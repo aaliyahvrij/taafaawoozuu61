@@ -1,6 +1,6 @@
 ## 📌 Veelgebruikte commit types in Conventional Commits
 | Type      | Gebruik voor... |
-
+|-----------|-----------------|
 | `feat`    | Een nieuwe feature (functionaliteit) toevoegen |
 | `fix`     | Een bug oplossen |
 | `refactor`| Code verbeteren zonder functionaliteit te veranderen |
@@ -13,10 +13,10 @@
 | `revert`  | Een eerdere commit ongedaan maken |
 
 ## 📌 Voorbeelden van goede commits met deze conventie
-✅ `feat: add dark mode toggle`
-✅ `fix: resolve issue with login validation`
-✅ `refactor: clean up authentication logic`
-✅ `docs: update installation guide in README`
-✅ `style: format code with Prettier`
-✅ `test: add unit tests for user service`
-✅ `chore: update dependencies to latest versions`
+- ✅ `feat: add dark mode toggle`
+- ✅ `fix: resolve issue with login validation`
+- ✅ `refactor: clean up authentication logic`
+- ✅ `docs: update installation guide in README`
+- ✅ `style: format code with Prettier`
+- ✅ `test: add unit tests for user service`
+- ✅ `chore: update dependencies to latest versions`
