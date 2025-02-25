@@ -3,7 +3,7 @@
 ## 📌 Teamleden
 - **Naam 1** (Aaliyah Vrij)
 - **Naam 2** (Stephanie Appiah Opoku)
-- **Naam 3** ()
+- **Naam 3** (Nigel Agyemang)
 - **Naam 4** ()
 
 ## 🎯 Doel van het project
