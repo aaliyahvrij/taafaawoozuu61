@@ -25,7 +25,7 @@ Het ontwikkelen van een functionele en gebruiksvriendelijke verkiezingen website
 - **Branch structuur:**
     - `main` → Alleen na goedkeuring en tests mergen
     - `dev` → Voor actieve ontwikkeling
-    - Feature branches (`feature/naam-feature`)
+    - Feature branches (`feature/naam-feature`) (iedere zijn eigen branch)
 - **Commit messages gebruiken volgens Conventional Commits** (bijv. `feat: add login page`). **"zie op docs commitsMessage.md"**
 - **Pull Requests moeten minimaal 1 review krijgen voordat ze gemerged worden.**
 
