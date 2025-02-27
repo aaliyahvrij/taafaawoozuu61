@@ -15,8 +15,9 @@
 Backend:
 - inloggen
 - profile pagina7
-- filters: onderwerpen, jaartalen"2021-2023": vergelijking met verkiezingen. steden, jaren, provinicies, stempunten 
-- informatie voor elke partij
+- filters: onderwerpen, jaartalen"2021-2023": vergelijking met verkiezingen. steden, jaren, provinces, stempunten, platte land 
+- informatie voor elke partij/ hoe werkt de Nederlandse verkiezingen dus info page
+- aantal stempunten en percentages.
 - meerdere talen(frans, duits) "optioneel"
 - forum "vragen stelen etc."
 -  moet op telefoon functioneren 
