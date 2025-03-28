@@ -30,7 +30,7 @@ public class DutchElectionReader {
         // Assuming the election data is contained in {@code src/main/resource} it should be found.
         // Please note that you can also specify an absolute path to the folder!
 
-        String resourceName = "/verkiezingsdata/2021/Kandidatenlijst_2021/EML_bestanden_TK2021_deel_1/Kandidatenlijsten_TK2021_Amsterdam.eml.xml";
+        String resourceName = "/EML_bestanden_TK2021/EML_bestanden_TK2021/Kandidatenlijst_2021/EML_bestanden_TK2021_deel_1/Kandidatenlijsten_TK2021_Amsterdam.eml.xml";
         Election election = electionProcessor.processResults("TK2021", PathUtils.getResourcePath(resourceName));
 
         System.out.println("All files are processed.\n");
