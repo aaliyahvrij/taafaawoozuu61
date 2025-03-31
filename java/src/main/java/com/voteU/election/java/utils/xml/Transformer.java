@@ -1,6 +1,8 @@
 package com.voteU.election.java.utils.xml;
 
 
+import com.voteU.election.java.model.Election;
+
 import java.util.Map;
 
 /**
@@ -22,9 +24,11 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#ELECTION_CATEGORY}</li>
      *     <li>{@link DutchElectionProcessor#ELECTION_DATE}</li>
      * </ul>
+     *
      * @param electionData a {@code Map} containing the information as {@code String}'s.
+     * @return
      */
-    void registerElection(Map<String, String> electionData);
+    Election registerElection(Map<String, String> electionData);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the
