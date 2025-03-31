@@ -8,6 +8,7 @@ import com.voteU.election.java.utils.xml.Transformer;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -19,23 +20,39 @@ import java.util.Map;
 public class DutchElectionReader {
 
     public static void main(String[] args) throws IOException, XMLStreamException {
-        System.out.println("Processing files...");
 
         // We need a Transformer that has knowledge of your classes.
         DutchElectionTransformer transformer = new DutchElectionTransformer();
 
         // And the election processor that traverses the folders and processes the XML-files.
-        DutchElectionProcessor<Election> electionProcessor = new DutchElectionProcessor<>(transformer);
+        DutchElectionProcessor<ArrayList<Election>> electionProcessor = new DutchElectionProcessor<>(transformer);
 
         // Assuming the election data is contained in {@code src/main/resource} it should be found.
         // Please note that you can also specify an absolute path to the folder!
 
-        String resourceName = "/EML_bestanden_TK2021/EML_bestanden_TK2021/Kandidatenlijst_2021/EML_bestanden_TK2021_deel_1/Kandidatenlijsten_TK2021_Amsterdam.eml.xml";
-        Election election = electionProcessor.processResults("TK2021", PathUtils.getResourcePath(resourceName));
+        String[] electionYears = {"TK2021","TK2023"};
+        // Lijst met categorieën (gemeente, kandidatenlijst, kieskring)
+        String[] categories = {"gemeente", "kandidatenlijst"};
 
-        System.out.println("All files are processed.\n");
-        // Just print the 'results'
-        //System.out.println(election);
+        // Doorloop elk jaar en elke categorie
+        for (String year : electionYears) {
+            for (String category : categories) {
+                String folderPath = "/EML_bestanden_" + year + "/" + category;
+
+                try {
+                    System.out.println("Processing: " + folderPath);
+                    ArrayList<Election> election = electionProcessor.processResults(year, PathUtils.getResourcePath(folderPath));
+                    System.out.println(election);
+
+                    System.out.println("Finished processing: " + folderPath);
+                } catch (Exception e) {
+                    System.err.println("Error processing " + folderPath + ": " + e.getMessage());
+                }
+
+
+            }
+        }
+
 
         Map<Integer, Party> parties = transformer.getParties(); //HASHMAP PARTIJ OBJECTEN<ID, {PARTY}>
 
