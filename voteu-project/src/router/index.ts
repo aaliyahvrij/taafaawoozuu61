@@ -20,8 +20,7 @@ const router = createRouter({
     {
       path: '/how',
       name: 'how',
-      //Todo: add how page view
-      component: () => import('../'),
+      component: () => import('../views/HowView.vue'),
     },
     {
       path: '/filter',
@@ -31,14 +30,12 @@ const router = createRouter({
     {
       path: '/compare',
       name: 'compare',
-      //Todo: add compare view
-      component: () => import('../'),
+      component: () => import('../views/CompareView.vue'),
     },
     {
       path: '/forum',
       name: 'forum',
-      //Todo: add forum view
-      component: () => import('../'),
+      component: () => import('../views/ForumView.vue'),
     },
   ],
 })
