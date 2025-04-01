@@ -18,9 +18,27 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
+      path: '/how',
+      name: 'how',
+      //Todo: add how page view
+      component: () => import('../'),
+    },
+    {
       path: '/filter',
       name: 'filter',
       component: () => import('../views/FilterView.vue'),
+    },
+    {
+      path: '/compare',
+      name: 'compare',
+      //Todo: add compare view
+      component: () => import('../'),
+    },
+    {
+      path: '/forum',
+      name: 'forum',
+      //Todo: add forum view
+      component: () => import('../'),
     },
   ],
 })
