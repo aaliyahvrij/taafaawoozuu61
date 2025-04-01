@@ -1,26 +1,17 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+
+import NavBarDesktop from "@/components/NavBarDesktop.vue";
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/how">How does it work?</RouterLink>
-        <RouterLink to="/filter">Filters</RouterLink>
-        <RouterLink to="/compare">Compare</RouterLink>
-        <RouterLink to="/forum">Forum</RouterLink>
+        <NavBarDesktop />
       </nav>
     </div>
   </header>
-
-  <RouterView />
 </template>
 
 <style scoped>
