@@ -16,47 +16,38 @@ import java.util.Map;
  * <br>
  * <b>Please do NOT include this code in you project!</b>
  */
-public class DutchElectionTransformer implements Transformer<ArrayList<Election>> {
+public class DutchElectionTransformer implements Transformer<Election> {
 
     private final Map<String, Election> elections = new HashMap<>();
     private Map<Integer, Party> parties = new HashMap<Integer, Party>();
 
     @Override
     public Election registerElection(Map<String, String> electionData) {
-        String year = electionData.get("ElectionIdentifier");
+        String year = electionData.get("ElectionIdentifier");  // Haal het jaar op (TK2021, TK2023)
 
-        // Haal bestaande Election op of maak een nieuwe
-        Election election = elections.getOrDefault(year, new Election());
+        if (year != null) {
+            Election election = new Election();  // ✅ Maak een nieuw Election object
+            election.data = new HashMap<>(electionData);  // ✅ Zet de data correct
 
-        if (election.data == null) {
-            election.data = new HashMap<>();
+            elections.put(year, election);  // ✅ Bewaar het als een Election object
         }
-        // Voeg nieuwe data toe zonder bestaande te overschrijven
-        election.data.putAll(electionData);
 
-        elections.put(year, election);
-        System.out.println("Elections currently stored: " + elections.keySet());
-
-
-        return election;
-
+        System.out.printf("Found election information for %s: %s\n", year, electionData);
+        return null;
     }
-
 
 
     @Override
     public void registerContest(Map<String, String> contestData) {
         String year = contestData.get("ElectionIdentifier"); // Haal het jaar op
-        Election election = elections.get(year); // Haal de juiste Election op
+        Election election = elections.get(year); // Zoek de verkiezing
 
         if (election != null) {
             if (election.data == null) {
                 election.data = new HashMap<>();
             }
-
-
-            election.data.putAll(contestData); // Voeg toe zonder te overschrijven
-            //System.out.printf("Found contest information: %s\n", contestData);
+            election.data.putAll(contestData); // Voeg data toe zonder te overschrijven
+            System.out.printf("Found contest information for year %s: %s\n", year, contestData);
         } else {
             System.out.println("Error: No election found for year " + year);
         }
@@ -64,52 +55,61 @@ public class DutchElectionTransformer implements Transformer<ArrayList<Election>
 
     @Override
     public void registerAffiliation(Map<String, String> affiliationData) {
-        String year = affiliationData.get("ElectionIdentifier");
-        Election election = elections.get(year);
+        String year = affiliationData.get("ElectionIdentifier"); // Haal het jaar op
+        Election election = elections.get(year); // Zoek de verkiezing
 
         if (election != null) {
             if (election.data == null) {
                 election.data = new HashMap<>();
             }
-            election.data.putAll(affiliationData); // Voeg toe zonder te overschrijven
-        } else {
-            System.out.println("Error: No election found for year " + year);
-            return;
-        }
+            election.data.putAll(affiliationData); // Voeg data toe zonder te overschrijven
 
-        String affiliationId = affiliationData.get("AffiliationIdentifier");
-        String affiliationName = affiliationData.get("RegisteredName");
+            String affiliationId = affiliationData.get("AffiliationIdentifier");
+            String affiliationName = affiliationData.get("RegisteredName");
 
-        if (affiliationId != null && affiliationName != null) {
-            try {
-                int id = Integer.parseInt(affiliationId);
-                parties.put(id, new Party(id, affiliationName));
-                System.out.printf("Found affiliation information: %s\n", affiliationData);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
+            if (affiliationId != null && affiliationName != null) {
+                try {
+                    int id = Integer.parseInt(affiliationId);
+                    parties.put(id, new Party(id, affiliationName));
+                    System.out.printf("Found affiliation information for year %s: %s\n", year, affiliationData);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("No affiliation information found for year " + year);
             }
         } else {
-            System.out.println("No affiliation information found");
+            System.out.println("Error: No election found for year " + year);
         }
     }
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {
-        String year = candidateData.get("ElectionIdentifier");
-        Election election = elections.get(year);
-
-        if (election != null) {
-            if (election.data == null) {
-                election.data = new HashMap<>();
-            }
-            election.data.putAll(candidateData); // Voeg toe zonder te overschrijven
-            //System.out.printf("Found candidate information: %s\n", candidateData);
-        } else {
-            System.out.println("Error: No election found for year " + year);
-        }
-
-
+//        System.out.println("Received candidate data: " + candidateData); // Debug print
+//
+//        String year = candidateData.get("ElectionIdentifier");
+//        if (year == null || year.isEmpty()) {
+//            System.out.println("Error: No ElectionIdentifier found in candidate data.");
+//            return;
+//        }
+//
+//        // Controleer of er al een election-object bestaat
+//        Election election = elections.get(year);
+//        if (election == null) {
+//            System.out.println("Creating new election object for year " + year);
+//            election = new Election();
+//            elections.put(year, election); // Zorg dat 2021 en 2023 worden opgeslagen
+//        }
+//
+//        // Voeg kandidaat toe zonder de lijst te overschrijven
+//        if (election.candidates == null) {
+//            election.candidates = new ArrayList<>();
+//        }
+//        election.candidates.add(new HashMap<>(candidateData)); // Kopie van de data
+//
+//        System.out.println("Added candidate for year " + year + ": " + candidateData);
     }
+
 
     @Override
     public void registerVotes(Map<String, String> votesData) {
@@ -117,26 +117,19 @@ public class DutchElectionTransformer implements Transformer<ArrayList<Election>
         Election election = elections.get(year);
 
         if (election != null) {
-            if (election.data == null) {
-                election.data = new HashMap<>();
+            if (election.votes == null) {
+                election.votes = new ArrayList<>();
             }
-            election.data.putAll(votesData); // Voeg toe zonder te overschrijven
-            //System.out.printf("Found votes information: %s\n", votesData);
+            election.votes.add(new HashMap<>(votesData)); // Voeg een kopie toe
         } else {
             System.out.println("Error: No election found for year " + year);
         }
     }
 
-    public Election retrieve(String electionId) {
-        return elections.get(electionId); // Haalt de juiste verkiezing op
-    }
-
-
     @Override
-    public ArrayList<Election> retrieve() {
-        return new ArrayList<>(elections.values()); // Geeft ALLE verkiezingen terug
+    public Election retrieve() {
+        return null;
     }
-
 
 
     public Map<Integer, Party> getParties() {
@@ -145,3 +138,4 @@ public class DutchElectionTransformer implements Transformer<ArrayList<Election>
 
 
 }
+
