@@ -6,7 +6,7 @@ import {RouterLink} from "vue-router";
 
 <template>
 
-  <div id=>
+  <div id=nav-block>
 <div id="navbar" class="navbar">
   <RouterLink to="/">Home</RouterLink>
   <RouterLink to="/how">How does it work?</RouterLink>

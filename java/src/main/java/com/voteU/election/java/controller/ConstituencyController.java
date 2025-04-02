@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/constituency")
+@RequestMapping("/api/constituency")
 public class ConstituencyController {
     private final ConsistuencyService consistuencyService;
 
