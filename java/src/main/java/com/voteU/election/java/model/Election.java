@@ -1,6 +1,5 @@
 package com.voteU.election.java.model;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -11,10 +10,16 @@ import java.util.Map;
  */
 public class Election {
     public Map<String, String> data;
-    public ArrayList<Object> candidates;
-    public ArrayList<Object> votes;
+    String id;
+    String name;
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {

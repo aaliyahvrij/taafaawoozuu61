@@ -1,68 +1,57 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Candidate;
+import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
-import com.voteU.election.java.utils.xml.Transformer;
+import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * A very small demo of how the classes {@link DutchElectionProcessor} and {@link Transformer}
- * can be used to process the XML-files.
- * <br>
+ * Processes election data from XML files and provides access to the results.
  */
+@Component
 public class DutchElectionReader {
+    private final nl.hva.ict.se.sm3.demo.DutchElectionTransformer transformer;
+    private final DutchElectionProcessor<Election> electionProcessor;
 
-    public static void main(String[] args) throws IOException, XMLStreamException {
+    public DutchElectionReader() {
+        this.transformer = new nl.hva.ict.se.sm3.demo.DutchElectionTransformer();
+        this.electionProcessor = new DutchElectionProcessor<>(transformer);
+    }
 
-        // We need a Transformer that has knowledge of your classes.
-        DutchElectionTransformer transformer = new DutchElectionTransformer();
-
-        // And the election processor that traverses the folders and processes the XML-files.
-        DutchElectionProcessor<Election> electionProcessor = new DutchElectionProcessor<>(transformer);
-
-        // Assuming the election data is contained in {@code src/main/resource} it should be found.
-        // Please note that you can also specify an absolute path to the folder!
-
+    /**
+     * Reads and processes election results for multiple years.
+     *
+     * @return A map containing election results, organized by election year.
+     */
+    public Map<String, Map<Integer, Contest>> getElections() {
         String[] electionYears = {"TK2021", "TK2023"};
-        // Lijst met categorieën (gemeente, kandidatenlijst, kieskring)
-        String[] categories = {"gemeente", "kandidatenlijst", "kieskring"};
+        Map<String, Map<Integer, Contest>> elections = new HashMap<>();
 
-        // Doorloop elk jaar en elke categorie
-        for (String year : electionYears) {
-            for (String category : categories) {
-                String folderPath = "/EML_bestanden_" + year + "/" + category;
+        for (String electionYear : electionYears) {
+            String path = "/EML_bestanden_" + electionYear;
+            try {
+                // Process election data
+                electionProcessor.processResults(electionYear, PathUtils.getResourcePath(path));
+                Map<Integer, Contest> contests = transformer.getContests(electionYear);
 
-                try {
-                    System.out.println("Processing: " + folderPath);
-                    Election election = electionProcessor.processResults(year, PathUtils.getResourcePath(folderPath));
-                    System.out.println(election);
-
-                    System.out.println("Finished processing: " + folderPath);
-                } catch (Exception e) {
-                    System.err.println("Error processing " + folderPath + ": " + e.getMessage());
+                if (contests != null && !contests.isEmpty()) {
+                    elections.put(electionYear, contests);
                 }
-
-
+            } catch (IOException | XMLStreamException e) {
+                System.err.println("Error processing election data for " + electionYear);
+                e.printStackTrace();
             }
         }
 
-
-        Map<Integer, Party> parties = transformer.getParties(); //HASHMAP PARTIJ OBJECTEN<ID, {PARTY}>
-
-        for (Party party : parties.values()) {
-            System.out.println(party);
-        }
-
-
-
+        return elections;
     }
-
-
-
 }

@@ -1,141 +1,147 @@
-package com.voteU.election.java.reader;
+package nl.hva.ict.se.sm3.demo;
 
-
-
+import com.voteU.election.java.model.Candidate;
+import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
+import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * A dummy {@link Transformer} that just prints the election data so you can get an understanding of what
- * information is available within each method.
- * <br>
- * <b>Please do NOT include this code in you project!</b>
+ * A Transformer that processes election data and organizes it into Election objects.
  */
 public class DutchElectionTransformer implements Transformer<Election> {
+    private Map<Integer, Candidate> candidates = new HashMap<>();
+    private Map<String, Election> electionsByYear = new HashMap<>();
+    private Map<String, Map<Integer, Contest>> contestsByYear = new HashMap<>(); // <YEAR, <CONTESTID, CONTEST>>
+    private Map<String, Map<Integer, Party>> partiesByYear = new HashMap<>(); // <YEAR, <PARTYID, PARTY>>
 
-    private final Map<String, Election> elections = new HashMap<>();
-    private Map<Integer, Party> parties = new HashMap<Integer, Party>();
 
     @Override
-    public Election registerElection(Map<String, String> electionData) {
-        String year = electionData.get("ElectionIdentifier");  // Haal het jaar op (TK2021, TK2023)
-
-        if (year != null) {
-            Election election = new Election();  // ✅ Maak een nieuw Election object
-            election.data = new HashMap<>(electionData);  // ✅ Zet de data correct
-
-            elections.put(year, election);  // ✅ Bewaar het als een Election object
+    public void registerElection(Map<String, String> electionData) {
+        String year = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        if (year == null) {
+            System.out.println("No election year found!");
+            return;
         }
 
-        System.out.printf("Found election information for %s: %s\n", year, electionData);
-        return null;
-    }
+        Election election = new Election();
+        election.data = new HashMap<>(electionData);
+        election.setId(year);
+        election.setName(electionData.get(DutchElectionProcessor.ELECTION_NAME));
 
+        electionsByYear.put(year, election);
+
+        // Initialize year-specific maps if not already present
+        contestsByYear.putIfAbsent(year, new HashMap<>());
+        partiesByYear.putIfAbsent(year, new HashMap<>());
+
+        //System.out.printf("Registered election: %s\n", electionData);
+    }
 
     @Override
     public void registerContest(Map<String, String> contestData) {
-        String year = contestData.get("ElectionIdentifier"); // Haal het jaar op
-        Election election = elections.get(year); // Zoek de verkiezing
-
-        if (election != null) {
-            if (election.data == null) {
-                election.data = new HashMap<>();
-            }
-            election.data.putAll(contestData); // Voeg data toe zonder te overschrijven
-            System.out.printf("Found contest information for year %s: %s\n", year, contestData);
-        } else {
-            System.out.println("Error: No election found for year " + year);
+        String year = contestData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        if (year == null) {
+            System.err.println("Missing ElectionIdentifier");
+            return;
         }
+
+        String id = contestData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
+        String name = contestData.get(DutchElectionProcessor.CONTEST_NAME);
+        if (id != null && name != null) {
+            int intId = Integer.parseInt(id);
+            Contest contest = new Contest(intId, name);
+
+            // Store the contest in the correct year's contest map
+            contestsByYear.get(year).put(intId, contest);
+        }
+
+        //System.out.printf("Registered contest: %s\n", contestData);
     }
 
     @Override
     public void registerAffiliation(Map<String, String> affiliationData) {
-        String year = affiliationData.get("ElectionIdentifier"); // Haal het jaar op
-        Election election = elections.get(year); // Zoek de verkiezing
-
-        if (election != null) {
-            if (election.data == null) {
-                election.data = new HashMap<>();
-            }
-            election.data.putAll(affiliationData); // Voeg data toe zonder te overschrijven
-
-            String affiliationId = affiliationData.get("AffiliationIdentifier");
-            String affiliationName = affiliationData.get("RegisteredName");
-
-            if (affiliationId != null && affiliationName != null) {
-                try {
-                    int id = Integer.parseInt(affiliationId);
-                    parties.put(id, new Party(id, affiliationName));
-                    System.out.printf("Found affiliation information for year %s: %s\n", year, affiliationData);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("No affiliation information found for year " + year);
-            }
-        } else {
-            System.out.println("Error: No election found for year " + year);
+        String year = affiliationData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        if (year == null) {
+            System.err.println("Missing ElectionIdentifier");
+            return;
         }
+
+        String id = affiliationData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        String name = affiliationData.get(DutchElectionProcessor.REGISTERED_NAME);
+        String contestId = affiliationData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
+        if (id != null && name != null && contestId != null) {
+            int intId = Integer.parseInt(id);
+            int contestIntId = Integer.parseInt(contestId);
+
+            Party party = new Party(intId, name);
+            partiesByYear.get(year).put(intId, party);
+
+            // Retrieve the contest and add the party
+            Contest contest = contestsByYear.get(year).get(contestIntId);
+            if (contest != null) {
+                contest.getParties().add(party);
+            } else {
+                System.err.println("Contest not found for ID: " + contestIntId + " in year " + year);
+            }
+        }
+
+       // System.out.printf("Registered party: %s\n", affiliationData);
     }
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {
-//        System.out.println("Received candidate data: " + candidateData); // Debug print
-//
-//        String year = candidateData.get("ElectionIdentifier");
-//        if (year == null || year.isEmpty()) {
-//            System.out.println("Error: No ElectionIdentifier found in candidate data.");
-//            return;
-//        }
-//
-//        // Controleer of er al een election-object bestaat
-//        Election election = elections.get(year);
-//        if (election == null) {
-//            System.out.println("Creating new election object for year " + year);
-//            election = new Election();
-//            elections.put(year, election); // Zorg dat 2021 en 2023 worden opgeslagen
-//        }
-//
-//        // Voeg kandidaat toe zonder de lijst te overschrijven
-//        if (election.candidates == null) {
-//            election.candidates = new ArrayList<>();
-//        }
-//        election.candidates.add(new HashMap<>(candidateData)); // Kopie van de data
-//
-//        System.out.println("Added candidate for year " + year + ": " + candidateData);
-    }
+        String year = candidateData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        if (year == null) {
+            System.err.println("Missing ElectionIdentifier");
+            return;
+        }
 
+        String id = candidateData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
+        String affiliationId = candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        String firstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
+        String lastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
+
+        if (id != null && affiliationId != null && lastName != null) {
+            int intId = Integer.parseInt(id);
+            int intAffiliationId = Integer.parseInt(affiliationId);
+            firstName = (firstName != null) ? firstName : "";
+            Candidate candidate = new Candidate(intId, firstName, lastName);
+            candidates.put(intId, candidate);
+
+            Party party = partiesByYear.get(year).get(intAffiliationId);
+            if (party != null) {
+                party.getCandidates().add(candidate);
+            } else {
+                System.err.println("Party not found for ID: " + intAffiliationId + " in year " + year);
+            }
+        }
+
+       // System.out.printf("Registered candidate: %s\n", candidateData);
+    }
 
     @Override
     public void registerVotes(Map<String, String> votesData) {
-        String year = votesData.get("ElectionIdentifier");
-        Election election = elections.get(year);
-
-        if (election != null) {
-            if (election.votes == null) {
-                election.votes = new ArrayList<>();
-            }
-            election.votes.add(new HashMap<>(votesData)); // Voeg een kopie toe
-        } else {
-            System.out.println("Error: No election found for year " + year);
-        }
+        //System.out.printf("Registered votes: %s\n", votesData);
     }
 
     @Override
     public Election retrieve() {
-        return null;
+        return null; // This method is not needed since we now track elections by year
     }
 
+    public Map<Integer, Contest> getContests(String year) {
+        return contestsByYear.getOrDefault(year, new HashMap<>());
+    }
 
-    public Map<Integer, Party> getParties() {
-        return parties;
+    public Election getElection(String year) {
+        return electionsByYear.get(year);
     }
 
 
 }
-
