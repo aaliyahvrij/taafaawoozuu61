@@ -19,11 +19,11 @@ import java.util.Map;
  */
 @Component
 public class DutchElectionReader {
-    private final nl.hva.ict.se.sm3.demo.DutchElectionTransformer transformer;
+    private final com.voteU.election.java.reader.DutchElectionTransformer transformer;
     private final DutchElectionProcessor<Election> electionProcessor;
 
     public DutchElectionReader() {
-        this.transformer = new nl.hva.ict.se.sm3.demo.DutchElectionTransformer();
+        this.transformer = new com.voteU.election.java.reader.DutchElectionTransformer();
         this.electionProcessor = new DutchElectionProcessor<>(transformer);
     }
 
