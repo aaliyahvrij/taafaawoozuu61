@@ -10,6 +10,16 @@ import java.util.Map;
  */
 public class Election {
     public Map<String, String> data;
+    String id;
+    String name;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {

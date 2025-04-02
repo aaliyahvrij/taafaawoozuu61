@@ -1,7 +1,9 @@
     package com.voteU.election.java.controller;
 
+    import com.voteU.election.java.model.Contest;
     import com.voteU.election.java.model.Party;
     import com.voteU.election.java.services.ElectionService;
+    import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
     import java.util.Map;
 
@@ -15,13 +17,13 @@
         }
 
         @GetMapping
-        public Map<Integer, Party> getParties() {
-            return electionService.getParties();
+        public Map<String, Map<Integer, Contest>> getElections() {
+            return electionService.getElections();
         }
 
         @PostMapping
         public boolean readResults() {
-            return electionService.readResults();
+            return electionService.readElections();
         }
 
     }

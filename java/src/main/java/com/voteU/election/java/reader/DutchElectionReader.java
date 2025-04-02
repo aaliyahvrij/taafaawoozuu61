@@ -1,51 +1,57 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Candidate;
+import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
-import com.voteU.election.java.utils.xml.Transformer;
 import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * A very small demo of how the classes {@link DutchElectionProcessor} and {@link Transformer}
- * can be used to process the XML-files.
- * <br>
- * <b>Please do NOT include this code in you project!</b>
+ * Processes election data from XML files and provides access to the results.
  */
 @Component
 public class DutchElectionReader {
-    private final  DutchElectionTransformer transformer;
+    private final nl.hva.ict.se.sm3.demo.DutchElectionTransformer transformer;
     private final DutchElectionProcessor<Election> electionProcessor;
 
     public DutchElectionReader() {
-        this.transformer = new DutchElectionTransformer();
+        this.transformer = new nl.hva.ict.se.sm3.demo.DutchElectionTransformer();
         this.electionProcessor = new DutchElectionProcessor<>(transformer);
     }
 
-    public boolean readElections() {
-        try {
-            // Dynamically generate the path
+    /**
+     * Reads and processes election results for multiple years.
+     *
+     * @return A map containing election results, organized by election year.
+     */
+    public Map<String, Map<Integer, Contest>> getElections() {
+        String[] electionYears = {"TK2021", "TK2023"};
+        Map<String, Map<Integer, Contest>> elections = new HashMap<>();
 
-            String resourceName = "/EML_bestanden_TK2021/Kandidatenlijst/Kandidatenlijsten_TK2021_Amsterdam.eml.xml";
+        for (String electionYear : electionYears) {
+            String path = "/EML_bestanden_" + electionYear;
+            try {
+                // Process election data
+                electionProcessor.processResults(electionYear, PathUtils.getResourcePath(path));
+                Map<Integer, Contest> contests = transformer.getContests(electionYear);
 
-            // Process results
-            Election election = electionProcessor.processResults("TK2021", PathUtils.getResourcePath(resourceName));
-
-            System.out.println("All files processed for folder: " + resourceName);
-            return true;
-        } catch (IOException | XMLStreamException e) {
-            e.printStackTrace();
-            return false;
+                if (contests != null && !contests.isEmpty()) {
+                    elections.put(electionYear, contests);
+                }
+            } catch (IOException | XMLStreamException e) {
+                System.err.println("Error processing election data for " + electionYear);
+                e.printStackTrace();
+            }
         }
-    }
 
-    public Map<Integer, Party> getParties(){
-        return transformer.getParties();
+        return elections;
     }
-
 }

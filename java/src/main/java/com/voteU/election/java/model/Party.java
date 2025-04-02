@@ -1,28 +1,38 @@
 package com.voteU.election.java.model;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Party {
     int id;
-    String partyName;
+    String name;
+    List<Candidate> candidates;
 
-
-    public Party(int id, String partyName) {
+    public Party(int id, String name) {
         this.id = id;
-        this.partyName = partyName;;
+        this.name = name;
+        this.candidates = new ArrayList<>();
+
+    }
+    public void addCandidate(Candidate candidate) {
+        candidates.add(candidate);
+    }
+
+    public void setCandidates(List<Candidate> candidates) {
+        this.candidates = candidates;
     }
 
     public int getId() {
         return id;
     }
-    public String getPartyName() {
-        return partyName;
+    public String getName() {
+        return name;
+    }
+    public List<Candidate> getCandidates() {
+        return candidates;
     }
 
-
-
-    @Override
     public String toString() {
-        return "{ID: " + id + ", PartyName: " + partyName  + "}";
+        return String.format("Party[id=%d, name=%s]", id, name + ", candidates: " + candidates);
     }
 }
