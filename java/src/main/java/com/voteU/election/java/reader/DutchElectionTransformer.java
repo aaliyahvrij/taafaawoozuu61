@@ -1,4 +1,4 @@
-package nl.hva.ict.se.sm3.demo;
+package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Contest;
@@ -6,27 +6,29 @@ import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * A Transformer that processes election data and organizes it into Election objects.
  */
+
+@Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
-    private Map<Integer, Candidate> candidates = new HashMap<>();
+    private final Map<Integer, Candidate> candidates = new HashMap<>();
     private Map<String, Election> electionsByYear = new HashMap<>();
     private Map<String, Map<Integer, Contest>> contestsByYear = new HashMap<>(); // <YEAR, <CONTESTID, CONTEST>>
     private Map<String, Map<Integer, Party>> partiesByYear = new HashMap<>(); // <YEAR, <PARTYID, PARTY>>
 
 
     @Override
-    public void registerElection(Map<String, String> electionData) {
+    public Election registerElection(Map<String, String> electionData) {
         String year = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         if (year == null) {
-            System.out.println("No election year found!");
-            return;
+            log.error("No election year found!");
+            return null;
         }
 
         Election election = new Election();
@@ -41,13 +43,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
         partiesByYear.putIfAbsent(year, new HashMap<>());
 
         //System.out.printf("Registered election: %s\n", electionData);
+        return election;
     }
 
     @Override
     public void registerContest(Map<String, String> contestData) {
         String year = contestData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         if (year == null) {
-            System.err.println("Missing ElectionIdentifier");
+            log.error("Missing ElectionIdentifier");
             return;
         }
 
@@ -68,7 +71,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerAffiliation(Map<String, String> affiliationData) {
         String year = affiliationData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         if (year == null) {
-            System.err.println("Missing ElectionIdentifier");
+            log.error("Missing ElectionIdentifier");
             return;
         }
 
@@ -87,7 +90,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             if (contest != null) {
                 contest.getParties().add(party);
             } else {
-                System.err.println("Contest not found for ID: " + contestIntId + " in year " + year);
+                log.error("Contest not found for ID: " + contestIntId + " in year " + year);
             }
         }
 
