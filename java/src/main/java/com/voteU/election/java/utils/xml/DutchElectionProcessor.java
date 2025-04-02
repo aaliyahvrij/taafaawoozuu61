@@ -47,6 +47,8 @@ public class DutchElectionProcessor<E> {
     private static final Logger LOG = Logger.getLogger(DutchElectionProcessor.class.getName());
     private final Transformer<E> transformer;
 
+
+
     // Common attribute name that is use on multiple tags.
     public static final String ID = "Id";
 
@@ -134,18 +136,32 @@ public class DutchElectionProcessor<E> {
      * for better readability.
      */
     public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
+        // Een map om gegevens per jaar op te slaan
+        Map<String, Map<String, String>> electionDataMap = new HashMap<>();
+
+        LOG.info("=== Processing election: %s ===".formatted(electionId));
         LOG.info("Loading election data from %s".formatted(folderName));
 
-        Map<String, String> electionData = new HashMap<>();
+
+        // Voeg de electionId toe aan de map van verkiezingsdata
+        Map<String, String> electionData = electionDataMap.computeIfAbsent(electionId, k -> new HashMap<>());
         electionData.put(ELECTION_IDENTIFIER, electionId);
 
+
         List<Path> files = PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId));
+
         for (Path electionFile : files) {
+
             LOG.fine("Found: %s".formatted(electionFile));
             XMLParser parser = new XMLParser(new FileInputStream(electionFile.toString()));
+
             processElection(electionData, parser);
             processContest(electionData, parser);
         }
+
+        List<Path> voteFiles = PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente".formatted(electionId));
+        LOG.info("Found %d vote count files for election %s".formatted(voteFiles.size(), electionId));
+
 
         for (Path votesPerReportingStationFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(votesPerReportingStationFile));
@@ -153,6 +169,7 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processVotes(electionData, parser);
         }
+        LOG.info("Finished processing election %s".formatted(electionId));
 
         return transformer.retrieve();
     }
