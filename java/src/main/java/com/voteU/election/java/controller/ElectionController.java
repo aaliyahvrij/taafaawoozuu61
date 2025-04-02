@@ -8,7 +8,7 @@
     import java.util.Map;
 
     @RestController
-    @RequestMapping("election")
+    @RequestMapping("/election")
     public class ElectionController {
         private final ElectionService electionService;
 
