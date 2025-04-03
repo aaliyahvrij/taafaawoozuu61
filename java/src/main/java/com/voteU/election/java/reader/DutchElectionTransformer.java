@@ -45,6 +45,34 @@ public class DutchElectionTransformer implements Transformer<Election> {
         //System.out.printf("Registered election: %s\n", electionData);
         return election;
     }
+//    @Override
+//    public void registerContest(Map<String, String> contestData) {
+//        String year = contestData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+//        if (year == null) {
+//            log.error("❌ Missing ElectionIdentifier in registerContest");
+//            return;
+//        }
+//
+//        String id = contestData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
+//        String name = contestData.get(DutchElectionProcessor.CONTEST_NAME);
+//        if (id == null || name == null) {
+//            log.error("❌ Contest ID of naam ontbreekt voor jaar: " + year);
+//            return;
+//        }
+//
+//        int intId = Integer.parseInt(id);
+//
+//        // Controleer of contests voor dit jaar bestaan
+//        if (!contestsByYear.containsKey(year)) {
+//            log.warn("⚠️ Geen bestaande contests voor jaar: " + year + ". Nieuwe lijst aangemaakt.");
+//            contestsByYear.put(year, new HashMap<>());
+//        }
+//
+//        Contest contest = new Contest(intId, name);
+//        contestsByYear.get(year).put(intId, contest);
+//
+//        log.info("✅ Contest geregistreerd: ID=" + intId + ", Naam=" + name + ", Jaar=" + year);
+//    }
 
     @Override
     public void registerContest(Map<String, String> contestData) {
@@ -56,6 +84,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         String id = contestData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
         String name = contestData.get(DutchElectionProcessor.CONTEST_NAME);
+
         if (id != null && name != null) {
             int intId = Integer.parseInt(id);
             Contest contest = new Contest(intId, name);
@@ -130,7 +159,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerVotes(Map<String, String> votesData) {
-        //System.out.printf("Registered votes: %s\n", votesData);
+
     }
 
     @Override
