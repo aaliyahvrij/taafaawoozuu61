@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class ConsistuencyService {
+public class ConstituencyService {
 
     private DutchElectionReader electionReader;
     private final Map<String, Map<Integer, Contest>> storedElections = new HashMap<>();
 
-    public void ElectionService(DutchElectionReader electionReader) {
+    public  ConstituencyService (DutchElectionReader electionReader) {
         this.electionReader = electionReader;
+        readElections();
     }
 
     /**
@@ -27,11 +28,14 @@ public class ConsistuencyService {
     public boolean readElections() {
         Map<String, Map<Integer, Contest>> elections = electionReader.getElections();
         if (elections.isEmpty()) {
+            System.out.println("Geen verkiezingsdata gevonden!");
             return false;
         }
         storedElections.putAll(elections);
+        System.out.println("Elections opgeslagen: " + storedElections.keySet());
         return true;
     }
+
 
     /**
      * Retrieves the stored election data (GET equivalent).
@@ -43,4 +47,8 @@ public class ConsistuencyService {
     }
 
     //Todo: getConsistuency function
+    public Contest getConstituency(String year, int contestId) {
+        Map<Integer, Contest> contests = storedElections.get(year);
+        return (contests != null) ? contests.get(contestId) : null;
+    }
 }
