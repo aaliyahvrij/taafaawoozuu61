@@ -16,7 +16,7 @@
 
         @GetMapping
         public Map<Integer, Party> getParties() {
-            return electionService.getParties();
+            return electionService.getAll();
         }
 
         @PostMapping

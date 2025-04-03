@@ -44,7 +44,7 @@ public class DutchElectionReader {
         }
     }
 
-    public Map<Integer, Party> getParties(){
+    public Map<Integer, Party> getAll(){
         return transformer.getParties();
     }
 

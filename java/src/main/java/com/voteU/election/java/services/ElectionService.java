@@ -22,8 +22,8 @@ public class ElectionService {
         return electionReader.readElections();
     }
 
-    public Map<Integer, Party> getParties() {
-        return electionReader.getParties();
+    public Map<Integer, Party> getAll() {
+        return electionReader.getAll();
     }
 
 }
