@@ -33,3 +33,4 @@ public class Candidate {
         return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d]", id, firstName, lastName, votes);
     }
 }
+
