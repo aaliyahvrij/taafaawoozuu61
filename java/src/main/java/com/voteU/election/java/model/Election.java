@@ -26,3 +26,4 @@ public class Election {
         return "The last information received is: %s".formatted(data);
     }
 }
+
