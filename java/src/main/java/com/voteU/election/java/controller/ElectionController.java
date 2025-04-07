@@ -1,12 +1,17 @@
     package com.voteU.election.java.controller;
 
+    import com.voteU.election.java.dto.ContestSummaryDTO;
+    import com.voteU.election.java.model.Contest;
     import com.voteU.election.java.model.Party;
     import com.voteU.election.java.services.ElectionService;
     import org.springframework.web.bind.annotation.*;
+
+    import java.util.List;
     import java.util.Map;
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @RestController
-    @RequestMapping("election")
+    @RequestMapping("/api/election")
     public class ElectionController {
         private final ElectionService electionService;
 
@@ -14,14 +19,27 @@
             this.electionService = electionService;
         }
 
+        @PostMapping
+        public boolean readResults() {
+            return electionService.readElections();
+        }
+
+        @PostMapping("/{electionId}/contests")
+        public boolean readResultsYear(@PathVariable String electionId) {
+            return electionService.readElectionYear(electionId);
+        }
+
+
+        @GetMapping("/{electionId}/contests")
+        public List<ContestSummaryDTO> getElection(@PathVariable String electionId) {
+            return electionService.getElection(electionId);
+        }
+
         @GetMapping
-        public Map<Integer, Party> getParties() {
+        public Map<String , Map<Integer, Contest>> getParties() {
             return electionService.getAll();
         }
 
-        @PostMapping
-        public boolean readResults() {
-            return electionService.readResults();
-        }
+
 
     }

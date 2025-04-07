@@ -59,6 +59,7 @@ public class DutchElectionProcessor<E> {
     public static final String ELECTION_NAME = "ElectionName";
     public static final String ELECTION_CATEGORY = "ElectionCategory";
     public static final String ELECTION_DATE = "ElectionDate";
+    public static final String TOTAL_VOTES = "TotalVotes";
 
     /*
      The tag names on the contest level within the XML files which are also used as keys in the maps when calling
@@ -146,6 +147,14 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processContest(electionData, parser);
         }
+
+        for(Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId)) ){
+            LOG.fine("Found: %s".formatted(totalVotesFile));
+            XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
+            processElection(electionData, parser);
+            processNationalData(electionData, parser);
+        }
+
 
         for (Path votesPerReportingStationFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(votesPerReportingStationFile));
@@ -349,6 +358,62 @@ public class DutchElectionProcessor<E> {
             parser.findAndAcceptEndTag(CONTEST);
         }
     }
+    private void processNationalData(Map<String, String> nationalContext, XMLParser parser) throws XMLStreamException {
+        if (parser.findBeginTag(TOTAL_VOTES)) {
+            while (parser.findBeginTag(SELECTION)) {
+                Map<String, String> data = new HashMap<>(nationalContext);
+
+                if (parser.findBeginTag(AFFILIATION_IDENTIFIER)) {
+                    // Get affiliation ID
+                    int affiliationId = parser.getIntegerAttributeValue(null, ID, -1);
+
+                    String affiliationName = INVALID_NAME;
+                    if (parser.findBeginTag(REGISTERED_NAME)) {
+                        affiliationName = parser.getElementText();
+                        parser.findAndAcceptEndTag(REGISTERED_NAME);
+                    }
+
+                    parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
+
+                    // Valid votes for this affiliation
+                    if (parser.findBeginTag(VALID_VOTES)) {
+                        int votes = Integer.parseInt(parser.getElementText());
+                        parser.findAndAcceptEndTag(VALID_VOTES);
+
+                        // Fill and send data
+                        data.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
+                        data.put(REGISTERED_NAME, affiliationName);
+                        data.put(VALID_VOTES, String.valueOf(votes));
+                        transformer.registerElection(data);
+                    }
+
+                } else if (parser.findBeginTag(CANDIDATE)) {
+                    int candidateId = -1;
+                    if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
+                        candidateId = parser.getIntegerAttributeValue(null, ID, -1);
+                        parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
+                    }
+                    parser.findAndAcceptEndTag(CANDIDATE);
+
+                    // Valid votes for this candidate
+                    if (parser.findBeginTag(VALID_VOTES)) {
+                        int votes = Integer.parseInt(parser.getElementText());
+                        parser.findAndAcceptEndTag(VALID_VOTES);
+
+                        // Fill and send data
+                        data.put(CANDIDATE_IDENTIFIER, String.valueOf(candidateId));
+                        data.put(VALID_VOTES, String.valueOf(votes));
+                        transformer.registerElection(data);
+                    }
+                }
+
+                parser.findAndAcceptEndTag(SELECTION);
+            }
+
+            parser.findAndAcceptEndTag(TOTAL_VOTES);
+        }
+    }
+
 
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REPORTING_UNIT_VOTES)) {

@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import {type Ref, ref} from "vue";
+import {YearService} from "@/services/YearService.ts";
 
 const year: Ref<string, string> = ref('');
+
+async function fetchContest(electionId: string) {
+  const data =  await YearService.getContestSummary(electionId)
+  contests.value = data;
+  console.log(data)
+}
+
+const contests = ref()
+
+
 </script>
 
 <template>
   <div class="main-container">
     <div class="filter-tag">
       select year
-      <select v-model="year">
+      <select v-model="year" @change="fetchContest(year)">
         <option value="2021">2021</option>
         <option value="2023">2023</option>
       </select>
     </div>
 
     <div class="data-container">
-      Showing parties of : {{year}}
+      Showing contest of : {{year}}
+      <div v-for="contest in contests" :key="contest.contestName"  >
+        {{contest.contestName}}
+        , {{contest.partyCount}} parties participating
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +51,7 @@ select{
 }
 
 .data-container{
-  height: 500px;
+  height: auto;
   border:1px solid black;
 }
 
