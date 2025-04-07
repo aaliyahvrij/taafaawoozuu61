@@ -5,7 +5,6 @@ import {RouterLink} from "vue-router";
 </script>
 
 <template>
-
   <div id=nav-block>
 <div id="navbar" class="navbar">
   <RouterLink to="/">Home</RouterLink>
@@ -18,5 +17,39 @@ import {RouterLink} from "vue-router";
 </template>
 
 <style scoped>
+#nav-block {
+  height: 100vh;
+  width: 220px;
+  background-color: #f8f8f8;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding-top: 2rem;
+  height: 100%;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  margin: 1rem 0;
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0;
+
+}
+
+.navbar a:hover {
+  background-color: #d6e8ff;
+  color: #002970;
+}
 
 </style>
