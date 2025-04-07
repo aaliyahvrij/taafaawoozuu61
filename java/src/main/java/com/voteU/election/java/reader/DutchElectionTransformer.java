@@ -6,6 +6,7 @@ import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Map;
 /**
  * A Transformer that processes election data and organizes it into Election objects.
  */
+
+@Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     private Map<Integer, Candidate> candidates = new HashMap<>();
     private Map<String, Election> electionsByYear = new HashMap<>();

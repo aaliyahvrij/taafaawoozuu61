@@ -1,25 +1,15 @@
 <script setup lang="ts">
 
-import YearFilter from "@/components/YearFilter.vue";
+import Constituency from "@/components/Data/Constituency.vue";
 </script>
 
 <template>
-  <div class="main-filter-container">
-    <YearFilter />
-  </div>
+<h1>Filters</h1>
+  <p> filter by what you need to read the election data</p>
 
+  <Constituency />
 </template>
 
 <style scoped>
-template{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.main-filter-container{
-  color:black;
-  background-color: #fafafa;
-  width: 800px;
-  height: 600px;
-}
+
 </style>

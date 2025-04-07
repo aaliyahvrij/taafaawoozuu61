@@ -135,6 +135,10 @@ public class DutchElectionProcessor<E> {
      * for better readability.
      */
     public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
+        // Een map om gegevens per jaar op te slaan
+        Map<String, Map<String, String>> electionDataMap = new HashMap<>();
+
+        LOG.info("=== Processing election: %s ===".formatted(electionId));
         LOG.info("Loading election data from %s".formatted(folderName));
 
         Map<String, String> electionData = new HashMap<>();

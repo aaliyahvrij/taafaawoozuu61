@@ -64,5 +64,4 @@ public class ElectionService {
             return contestSummariesByYear.get(electionId);
     }
 
-
 }
