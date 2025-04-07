@@ -12,6 +12,8 @@ import NavBarDesktop from "@/components/NavBarDesktop.vue";
       </nav>
     </div>
   </header>
+
+  <RouterView />
 </template>
 
 <style scoped>
