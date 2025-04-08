@@ -8,7 +8,7 @@ import Header from '@/components/Header.vue'
   <header>
 
     <div class="wrapper">
-        <Header />
+      <Header />
       <nav>
         <NavBarDesktop />
       </nav>
@@ -19,5 +19,8 @@ import Header from '@/components/Header.vue'
 </template>
 
 <style scoped>
-
+html, body {
+  height: 100%;
+  margin: 0;  /* Remove default margins */
+}
 </style>

@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import AboutView from "@/views/AboutView.vue";
+import HowView from "@/views/HowView.vue";
+import ForumView from "@/views/ForumView.vue";
+import FilterView from "@/views/FilterView.vue";
+import CompareView from "@/views/CompareView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,30 +17,27 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      component: AboutView,
     },
     {
-      path: '/how',
-      name: 'how',
-      component: () => import('../views/HowView.vue'),
+      path:'/how',
+      name:'how',
+      component: HowView,
     },
     {
-      path: '/filter',
-      name: 'filter',
-      component: () => import('../views/FilterView.vue'),
+      path:'/forum',
+      name:'forum',
+      component: ForumView,
     },
     {
-      path: '/compare',
-      name: 'compare',
-      component: () => import('../views/CompareView.vue'),
+      path:'/filter',
+      name:'filter',
+      component: FilterView,
     },
     {
-      path: '/forum',
-      name: 'forum',
-      component: () => import('../views/ForumView.vue'),
+      path:'/compare',
+      name:'compare',
+      component: CompareView,
     },
   ],
 })

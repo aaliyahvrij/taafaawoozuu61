@@ -7,17 +7,18 @@
 
 <style scoped>
 .header {
-  position: fixed;
+  position: fixed;        /* Make it stick to the top */
   top: 0;
-  left: 220px;
-  right: 0;
-  height: 60px;
+  left: 0;                /* Start from the left edge */
+  right: 0;               /* Stretch all the way to the right */
+  width: 100vw;           /* Optional: Full viewport width */
+  height: 100px;
   background-color: #880D1E;
   display: flex;
   align-items: center;
   padding: 0 2rem;
   color: white;
-  z-index: 10;
+  z-index: 1000;          /* Ensure it's above other content */
 }
 
 .logo {
