@@ -1,5 +1,6 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
@@ -53,5 +54,8 @@ public class DutchElectionReader {
         return electionsMap;
     }
 
+    public Map<String, Map<Integer, Contest>> getElections() {
+        return Map.of();
+    }
 }
 

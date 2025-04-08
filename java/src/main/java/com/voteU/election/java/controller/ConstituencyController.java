@@ -1,6 +1,6 @@
 package com.voteU.election.java.controller;
 import com.voteU.election.java.model.Contest;
-import com.voteU.election.java.services.ConstituencyService;
+import com.voteU.election.java.services.ConsistuencyService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -8,10 +8,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/constituency")
 public class ConstituencyController {
-    private final ConstituencyService constituencyService;
+    private final ConsistuencyService constituencyService = null;
+    private final ConsistuencyService consistuencyService;
 
-    public ConstituencyController(ConstituencyService constituencyService) {
-        this.constituencyService = constituencyService;
+    public ConstituencyController(ConsistuencyService consistuencyService) {
+        this.consistuencyService = consistuencyService;
     }
 
 //    @GetMapping("/{year}/{contestId}")

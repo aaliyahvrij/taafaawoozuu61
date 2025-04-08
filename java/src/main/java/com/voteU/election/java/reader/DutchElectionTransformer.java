@@ -1,7 +1,5 @@
 package com.voteU.election.java.reader;
 
-import com.voteU.election.java.model.Candidate;
-import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
@@ -17,7 +15,6 @@ import java.util.Map;
 /**
  * A Transformer that processes election data and organizes it into Election objects.
  */
-
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
@@ -73,25 +70,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
+
     @Override
     public void registerContest(Map<String, String> contestData) {
-        String year = contestData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-        if (year == null) {
-            log.error("Missing ElectionIdentifier");
-            return;
-        }
-
-        String id = contestData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
-        String name = contestData.get(DutchElectionProcessor.CONTEST_NAME);
-        if (id != null && name != null) {
-            int intId = Integer.parseInt(id);
-            Contest contest = new Contest(intId, name);
-
-            // Store the contest in the correct year's contest map
-            contestsByYear.get(year).put(intId, contest);
-        }
-
-        //System.out.printf("Registered contest: %s\n", contestData);
     }
 
     @Override
