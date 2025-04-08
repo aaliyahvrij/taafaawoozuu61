@@ -25,12 +25,7 @@ public class ConsistuencyService {
      * @return true if the elections were successfully processed and stored, false otherwise.
      */
     public boolean readElections() {
-        Map<String, Map<Integer, Contest>> elections = electionReader.getElections();
-        if (elections.isEmpty()) {
-            return false;
-        }
-        storedElections.putAll(elections);
-        return true;
+        return false;
     }
 
     /**

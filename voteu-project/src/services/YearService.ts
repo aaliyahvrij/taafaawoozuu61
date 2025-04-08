@@ -1,12 +1,12 @@
+import type {Election} from "@/interface/Election.ts";
 
-  import type {ContestSummary} from "@/interface/ContestSummary.ts";
 
-    export class YearService {
+export class YearService {
 
-    static async getContestSummary(electionId : string): Promise<ContestSummary | null> {
+    static async getPartyVotes(electionId : string): Promise<Election | null> {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/election/TK${electionId}/contests`,
+          `http://localhost:8080/api/election/TK${electionId}/parties`,
           {
             method: 'GET',
             headers: {

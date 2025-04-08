@@ -28,7 +28,7 @@ public interface Transformer<E> {
      * @param electionData a {@code Map} containing the information as {@code String}'s.
      * @return
      */
-    Election registerElection(Map<String, String> electionData);
+    void registerElection(Map<String, String> electionData);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the

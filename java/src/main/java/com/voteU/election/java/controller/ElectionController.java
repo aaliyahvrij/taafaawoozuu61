@@ -1,7 +1,7 @@
     package com.voteU.election.java.controller;
 
-    import com.voteU.election.java.dto.ContestSummaryDTO;
     import com.voteU.election.java.model.Contest;
+    import com.voteU.election.java.model.Election;
     import com.voteU.election.java.model.Party;
     import com.voteU.election.java.services.ElectionService;
     import org.springframework.web.bind.annotation.*;
@@ -24,19 +24,20 @@
             return electionService.readElections();
         }
 
-        @PostMapping("/{electionId}/contests")
+        @PostMapping("/{electionId}/parties")
         public boolean readResultsYear(@PathVariable String electionId) {
             return electionService.readElectionYear(electionId);
         }
 
 
-        @GetMapping("/{electionId}/contests")
-        public List<ContestSummaryDTO> getElection(@PathVariable String electionId) {
+        @GetMapping("/{electionId}/parties")
+        public Election getElection(@PathVariable String electionId) {
             return electionService.getElection(electionId);
         }
 
         @GetMapping
-        public Map<String , Map<Integer, Contest>> getParties() {
+        public Map<String, Election> getParties() {
+
             return electionService.getAll();
         }
 
