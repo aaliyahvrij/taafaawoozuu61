@@ -44,13 +44,8 @@ public class DutchElectionReader {
             }
         }
         System.out.println("All files are processed.\n");
-        Map<String, Election> electionsMap = new HashMap<>();
-        for (Map.Entry<String, Election> entry : elections.entrySet()) {
-            String electionYear = entry.getKey();
-            Election election = transformer.getElection(electionYear);
-            electionsMap.put(electionYear, election);
-        }
-        return electionsMap;
+
+        return transformer.getElections();
     }
 
 }

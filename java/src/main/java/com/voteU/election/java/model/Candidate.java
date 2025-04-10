@@ -2,19 +2,24 @@ package com.voteU.election.java.model;
 
 public class Candidate {
     int id;
+    public String shortCode;
     String firstName;
     String lastName;
     int votes;
 
 
-    public Candidate(int id, String firstName, String lastName) {
+    public Candidate() {
         this.id = id;
+        this.shortCode = "";
         this.firstName = firstName;
         this.lastName = lastName;
         this.votes = 0;
     }
     public int getId() {
         return id;
+    }
+    public String getShortCode() {
+        return shortCode;
     }
     public String getFirstName() {
         return firstName;
@@ -30,6 +35,6 @@ public class Candidate {
     }
 
     public String toString() {
-        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d]", id, firstName, lastName, votes);
+        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]", id, firstName, lastName, votes, shortCode);
     }
 }

@@ -24,6 +24,15 @@ public class Party {
         this.candidates = candidates;
     }
 
+    public boolean hasCandidateShortCode(String candidateId){
+        for (Candidate candidate : candidates) {
+            if (candidate.getShortCode().equals(candidateId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getVotes() {
         return votes;
     }

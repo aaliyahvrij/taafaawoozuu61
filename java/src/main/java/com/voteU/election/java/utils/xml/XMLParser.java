@@ -129,7 +129,21 @@ class XMLParser extends StreamReaderDelegate {
 
     int getIntegerAttributeValue(String ns, String name, int defaultValue) {
         String value = getAttributeValue(ns, name);
-        return (value != null ? Integer.parseInt(value) : defaultValue);
+        if (value != null) {
+            if ("alle".equalsIgnoreCase(value)) {
+                // Handle the special case where the ID is "alle" (everything)
+                LOG.info("Attribute '" + name + "' has 'alle' (Totaaltelling). Returning a special marker value: 12345.");
+                return 12345; // Use -1 or another special marker value to indicate "all contests"
+            }
+            try {
+                return Integer.parseInt(value); // Try parsing normally if not "alle"
+            } catch (NumberFormatException e) {
+                // Log a warning and return the default value
+                LOG.warning("Expected an integer for attribute '" + name + "' but found: " + value
+                        + ". Using default value: " + defaultValue);
+            }
+        }
+        return defaultValue; // Return default if null or parsing fails
     }
 
     void logStatus() {

@@ -3,6 +3,7 @@ package com.voteU.election.java.model;
 import com.voteU.election.java.utils.xml.Transformer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +18,13 @@ public class Election {
     private String name;
     private String date;
     private List<Province> provinces;
-    private List<Party> parties;
-    private List<Candidate> candidates;
-    private List<VotingData> nationalVotingData;
+    private Map<Integer, Party> nationalParties;
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.parties = new ArrayList<>();
-        this.candidates = new ArrayList<>();
-        this.nationalVotingData = new ArrayList<>();
+        this.nationalParties = new HashMap<>();
         this.provinces = new ArrayList<>();
 
         Province Drenthe = new Province(1, "Drenthe");
@@ -76,21 +73,11 @@ public class Election {
         return provinces;
     }
 
-    public List<Party> getParties() {
-        return parties;
+    public Map<Integer, Party> getNationalParties() {
+        return nationalParties;
     }
 
-    public List<Candidate> getCandidates() {
-        return candidates;
-    }
 
-    public void addCandidate(Candidate candidate){
-        candidates.add(candidate);
-    }
-
-    public List<VotingData> getNationalVotingData() {
-        return nationalVotingData;
-    }
 
     @Override
     public String toString(){

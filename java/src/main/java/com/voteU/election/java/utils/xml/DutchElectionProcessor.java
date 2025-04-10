@@ -5,9 +5,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -49,6 +47,7 @@ public class DutchElectionProcessor<E> {
 
     // Common attribute name that is use on multiple tags.
     public static final String ID = "Id";
+    public static final String SHORT_CODE = "ShortCode";
 
     /*
      The tag names on the election level within the XML files which are also used as keys in the maps when calling
@@ -65,6 +64,9 @@ public class DutchElectionProcessor<E> {
      The tag names on the contest level within the XML files which are also used as keys in the maps when calling
      the methods of the transformer.
      */
+    public static final String MANAGING_AUTHORITY = "ManagingAuthority";
+    public static final String AUTHORITY_IDENTIFIER = "AuthorityIdentifier";
+
     public static final String CONTEST = "Contest";
     public static final String CONTEST_IDENTIFIER = "ContestIdentifier";
     public static final String CONTEST_NAME = "ContestName";
@@ -89,11 +91,7 @@ public class DutchElectionProcessor<E> {
     public static final String FIRST_NAME = "FirstName";
     public static final String LAST_NAME_PREFIX = "NamePrefix";
     public static final String LAST_NAME = "LastName";
-    public static final String GENDER = "Gender";
-    public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
-    public static final String LOCALITY = "Locality";
-    public static final String LOCALITY_NAME = "LocalityName";
-
+    public static final String LAST_NAME_SUFFIX = "NameSuffix";
     /*
      The tag names on the reporting unit level within the XML files which are also used as keys in the maps when calling
      the methods of the transformer.
@@ -135,10 +133,6 @@ public class DutchElectionProcessor<E> {
      * for better readability.
      */
     public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
-        // Een map om gegevens per jaar op te slaan
-        Map<String, Map<String, String>> electionDataMap = new HashMap<>();
-
-        LOG.info("=== Processing election: %s ===".formatted(electionId));
         LOG.info("Loading election data from %s".formatted(folderName));
 
         Map<String, String> electionData = new HashMap<>();
@@ -156,15 +150,14 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionData, parser);
-            processNationalData(electionData, parser);
+            processVotes(electionData, parser);
         }
-
 
         for (Path votesPerReportingStationFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(votesPerReportingStationFile));
             XMLParser parser = new XMLParser(new FileInputStream(votesPerReportingStationFile.toString()));
-            processElection(electionData, parser);
-            processVotes(electionData, parser);
+            //processElection(electionData, parser);
+            //processVotes(electionData, parser);
         }
 
         return transformer.retrieve();
@@ -204,6 +197,8 @@ public class DutchElectionProcessor<E> {
             }
         }
     }
+
+
 
     private void processContest(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
@@ -271,58 +266,49 @@ public class DutchElectionProcessor<E> {
         String firstName = null;
         String lastNamePrefix = null;
         String lastName = null;
-        String gender = null;
+        String qualifyingAddress = null;
         String locality = null;
+        String localityName = null;
+        String gender = null;
 
         parser.nextBeginTag(CANDIDATE);
+
+        // Extract Candidate ID
         if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
             id = parser.getIntegerAttributeValue(null, ID, 0);
+            parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER); // Move past the CandidateIdentifier tag
         }
+
+        // Extract Person Name details
         if (parser.findBeginTag(PERSON_NAME)) {
             if (parser.findBeginTag(NAME_LINE) && INITIALS.equals(parser.getAttributeValue("", NAME_TYPE))) {
                 initials = parser.getElementText().trim();
-                parser.findAndAcceptEndTag(NAME_LINE);
+                parser.findAndAcceptEndTag(NAME_LINE); // Accept the NameLine tag after reading
             }
             if (parser.getLocalName().equals(FIRST_NAME)) {
                 firstName = parser.getElementText().trim();
-                parser.findAndAcceptEndTag(FIRST_NAME);
+                parser.findAndAcceptEndTag(FIRST_NAME); // Accept the FirstName tag after reading
             }
             if (parser.getLocalName().equals(LAST_NAME_PREFIX)) {
-                if (parser.findBeginTag(LAST_NAME_PREFIX)) {
-                    lastNamePrefix = parser.getElementText().trim();
-                    parser.findAndAcceptEndTag(LAST_NAME_PREFIX);
-                }
+                lastNamePrefix = parser.getElementText().trim();
+                parser.findAndAcceptEndTag(LAST_NAME_PREFIX); // Accept the LastNamePrefix tag after reading
             }
             if (parser.findBeginTag(LAST_NAME)) {
                 lastName = parser.getElementText().trim();
-                parser.findAndAcceptEndTag(LAST_NAME);
+                parser.findAndAcceptEndTag(LAST_NAME); // Accept the LastName tag after reading
             }
-            parser.findAndAcceptEndTag(PERSON_NAME);
+            parser.findAndAcceptEndTag(PERSON_NAME); // Accept the PersonName tag after reading
         }
 
-        if (parser.findBeginTag(GENDER)) {
-            gender = parser.getElementText().trim();
-            parser.findAndAcceptEndTag(GENDER);
-        }
+        parser.findAndAcceptEndTag(CANDIDATE); // Accept the Candidate tag after reading
 
-        if (parser.findBeginTag(QUALIFYING_ADDRESS)) {
-            if (parser.findBeginTag(LOCALITY)) {
-                if (parser.findBeginTag(LOCALITY_NAME)) {
-                    locality = parser.getElementText().trim();
-                    parser.findAndAcceptEndTag(LOCALITY_NAME);
-                }
-                parser.findAndAcceptEndTag(LOCALITY);
-            }
-            parser.findAndAcceptEndTag(QUALIFYING_ADDRESS);
-        }
-
-
-        parser.findAndAcceptEndTag(CANDIDATE);
-
+        // Create a map to store candidate data
         Map<String, String> candidateData = new HashMap<>(affiliationData);
         candidateData.put(CANDIDATE_IDENTIFIER, String.valueOf(id));
+
+        // Add extracted data to candidateData map
         if (initials != null) {
-            candidateData.put(INITIALS, (initials));
+            candidateData.put(INITIALS, initials);
         }
         if (firstName != null) {
             candidateData.put(FIRST_NAME, firstName);
@@ -333,15 +319,11 @@ public class DutchElectionProcessor<E> {
         if (lastName != null) {
             candidateData.put(LAST_NAME, lastName);
         }
-        if (gender != null) {
-            candidateData.put(GENDER, gender);
-        }
-        if (locality != null) {
-            candidateData.put(LOCALITY_NAME, locality);
-        }
 
+        // Register the candidate data with the transformer
         transformer.registerCandidate(candidateData);
     }
+
 
     private void processVotes(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
@@ -355,68 +337,101 @@ public class DutchElectionProcessor<E> {
             Map<String, String> contestData = new HashMap<>(electionData);
             contestData.put(CONTEST_IDENTIFIER, String.valueOf(contestId));
 
-            while (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
-                processReportingUnit(contestData, parser);
+            // Process only TOTAL_VOTES here
+            if (parser.findBeginTag(TOTAL_VOTES)) {
+                System.out.println("Processing total votes");
+                processTotalVotes(contestData, parser);
+                parser.findAndAcceptEndTag(TOTAL_VOTES);// Accept the end tag to prevent further processing
+            }
+
+            // Skip the REPORTING_UNIT_VOTES section if commented out or if it's unwanted
+            while (parser.nextBeginTag(REPORTING_UNIT_VOTES)) {
+                System.out.println("Processing ReportingUnitVotes...");
+                // processReportingUnit(contestData, parser);
+                parser.findAndAcceptEndTag(REPORTING_UNIT_VOTES);
             }
 
             parser.findAndAcceptEndTag(CONTEST);
         }
     }
-    private void processNationalData(Map<String, String> nationalContext, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(TOTAL_VOTES)) {
+
+
+    private void processTotalVotes(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
+        if (parser.findBeginTag(TOTAL_VOTES)){
+            // System.out.println("Parser at " + parser.getLocalName());
+            int affiliationId = 0;
+            String name = INVALID_NAME;
+            int affiliationVotes = 0;
+
+            Set<Integer> registeredAffiliationIds = new HashSet<>();
+            Set<String> registeredCandidateIds = new HashSet<>();
+
             while (parser.findBeginTag(SELECTION)) {
-                Map<String, String> data = new HashMap<>(nationalContext);
+                parser.next();
+                switch (parser.getLocalName()) {
+                    case AFFILIATION_IDENTIFIER:
+                        Map<String, String> afTotalVotesData = new HashMap<>(contestData);
+                        affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
+                        if (registeredAffiliationIds.contains(affiliationId)) {
+                            parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
+                            continue;
+                        }
 
-                if (parser.findBeginTag(AFFILIATION_IDENTIFIER)) {
-                    // Get affiliation ID
-                    int affiliationId = parser.getIntegerAttributeValue(null, ID, -1);
+                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                            name = parser.getElementText();
+                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                        }
+                        parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
+                        if (parser.findBeginTag(VALID_VOTES)) {
+                            affiliationVotes = Integer.parseInt(parser.getElementText());
+                            parser.findAndAcceptEndTag(VALID_VOTES);
+                        }
+                        afTotalVotesData.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
+                        afTotalVotesData.put(REGISTERED_NAME, name);
+                        afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
+                        afTotalVotesData.put("Source", "TOTAL"); // ✅ important!
+                        transformer.registerVotes(afTotalVotesData);
+                        registeredAffiliationIds.add(affiliationId);
+                        break;
+                    case CANDIDATE:
+                        Map<String, String> caTotalVotesData = new HashMap<>(contestData);
+                        String candidateId = null;
+                        if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
+                            candidateId = parser.getAttributeValue(null,SHORT_CODE);
+                        }
 
-                    String affiliationName = INVALID_NAME;
-                    if (parser.findBeginTag(REGISTERED_NAME)) {
-                        affiliationName = parser.getElementText();
-                        parser.findAndAcceptEndTag(REGISTERED_NAME);
-                    }
+                        parser.findAndAcceptEndTag(CANDIDATE);
+                        // If this candidate has already been registered, skip it
+                        if (registeredCandidateIds.contains(candidateId)) {
+                            parser.findAndAcceptEndTag(VALID_VOTES);
+                            continue;
+                        }
 
-                    parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
+                        if (parser.findBeginTag(VALID_VOTES)) {
+                            int candidateVoteCount = Integer.parseInt(parser.getElementText());
+                            parser.findAndAcceptEndTag(VALID_VOTES);
 
-                    // Valid votes for this affiliation
-                    if (parser.findBeginTag(VALID_VOTES)) {
-                        int votes = Integer.parseInt(parser.getElementText());
-                        parser.findAndAcceptEndTag(VALID_VOTES);
+                            caTotalVotesData.put(CANDIDATE_IDENTIFIER, candidateId);
+                            caTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
+                            caTotalVotesData.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
+                            caTotalVotesData.put("Source", "TOTAL"); // ✅ important!
+                            transformer.registerVotes(caTotalVotesData);
+                            registeredCandidateIds.add(candidateId);
 
-                        // Fill and send data
-                        data.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
-                        data.put(REGISTERED_NAME, affiliationName);
-                        data.put(VALID_VOTES, String.valueOf(votes));
-                        transformer.registerElection(data);
-                    }
-
-                } else if (parser.findBeginTag(CANDIDATE)) {
-                    int candidateId = -1;
-                    if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
-                        candidateId = parser.getIntegerAttributeValue(null, ID, -1);
-                        parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
-                    }
-                    parser.findAndAcceptEndTag(CANDIDATE);
-
-                    // Valid votes for this candidate
-                    if (parser.findBeginTag(VALID_VOTES)) {
-                        int votes = Integer.parseInt(parser.getElementText());
-                        parser.findAndAcceptEndTag(VALID_VOTES);
-
-                        // Fill and send data
-                        data.put(CANDIDATE_IDENTIFIER, String.valueOf(candidateId));
-                        data.put(VALID_VOTES, String.valueOf(votes));
-                        transformer.registerElection(data);
-                    }
+                        } else {
+                            LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candidateId, affiliationId));
+                        }
+                        break;
+                    default:
+                        LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
 
                 parser.findAndAcceptEndTag(SELECTION);
             }
-
             parser.findAndAcceptEndTag(TOTAL_VOTES);
         }
     }
+
 
 
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
@@ -446,17 +461,26 @@ public class DutchElectionProcessor<E> {
             reportingUnitData.put(ZIPCODE, zipCode);
 
             int affiliationId = 0;
+            String name = INVALID_NAME;
+            int affiliationVotes = 0;
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.next();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_IDENTIFIER:
                         affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
+                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                            name = parser.getElementText();
+                        }
+                        parser.findAndAcceptEndTag(REGISTERED_NAME);
                         parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
                         // Skipping the total ValidVotes for this affiliation
                         if (parser.findBeginTag(VALID_VOTES)) {
+                            affiliationVotes = Integer.parseInt(parser.getElementText());
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
                         reportingUnitData.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
+                        reportingUnitData.put(REGISTERED_NAME, name);
+                        reportingUnitData.put("AffiliationReportingUnitVotes", String.valueOf(affiliationVotes));
                         break;
                     case CANDIDATE:
                         int candidateId = 0;
@@ -466,11 +490,11 @@ public class DutchElectionProcessor<E> {
 
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int voteCount = Integer.parseInt(parser.getElementText());
+                            int candidateVoteCount = Integer.parseInt(parser.getElementText());
                             parser.findAndAcceptEndTag(VALID_VOTES);
 
                             reportingUnitData.put(CANDIDATE_IDENTIFIER, String.valueOf(candidateId));
-                            reportingUnitData.put(VALID_VOTES, String.valueOf(voteCount));
+                            reportingUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
 
                             transformer.registerVotes(reportingUnitData);
                         } else {
@@ -488,3 +512,4 @@ public class DutchElectionProcessor<E> {
         }
     }
 }
+

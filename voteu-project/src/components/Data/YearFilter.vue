@@ -4,23 +4,25 @@ import {YearService} from "@/services/YearService.ts";
 import type {Election} from "@/interface/Election.ts";
 
 
-
-const year: Ref<string> = ref('');
-const elections = ref<Election | null >(null)
+//:Ref<TYPE> = ref(value)
+const year: Ref<string> = ref('');// waarde wordt veranderd met select
+const election: Ref<Election | null> = ref(null)
 
 const emit = defineEmits<{
   (event: 'updateElections', data: Election): void;
 }>();
 
+
 async function fetchNationalPartyVotes(electionId: string){
   const data = await YearService.getPartyVotes(electionId)
   if (data){
-    elections.value = data
-    emit('updateElections', elections.value);
+    election.value = data
+    emit('updateElections', election.value);
   }
   else{
-    elections.value = null;  // If no data, clear elections
+    election.value = null;  // If no data, clear elections
   }
+
 }
 </script>
 

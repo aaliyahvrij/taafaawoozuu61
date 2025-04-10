@@ -1,6 +1,5 @@
 import type {Election} from "@/interface/Election.ts";
 
-
 export class YearService {
 
     static async getPartyVotes(electionId : string): Promise<Election | null> {
