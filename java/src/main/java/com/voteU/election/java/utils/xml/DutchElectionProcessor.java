@@ -419,6 +419,7 @@ public class DutchElectionProcessor<E> {
     }
 
 
+
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
             String reportingUnitId = null;
@@ -487,4 +488,77 @@ public class DutchElectionProcessor<E> {
             parser.findAndAcceptEndTag(REPORTING_UNIT_VOTES);
         }
     }
+
+    private void processConstituency(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
+
+        Map<Integer, Integer> affiliationVotes = new HashMap<>();
+        Map<Integer, Integer> candidateVotes = new HashMap<>();
+
+        if (parser.findBeginTag(CONTEST)) {
+            int id = 0;
+            String constituencyName = null;
+            if(parser.findBeginTag(CONTEST_IDENTIFIER)){
+                id = parser.getIntegerAttributeValue(null, ID, 0);
+                if(parser.findBeginTag(CONTEST_NAME)){
+                    constituencyName = parser.getElementText().trim();
+                    parser.findAndAcceptEndTag(CONTEST_NAME);
+                }
+                parser.findAndAcceptEndTag(CONTEST_IDENTIFIER);
+            }
+
+            if (parser.findBeginTag(VALID_VOTES)) {
+                while (parser.findBeginTag(SELECTION)) {
+                    String affiliationName = null;
+                    int affiliationId = 0;
+                    int candidateId = 0;
+                    int totalVotes = 0;
+
+                    boolean isAffiliation = parser.findBeginTag(AFFILIATION_IDENTIFIER);
+                    boolean isCandidate = !isAffiliation && parser.findBeginTag(CANDIDATE);
+
+                    if (isAffiliation) {
+                        affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
+
+                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                            affiliationName = parser.getElementText().trim();
+                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                        }
+
+                        parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
+                    } else if (isCandidate) {
+                        if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
+                            candidateId = parser.getIntegerAttributeValue(null, ID, 0);
+                            parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
+                        }
+                        parser.findAndAcceptEndTag(CANDIDATE);
+                    }
+
+                    if (parser.findBeginTag(VALID_VOTES)) {
+                        totalVotes = Integer.parseInt(parser.getElementText().trim());
+                        parser.findAndAcceptEndTag(VALID_VOTES);
+                    }
+
+                    parser.findAndAcceptEndTag(SELECTION);
+
+                    if (affiliationId != -1) {
+                        affiliationVotes.put(affiliationId, totalVotes);
+
+                    } else if (candidateId != -1) {
+                        candidateVotes.put(candidateId, totalVotes);
+
+                    }
+
+                }
+
+                parser.findAndAcceptEndTag(VALID_VOTES);
+
+            }
+
+        }
+
+    }
+
 }
+
+
+
