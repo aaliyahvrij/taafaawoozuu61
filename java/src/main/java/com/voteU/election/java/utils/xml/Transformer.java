@@ -1,8 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
 
-import com.voteU.election.java.model.Election;
-
 import java.util.Map;
 
 /**
@@ -77,6 +75,16 @@ public interface Transformer<E> {
      *                  the number of votes.
      */
     void registerVotes(Map<String, String> votesData);
+
+    /**
+     * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
+     * same information as {@code candidateData} in {@link #registerCandidate(Map)}, and the following information:
+     * <ul>
+     *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
+     * </ul>
+     * @param constituencyData a {@code Map} containing information about the constituency, affiliation, candidate and their votes
+     */
+    void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes);
 
     /**
      * Returns an instance that encapsulates all the registered data about the election.

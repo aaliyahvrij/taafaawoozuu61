@@ -493,6 +493,7 @@ public class DutchElectionProcessor<E> {
 
         Map<Integer, Integer> affiliationVotes = new HashMap<>();
         Map<Integer, Integer> candidateVotes = new HashMap<>();
+        Map<String, String> constituencyData = new HashMap<>(contestData);
 
         if (parser.findBeginTag(CONTEST)) {
             int id = 0;
@@ -505,6 +506,9 @@ public class DutchElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(CONTEST_IDENTIFIER);
             }
+
+            constituencyData.put(CONTEST_IDENTIFIER, String.valueOf(id));
+            constituencyData.put(CONTEST_NAME, constituencyName);
 
             if (parser.findBeginTag(VALID_VOTES)) {
                 while (parser.findBeginTag(SELECTION)) {
@@ -533,6 +537,11 @@ public class DutchElectionProcessor<E> {
                         parser.findAndAcceptEndTag(CANDIDATE);
                     }
 
+                    constituencyData.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
+                    constituencyData.put(REGISTERED_NAME, affiliationName);
+                    constituencyData.put(CANDIDATE_IDENTIFIER, String.valueOf(candidateId));
+
+
                     if (parser.findBeginTag(VALID_VOTES)) {
                         totalVotes = Integer.parseInt(parser.getElementText().trim());
                         parser.findAndAcceptEndTag(VALID_VOTES);
@@ -554,6 +563,7 @@ public class DutchElectionProcessor<E> {
 
             }
 
+            transformer.registerConstituency(constituencyData, affiliationVotes, candidateVotes );
         }
 
     }
