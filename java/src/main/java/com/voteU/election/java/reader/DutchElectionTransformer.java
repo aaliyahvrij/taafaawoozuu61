@@ -1,5 +1,6 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
@@ -18,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
-
+    Map<String, Constituency> constituencyMap = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {
@@ -89,6 +90,22 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerVotes(Map<String, String> votesData) {
         // System.out.println(votesData);
     }
+
+    @Override
+    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
+        int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
+        String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
+        int affiliationId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
+        int votesAffiliation = affiliationVotes.get(DutchElectionProcessor.VALID_VOTES);
+        int candidateId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+        int votesCandidate = candidateVotes.get(DutchElectionProcessor.VALID_VOTES);
+
+        if (contestId == null || contestName = null) {
+            log.warn("missing constituency data id or name");
+        }
+
+    }
+
     @Override
     public Election retrieve() {
         return null; // This method is not needed since we now track elections by year
