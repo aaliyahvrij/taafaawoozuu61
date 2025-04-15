@@ -95,14 +95,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
         String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
-        int affiliationId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
-        int votesAffiliation = affiliationVotes.get(DutchElectionProcessor.VALID_VOTES);
-        int candidateId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
-        int votesCandidate = candidateVotes.get(DutchElectionProcessor.VALID_VOTES);
 
-        if (contestId == null || contestName = null) {
-            log.warn("missing constituency data id or name");
+        // warning may not contain integer watch out!
+        Constituency constituency = constituencyMap.get(contestId);
+
+
+        if (constituency == null) {
+            constituency = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName );
         }
+
 
     }
 
