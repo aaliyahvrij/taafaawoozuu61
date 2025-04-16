@@ -164,8 +164,17 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(votesPerReportingStationFile));
             XMLParser parser = new XMLParser(new FileInputStream(votesPerReportingStationFile.toString()));
             processElection(electionData, parser);
-            processVotes(electionData, parser);
+            processVotes(electionData, parser, "gemeente");
         }
+
+        for(Path constituencyFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
+            LOG.fine("Found: %s".formatted(constituencyFile));
+            XMLParser parser = new XMLParser(new FileInputStream(constituencyFile.toString()));
+            processElection(electionData, parser);
+            processVotes(electionData, parser, "kieskring");
+
+        }
+
 
         return transformer.retrieve();
     }
@@ -343,7 +352,7 @@ public class DutchElectionProcessor<E> {
         transformer.registerCandidate(candidateData);
     }
 
-    private void processVotes(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
+    private void processVotes(Map<String, String> electionData, XMLParser parser, String fileType ) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
 
             int contestId = 0;
@@ -354,6 +363,10 @@ public class DutchElectionProcessor<E> {
 
             Map<String, String> contestData = new HashMap<>(electionData);
             contestData.put(CONTEST_IDENTIFIER, String.valueOf(contestId));
+
+            if(fileType.equals("kieskring")) {
+                processConstituency(contestData, parser);
+            }
 
             while (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
                 processReportingUnit(contestData, parser);
@@ -491,6 +504,8 @@ public class DutchElectionProcessor<E> {
 
     private void processConstituency(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
 
+
+
         Map<Integer, Integer> affiliationVotes = new HashMap<>();
         Map<Integer, Integer> candidateVotes = new HashMap<>();
         Map<String, String> constituencyData = new HashMap<>(contestData);
@@ -559,11 +574,13 @@ public class DutchElectionProcessor<E> {
 
                 }
 
+
                 parser.findAndAcceptEndTag(VALID_VOTES);
 
             }
-
             transformer.registerConstituency(constituencyData, affiliationVotes, candidateVotes );
+
+
         }
 
     }
