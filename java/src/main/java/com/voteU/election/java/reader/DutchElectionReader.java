@@ -55,14 +55,6 @@ public class DutchElectionReader {
         return electionsMap;
     }
 
-    public Map<String, Map<Integer, Contest>> getElections() {
-        return Map.of();
-    }
-
-    public Map<String, Map<Integer, Constituency>> getConstituencies() {
-        return transformer.getConstituencyMap();
-    }
-
 
 }
 

@@ -1,5 +1,6 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -27,9 +28,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
 
-        String partyIdStr = electionData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
-        String partyName = electionData.get(DutchElectionProcessor.REGISTERED_NAME);
-        String votesStr = electionData.get(DutchElectionProcessor.VALID_VOTES);
 
         if (electionId == null || electionName == null || electionDate == null) {
             System.out.println("Incomplete election data: Missing ID, Name, or Date.");
@@ -42,33 +40,98 @@ public class DutchElectionTransformer implements Transformer<Election> {
             election = new Election(electionId, electionName, electionDate);
             elections.put(electionId, election);
         }
+        // System.out.println(electionData);
+    }
 
-        if (partyIdStr != null && partyName != null && votesStr != null) {
+    @Override
+    public void registerNationalVotes(Map<String, String> votesData) {
+        String source = votesData.get("Source");
+        boolean isTotalVotes = "TOTAL".equals(source);
+
+        // Safely get party ID
+        String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        if (partyIdStr == null) {
+            System.err.println("❌ Missing AFFILIATION_IDENTIFIER in votesData: " + votesData);
+            return;
+        }
+
+        int partyId;
+        try {
+            partyId = Integer.parseInt(partyIdStr);
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Invalid AFFILIATION_IDENTIFIER: '" + partyIdStr + "' in " + votesData);
+            return;
+        }
+
+        String partyName = votesData.get(DutchElectionProcessor.REGISTERED_NAME);
+        if (partyName == null) {
+            partyName = "UNKNOWN";
+        }
+
+        // Check if the party already exists
+        String electionId = votesData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        Election election = elections.get(electionId);
+        Map<Integer, Party> partyMap = election.getNationalParties();
+        Party party = partyMap.get(partyId);
+
+        // Register party on TOTAL only, if not already registered
+        if (isTotalVotes && party == null) {
+            String partyVotesStr = votesData.get(DutchElectionProcessor.VALID_VOTES);
+            if (partyVotesStr == null) {
+                System.err.println("❌ Missing VALID_VOTES for party " + partyName + ": " + votesData);
+                return;
+            }
+
+            int partyVotes;
             try {
-                int partyId = Integer.parseInt(partyIdStr);
-                int votes = Integer.parseInt(votesStr);
-
-                // Check if the party was already added to this election
-                boolean alreadyAdded = false;
-                for (Party existingParty : election.getParties()) {
-                    if (existingParty.getId() == partyId) {
-                        alreadyAdded = true;
-                        break;
-                    }
-                }
-
-                if (!alreadyAdded) {
-                    Party party = new Party(partyId, partyName);
-                    party.setVotes(votes);
-                    election.getParties().add(party);
-
-                    //System.out.println(party.getId() + " " + party.getName() + " has " + party.getVotes() + " votes.");
-                }
-
+                partyVotes = Integer.parseInt(partyVotesStr);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid number format for party ID or votes: " + e.getMessage());
+                System.err.println("❌ Invalid VALID_VOTES value: '" + partyVotesStr + "' in " + votesData);
+                return;
+            }
+
+            // Create and register the new party
+            party = new Party(partyId, partyName);
+            party.setVotes(partyVotes);
+            partyMap.put(partyId, party);
+            // Removed duplicate logging here to prevent repeated logs during multiple calls
+        }
+
+        // Handle candidate votes
+        if (votesData.containsKey("CandidateVotes")) {
+            String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
+            String candidateVotesStr = votesData.get("CandidateVotes");
+
+            if (candidateId == null || candidateVotesStr == null) {
+                System.err.println("❌ Missing candidate data in: " + votesData);
+                return;
+            }
+
+            int candidateVotes;
+            try {
+                candidateVotes = Integer.parseInt(candidateVotesStr);
+            } catch (NumberFormatException e) {
+                System.err.println("❌ Invalid CandidateVotes value: '" + candidateVotesStr + "' in " + votesData);
+                return;
+            }
+
+            // Check if the candidate already exists and is added to the party
+            if (isTotalVotes && party != null && !party.hasCandidateShortCode(candidateId)) {
+                Candidate candidate = new Candidate();
+                candidate.shortCode = candidateId;
+                candidate.setVotes(candidateVotes);
+                party.addCandidate(candidate);
+                // Removed duplicate logging here for the candidate as well
             }
         }
+
+        if (election != null) {
+            partyMap.put(partyId, party);
+        }
+
+        // Ensure only the number of registered parties is logged, not each time for each party
+        // This logging happens once at the end, after all votes are processed.
+
     }
 
 

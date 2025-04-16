@@ -3,6 +3,7 @@ package com.voteU.election.java.model;
 import com.voteU.election.java.utils.xml.Transformer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,23 +13,25 @@ import java.util.Map;
  * <br>
  * <b>Please do NOT include this code in you project!</b>
  */
+
+
 public class Election {
     private String id;
     private String name;
     private String date;
     private List<Province> provinces;
-    private List<Party> parties;
-    private List<Candidate> candidates;
-    private List<VotingData> nationalVotingData;
+    Map<Integer, Contest> contests;
+    private Map<Integer, Party> nationalParties;
+
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.parties = new ArrayList<>();
-        this.candidates = new ArrayList<>();
-        this.nationalVotingData = new ArrayList<>();
+        this.nationalParties = new HashMap<>();
         this.provinces = new ArrayList<>();
+        this.contests = new HashMap<>();
+
 
         Province Drenthe = new Province(1, "Drenthe");
         Province Flevoland = new Province(2, "Flevoland");
@@ -68,33 +71,31 @@ public class Election {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<Province> getProvinces() {
         return provinces;
     }
 
-    public List<Party> getParties() {
-        return parties;
+    public Map<Integer,Contest> getContests() {
+        return contests;
     }
 
-    public List<Candidate> getCandidates() {
-        return candidates;
+    public Map<Integer, Party> getNationalParties() {
+        return nationalParties;
     }
 
-    public void addCandidate(Candidate candidate){
-        candidates.add(candidate);
-    }
 
-    public List<VotingData> getNationalVotingData() {
-        return nationalVotingData;
-    }
 
     @Override
-    public String toString(){
-        return "Election( id = " + id + ", name = " + name + ", date = " + date + " )";
+    public String toString() {
+        return "Election {" +
+                "\n  id='" + id + '\'' +
+                ",\n  name='" + name + '\'' +
+                ",\n  date='" + date + '\'' +
+                ",\n  provinces=" + provinces.size() +
+                ",\n  nationalParties=" + nationalParties +
+                ",\n  contests=" + contests+
+                "\n}";
     }
-}
 
+}

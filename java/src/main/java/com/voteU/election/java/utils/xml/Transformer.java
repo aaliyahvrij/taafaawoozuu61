@@ -75,6 +75,7 @@ public interface Transformer<E> {
      *                  the number of votes.
      */
     void registerVotes(Map<String, String> votesData);
+    void registerNationalVotes(Map<String, String> votesData);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
@@ -83,6 +84,7 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
      * @param constituencyData a {@code Map} containing information about the constituency, affiliation, candidate and their votes
+     *
      */
     void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes);
 
