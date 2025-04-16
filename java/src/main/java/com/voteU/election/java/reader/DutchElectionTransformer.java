@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +18,8 @@ import java.util.Map;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
-    Map<String, Constituency> constituencyMap = new HashMap<>();
+    Map<String, Map<Integer, Constituency>> constituencyMap = new HashMap<>();
+
 
     @Override
     public void registerElection(Map<String, String> electionData) {
@@ -93,17 +93,20 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
+
+
+        String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
         String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
 
-        // warning may not contain integer watch out!
-        Constituency constituency = constituencyMap.get(contestId);
+        constituencyMap.putIfAbsent(electionId, new HashMap<>());
+        Map<Integer, Constituency> innerMap = constituencyMap.get(electionId);
 
+        if (!innerMap.containsKey(contestId)) {
+            Constituency c = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName);
+            innerMap.put(contestId, c);
 
-        if (constituency == null) {
-            constituency = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName );
         }
-
 
     }
 
@@ -118,4 +121,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
 
+public Map<String, Map<Integer, Constituency>> getConstituencyMap() {
+        return constituencyMap;
+    }
 }
