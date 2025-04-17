@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,9 +96,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
 
 
+
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
         String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
+
+        constituencyData.put(DutchElectionProcessor.ELECTION_IDENTIFIER, electionId);
 
         constituencyMap.putIfAbsent(electionId, new HashMap<>());
         Map<Integer, Constituency> innerMap = constituencyMap.get(electionId);
@@ -108,7 +112,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         }
 
+        log.info("Registering for election: " + electionId);
+
+
     }
+
+    public void addConstituencies(String year, List<Constituency> list) {
+        Map<Integer, Constituency> map = new HashMap<>();
+        for (Constituency c : list) {
+            map.put(c.getId(), c);
+        }
+        constituencyMap.put(year, map);
+    }
+
 
     @Override
     public Election retrieve() {
