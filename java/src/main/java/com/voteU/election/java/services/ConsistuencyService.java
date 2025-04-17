@@ -24,7 +24,8 @@ public class ConsistuencyService {
      * @return true if the elections were successfully processed and stored, false otherwise.
      */
     public boolean readElections() {
-        //electionReader.getAll();//
+        electionReader.getAll();
+
         Map<String, Map<Integer, Constituency>> elections = electionReader.getConstituencies();
         if (elections == null || elections.isEmpty())  {
             System.out.println("Geen verkiezingsdata gevonden!");
@@ -34,6 +35,7 @@ public class ConsistuencyService {
         System.out.println("Elections opgeslagen: " + storedElections.keySet());
         return true;
     }
+
 
 
     /**
