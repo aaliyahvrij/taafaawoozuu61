@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 /**
  * Processes election data from XML files and provides access to the results.
  */
@@ -51,7 +52,14 @@ public class DutchElectionReader {
             String electionYear = entry.getKey();
             Election election = transformer.getElection(electionYear);
             electionsMap.put(electionYear, election);
+
+            if (!transformer.getConstituencyMap().containsKey(electionYear)) {
+                List<Constituency> constituencies = election.getConstituencies();
+                transformer.addConstituencies(electionYear, constituencies);
+            }
         }
+
+
         return electionsMap;
     }
 
