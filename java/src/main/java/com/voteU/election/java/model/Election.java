@@ -4,7 +4,6 @@ import com.voteU.election.java.utils.xml.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Just a very silly election class that only demonstrates that a {@link Transformer}
@@ -19,6 +18,7 @@ public class Election {
     private List<Province> provinces;
     private List<Party> parties;
     private List<Candidate> candidates;
+    private List<Constituency> constituencies;
     private List<VotingData> nationalVotingData;
 
     public Election(String id, String name, String date) {
@@ -27,6 +27,7 @@ public class Election {
         this.date = date;
         this.parties = new ArrayList<>();
         this.candidates = new ArrayList<>();
+        this.constituencies = new ArrayList<>();
         this.nationalVotingData = new ArrayList<>();
         this.provinces = new ArrayList<>();
 
@@ -88,6 +89,13 @@ public class Election {
         candidates.add(candidate);
     }
 
+    public List<Constituency> getConstituencies() {
+        return constituencies;
+    }
+
+    public void addConstituencies(Constituency constituency) {
+        constituencies.add(constituency);
+    }
     public List<VotingData> getNationalVotingData() {
         return nationalVotingData;
     }
@@ -96,5 +104,6 @@ public class Election {
     public String toString(){
         return "Election( id = " + id + ", name = " + name + ", date = " + date + " )";
     }
+
 }
 
