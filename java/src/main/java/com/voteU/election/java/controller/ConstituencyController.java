@@ -1,6 +1,6 @@
 package com.voteU.election.java.controller;
 import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.services.ConsistuencyService;
+import com.voteU.election.java.services.ConstituencyService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -9,20 +9,15 @@ import java.util.Map;
 @RequestMapping("/api/constituency")
 public class ConstituencyController {
 
-    private final ConsistuencyService consistuencyService;
+    private final ConstituencyService constituencyService;
 
-    public ConstituencyController(ConsistuencyService consistuencyService) {
-        this.consistuencyService = consistuencyService;
+    public ConstituencyController(ConstituencyService constituencyService) {
+        this.constituencyService = constituencyService;
     }
 
-    @GetMapping("/{year}/{contestId}")
-    public Constituency getConstituencyById(@PathVariable String year, @PathVariable int contestId) {
-        return consistuencyService.getConstituency(year, contestId);
-    }
-
-    @GetMapping
-    public Map<String, Map<Integer, Constituency>> getConstituency() {
-        return consistuencyService.getElections();
+    @GetMapping("/{year}")
+    public Map<Integer,Constituency> getConstituencyById(@PathVariable String year) {
+        return constituencyService.getConstituencies(year);
     }
 
 

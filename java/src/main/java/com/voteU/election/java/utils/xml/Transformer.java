@@ -86,7 +86,7 @@ public interface Transformer<E> {
      * @param constituencyData a {@code Map} containing information about the constituency, affiliation, candidate and their votes
      *
      */
-    void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes);
+    void registerConstituency(Map<String, String> constituencyData);
 
     /**
      * Returns an instance that encapsulates all the registered data about the election.

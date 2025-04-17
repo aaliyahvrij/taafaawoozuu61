@@ -1,15 +1,11 @@
 package com.voteU.election.java.reader;
 
-import com.voteU.election.java.model.Candidate;
-import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.*;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 import lombok.extern.slf4j.Slf4j;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +15,6 @@ import java.util.Map;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
-    Map<String, Map<Integer, Constituency>> constituencyMap = new HashMap<>();
 
 
     @Override
@@ -155,22 +150,51 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
-
-
+    public void registerConstituency(Map<String, String> constituencyData) {
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-        int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
+
+        String contestIdStr = constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
         String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
 
-        constituencyMap.putIfAbsent(electionId, new HashMap<>());
-        Map<Integer, Constituency> innerMap = constituencyMap.get(electionId);
+        String partyIdStr = constituencyData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
 
-        if (!innerMap.containsKey(contestId)) {
-            Constituency c = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName);
-            innerMap.put(contestId, c);
 
+        if (electionId == null || contestIdStr == null || partyIdStr == null || contestName == null) return;
+
+        int contestId, partyId;
+        try {
+            contestId = Integer.parseInt(contestIdStr);
+            partyId = Integer.parseInt(partyIdStr);
+        } catch (NumberFormatException e) {
+            return;
         }
 
+        Election election = elections.get(electionId);
+        if (election == null) return;
+
+        Map<Integer, Constituency> contestMap = election.getConstituencies();
+        Constituency constituency = contestMap.get(contestId);
+        if (constituency == null) {
+            constituency = new Constituency(contestId, contestName);
+            contestMap.put(contestId, constituency);
+        }
+
+        Map<Integer, Party> partyMap = constituency.getConstituencyData();
+        boolean isTotalVotes = "GEMEENTE".equals(constituencyData.get("Source"));
+
+        if (isTotalVotes && !partyMap.containsKey(partyId)) {
+            String partyVotesStr = constituencyData.get(DutchElectionProcessor.VALID_VOTES);
+            if (partyVotesStr == null) return;
+
+            try {
+                int votes = Integer.parseInt(partyVotesStr);
+                String partyName = constituencyData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
+                Party party = new Party(partyId, partyName);
+                party.setVotes(votes);
+                partyMap.put(partyId, party);
+            } catch (NumberFormatException ignore) {
+            }
+        }
     }
 
     @Override
@@ -184,7 +208,5 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
 
-public Map<String, Map<Integer, Constituency>> getConstituencyMap() {
-        return constituencyMap;
-    }
+
 }

@@ -1,18 +1,18 @@
 package com.voteU.election.java.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Constituency {
     int id;
     String name;
-    private List<Candidate> candidates;
-    private List<Party> parties;
+    private Map<Integer, Party> constituencyData;
 
-    public Constituency(int id, List<Party> parties, List<Candidate> candidates, String name) {
+    public Constituency(int id, String name) {
         this.id = id;
-        this.parties = parties;
-        this.candidates = candidates;
         this.name = name;
+        this.constituencyData = new HashMap<>();
     }
 
     public int getId() {
@@ -23,22 +23,6 @@ public class Constituency {
         this.id = id;
     }
 
-    public List<Party> getParties() {
-        return parties;
-    }
-
-    public void setParties(List<Party> parties) {
-        this.parties = parties;
-    }
-
-    public List<Candidate> getCandidates() {
-        return candidates;
-    }
-
-    public void setCandidates(List<Candidate> candidates) {
-        this.candidates = candidates;
-    }
-
     public String getName() {
         return name;
     }
@@ -47,13 +31,15 @@ public class Constituency {
         this.name = name;
     }
 
+    public Map<Integer, Party> getConstituencyData() {
+        return constituencyData;
+    }
+
     @Override
     public String toString() {
         return "Constituency{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", candidates=" + candidates +
-                ", parties=" + parties +
                 '}';
     }
 }
