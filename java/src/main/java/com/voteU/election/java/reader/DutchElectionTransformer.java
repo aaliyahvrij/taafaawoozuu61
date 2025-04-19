@@ -1,5 +1,6 @@
 package com.voteU.election.java.reader;
 
+import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
     Map<String, Map<Integer, Constituency>> constituencyMap = new HashMap<>();
+    Map<Integer, Candidate> candidateMap = new HashMap<>();
+
 
 
     @Override
@@ -84,7 +87,17 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {
+        int id = Integer.parseInt(candidateData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+        String firstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
+        String lastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
+        String lastNamePrefix = candidateData.get(DutchElectionProcessor.LAST_NAME_PREFIX);
+        int affiliationId = Integer.parseInt(candidateData.getOrDefault(DutchElectionProcessor.AFFILIATION_IDENTIFIER, "-1"));
 
+        Candidate candidate = new Candidate(id, firstName, lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName);
+
+
+
+        candidateMap.put(id, candidate);
     }
 
     @Override
@@ -93,9 +106,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes) {
-
-
+    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes, Map<Integer, String> affiliationNames) {
 
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
@@ -106,14 +117,34 @@ public class DutchElectionTransformer implements Transformer<Election> {
         constituencyMap.putIfAbsent(electionId, new HashMap<>());
         Map<Integer, Constituency> innerMap = constituencyMap.get(electionId);
 
+
         if (!innerMap.containsKey(contestId)) {
             Constituency c = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName);
             innerMap.put(contestId, c);
 
+            for(Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet() ) {
+                int id = entry.getKey();
+                String affiliationName = affiliationNames.getOrDefault(id, "");
+                int votes = entry.getValue();
+
+                Party party = new Party(id, affiliationName);
+                party.setVotes(votes);
+                c.getParties().add(party);
+            }
+
+            for(Map.Entry<Integer, Integer> entry: candidateVotes.entrySet()) {
+                int id = entry.getKey();
+                int votes = entry.getValue();
+
+                Candidate candidate = candidateMap.getOrDefault(id, new Candidate(id, null, null));
+                candidate.setVotes(votes);
+                c.getCandidates().add(candidate);
+            }
         }
 
         log.info("Registering for election: " + electionId);
         log.info("Registering: " + electionId + " -> " + contestId);
+
 
 
 
@@ -141,5 +172,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
 public Map<String, Map<Integer, Constituency>> getConstituencyMap() {
         return constituencyMap;
+    }
+
+    public Map<Integer, Candidate> getCandidateMap() {
+        return candidateMap;
     }
 }
