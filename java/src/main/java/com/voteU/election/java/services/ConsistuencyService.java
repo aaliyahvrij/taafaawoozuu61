@@ -27,6 +27,9 @@ public class ConsistuencyService {
         electionReader.getAll();
 
         Map<String, Map<Integer, Constituency>> elections = electionReader.getConstituencies();
+        System.out.println("Constituency map size: " + elections.size());
+        System.out.println("Keys: " + elections.keySet());
+
         if (elections == null || elections.isEmpty())  {
             System.out.println("Geen verkiezingsdata gevonden!");
             return false;
