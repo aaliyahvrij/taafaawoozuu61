@@ -171,8 +171,8 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(constituencyFile));
             XMLParser parser = new XMLParser(new FileInputStream(constituencyFile.toString()));
             processElection(electionData, parser);
+            processConstituency(electionData, parser);
             processVotes(electionData, parser, "kieskring");
-
         }
 
 
