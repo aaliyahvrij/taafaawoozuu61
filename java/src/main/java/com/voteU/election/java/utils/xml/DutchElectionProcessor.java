@@ -1,5 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
+import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.utils.PathUtils;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
@@ -504,11 +505,10 @@ public class DutchElectionProcessor<E> {
 
     private void processConstituency(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
 
-
-
         Map<Integer, Integer> affiliationVotes = new HashMap<>();
         Map<Integer, Integer> candidateVotes = new HashMap<>();
         Map<String, String> constituencyData = new HashMap<>(contestData);
+        Map<Integer, String> affiliationNames = new HashMap<>();
 
         if (parser.findBeginTag(CONTEST)) {
             int id = 0;
@@ -547,6 +547,7 @@ public class DutchElectionProcessor<E> {
                     } else if (isCandidate) {
                         if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
                             candidateId = parser.getIntegerAttributeValue(null, ID, 0);
+
                             parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
@@ -566,6 +567,7 @@ public class DutchElectionProcessor<E> {
 
                     if (affiliationId != -1) {
                         affiliationVotes.put(affiliationId, totalVotes);
+                        affiliationNames.put(affiliationId, affiliationName);
 
                     } else if (candidateId != -1) {
                         candidateVotes.put(candidateId, totalVotes);
@@ -578,7 +580,7 @@ public class DutchElectionProcessor<E> {
                 parser.findAndAcceptEndTag(VALID_VOTES);
 
             }
-            transformer.registerConstituency(constituencyData, affiliationVotes, candidateVotes );
+            transformer.registerConstituency(constituencyData, affiliationVotes, candidateVotes, affiliationNames);
 
 
         }
