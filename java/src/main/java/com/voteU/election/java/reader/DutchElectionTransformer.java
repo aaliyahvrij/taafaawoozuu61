@@ -113,6 +113,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         log.info("Registering for election: " + electionId);
+        log.info("Registering: " + electionId + " -> " + contestId);
+
 
 
     }
