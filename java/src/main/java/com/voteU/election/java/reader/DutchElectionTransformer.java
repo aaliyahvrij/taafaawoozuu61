@@ -22,7 +22,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
     Map<String, Map<Integer, Constituency>> constituencyMap = new HashMap<>();
     Map<Integer, Candidate> candidateMap = new HashMap<>();
-
+    Map<String, Party> partyMap = new HashMap<>();
 
 
     @Override
@@ -82,7 +82,13 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerAffiliation(Map<String, String> affiliationData) {
-        //System.out.println(affiliationData);
+
+        int id = Integer.parseInt(affiliationData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
+        String name = affiliationData.get(DutchElectionProcessor.REGISTERED_NAME);
+
+        Party party = new Party(id, name);
+
+        partyMap.put(String.valueOf(id), party);
     }
 
     @Override
@@ -91,13 +97,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String firstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
         String lastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
         String lastNamePrefix = candidateData.get(DutchElectionProcessor.LAST_NAME_PREFIX);
-        int affiliationId = Integer.parseInt(candidateData.getOrDefault(DutchElectionProcessor.AFFILIATION_IDENTIFIER, "-1"));
 
-        Candidate candidate = new Candidate(id, firstName, lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName);
+        int affiliationId = Integer.parseInt(candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
 
-
-
-        candidateMap.put(id, candidate);
+//        Candidate candidate = new Candidate(id, firstName, lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName);
+//
+//        candidate.setPartyId(affiliationId);
+//
+//        candidateMap.put(id, candidate);
     }
 
     @Override
@@ -106,7 +113,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes, Map<Integer, String> affiliationNames) {
+    public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
 
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
@@ -117,35 +124,40 @@ public class DutchElectionTransformer implements Transformer<Election> {
         constituencyMap.putIfAbsent(electionId, new HashMap<>());
         Map<Integer, Constituency> innerMap = constituencyMap.get(electionId);
 
+        log.info("registerConstituency method called with contestId: " + contestId);
+        log.info("Candidate votes map: " + candidateVotes);
 
         if (!innerMap.containsKey(contestId)) {
             Constituency c = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName);
             innerMap.put(contestId, c);
 
-            for(Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet() ) {
-                int id = entry.getKey();
-                String affiliationName = affiliationNames.getOrDefault(id, "");
-                int votes = entry.getValue();
+            log.info("Entering loop for affiliationVotes: " + affiliationVotes);
+            for (Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet()) {
+                int affiliationId = entry.getKey();
+                String affiliationName = affiliationNames.getOrDefault(affiliationId, "");
+                int affiliationVotesCount = entry.getValue();
 
-                Party party = new Party(id, affiliationName);
-                party.setVotes(votes);
+                Party party = new Party(affiliationId, affiliationName);
+                party.setVotes(affiliationVotesCount);
+                party.setCandidates(new ArrayList<>());
+
+                Map<Integer, Integer> candidatesForAffiliation = candidateVotes.getOrDefault(affiliationId, new HashMap<>());
+                for (Map.Entry<Integer, Integer> candidateEntry : candidatesForAffiliation.entrySet()) {
+                    int candidateId = candidateEntry.getKey();
+                    int candidateVotesCount = candidateEntry.getValue();
+
+                    Candidate candidate = new Candidate(candidateId, "", "");
+                    candidate.setPartyId(affiliationId);
+                    candidate.setVotes(candidateVotesCount);
+                    party.getCandidates().add(candidate);
+                }
+
                 c.getParties().add(party);
+
             }
 
-            for(Map.Entry<Integer, Integer> entry: candidateVotes.entrySet()) {
-                int id = entry.getKey();
-                int votes = entry.getValue();
 
-                Candidate candidate = candidateMap.getOrDefault(id, new Candidate(id, null, null));
-                candidate.setVotes(votes);
-                c.getCandidates().add(candidate);
-            }
         }
-
-        log.info("Registering for election: " + electionId);
-        log.info("Registering: " + electionId + " -> " + contestId);
-
-
 
 
     }
