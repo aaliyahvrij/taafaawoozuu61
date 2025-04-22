@@ -530,12 +530,16 @@ public class DutchElectionProcessor<E> {
             constituencyData.put(CONTEST_IDENTIFIER, String.valueOf(id));
             constituencyData.put(CONTEST_NAME, constituencyName);
 
+            System.out.println("found contestId: " + id + "called:  " + constituencyName);
             if (parser.findBeginTag(TOTAL_VOTES)) {
+                System.out.println("found totalVotes");
                 int currentAffiliationId;
                 String currentAffiliationName = null;
                 int totalVotes = 0;
 
                 while (parser.findBeginTag(SELECTION)) {
+                    parser.nextTag();
+
                     if (parser.findBeginTag(AFFILIATION_IDENTIFIER)) {
 
                         currentAffiliationId = parser.getIntegerAttributeValue(null, ID, -1);
@@ -545,8 +549,6 @@ public class DutchElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
 
-//                        int affiliationVotesCount = 0;
-
                         if (parser.findBeginTag(VALID_VOTES)) {
                             totalVotes = Integer.parseInt(parser.getElementText().trim());
                             affiliationVotes.put(currentAffiliationId, totalVotes);
@@ -555,49 +557,44 @@ public class DutchElectionProcessor<E> {
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
 
-                        parser.findAndAcceptEndTag(SELECTION);
+                            parser.findAndAcceptEndTag(SELECTION);
 
+                            if (parser.findBeginTag(CANDIDATE)) {
+                                int candidateId = 0;
 
-                        while (parser.findBeginTag(SELECTION)) {
-                            if (parser.findBeginTag(CANDIDATE) && parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
-                                int candidateId = -1;
-
-
-                                candidateId = parser.getIntegerAttributeValue(null, ID, -1);
-                                parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
+                                if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
+                                    candidateId = parser.getIntegerAttributeValue(null, ID, -1);
+                                    parser.findAndAcceptEndTag(CANDIDATE_IDENTIFIER);
+                                }
 
                                 parser.findAndAcceptEndTag(CANDIDATE);
 
-//                                int candidateVotesCount = 0;
                                 if (parser.findBeginTag(VALID_VOTES)) {
                                     totalVotes = Integer.parseInt(parser.getElementText().trim());
                                     parser.findAndAcceptEndTag(VALID_VOTES);
                                 }
 
                                 if (candidateId != -1 && currentAffiliationId != -1) {
-                                    candidateVotes
-                                            .computeIfAbsent(currentAffiliationId, k -> new HashMap<>())
+                                    candidateVotes.get(currentAffiliationId)
                                             .put(candidateId, totalVotes);
                                 }
 
-                                parser.findAndAcceptEndTag(SELECTION);
+                            }
+
                             } else {
                                 break;
                             }
-                        }
-                    } else {
-                        parser.findAndAcceptEndTag(SELECTION);
+
                     }
                 }
+
             }
-
-
 
             transformer.registerConstituency(constituencyData, affiliationVotes, candidateVotes, affiliationNames);
         }
     }
 
-}
+
 
 
 
