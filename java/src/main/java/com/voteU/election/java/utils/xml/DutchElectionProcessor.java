@@ -562,8 +562,7 @@ public class DutchElectionProcessor<E> {
 
                     }
 
-                    if (parser.nextBeginTag(CANDIDATE)) {
-
+                    if (parser.findBeginTag(CANDIDATE)) {
                         int candidateId = 0;
 //                        System.out.println("found candidate");
                         if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
