@@ -103,6 +103,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         candidate.setPartyId(affiliationId);
         candidateMap.put(candidate.setId(id), candidate);
+
+        Party party = partyMap.get(String.valueOf(affiliationId));
+        if (party != null) {
+            if (party.getCandidates() == null) {
+                party.setCandidates(new ArrayList<>());
+            }
+            party.getCandidates().add(candidate);
+        }
     }
 
     @Override
@@ -139,17 +147,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 party.setVotes(affiliationVotesCount);
                 party.setCandidates(new ArrayList<>());
 
-                Map<Integer, Integer> candidatesForAffiliation = candidateVotes.getOrDefault(affiliationId, new HashMap<>());
-                for (Map.Entry<Integer, Integer> candidateEntry : candidatesForAffiliation.entrySet()) {
-                    int candidateId = candidateEntry.getKey();
-                    int candidateVotesCount = candidateEntry.getValue();
-                    Candidate candidateData = candidateMap.get(candidateId);
+                Party registeredParty = partyMap.get(String.valueOf(affiliationId));
+                if (registeredParty != null) {
+                    List<Candidate> originalCandidates = registeredParty.getCandidates();
+                    Map<Integer, Integer> candidatesForAffiliation = candidateVotes.getOrDefault(affiliationId, new HashMap<>());
 
-                    Candidate candidate = new Candidate(candidateId, candidateData.getFirstName(), candidateData.getLastName());
-//                    candidate.setPartyId(affiliationId);
-                    candidate.setPartyId(candidateData.getPartyId());
-                    candidate.setVotes(candidateVotesCount);
-                    party.getCandidates().add(candidate);
+                    for (Candidate original : originalCandidates) {
+                        int votes = candidatesForAffiliation.getOrDefault(original.getId(), 0);
+                        Candidate candidate = new Candidate(original.getId(), original.getFirstName(), original.getLastName());
+                        candidate.setPartyId(affiliationId);
+                        candidate.setVotes(votes);
+                        party.getCandidates().add(candidate);
+                    }
                 }
 
                 c.getParties().add(party);
