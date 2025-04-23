@@ -98,13 +98,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String lastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
         String lastNamePrefix = candidateData.get(DutchElectionProcessor.LAST_NAME_PREFIX);
 
-        int affiliationId = Integer.parseInt(candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
+        Candidate candidate = new Candidate(id, firstName, lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName);
 
-//        Candidate candidate = new Candidate(id, firstName, lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName);
-//
-//        candidate.setPartyId(affiliationId);
-//
-//        candidateMap.put(id, candidate);
+        candidateMap.put(id, candidate);
     }
 
     @Override
@@ -145,8 +141,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 for (Map.Entry<Integer, Integer> candidateEntry : candidatesForAffiliation.entrySet()) {
                     int candidateId = candidateEntry.getKey();
                     int candidateVotesCount = candidateEntry.getValue();
+                    Candidate candidateData = candidateMap.get(candidateId);
 
-                    Candidate candidate = new Candidate(candidateId, "", "");
+                    Candidate candidate = new Candidate(candidateId, candidateData.getFirstName(), candidateData.getLastName());
                     candidate.setPartyId(affiliationId);
                     candidate.setVotes(candidateVotesCount);
                     party.getCandidates().add(candidate);
