@@ -5,20 +5,17 @@ import type {Election} from "@/interface/Election.ts";
 
 
 
-const year: Ref<string> = ref('');
-const elections = ref<Election | null >(null)
+const year: Ref<string> = ref(''); // jaar begint leeg.
+const elections: Ref<Election | null > = ref(null) // variable om gefetchte data op te slaan
 
-const emit = defineEmits<{
-  (event: 'updateElections', data: Election): void;
-}>();
+const emit = defineEmits(['updateElections']); // definieer emit om op te sturen
 
-async function fetchNationalPartyVotes(electionId: string){
+async function fetchNationalPartyVotes(electionId: string){ // functie die service aanroept (krijgt id van select)
   const data = await YearService.getPartyVotes(electionId)
-  if (data){
-    elections.value = data
-    emit('updateElections', elections.value);
-  }
-  else{
+  if (data) {
+    elections.value = data // variable waarde wordt gezet
+    emit('updateElections', elections.value); // emit wordt waarde wordt gezet
+  } else {
     elections.value = null;  // If no data, clear elections
   }
 }

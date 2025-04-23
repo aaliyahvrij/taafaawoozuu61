@@ -6,13 +6,13 @@ import java.util.List;
 public class Province {
     int id;
     String name;
-    List<Contest> contests;
+    List<Constituency> contests;
 
     public Province(){}
     public Province(int id, String name) {
         this.id = id;
         this.name = name;
-        this.contests = new ArrayList<>();
+        this.contests = new ArrayList<Constituency>();
     }
     public int getId() {
         return id;
@@ -26,7 +26,7 @@ public class Province {
     public void setName(String name) {
         this.name = name;
     }
-    public List<Contest> getContests() {
+    public List<Constituency> getContests() {
         return contests;
     }
 }

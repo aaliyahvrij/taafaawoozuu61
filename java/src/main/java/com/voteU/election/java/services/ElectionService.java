@@ -1,13 +1,9 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Contest;
 import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 

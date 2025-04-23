@@ -144,13 +144,6 @@ public class DutchElectionProcessor<E> {
         Map<String, String> electionData = new HashMap<>();
         electionData.put(ELECTION_IDENTIFIER, electionId);
 
-        List<Path> files = PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId));
-        for (Path electionFile : files) {
-            LOG.fine("Found: %s".formatted(electionFile));
-            XMLParser parser = new XMLParser(new FileInputStream(electionFile.toString()));
-            processElection(electionData, parser);
-            processContest(electionData, parser);
-        }
 
         for(Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId)) ){
             LOG.fine("Found: %s".formatted(totalVotesFile));
@@ -170,6 +163,14 @@ public class DutchElectionProcessor<E> {
             XMLParser parser = new XMLParser(new FileInputStream(votesPerReportingStationFile.toString()));
             processElection(electionData, parser);
             processVotes(electionData, parser, "gemeente");
+        }
+
+        List<Path> files = PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId));
+        for (Path electionFile : files) {
+            LOG.fine("Found: %s".formatted(electionFile));
+            XMLParser parser = new XMLParser(new FileInputStream(electionFile.toString()));
+            processElection(electionData, parser);
+            processContest(electionData, parser);
         }
 
         return transformer.retrieve();
