@@ -15,10 +15,6 @@ public class Candidate {
         this.votes = 0;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -41,6 +37,15 @@ public class Candidate {
 
     public void setPartyId(int partyId) {
         this.partyId = partyId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int setId(int id) {
+        this.id = id;
+        return id;
     }
 
     public String toString() {
