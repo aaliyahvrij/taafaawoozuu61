@@ -5,13 +5,11 @@ import java.util.List;
 public class Constituency {
     int id;
     String name;
-    private List<Candidate> candidates;
     private List<Party> parties;
 
-    public Constituency(int id, List<Party> parties, List<Candidate> candidates, String name) {
+    public Constituency(int id, List<Party> parties, String name) {
         this.id = id;
         this.parties = parties;
-        this.candidates = candidates;
         this.name = name;
     }
 
@@ -31,14 +29,6 @@ public class Constituency {
         this.parties = parties;
     }
 
-    public List<Candidate> getCandidates() {
-        return candidates;
-    }
-
-    public void setCandidates(List<Candidate> candidates) {
-        this.candidates = candidates;
-    }
-
     public String getName() {
         return name;
     }
@@ -52,7 +42,6 @@ public class Constituency {
         return "Constituency{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", candidates=" + candidates +
                 ", parties=" + parties +
                 '}';
     }

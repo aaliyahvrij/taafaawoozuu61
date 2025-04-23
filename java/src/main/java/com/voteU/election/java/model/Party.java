@@ -6,15 +6,15 @@ import java.util.List;
 public class Party {
     int id;
     String name;
-    List<Candidate> candidates;
     int votes;
+    List<Candidate> candidates;
+
 
     public Party(int id, String name) {
         this.id = id;
         this.name = name;
-        this.candidates = new ArrayList<>();
         this.votes = 0;
-
+        this.candidates = new ArrayList<>();
     }
     public void addCandidate(Candidate candidate) {
         candidates.add(candidate);

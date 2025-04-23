@@ -134,7 +134,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         log.info("Candidate votes map: " + candidateVotes);
 
         if (!innerMap.containsKey(contestId)) {
-            Constituency c = new Constituency(contestId, new ArrayList<>(), new ArrayList<>(), contestName);
+            Constituency c = new Constituency(contestId, new ArrayList<>(), contestName);
             innerMap.put(contestId, c);
 
             log.info("Entering loop for affiliationVotes: " + affiliationVotes);
