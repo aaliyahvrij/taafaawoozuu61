@@ -1,6 +1,8 @@
 package com.voteU.election.java.controller;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.services.ConsistuencyService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,9 +23,10 @@ public class ConstituencyController {
     }
 
     @GetMapping
-    public Map<String, Map<Integer, Constituency>> getConstituency() {
-        return consistuencyService.getElections();
+    public ResponseEntity<Map<String, Map<Integer, Constituency>>> getConstituency() {
+        return ResponseEntity.ok(consistuencyService.getElections());
     }
+
 
     @PostMapping
     public boolean readResults() {
