@@ -14,18 +14,26 @@ public class Party {
         this.name = name;
         this.candidates = new ArrayList<>();
         this.votes = 0;
-
     }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public List<Candidate> getCandidates() {
+        return this.candidates;
+    }
+
     public void addCandidate(Candidate candidate) {
         candidates.add(candidate);
     }
 
-    public void setCandidates(List<Candidate> candidates) {
-        this.candidates = candidates;
-    }
-
-    public boolean hasCandidateShortCode(String candidateId){
-        for (Candidate candidate : candidates) {
+    public boolean hasCandidateShortCode(String candidateId) {
+        for (Candidate candidate : this.candidates) {
             if (candidate.getShortCode().equals(candidateId)) {
                 return true;
             }
@@ -33,24 +41,25 @@ public class Party {
         return false;
     }
 
-    public int getVotes() {
-        return votes;
+    public boolean hasCandidateId(int candidateId) {
+        for (Candidate candidate : this.candidates) {
+            if (candidate.getId() == candidateId) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    public int getVotes() {
+        return this.votes;
+    }
+
     public void setVotes(int votes) {
         this.votes = votes;
     }
 
-    public int getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public List<Candidate> getCandidates() {
-        return candidates;
-    }
-
+    @Override
     public String toString() {
-        return String.format("Party[id=%d, name=%s]", id, name + ", candidates: " + candidates);
+        return String.format("Party[id=%d, name=%s, votes=%d, candidates=%s]", this.id, this.name, this.votes, this.candidates);
     }
 }
