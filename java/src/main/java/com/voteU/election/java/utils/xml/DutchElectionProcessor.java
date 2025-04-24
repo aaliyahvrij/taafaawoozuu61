@@ -348,7 +348,6 @@ public class DutchElectionProcessor<E> {
                         break;
                     case "kieskring":
                         System.out.println("Processing kieskring votes");
-                        processConstituency();
                 }
             }
 
@@ -359,7 +358,7 @@ public class DutchElectionProcessor<E> {
                 parser.findAndAcceptEndTag(TOTAL_VOTES); // Accept the end tag to prevent further processing
             }
 
-            //System.out.println("next opening tag:" + parser.getLocalName());
+            //System.out.println("next opening tag: " + parser.getLocalName());
 
             // Skip the REPORTING_UNIT_VOTES section if commented out or if it's unwanted
             if (fileType.equals("gemeente")) {
