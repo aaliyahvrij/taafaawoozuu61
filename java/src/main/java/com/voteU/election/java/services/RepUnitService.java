@@ -10,16 +10,14 @@ import java.util.Map;
 @Slf4j
 @Service
 public class RepUnitService {
-    private final Election storedElection;
-
     public RepUnitService() {
-        this.storedElection = ElectionService.storedElection;
     }
 
     /**
      * Retrieves all stored reporting units (GET).
      */
     public Map<Integer, ReportingUnit> getRepUnits() {
-        return storedElection.getRepUnits();
+        System.out.println("ee22: " + ElectionService.storedElection);
+        return ElectionService.storedElection.getRepUnits();
     }
 }

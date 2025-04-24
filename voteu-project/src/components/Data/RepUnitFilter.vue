@@ -12,8 +12,8 @@ const emit = defineEmits<{
 }>()
 
 async function fetchRepUnits() {
-  alert("hii_repUnits");
-  const data = await RepUnitService.getReportingUnits()
+  alert('hii_repUnits')
+  const data = await RepUnitService.getRepUnits()
   if (data) {
     repUnit.value = data
     emit('updateRepUnits', repUnit.value)

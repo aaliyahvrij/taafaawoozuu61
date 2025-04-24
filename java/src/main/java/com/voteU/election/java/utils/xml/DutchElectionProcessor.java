@@ -1,6 +1,7 @@
 package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.utils.PathUtils;
+
 import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -111,6 +112,7 @@ public class DutchElectionProcessor<E> {
     /**
      * Creates a new instance that will use the provided transformer for transforming the data into the
      * application specific models.
+     *
      * @param transformer the {@link Transformer} that will take care of transforming the data into the application
      *                    specific models.
      */
@@ -125,12 +127,13 @@ public class DutchElectionProcessor<E> {
      * <pre>
      * NOTE: It assumes that there are <b>NO</b> whitespace characters between the tags other than within text values!
      * </pre>
+     *
      * @param electionId the identifier for the of the files that should be processed, for example <i>TK2023</i>.
      * @param folderName The name of the folder that contains the files containing the election data.
      * @return returns the result as defined by the {@link Transformer#retrieve()} method.
-     * @throws IOException in case something goes wrong while reading the file.
+     * @throws IOException        in case something goes wrong while reading the file.
      * @throws XMLStreamException when a file has not the expected format. One example is a file that has been formatted
-     * for better readability.
+     *                            for better readability.
      */
     public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
         LOG.info("Loading election data from %s".formatted(folderName));
@@ -146,7 +149,7 @@ public class DutchElectionProcessor<E> {
             processContest(electionData, parser);
         }
 
-        for(Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId)) ){
+        for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionData, parser);
@@ -188,7 +191,7 @@ public class DutchElectionProcessor<E> {
                     electionData.put(ELECTION_DATE, electionDate);
                 }
 
-                System.out.println("election tag data gotten");
+                //System.out.println("election tag data gotten");
                 transformer.registerElection(electionData);
 
                 parser.findAndAcceptEndTag(ELECTION_IDENTIFIER);
@@ -198,7 +201,6 @@ public class DutchElectionProcessor<E> {
             }
         }
     }
-
 
 
     private void processContest(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
@@ -358,7 +360,7 @@ public class DutchElectionProcessor<E> {
 
 
     private void processTotalVotes(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(TOTAL_VOTES)){
+        if (parser.findBeginTag(TOTAL_VOTES)) {
             // System.out.println("Parser at " + parser.getLocalName());
             int affiliationId = 0;
             String name = INVALID_NAME;
@@ -398,7 +400,7 @@ public class DutchElectionProcessor<E> {
                         Map<String, String> caTotalVotesData = new HashMap<>(contestData);
                         String candidateId = null;
                         if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
-                            candidateId = parser.getAttributeValue(null,SHORT_CODE);
+                            candidateId = parser.getAttributeValue(null, SHORT_CODE);
                         }
 
                         parser.findAndAcceptEndTag(CANDIDATE);
@@ -432,7 +434,6 @@ public class DutchElectionProcessor<E> {
             parser.findAndAcceptEndTag(TOTAL_VOTES);
         }
     }
-
 
 
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
