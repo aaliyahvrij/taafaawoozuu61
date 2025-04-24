@@ -20,8 +20,9 @@ public class Election {
     private String name;
     private String date;
     private List<Province> provinces;
-    Map<Integer, Constituency> constituenies;
     private Map<Integer, Party> nationalData;
+    private Map<String, Authority> authorities;
+
 
 
     public Election(String id, String name, String date) {
@@ -30,7 +31,7 @@ public class Election {
         this.date = date;
         this.nationalData = new HashMap<>();
         this.provinces = new ArrayList<>();
-        this.constituenies = new HashMap<>();
+        this.authorities = new HashMap<>();
 
 
         Province Drenthe = new Province(1, "Drenthe");
@@ -72,12 +73,8 @@ public class Election {
     }
 
 
-    public List<Province> getProvinces() {
-        return provinces;
-    }
-
-    public Map<Integer,Constituency> getConstituencies() {
-        return constituenies;
+    public Map<String, Authority> getAuthorities() {
+        return authorities;
     }
 
     public Map<Integer, Party> getNationalParties() {
@@ -94,7 +91,7 @@ public class Election {
                 ",\n  date='" + date + '\'' +
                 ",\n  provinces=" + provinces.size() +
                 ",\n  nationalParties=" + nationalData +
-                ",\n  contests=" + constituenies+
+                ", \n  authorities=" + authorities +
                 "\n}";
     }
 

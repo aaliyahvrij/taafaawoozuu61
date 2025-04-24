@@ -6,8 +6,8 @@ import java.util.List;
 public class Party {
     int id;
     String name;
-    List<Candidate> candidates;
     int votes;
+    List<Candidate> candidates;
 
     public Party(int id, String name) {
         this.id = id;

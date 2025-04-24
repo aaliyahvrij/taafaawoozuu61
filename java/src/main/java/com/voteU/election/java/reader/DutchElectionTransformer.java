@@ -129,6 +129,69 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     }
 
+    @Override
+    public void registerAuthority(Map<String, String> authorityData) {
+        String electionId = authorityData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
+        String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_IDENTIFIER);
+        String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
+        String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
+        boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
+
+        if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null)
+            return;
+
+        int contestId, partyId;
+        try {
+            contestId = Integer.parseInt(contestIdStr);
+            partyId = Integer.parseInt(partyIdStr);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        Election election = elections.get(electionId);
+        if (election == null) return;
+
+
+        Map<String, Authority> authorityMap = election.getAuthorities();
+        Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
+            Authority a = new Authority(id);
+            a.setName(authorityName);
+            a.setContestId(contestId);
+            return a;
+        });
+
+        Map<Integer, Party> partyMap = authority.getAuthorityData();
+        Party party = partyMap.get(partyId);
+
+        if (isTotalVotes && party == null) {
+            String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
+            if (votesStr == null) return;
+
+            try {
+                int votes = Integer.parseInt(votesStr);
+                party = new Party(partyId, partyName);
+                party.setVotes(votes);
+                partyMap.put(partyId, party);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
+            try {
+                int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+                int candidateVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
+
+                if (!party.hasCandidateId(candidateId)) {
+                    Candidate candidate = new Candidate();
+                    candidate.setId(candidateId);
+                    candidate.setVotes(candidateVotes);
+                    party.addCandidate(candidate);
+                }
+            } catch (NumberFormatException | NullPointerException ignored) {}
+        }
+    }
+
 
     @Override
     public void registerContest(Map<String, String> contestData) {
@@ -149,53 +212,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // System.out.println(votesData);
     }
 
-    @Override
-    public void registerConstituency(Map<String, String> constituencyData) {
-        String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
 
-        String contestIdStr = constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
-        String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
-
-        String partyIdStr = constituencyData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
-
-
-        if (electionId == null || contestIdStr == null || partyIdStr == null || contestName == null) return;
-
-        int contestId, partyId;
-        try {
-            contestId = Integer.parseInt(contestIdStr);
-            partyId = Integer.parseInt(partyIdStr);
-        } catch (NumberFormatException e) {
-            return;
-        }
-
-        Election election = elections.get(electionId);
-        if (election == null) return;
-
-        Map<Integer, Constituency> contestMap = election.getConstituencies();
-        Constituency constituency = contestMap.get(contestId);
-        if (constituency == null) {
-            constituency = new Constituency(contestId, contestName);
-            contestMap.put(contestId, constituency);
-        }
-
-        Map<Integer, Party> partyMap = constituency.getConstituencyData();
-        boolean isTotalVotes = "GEMEENTE".equals(constituencyData.get("Source"));
-
-        if (isTotalVotes && !partyMap.containsKey(partyId)) {
-            String partyVotesStr = constituencyData.get(DutchElectionProcessor.VALID_VOTES);
-            if (partyVotesStr == null) return;
-
-            try {
-                int votes = Integer.parseInt(partyVotesStr);
-                String partyName = constituencyData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
-                Party party = new Party(partyId, partyName);
-                party.setVotes(votes);
-                partyMap.put(partyId, party);
-            } catch (NumberFormatException ignore) {
-            }
-        }
-    }
 
     @Override
     public Election retrieve() {
