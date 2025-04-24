@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class ElectionService {
     private final DutchElectionReader electionReader;
     private static final Map<String, Election> storedElections = new HashMap<>();
-    public static Election storedElection = null;
+    public static Election storedElection;
 
     public ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -60,6 +60,7 @@ public class ElectionService {
      */
     public Election getElection(String electionId) {
         storedElection = storedElections.get(electionId);
+        System.out.println("static storedElection is no longer null");
         return storedElections.get(electionId);
     }
 }

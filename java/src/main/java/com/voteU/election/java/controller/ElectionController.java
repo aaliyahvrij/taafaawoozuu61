@@ -28,6 +28,7 @@ public class ElectionController {
 
     @GetMapping("/{electionId}/parties")
     public Election getElection(@PathVariable String electionId) {
+        System.out.println("come ooooooooooon");
         return electionService.getElection(electionId);
     }
 
