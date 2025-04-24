@@ -6,16 +6,14 @@ import type { Authority } from "@/interface/Authority.ts";
 // Refs for storing data
 const year: Ref<string> = ref('');
 const authorities: Ref<Authority[] | null> = ref(null)
+const emit = defineEmits(['updateAuthorities']);
 
 // Fetch authority votes based on electionId
 async function fetchAuthorityVotes(electionId: string) {
   const data = await AuthorityService.getAuthorityVotes(electionId);
-
   if (data) {
    authorities.value = Object.values(data)
-    for(let i = 0; i<authorities.value.length; i++) {
-      console.log(authorities.value[i].name)
-    }
+    emit('updateAuthorities', authorities.value);
   } else {
     authorities.value = null;
     console.warn(`No authorities data for electionId: ${electionId}`);
@@ -27,9 +25,20 @@ async function fetchAuthorityVotes(electionId: string) {
 <template>
   <div class="main-container">
     <select class="filter-tag" v-model="year" @change="fetchAuthorityVotes(year)">
-      <option value="" disabled selected hidden="">Municipality</option>
+      <option value="" disabled selected hidden="">MunicipalityYear</option>
       <option value="2021">2021</option>
       <option value="2023">2023</option>
+    </select>
+
+    <select class="filter-tag" v-model="year" @change="fetchAuthorityVotes(year)">
+      <option value="" disabled selected hidden="">Municipality</option>
+      <option
+        v-for="auth in authorities || []"
+        :key="auth.id"
+        :value="auth.id"
+      >
+        {{auth.name}}
+      </option>
     </select>
   </div>
 </template>
