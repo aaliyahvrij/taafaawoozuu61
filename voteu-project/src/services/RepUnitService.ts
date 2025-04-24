@@ -1,9 +1,9 @@
-import type { Election } from '@/interface/Election.ts'
+import type { ReportingUnit } from '@/interface/ReportingUnit.ts'
 
-export class YearService {
-  static async getPartyVotes(electionId: string): Promise<Election | null> {
+export class RepUnitService {
+  static async getReportingUnits(): Promise<Map<number, ReportingUnit> | null> {
     try {
-      const response = await fetch(`http://localhost:8080/api/election/TK${electionId}/parties`, {
+      const response = await fetch(`http://localhost:8080/api/repunit`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

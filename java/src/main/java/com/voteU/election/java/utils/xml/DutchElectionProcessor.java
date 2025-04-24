@@ -188,6 +188,7 @@ public class DutchElectionProcessor<E> {
                     electionData.put(ELECTION_DATE, electionDate);
                 }
 
+                System.out.println("election tag data gotten");
                 transformer.registerElection(electionData);
 
                 parser.findAndAcceptEndTag(ELECTION_IDENTIFIER);

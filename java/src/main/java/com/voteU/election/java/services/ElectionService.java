@@ -14,9 +14,9 @@ import java.util.HashMap;
 @Slf4j
 @Service
 public class ElectionService {
-
     private final DutchElectionReader electionReader;
-    private final Map<String, Election> storedElections = new HashMap<>();
+    private static final Map<String, Election> storedElections = new HashMap<>();
+    public static Election storedElectionn = null;
 
     public ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -59,8 +59,7 @@ public class ElectionService {
      * Retrieves a specific election by ID (GET).
      */
     public Election getElection(String electionId) {
+        storedElectionn = storedElections.get(electionId);
         return storedElections.get(electionId);
     }
-
-
 }

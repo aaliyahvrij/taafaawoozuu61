@@ -1,12 +1,15 @@
 package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.Election;
+import com.voteU.election.java.model.ReportingUnit;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Processes election data from XML files and provides access to the results.
  */
@@ -36,9 +39,9 @@ public class DutchElectionReader {
             try {
                 // Process election data
                 Election election = electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
-                    elections.put(electionId, election);
-                    log.info("Processed Election " + electionId);
-            } catch(Exception e){
+                elections.put(electionId, election);
+                log.info("Processed Election " + electionId);
+            } catch (Exception e) {
                 System.out.println("Could not process " + electionId);
                 e.printStackTrace();
             }
@@ -47,5 +50,4 @@ public class DutchElectionReader {
 
         return transformer.getElections();
     }
-
 }

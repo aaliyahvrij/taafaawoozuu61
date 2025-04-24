@@ -3,10 +3,9 @@ package com.voteU.election.java.reader;
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
-
+import com.voteU.election.java.model.ReportingUnit;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
-
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -18,14 +17,13 @@ import java.util.Map;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     private Map<String, Election> elections = new HashMap<>();
-
+    private Map<String, ReportingUnit> repUnits = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {
         String electionId = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
-
 
         if (electionId == null || electionName == null || electionDate == null) {
             System.out.println("Incomplete election data: Missing ID, Name, or Date.");
@@ -40,8 +38,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
         // System.out.println(electionData);
     }
-
-
 
     @Override
     public void registerContest(Map<String, String> contestData) {
@@ -148,9 +144,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // This logging happens once at the end, after all votes are processed.
     }
 
-
-
-
     /**
      * This method is not needed since we now track elections by year.
      */
@@ -169,5 +162,4 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public Map<String, Election> getElections() {
         return elections;
     }
-
 }
