@@ -158,7 +158,7 @@ public class DutchElectionProcessor<E> {
             processVotes(electionData, parser, "kieskring");
         }
 
-        for (Path authorityFile: PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_Apeldoorn.eml.xml".formatted(electionId))) {
+        for (Path authorityFile: PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
             System.out.println(folderName+ authorityFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);

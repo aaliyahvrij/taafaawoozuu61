@@ -7,7 +7,7 @@
 
     import java.util.Map;
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "http://localhost:5173") // DIT GEEFT DE FRONTEND TOEGANG OM VAN DE HIER DATA TE PAKKEN, BELANGRIJK
     @RestController
     @RequestMapping("/api/election")
     public class ElectionController {

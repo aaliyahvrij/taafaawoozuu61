@@ -5,6 +5,7 @@ import YearFilter from '@/components/Data/YearFilter.vue'
 import {type Ref, ref} from "vue";
 import type {Election} from "@/interface/Election.ts";
 import type {Party} from "@/interface/Party.ts";
+import AuthorityFilter from '@/components/Data/AuthorityFilter.vue'
 
 
 
@@ -34,6 +35,7 @@ function goBack() {
     <div class="filters-wrapper">
       <YearFilter  @update-elections="handleElectionsUpdate"/>
       <ConstituencyFilter/>
+      <AuthorityFilter/>
     </div>
 
     <div class="data-wrapper">

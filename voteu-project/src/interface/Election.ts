@@ -7,4 +7,5 @@ export interface Election {
   name: string;
   provinces: Province[];
   nationalParties: { [key: number]: Party };
+  Authorities: { [key: string]: Party };
 }
