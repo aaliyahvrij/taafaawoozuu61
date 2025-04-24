@@ -60,7 +60,11 @@ public class ElectionService {
      */
     public Election getElection(String electionId) {
         storedElection = storedElections.get(electionId);
-        System.out.println("static storedElection is no longer null");
+        if (storedElection != null) {
+            System.out.println("static storedElection is no longer null");
+            System.out.println(storedElection.getId());
+            System.out.println(storedElection.getName());
+        }
         return storedElections.get(electionId);
     }
 }

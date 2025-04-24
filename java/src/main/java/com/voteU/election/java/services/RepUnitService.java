@@ -17,7 +17,7 @@ public class RepUnitService {
      * Retrieves all stored reporting units (GET).
      */
     public Map<Integer, ReportingUnit> getRepUnits() {
-        System.out.println("ee22: " + ElectionService.storedElection);
+        System.out.println("ee22: " + ElectionService.storedElection.getRepUnits().size());
         return ElectionService.storedElection.getRepUnits();
     }
 }

@@ -55,7 +55,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerVotes(Map<String, String> votesData) {
+    public void registerNationalVotes(Map<String, String> votesData) {
         String source = votesData.get("Source");
         boolean isTotalVotes = "TOTAL".equals(source);
 
@@ -142,6 +142,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         // Ensure only the number of registered parties is logged, not each time for each party
         // This logging happens once at the end, after all votes are processed.
+    }
+
+    @Override
+    public void registerReportingUnit(Map<String, String> reportingUnitData) {
+        System.out.println(reportingUnitData);
     }
 
     /**

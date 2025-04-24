@@ -76,7 +76,9 @@ public interface Transformer<E> {
      * @param votesData a {@code Map} containing information about the election, contest, affiliation, candidate and
      *                  the number of votes.
      */
-    void registerVotes(Map<String, String> votesData);
+    void registerNationalVotes(Map<String, String> votesData);
+
+    void registerReportingUnit(Map<String, String> reportingUnitData);
 
     /**
      * Returns an instance that encapsulates all the registered data about the election.
