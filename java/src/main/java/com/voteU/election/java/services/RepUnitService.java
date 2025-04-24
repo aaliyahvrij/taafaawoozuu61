@@ -12,8 +12,8 @@ import java.util.Map;
 public class RepUnitService {
     private final Election storedElection;
 
-    public RepUnitService(ElectionService electionService) {
-        this.storedElection = electionService.storedElectionn;
+    public RepUnitService() {
+        this.storedElection = ElectionService.storedElection;
     }
 
     /**

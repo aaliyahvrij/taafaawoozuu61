@@ -5,13 +5,14 @@ import { RepUnitService } from '@/services/RepUnitService.ts'
 
 //:Ref<TYPE> = ref(value)
 const year: Ref<string> = ref('') // waarde wordt veranderd met select
-const repUnit: Ref<ReportingUnit | null> = ref(null)
+const repUnit: Ref<Map<number, ReportingUnit> | null> = ref(null)
 
 const emit = defineEmits<{
-  (event: 'updateRepUnits', data: ReportingUnit): void
+  (event: 'updateRepUnits', data: Map<number, ReportingUnit>): void
 }>()
 
 async function fetchRepUnits() {
+  alert("hii_repUnits");
   const data = await RepUnitService.getReportingUnits()
   if (data) {
     repUnit.value = data

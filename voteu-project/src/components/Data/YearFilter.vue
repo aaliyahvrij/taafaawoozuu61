@@ -12,6 +12,7 @@ const emit = defineEmits<{
 }>()
 
 async function fetchNationalPartyVotes(electionId: string) {
+  alert("hii_electionYear");
   const data = await YearService.getPartyVotes(electionId)
   if (data) {
     election.value = data

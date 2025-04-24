@@ -3,6 +3,6 @@ import type {Party} from "@/interface/Party.ts";
 export interface ReportingUnit {
   id: string;
   name: string;
-  affiliations: Party[];
+  affiliations: { [key: number]: Party };
   totalVotes: number;
 }

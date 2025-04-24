@@ -81,8 +81,6 @@ public class Election {
 
     public Map<Integer, ReportingUnit> getRepUnits() { return repUnits; }
 
-
-
     @Override
     public String toString(){
         return "Election( id = " + id + ", name = " + name + ", date = " + date + " )";
