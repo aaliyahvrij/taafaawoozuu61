@@ -13,6 +13,7 @@ async function fetchAuthorityVotes(electionId: string) {
   const data = await AuthorityService.getAuthorityVotes(electionId);
   if (data) {
    authorities.value = Object.values(data)
+    console.log(authorities.value)
     emit('updateAuthorities', authorities.value);
   } else {
     authorities.value = null;

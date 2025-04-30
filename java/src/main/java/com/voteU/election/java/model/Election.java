@@ -1,10 +1,11 @@
 package com.voteU.election.java.model;
 
 import com.voteU.election.java.utils.xml.Transformer;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,85 +15,46 @@ import java.util.Map;
  * <b>Please do NOT include this code in you project!</b>
  */
 
-
+@Entity
 public class Election {
+    @Id
+    @Getter @Setter
+    @Column(name = "election_id")  // Specify column name if needed
     private String id;
+
+    @Getter @Setter
     private String name;
+
+    @Getter @Setter
     private String date;
-    private List<Province> provinces;
-    private Map<Integer, Party> nationalData;
+
+    @OneToMany
+    @MapKeyColumn(name = "party_id")  // Assuming 'Party' has an id
+    @Getter @Setter
+    private Map<Integer, Party> nationalParties;
+
+    @OneToMany
+    @MapKeyColumn(name = "authority_id")  // Assuming 'Authority' has an id
+    @Getter @Setter
     private Map<String, Authority> authorities;
 
+    public Election() {
 
+    }
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.nationalData = new HashMap<>();
-        this.provinces = new ArrayList<>();
+        this.nationalParties = new HashMap<>();
         this.authorities = new HashMap<>();
-
-
-        Province Drenthe = new Province(1, "Drenthe");
-        Province Flevoland = new Province(2, "Flevoland");
-        Province Friesland = new Province(3, "Friesland");
-        Province Gelderland = new Province(4, "Gelderland");
-        Province Groningen = new Province(5, "Groningen");
-        Province Limburg = new Province(6, "Limburg");
-        Province Noord_Brabant  = new Province(7, "Noord-Brabant");
-        Province Noord_Holland  = new Province(8, "Noord-Holland");
-        Province Overijssel = new Province(9, "Overijssel");
-        Province Utrecht = new Province(10, "Utrecht");
-        Province Zeeland = new Province(11, "Zeeland");
-        Province Zuid_Holland  = new Province(12, "Zuid-Holland");
-        provinces.add(Drenthe);
-        provinces.add(Flevoland);
-        provinces.add(Friesland);
-        provinces.add(Gelderland);
-        provinces.add(Groningen);
-        provinces.add(Limburg);
-        provinces.add(Noord_Brabant);
-        provinces.add(Noord_Holland);
-        provinces.add(Overijssel);
-        provinces.add(Utrecht);
-        provinces.add(Zeeland);
-        provinces.add(Zuid_Holland);
     }
 
-    public String getId() {
-        return id;
+        @Override
+        public String toString() {
+            return "Name=" + this.name ;
+        }
+
+
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-    public Map<String, Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public Map<Integer, Party> getNationalParties() {
-        return nationalData;
-    }
-
-
-
-    @Override
-    public String toString() {
-        return "Election {" +
-                "\n  id='" + id + '\'' +
-                ",\n  name='" + name + '\'' +
-                ",\n  date='" + date + '\'' +
-                ",\n  provinces=" + provinces.size() +
-                ",\n  nationalParties=" + nationalData +
-                ", \n  authorities=" + authorities +
-                "\n}";
-    }
-
-}

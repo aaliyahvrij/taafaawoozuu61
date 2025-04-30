@@ -15,7 +15,7 @@ public class AuthorityService {
     }
 
     public Map<String, Authority> getAuthoritiesByYear(String year) {
-        Election election = electionService.getElection(year);
+        Election election = electionService.getElectionByYear(year);
         if (election == null) {
             return null;
         }

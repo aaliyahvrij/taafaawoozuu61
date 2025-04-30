@@ -504,7 +504,7 @@ public class DutchElectionProcessor<E> {
                         afTotalVotesData.put(REGISTERED_NAME, name);
                         afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
                         afTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
-                        transformer.registerAuthority(afTotalVotesData);
+                        transformer.registerAuthorityVotes(afTotalVotesData);
                         break;
                     case CANDIDATE:
                         //System.out.println("Parser inside CANDIDATE tag...");
@@ -533,7 +533,7 @@ public class DutchElectionProcessor<E> {
                             caTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
                             caTotalVotesData.put(AFFILIATION_IDENTIFIER, String.valueOf(affiliationId));
                             caTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
-                            transformer.registerAuthority(caTotalVotesData);
+                            transformer.registerAuthorityVotes(caTotalVotesData);
                             registeredCandidateAffiliations.add(candidateAffiliationKey);
 
                         } else {

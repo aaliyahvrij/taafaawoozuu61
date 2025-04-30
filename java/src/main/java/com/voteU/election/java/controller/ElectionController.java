@@ -7,7 +7,6 @@
 
     import java.util.Map;
 
-    @CrossOrigin(origins = "http://localhost:5173") // DIT GEEFT DE FRONTEND TOEGANG OM VAN DE HIER DATA TE PAKKEN, BELANGRIJK
     @RestController
     @RequestMapping("/api/election")
     public class ElectionController {
@@ -22,15 +21,15 @@
             return electionService.readElections();
         }
 
-        @PostMapping("/{electionId}/parties")
-        public boolean readResultsYear(@PathVariable String electionId) {
-            return electionService.readElectionYear(electionId);
+        @PostMapping("/{electionYear}/parties")
+        public boolean readResultsYear(@PathVariable String electionYear) {
+            return electionService.readElectionYear(electionYear);
         }
 
 
-        @GetMapping("/{electionId}/parties")
-        public Election getElection(@PathVariable String electionId) {
-            return electionService.getElection(electionId);
+        @GetMapping("/{electionYear}/parties")
+        public Election getElection(@PathVariable String electionYear) {
+            return electionService.getElectionByYear(electionYear);
         }
 
         @GetMapping

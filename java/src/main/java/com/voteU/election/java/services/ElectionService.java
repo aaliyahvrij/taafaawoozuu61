@@ -12,50 +12,35 @@ import java.util.HashMap;
 public class ElectionService {
 
     private final DutchElectionReader electionReader;
-    private final Map<String, Election> storedElections = new HashMap<>();
+    private final Map<String, Election> electionsByYear = new HashMap<>();
 
     public ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
     }
 
-    /**
-     * Loads all elections from the reader and stores them internally.
-     * This is intended to be called via a POST-like operation.
-     *
-     * @return true if elections were loaded successfully, false otherwise
-     */
+
     public boolean readElections() {
         Map<String, Election> elections = electionReader.getAll();
         if (elections == null || elections.isEmpty()) {
             log.warn("No election data found during readElections().");
             return false;
         }
-        storedElections.putAll(elections);
+        electionsByYear.putAll(elections);
         return true;
     }
 
-    /**
-     * Checks if a specific election year is available in memory.
-     *
-     * @param electionId the ID of the election (e.g. "TK2021")
-     * @return true if found, false otherwise
-     */
-    public boolean readElectionYear(String electionId) {
-        return storedElections.containsKey(electionId);
+
+    public boolean readElectionYear(String electionYear) {
+        return electionsByYear.containsKey(electionYear);
     }
 
-    /**
-     * Retrieves all stored elections (GET).
-     */
+
     public Map<String, Election> getAll() {
-        return storedElections;
+        return electionsByYear;
     }
 
-    /**
-     * Retrieves a specific election by ID (GET).
-     */
-    public Election getElection(String electionId) {
-        return storedElections.get(electionId);
+    public Election getElectionByYear(String electionYear) {
+        return electionsByYear.get(electionYear);
     }
 
 

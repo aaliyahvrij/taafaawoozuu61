@@ -5,9 +5,7 @@ import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 import lombok.extern.slf4j.Slf4j;
 
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A Transformer that processes election data and organizes it into Election objects.
@@ -114,7 +112,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             if (isTotalVotes && party != null && !party.hasCandidateShortCode(candidateId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candidateId;
-                candidate.setVotes(candidateVotes);
+                candidate.setValidVotes(candidateVotes);
                 party.addCandidate(candidate);
                 // Removed duplicate logging here for the candidate as well
             }
@@ -130,7 +128,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerAuthority(Map<String, String> authorityData) {
+    public void registerAuthorityVotes(Map<String, String> authorityData) {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_IDENTIFIER);
@@ -158,11 +156,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
             Authority a = new Authority(id);
             a.setName(authorityName);
-            a.setContestId(contestId);
             return a;
         });
 
-        Map<Integer, Party> partyMap = authority.getAuthorityData();
+        Map<Integer, Party> partyMap = authority.getAuthorityParties();
         Party party = partyMap.get(partyId);
 
         if (isTotalVotes && party == null) {
@@ -174,7 +171,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 party = new Party(partyId, partyName);
                 party.setVotes(votes);
                 partyMap.put(partyId, party);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
@@ -185,13 +183,13 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 if (!party.hasCandidateId(candidateId)) {
                     Candidate candidate = new Candidate();
                     candidate.setId(candidateId);
-                    candidate.setVotes(candidateVotes);
+                    candidate.setValidVotes(candidateVotes);
                     party.addCandidate(candidate);
                 }
-            } catch (NumberFormatException | NullPointerException ignored) {}
+            } catch (NumberFormatException | NullPointerException ignored) {
+            }
         }
     }
-
 
     @Override
     public void registerContest(Map<String, String> contestData) {
@@ -208,22 +206,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerVotes(Map<String, String> votesData) {
-        // System.out.println(votesData);
-    }
-
-
-
-    @Override
     public Election retrieve() {
         return null; // This method is not needed since we now track elections by year
     }
 
-
     public Election getElection(String year) {
         return elections.get(year);
     }
-
-
-
 }

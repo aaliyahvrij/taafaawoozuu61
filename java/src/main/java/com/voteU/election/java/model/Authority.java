@@ -1,46 +1,45 @@
 package com.voteU.election.java.model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
 public class Authority {
+    @Id
+    @Getter @Setter
+    @Column(name = "authority_id")
     String id;
+
+    @Getter @Setter
     String name;
-    Map<Integer, Party> authorityData;
-    int contestId;
+
+    @OneToMany
+    @MapKeyColumn(name = "party_id")  //
+    @Getter @Setter
+    Map<Integer, Party> authorityParties;
+
+    @ManyToOne
+    @JoinColumn(name = "election_id")  // Foreign key to Election
+    @Getter @Setter
+    Election election;
 
     public Authority(String id) {
         this.id = id;
         this.name = "";
-        authorityData = new HashMap<>();
-        contestId = 0;
+        this.authorityParties = new HashMap<>();
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public Map<Integer, Party> getAuthorityData() {
-        return authorityData;
+    public Authority() {
+
     }
 
-    public int getContestId() {
-        return contestId;
-    }
-    public void setContestId(int contestId) {
-        this.contestId = contestId;
-    }
 
     @Override
     public String toString() {
-        return "id " + id + " name " + name + " authorityData " + authorityData.toString();
+        return "id " + this.id + " name " + this.name + " authorityData " + this.authorityParties.toString();
     }
 }
