@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Contest {
-    int id;
-    String name;
-    List<Party> parties;
+    private int id;
+    private String name;
+    private List<Party> parties;
 
     public Contest(int id, String name) {
         this.id = id;
@@ -15,18 +15,16 @@ public class Contest {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
     public String getName() {
-        return name;
+        return this.name;
     }
     public List<Party> getParties() {
-        return parties;
+        return this.parties;
     }
 
     public String toString() {
-        return String.format("Contest[id=%d, name=%s]", id, name + ", parties: " + parties);
+        return String.format("Contest[id=%d, name=%s]", this.id, this.name + ", parties: " + this.parties);
     }
-
-
 }
