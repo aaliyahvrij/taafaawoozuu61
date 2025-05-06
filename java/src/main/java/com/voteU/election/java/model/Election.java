@@ -15,38 +15,29 @@ import java.util.Map;
  * <b>Please do NOT include this code in you project!</b>
  */
 
-@Entity
+@Getter @Setter
 public class Election {
     @Id
-    @Getter @Setter
-    @Column(name = "election_id")  // Specify column name if needed
     private String id;
 
-    @Getter @Setter
+
     private String name;
 
-    @Getter @Setter
     private String date;
 
-    @OneToMany
-    @MapKeyColumn(name = "party_id")  // Assuming 'Party' has an id
-    @Getter @Setter
+
     private Map<Integer, Party> nationalParties;
 
-    @OneToMany
-    @MapKeyColumn(name = "authority_id")  // Assuming 'Authority' has an id
-    @Getter @Setter
+    private Map<Integer, Constituency> constituencies;
+
     private Map<String, Authority> authorities;
-
-    public Election() {
-
-    }
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.nationalParties = new HashMap<>();
+        this.constituencies = new HashMap<>();
         this.authorities = new HashMap<>();
     }
 

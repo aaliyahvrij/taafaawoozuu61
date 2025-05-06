@@ -1,6 +1,7 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.model.Election;
+import com.voteU.election.java.model.Party;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,15 @@ public class ElectionService {
         return true;
     }
 
-
     public boolean readElectionYear(String electionYear) {
-        return electionsByYear.containsKey(electionYear);
+        Election election = electionReader.getElection(electionYear);
+        if (election == null) {
+            log.warn("No election data found for year {} during readElectionYear().", electionYear);
+            return false;
+        }
+        electionsByYear.put(electionYear, election);
+        return true;
     }
-
 
     public Map<String, Election> getAll() {
         return electionsByYear;
@@ -41,6 +46,14 @@ public class ElectionService {
 
     public Election getElectionByYear(String electionYear) {
         return electionsByYear.get(electionYear);
+    }
+
+    public Map<Integer, Party> getNationalPartiesByYear(String electionYear) {
+        Election election = getElectionByYear(electionYear);
+        if (election == null) {
+            return null;
+        }
+        return election.getNationalParties();
     }
 
 

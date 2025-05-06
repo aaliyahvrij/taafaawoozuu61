@@ -20,11 +20,7 @@ public class AuthorityService {
             return null;
         }
         // Assuming Election has a Map<Integer, Constituency> field (like getConstituencies())
-        Map<String, Authority> authorities= election.getAuthorities();
-        if (authorities == null) {
-            return null;
-        }
 
-        return authorities;
+        return election.getAuthorities();
     }
 }

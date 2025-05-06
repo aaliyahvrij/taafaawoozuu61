@@ -1,0 +1,39 @@
+package com.voteU.election.java.services;
+
+import com.voteU.election.java.model.Constituency;
+import com.voteU.election.java.model.Election;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class ConstituencyService {
+
+    private final ElectionService electionService;
+
+    public ConstituencyService(ElectionService electionService) {
+        this.electionService = electionService;
+    }
+
+
+    public Map<Integer, Constituency> getConstituenciesByYear(String year) {
+        Election election = electionService.getElectionByYear(year);
+        if (election == null){
+            return null;
+        }
+        Map<Integer, Constituency> constituencies = election.getConstituencies();
+        if (constituencies == null || constituencies.isEmpty()) {
+            System.out.println("No constituencies found for election year: " + year);
+            return null;
+        }
+        return constituencies;
+    }
+
+    public Constituency getConstituencyById(String year, int constituencyId) {
+        Map<Integer, Constituency> constituencies = getConstituenciesByYear(year);
+        if (constituencies == null){
+            return null;
+        }
+        return constituencies.get(constituencyId);
+    }
+}

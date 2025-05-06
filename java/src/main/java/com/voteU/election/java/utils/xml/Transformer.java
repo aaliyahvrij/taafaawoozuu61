@@ -81,6 +81,8 @@ public interface Transformer<E> {
 
     void registerNationalVotes(Map<String, String> votesData);
 
+    void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes,Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames);
+
     void registerAuthorityVotes(Map<String, String> AuthorityData);
 
     /**

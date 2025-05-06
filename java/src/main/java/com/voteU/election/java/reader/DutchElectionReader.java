@@ -1,6 +1,5 @@
 package com.voteU.election.java.reader;
 
-
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
@@ -37,8 +36,8 @@ public class DutchElectionReader {
             try {
                 // Process election data
                 Election election = electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
-                    elections.put(electionId, election);
-                    log.info("Processed Election " + electionId);
+                elections.put(electionId, election);
+                log.info("Processed Election " + electionId);
             } catch(Exception e){
                 System.out.println("Could not process " + electionId);
                 e.printStackTrace();
@@ -54,6 +53,21 @@ public class DutchElectionReader {
         return electionsMap;
     }
 
+    public Election getElection(String electionId) {
+        String[] electionIds = {"TK2021", "TK2023"};
+
+            String path = "/EML_bestanden_" + electionId;
+            try {
+                // Process election data
+                electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+                log.info("Processed Election " + electionId);
+            } catch(Exception e){
+                log.error("Could not process {}", electionId, e);
+            }
+
+        System.out.println("All files are processed.\n");
+        return transformer.getElection(electionId);
+    }
 
 }
 

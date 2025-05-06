@@ -13,7 +13,9 @@ import java.util.*;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
-
+    Map<Integer, Candidate> candidateMap = new HashMap<>();
+    Map<Integer, String> affiliationNames = new HashMap<>();
+    Map<String, Party> partyMap = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {
@@ -109,23 +111,72 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
 
             // Check if the candidate already exists and is added to the party
-            if (isTotalVotes && party != null && !party.hasCandidateShortCode(candidateId)) {
+            if (isTotalVotes && !party.hasCandidateShortCode(candidateId)) {
                 Candidate candidate = new Candidate();
-                candidate.shortCode = candidateId;
-                candidate.setValidVotes(candidateVotes);
+                candidate.setShortCode(candidateId);
+                candidate.setVotes(candidateVotes);
                 party.addCandidate(candidate);
                 // Removed duplicate logging here for the candidate as well
             }
         }
 
-        if (election != null) {
-            partyMap.put(partyId, party);
-        }
+        partyMap.put(partyId, party);
 
         // Ensure only the number of registered parties is logged, not each time for each party
         // This logging happens once at the end, after all votes are processed.
 
     }
+
+    public void registerConstituency(Map<String, String> constituencyData,
+                                     Map<Integer, Integer> affiliationVotes,
+                                     Map<Integer, Map<Integer, Integer>> candidateVotes,
+                                     Map<Integer, String> affiliationNames) {
+
+        String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
+        String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
+
+        Election election = elections.get(electionId);
+        if (election == null) return;
+
+        Map<Integer, Constituency> constituencyMap = election.getConstituencies();
+        if (constituencyMap == null) {
+            constituencyMap = new HashMap<>();
+            election.setConstituencies(constituencyMap);
+        }
+
+        Constituency constituency = constituencyMap.computeIfAbsent(contestId, i -> new Constituency(i, contestName));
+
+        // Voeg partijen toe aan de constituency
+        for (Map.Entry<Integer, String> entry : affiliationNames.entrySet()) {
+            int partyId = entry.getKey();
+            String partyName = entry.getValue();
+            int totalVotes = affiliationVotes.getOrDefault(partyId, 0);
+
+            Party party = new Party(partyId, partyName);
+            party.setVotes(totalVotes);
+            party.setCandidates(new ArrayList<>());
+
+            Map<Integer, Integer> votesForCandidates = candidateVotes.getOrDefault(partyId, new HashMap<>());
+
+            Party globalParty = partyMap.get(String.valueOf(partyId));
+            if (globalParty != null && globalParty.getCandidates() != null) {
+                for (Candidate original : globalParty.getCandidates()) {
+                    Candidate clone = new Candidate();
+                    clone.setId(original.getId());
+                    clone.setFirstName(original.getFirstName());
+                    clone.setLastName(original.getLastName());
+                    clone.setPartyId(partyId);
+                    clone.setVotes(votesForCandidates.getOrDefault(clone.getId(), 0));
+                    party.getCandidates().add(clone);
+                }
+            }
+
+            constituency.getParties().put(partyId, party);
+        }
+    }
+
+
 
     @Override
     public void registerAuthorityVotes(Map<String, String> authorityData) {
@@ -183,7 +234,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 if (!party.hasCandidateId(candidateId)) {
                     Candidate candidate = new Candidate();
                     candidate.setId(candidateId);
-                    candidate.setValidVotes(candidateVotes);
+                    candidate.setVotes(candidateVotes);
                     party.addCandidate(candidate);
                 }
             } catch (NumberFormatException | NullPointerException ignored) {
@@ -197,13 +248,41 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerAffiliation(Map<String, String> affiliationData) {
-        //System.out.println(affiliationData);
+        int id = Integer.parseInt(affiliationData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
+        String name = affiliationData.get(DutchElectionProcessor.REGISTERED_NAME);
+        Party party = new Party(id, name);
+        party.setCandidates(new ArrayList<>());
+        partyMap.put(String.valueOf(id), party);
     }
+
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {
+        int id = Integer.parseInt(candidateData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+        String firstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
+        String lastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
+        String lastNamePrefix = candidateData.get(DutchElectionProcessor.LAST_NAME_PREFIX);
+        int affiliationId = Integer.parseInt(candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER));
 
+        String fullLastName = lastNamePrefix != null ? lastNamePrefix + " " + lastName : lastName;
+
+        Candidate candidate = new Candidate();
+        candidate.setId(id);
+        candidate.setFirstName(firstName);
+        candidate.setLastName(fullLastName);
+        candidate.setPartyId(affiliationId);
+        candidate.setVotes(0); // default votes = 0
+
+        candidateMap.put(id, candidate);
+
+        Party party = partyMap.get(String.valueOf(affiliationId));
+        if (party != null) {
+            party.getCandidates().add(candidate);
+        }
     }
+
+
+
 
     @Override
     public Election retrieve() {

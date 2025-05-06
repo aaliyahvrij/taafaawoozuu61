@@ -5,26 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 public class Candidate {
     @Id
-    @Getter @Setter
-    int id;
+    private int id;
+    private String shortCode;
+    private String firstName;
+    private String lastName;
+    private int votes;
+    private int partyId;
 
-    @Getter @Setter
-    public String shortCode;
-
-    @Getter @Setter
-    String firstName;
-
-    @Getter @Setter
-    String lastName;
-
-    @Getter @Setter
-    public int validVotes;
-
-    @ManyToOne
-    @JoinColumn(name = "party_id")  // Foreign key column in the Candidate table
-    private Party party;  // The Party this candidate belongs to
 
 
     public Candidate() {
@@ -32,9 +22,9 @@ public class Candidate {
         this.shortCode = "";
         this.firstName = "";
         this.lastName = "";
-        this.validVotes = 0;
+        this.votes = 0;
     }
     public String toString() {
-        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]", this.id, this.firstName, this.lastName, this.validVotes, this.shortCode);
+        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]", this.id, this.firstName, this.lastName, this.votes, this.shortCode);
     }
 }

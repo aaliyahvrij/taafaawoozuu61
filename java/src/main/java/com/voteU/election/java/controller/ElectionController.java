@@ -2,6 +2,7 @@
 
 
     import com.voteU.election.java.model.Election;
+    import com.voteU.election.java.model.Party;
     import com.voteU.election.java.services.ElectionService;
     import org.springframework.web.bind.annotation.*;
 
@@ -21,22 +22,27 @@
             return electionService.readElections();
         }
 
-        @PostMapping("/{electionYear}/parties")
+        @PostMapping("/{electionYear}")
         public boolean readResultsYear(@PathVariable String electionYear) {
             return electionService.readElectionYear(electionYear);
         }
 
+        @GetMapping
+        public Map<String, Election> getAllElections() {
+            return electionService.getAll();
+        }
 
-        @GetMapping("/{electionYear}/parties")
+        @GetMapping("/{electionYear}")
         public Election getElection(@PathVariable String electionYear) {
             return electionService.getElectionByYear(electionYear);
         }
 
-        @GetMapping
-        public Map<String, Election> getParties() {
-
-            return electionService.getAll();
+        @GetMapping("/{electionYear}/national")
+        public Map<Integer, Party> getNationalPartiesByYear(@PathVariable String electionYear){
+            return electionService.getNationalPartiesByYear(electionYear);
         }
+
+
 
 
 
