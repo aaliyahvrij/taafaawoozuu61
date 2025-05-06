@@ -21,6 +21,7 @@ function handleElectionsUpdate(data: Election) {
 
 // When clicking a party
 function handlePartyClick(party: Party) {
+  console.log("Clicked party:", party);
   selectedParty.value = party;
 }
 
