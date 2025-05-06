@@ -1,5 +1,7 @@
 package com.voteU.election.java.model;
 
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class Party {
     int id;
     String name;
     List<Candidate> candidates;
+    @Setter
     int votes;
 
     public Party(int id, String name) {
@@ -52,10 +55,6 @@ public class Party {
 
     public int getVotes() {
         return this.votes;
-    }
-
-    public void setVotes(int votes) {
-        this.votes = votes;
     }
 
     @Override

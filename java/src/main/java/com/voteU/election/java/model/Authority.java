@@ -1,13 +1,18 @@
 package com.voteU.election.java.model;
 
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Authority {
-    String id;
-    String name;
-    Map<Integer, Party> authorityParties;
-    int contestId;
+    @Setter
+    private String id;
+    @Setter
+    private String name;
+    private Map<Integer, Party> authorityParties;
+    @Setter
+    private int contestId;
 
     public Authority(String id) {
         this.id = id;
@@ -20,16 +25,8 @@ public class Authority {
         return this.id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Map<Integer, Party> getAuthorityParties() {
@@ -38,10 +35,6 @@ public class Authority {
 
     public int getContestId() {
         return this.contestId;
-    }
-
-    public void setContestId(int contestId) {
-        this.contestId = contestId;
     }
 
     @Override

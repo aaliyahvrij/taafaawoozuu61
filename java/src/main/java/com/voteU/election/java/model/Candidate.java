@@ -1,32 +1,26 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Candidate {
-    int id;
+    @Setter
+    @Getter
+    private int id;
+    @Getter
     public String shortCode;
-    int partyId;
-    String firstName;
-    String lastName;
+    private int partyId;
+    private String firstName;
+    private String lastName;
     public int validVotes;
 
     public Candidate() {
-        this.id = id;
+        this.id = 0;
         this.shortCode = "";
         this.firstName = "";
         this.lastName = "";
-        this.partyId = partyId;
+        this.partyId = 0;
         this.validVotes = 0;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getShortCode() {
-        return this.shortCode;
     }
 
     public String getFirstName() {

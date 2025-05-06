@@ -10,7 +10,7 @@ import java.util.Map;
 @Slf4j
 @Service
 public class RepUnitService {
-    public RepUnitService() {
+    public RepUnitService(ElectionService electionService) {
     }
 
     /**

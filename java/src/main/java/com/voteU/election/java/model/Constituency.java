@@ -1,12 +1,15 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
+
 import java.util.*;
 
 public class Constituency {
-    int id;
-    String name;
-    Map<Integer, Party> constituencyData;
-    Map<String, Authority> authorities;
+    @Getter
+    private int id;
+    private String name;
+    private Map<Integer, Party> constituencyData;
+    private Map<String, Authority> authorities;
 
     public Constituency(int id, String name) {
         this.id = id;
@@ -15,16 +18,12 @@ public class Constituency {
         this.authorities = new HashMap<>();
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -32,11 +31,11 @@ public class Constituency {
     }
 
     public Map<Integer, Party> getParties() {
-        return constituencyData;
+        return this.constituencyData;
     }
 
     public Map<String, Authority> getAuthorities() {
-        return authorities;
+        return this.authorities;
     }
 
     @Override
