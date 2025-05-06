@@ -30,7 +30,7 @@ function goBack() {
 }
 </script>
 
-<template>
+<template>//
   <div class="main-template">
 
     <div class="filters-wrapper">
