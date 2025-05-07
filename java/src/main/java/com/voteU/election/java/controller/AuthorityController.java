@@ -1,13 +1,13 @@
 package com.voteU.election.java.controller;
 import com.voteU.election.java.model.Authority;
+import com.voteU.election.java.model.Party;
 import com.voteU.election.java.services.AuthorityService;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/election/{year}/authorities")
+@RequestMapping("/api/election/{year}/constituencies/{constituencyId}/authorities")
 public class AuthorityController {
-
     private final AuthorityService authorityService;
 
     public AuthorityController(AuthorityService authorityService) {
@@ -15,13 +15,17 @@ public class AuthorityController {
     }
 
     @GetMapping
-    public Map<String, Authority> getAuthoritiesByYear(@PathVariable String year) {
-        return authorityService.getAuthoritiesByYear(year);
+    public Map<String, Authority> getAuthoritiesByConstituencyId(@PathVariable String year, @PathVariable Integer constituencyId) {
+        return authorityService.getAuthoritiesByConstituencyId(year, constituencyId);
     }
 
     @GetMapping("/{authorityId}")
-    public Authority getAuthorityById(@PathVariable String year, @PathVariable String authorityId) {
-        return authorityService.getAuthorityById(year, authorityId);
+    public Authority getAuthorityById(@PathVariable String year,@PathVariable Integer constituencyId, @PathVariable String authorityId) {
+        return authorityService.getAuthorityById(year, constituencyId, authorityId);
     }
 
+    @GetMapping("/{authorityId}/parties")
+    public Map<Integer, Party> getPartiesByAuthorityId(@PathVariable String year, @PathVariable Integer constituencyId, @PathVariable String authorityId) {
+        return authorityService.getPartiesByAuthorityId(year, constituencyId, authorityId);
+    }
 }
