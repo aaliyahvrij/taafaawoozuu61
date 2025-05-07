@@ -3,10 +3,8 @@ import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.services.ConstituencyService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Map;
-//api/election/(ELECTIONID)/constituencies/(CONSTUENCYID)
+
 @RestController
 @RequestMapping("/api/election/{year}/constituencies")
 public class ConstituencyController {
@@ -25,6 +23,11 @@ public class ConstituencyController {
     @GetMapping("/{constituencyId}")
     public Constituency getConstituencyById(@PathVariable String year, @PathVariable Integer constituencyId){
         return constituencyService.getConstituencyById(year, constituencyId);
+    }
+
+    @GetMapping("/{constituencyId}/parties")
+    public Map<Integer, Party> getPartiesByConstituencyId(@PathVariable String year, @PathVariable Integer constituencyId){
+        return constituencyService.getPartiesByConstituencyId(year, constituencyId);
     }
 
 }

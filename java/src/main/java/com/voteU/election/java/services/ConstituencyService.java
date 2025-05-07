@@ -1,9 +1,8 @@
 package com.voteU.election.java.services;
-
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
+import com.voteU.election.java.model.Party;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -14,7 +13,6 @@ public class ConstituencyService {
     public ConstituencyService(ElectionService electionService) {
         this.electionService = electionService;
     }
-
 
     public Map<Integer, Constituency> getConstituenciesByYear(String year) {
         Election election = electionService.getElectionByYear(year);
@@ -35,5 +33,13 @@ public class ConstituencyService {
             return null;
         }
         return constituencies.get(constituencyId);
+    }
+
+    public Map<Integer, Party> getPartiesByConstituencyId(String year, int constituencyId) {
+        Constituency constituency = getConstituencyById(year, constituencyId);
+        if (constituency == null){
+            return null;
+        }
+        return constituency.getParties();
     }
 }

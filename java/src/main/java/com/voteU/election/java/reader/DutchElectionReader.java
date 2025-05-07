@@ -54,8 +54,6 @@ public class DutchElectionReader {
     }
 
     public Election getElection(String electionId) {
-        String[] electionIds = {"TK2021", "TK2023"};
-
             String path = "/EML_bestanden_" + electionId;
             try {
                 // Process election data

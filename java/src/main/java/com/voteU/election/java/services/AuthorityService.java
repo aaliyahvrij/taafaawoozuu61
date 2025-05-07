@@ -19,8 +19,14 @@ public class AuthorityService {
         if (election == null) {
             return null;
         }
-        // Assuming Election has a Map<Integer, Constituency> field (like getConstituencies())
-
         return election.getAuthorities();
+    }
+
+    public Authority getAuthorityById(String year, String authorityId) {
+        Map<String, Authority> authorities = getAuthoritiesByYear(year);
+        if (authorities == null) {
+            return null;
+        }
+        return authorities.get(authorityId);
     }
 }

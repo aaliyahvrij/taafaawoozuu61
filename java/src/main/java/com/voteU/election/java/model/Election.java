@@ -17,19 +17,11 @@ import java.util.Map;
 
 @Getter @Setter
 public class Election {
-    @Id
     private String id;
-
-
     private String name;
-
     private String date;
-
-
     private Map<Integer, Party> nationalParties;
-
     private Map<Integer, Constituency> constituencies;
-
     private Map<String, Authority> authorities;
 
     public Election(String id, String name, String date) {
@@ -41,11 +33,16 @@ public class Election {
         this.authorities = new HashMap<>();
     }
 
-        @Override
-        public String toString() {
-            return "Name=" + this.name ;
-        }
-
+    @Override
+    public String toString() {
+        return "Election {" +
+                "\n  id='" + id + '\'' +
+                ",\n  name='" + name + '\'' +
+                ",\n  date='" + date + '\'' +
+                ",\n  nationalParties=" + nationalParties +
+                ",\n  contests=" + constituencies +
+                "\n}";
+    }
 
     }
 
