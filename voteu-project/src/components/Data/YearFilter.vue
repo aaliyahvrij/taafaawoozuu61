@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type Ref, ref } from 'vue'
-import { ElectionService } from '@/services/ElectionService.ts'
 import type { Election } from '@/interface/Election.ts'
+import { ElectionService } from '@/services/ElectionService.ts'
 
 //:Ref<TYPE> = ref(value)
 const year: Ref<string> = ref('') // waarde wordt veranderd met select
@@ -11,9 +11,9 @@ const emit = defineEmits<{
   (event: 'updateElections', data: Election): void
 }>()
 
-async function fetchNationalPartyVotes(electionId: number) {
+async function fetchNationalPartyVotes(electionYear: number) {
   alert("hii_electionYear");
-  const data = await ElectionService.getPartyVotes(electionId)
+  const data = await ElectionService.getPartyVotes(electionYear)
   if (data) {
     election.value = data
     emit('updateElections', election.value)

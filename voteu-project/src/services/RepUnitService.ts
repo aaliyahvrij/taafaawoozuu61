@@ -1,4 +1,4 @@
-import type { RepUnit } from '@/interface/ReportingUnit.ts'
+import type { RepUnit } from '@/interface/RepUnit.ts'
 
 export class RepUnitService {
   static async getRepUnits(electionYear: number): Promise<Map<number, RepUnit> | null> {

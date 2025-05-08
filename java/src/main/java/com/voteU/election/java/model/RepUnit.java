@@ -32,4 +32,3 @@ public class RepUnit {
         return String.format("ReportingUnit[id=%d, name=%s]", id, name + ", parties: " + this.affiliations + " - total votes: " + this.totalVotes);
     }
 }
-

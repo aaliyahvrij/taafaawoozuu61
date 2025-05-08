@@ -11,9 +11,9 @@ const emit = defineEmits<{
   (event: 'updateRepUnits', data: Map<number, RepUnit>): void
 }>()
 
-async function fetchRepUnits(electionId: number) {
+async function fetchRepUnits(electionYear: number) {
   alert('hii_repUnits')
-  const data = await RepUnitService.getRepUnits(electionId)
+  const data = await RepUnitService.getRepUnits(electionYear)
   if (data) {
     repUnit.value = data
     emit('updateRepUnits', repUnit.value)
