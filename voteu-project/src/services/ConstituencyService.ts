@@ -1,8 +1,7 @@
-import axios from "axios";
-import type { AxiosResponse } from "axios";
+import axios from 'axios'
+import type { AxiosResponse } from 'axios'
 
-const CONSTITUENCY_API_BASE_URL: string = "http://localhost:8080/api/constituency";
-
+const CONSTITUENCY_API_BASE_URL: string = 'http://localhost:8080/api/constituency'
 
 interface Constituency {
   //todo: fill this interface with typing from the backend model
@@ -10,8 +9,8 @@ interface Constituency {
 
 class ConstituencyService {
   getConstituency(): Promise<AxiosResponse<Constituency[]>> {
-    return axios.get<Constituency[]>(CONSTITUENCY_API_BASE_URL);
+    return axios.get<Constituency[]>(CONSTITUENCY_API_BASE_URL)
   }
 }
 
-export default new ConstituencyService();
+export default new ConstituencyService()

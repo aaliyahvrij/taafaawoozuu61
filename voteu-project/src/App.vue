@@ -1,12 +1,10 @@
 <script setup lang="ts">
-
-import NavBarDesktop from "@/components/NavBarDesktop.vue";
+import NavBarDesktop from '@/components/NavBarDesktop.vue'
 import Header from '@/components/Header.vue'
 </script>
 
 <template>
   <header>
-
     <div class="wrapper">
       <Header />
       <nav>
@@ -19,8 +17,9 @@ import Header from '@/components/Header.vue'
 </template>
 
 <style scoped>
-html, body {
+html,
+body {
   height: 100%;
-  margin: 0;  /* Remove default margins */
+  margin: 0; /* Remove default margins */
 }
 </style>

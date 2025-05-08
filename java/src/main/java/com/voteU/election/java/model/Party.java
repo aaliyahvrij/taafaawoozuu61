@@ -1,9 +1,11 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
 
+@Getter
 public class Party {
     int id;
     String name;
@@ -16,18 +18,6 @@ public class Party {
         this.name = name;
         this.candidates = new ArrayList<>();
         this.votes = 0;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<Candidate> getCandidates() {
-        return this.candidates;
     }
 
     public void addCandidate(Candidate candidate) {
@@ -50,10 +40,6 @@ public class Party {
             }
         }
         return false;
-    }
-
-    public int getVotes() {
-        return this.votes;
     }
 
     @Override

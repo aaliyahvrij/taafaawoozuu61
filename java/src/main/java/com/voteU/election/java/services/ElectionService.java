@@ -69,8 +69,7 @@ public class ElectionService {
     }
 
     /**
-     *
-      * Retrieves all reporting units by election ID (GET).
+     * Retrieves all reporting units by election ID (GET).
      */
     public Map<Integer, RepUnit> getAllRepUnitsOfElection(String electionId) {
         Election election = getElection(electionId);
