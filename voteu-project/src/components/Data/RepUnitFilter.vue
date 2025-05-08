@@ -4,7 +4,7 @@ import type { RepUnit } from '@/interface/RepUnit.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
 
 //:Ref<TYPE> = ref(value)
-const year: Ref<string> = ref('') // waarde wordt veranderd met select
+const electionYear: Ref<string> = ref('') // waarde wordt veranderd met select
 const repUnit: Ref<Map<number, RepUnit> | null> = ref(null)
 
 const emit = defineEmits<{
@@ -25,7 +25,7 @@ async function fetchRepUnits(electionYear: number) {
 
 <template>
   <div class="main-container">
-    <select class="filter-tag" v-model="year" @change="fetchRepUnits">
+    <select class="filter-tag" v-model="electionYear" @change="fetchRepUnits(parseInt(electionYear))">
       <option value="" disabled selected hidden="">ReportingUnit</option>
       <option value="2023">Stembureaus</option>
     </select>

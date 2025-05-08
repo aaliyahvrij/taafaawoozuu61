@@ -4,8 +4,8 @@ import type { Election } from '@/interface/Election.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 
 //:Ref<TYPE> = ref(value)
-const year: Ref<string> = ref('') // waarde wordt veranderd met select
 const election: Ref<Election | null> = ref(null)
+const electionYear: Ref<string> = ref('') // waarde wordt veranderd met select
 
 const emit = defineEmits<{
   (event: 'updateElections', data: Election): void
@@ -25,7 +25,7 @@ async function fetchNationalPartyVotes(electionYear: number) {
 
 <template>
   <div class="main-container">
-    <select class="filter-tag" v-model="year" @change="fetchNationalPartyVotes(year)">
+    <select class="filter-tag" v-model="electionYear" @change="fetchNationalPartyVotes(parseInt(electionYear))">
       <option value="" disabled selected hidden="">Year</option>
       <option value="2021">2021</option>
       <option value="2023">2023</option>
