@@ -12,11 +12,10 @@ import java.util.*;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     private Map<String, Election> elections = new HashMap<>();
-    //private Map<String, RepUnit> repUnits = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {
-        String electionId = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        String electionId = electionData.get(DutchElectionProcessor.ELECTION_ID);
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
 
@@ -50,7 +49,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         boolean isTotalVotes = "TOTAL".equals(source);
 
         // Safely get party ID
-        String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_ID);
         if (partyIdStr == null) {
             System.err.println("❌ Missing AFFILIATION_IDENTIFIER in votesData: " + votesData);
             return;
@@ -70,9 +69,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Check if the party already exists
-        String electionId = votesData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        String electionId = votesData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
-        Map<Integer, Party> partyMap = election.getNationalParties();
+        Map<Integer, Party> partyMap = election.getParties();
         Party party = partyMap.get(partyId);
 
         // Register party on TOTAL only, if not already registered
@@ -100,7 +99,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         // Handle candidate votes
         if (votesData.containsKey("CandidateVotes")) {
-            String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
+            String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
             String candidateVotesStr = votesData.get("CandidateVotes");
 
             if (candidateId == null || candidateVotesStr == null) {
@@ -136,10 +135,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerAuthorityVotes(Map<String, String> authorityData) {
-        String electionId = authorityData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-        String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
-        String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_IDENTIFIER);
-        String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
+        String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
+        String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
+        String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
         String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
@@ -183,7 +182,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
             try {
-                int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+                int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
                 int candidateVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
                 if (!party.hasCandidateId(candidateId)) {
                     Candidate candidate = new Candidate();
