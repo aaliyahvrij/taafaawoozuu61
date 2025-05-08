@@ -270,6 +270,7 @@
                         Candidate candidate = new Candidate();
                         candidate.setId(candidateId);
                         candidate.setVotes(candidateVotes);
+                        candidate.setPartyId(partyId);
                         party.addCandidate(candidate);
                     }
                 } catch (NumberFormatException | NullPointerException ignored) {
@@ -290,11 +291,13 @@
             String caIdStr = candidateData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
             String caFirstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
             String caLastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
+            String localityName = candidateData.get(DutchElectionProcessor.LOCALITY_NAME);
+            String gender = candidateData.get(DutchElectionProcessor.GENDER);
             String electionId = candidateData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
             String contestIdStr = candidateData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
             String affIdStr = candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
     
-            if (caIdStr != null && caFirstName != null && caLastName != null
+            if (caIdStr != null && caLastName != null
                     && electionId != null && contestIdStr != null && affIdStr != null) {
     
                 int caId = Integer.parseInt(caIdStr);
@@ -309,66 +312,49 @@
                     if (constituency != null) {
                         // Update or insert candidate in Constituency-level Party
                         Map<Integer, Party> parties = constituency.getParties();
-                        Party party = parties.get(affId);
-    
-                        if (party != null) {
-                            List<Candidate> candidates = party.getCandidates();
-                            Candidate existing = null;
-    
-                            for (Candidate c : candidates) {
-                                if (c.getId() == caId) {
-                                    existing = c;
-                                    break;
-                                }
-                            }
-    
-                            if (existing != null) {
-                                existing.setFirstName(caFirstName);
-                                existing.setLastName(caLastName);
-                            } else {
-                                Candidate newCandidate = new Candidate();
-                                newCandidate.setId(caId);
-                                newCandidate.setFirstName(caFirstName);
-                                newCandidate.setLastName(caLastName);
-                                party.addCandidate(newCandidate);
-                            }
-                        }
-    
+                        populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, parties);
+
                         // Update or insert candidate in each Authority-level Party
                         Map<String, Authority> authorities = constituency.getAuthorities();
-                        for (Authority a : authorities.values()) {
-                            Map<Integer, Party> partyMap = a.getAuthorityParties();
-                            Party authorityParty = partyMap.get(affId);
-    
-                            if (authorityParty != null) {
-                                List<Candidate> candidates = authorityParty.getCandidates();
-                                Candidate existing = null;
-    
-                                for (Candidate c : candidates) {
-                                    if (c.getId() == caId) {
-                                        existing = c;
-                                        break;
-                                    }
-                                }
-    
-                                if (existing != null) {
-                                    existing.setFirstName(caFirstName);
-                                    existing.setLastName(caLastName);
-                                } else {
-                                    Candidate newCandidate = new Candidate();
-                                    newCandidate.setId(caId);
-                                    newCandidate.setFirstName(caFirstName);
-                                    newCandidate.setLastName(caLastName);
-                                    authorityParty.addCandidate(newCandidate);
-                                }
-                            }
+                        for (Authority authority : authorities.values()) {
+                            Map<Integer, Party> partyMap = authority.getAuthorityParties();
+                            populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, partyMap);
                         }
                     }
                 }
             }
         }
-    
-    
+
+        private void populateCandidate(String caFirstName, String caLastName, String localityName, String gender, int caId, int affId, Map<Integer, Party> parties) {
+            Party party = parties.get(affId);
+
+            if (party != null) {
+                List<Candidate> candidates = party.getCandidates();
+                Candidate existingCandidate = null;
+
+                for (Candidate candidate : candidates) {
+                    if (candidate.getId() == caId && candidate.getPartyId() == affId) {
+                        existingCandidate = candidate;
+                        break;
+                    }
+                }
+
+                if (existingCandidate != null) {
+                    existingCandidate.setFirstName(caFirstName);
+                    existingCandidate.setLastName(caLastName);
+                    existingCandidate.setGender(gender);
+                    existingCandidate.setLocality(localityName);
+                } else {
+                    Candidate newCandidate = new Candidate();
+                    newCandidate.setId(caId);
+                    newCandidate.setFirstName(caFirstName);
+                    newCandidate.setLastName(caLastName);
+                    party.addCandidate(newCandidate);
+                }
+            }
+        }
+
+
         /**
          * This method is not needed since we now track elections by year.
          */

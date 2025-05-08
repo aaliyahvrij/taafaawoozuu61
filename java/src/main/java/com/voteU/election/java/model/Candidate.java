@@ -14,6 +14,10 @@ public class Candidate {
     private String lastName;
     private int votes;
     private int partyId;
+    private String gender;
+    private String locality;
+
+
 
 
 
@@ -23,8 +27,10 @@ public class Candidate {
         this.firstName = "";
         this.lastName = "";
         this.votes = 0;
+        this.gender = "";
+        this.locality = "";
     }
     public String toString() {
-        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]", this.id, this.firstName, this.lastName, this.votes, this.shortCode);
+        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s, gender=%s, locality=%s]", this.id, this.firstName, this.lastName, this.votes, this.shortCode, this.gender, this.locality);
     }
 }

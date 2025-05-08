@@ -3,10 +3,10 @@ import type {Election} from "@/interface/Election.ts";
 
 export class YearService {
 
-    static async getPartyVotes(electionId : string): Promise<Election | null> {
+    static async getNationalPartyVotes(electionId : string): Promise<Election | null> {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/election/TK${electionId}/parties`,
+          `http://localhost:8080/api/election/TK${electionId}/national`,
           {
             method: 'GET',
             headers: {

@@ -11,7 +11,7 @@ const elections: Ref<Election | null > = ref(null) // variable om gefetchte data
 const emit = defineEmits(['updateElections']); // definieer emit om op te sturen
 
 async function fetchNationalPartyVotes(electionId: string){ // functie die service aanroept (krijgt id van select)
-  const data = await YearService.getPartyVotes(electionId)
+  const data = await YearService.getNationalPartyVotes(electionId)
   if (data) {
     elections.value = data // variable waarde wordt gezet
     emit('updateElections', elections.value); // emit wordt waarde wordt gezet

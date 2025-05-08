@@ -92,7 +92,6 @@ public class DutchElectionProcessor<E> {
     public static final String LAST_NAME_PREFIX = "NamePrefix";
     public static final String LAST_NAME = "LastName";
     public static final String GENDER = "Gender";
-    public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
     public static final String LOCALITY = "Locality";
     public static final String LOCALITY_NAME = "LocalityName";
 
@@ -290,8 +289,6 @@ public class DutchElectionProcessor<E> {
         String firstName = null;
         String lastNamePrefix = null;
         String lastName = null;
-        String qualifyingAddress = null;
-        String locality = null;
         String localityName = null;
         String gender = null;
 
@@ -323,6 +320,18 @@ public class DutchElectionProcessor<E> {
             }
             parser.findAndAcceptEndTag(PERSON_NAME); // Accept the PersonName tag after reading
         }
+        parser.next();
+        if (parser.getLocalName().equals(GENDER)) {
+            gender = parser.getElementText().trim();
+            parser.findAndAcceptEndTag(GENDER);
+        }
+        if (parser.findBeginTag(LOCALITY)) {
+            if(parser.findBeginTag(LOCALITY_NAME)){
+                localityName = parser.getElementText().trim();
+                parser.findAndAcceptEndTag(LOCALITY_NAME);
+            }
+            parser.findAndAcceptEndTag(LOCALITY);
+        }
 
         parser.findAndAcceptEndTag(CANDIDATE); // Accept the Candidate tag after reading
 
@@ -338,15 +347,19 @@ public class DutchElectionProcessor<E> {
             candidateData.put(FIRST_NAME, firstName);
         }
         if (lastName != null) {
-            candidateData.put(LAST_NAME_PREFIX, lastNamePrefix);
-        }
-        if (lastName != null) {
             candidateData.put(LAST_NAME, lastName);
+        }
+        if(gender != null){
+            candidateData.put(GENDER, gender);
+        }
+        if(localityName != null){
+            candidateData.put(LOCALITY_NAME, localityName);
         }
 
         // Register the candidate data with the transformer
         transformer.registerCandidate(candidateData);
     }
+
 
 
     private void processVotes(Map<String, String> electionData, XMLParser parser, String fileType) throws XMLStreamException {
