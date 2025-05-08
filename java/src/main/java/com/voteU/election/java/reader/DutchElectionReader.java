@@ -17,7 +17,6 @@ public class DutchElectionReader {
     private final DutchElectionTransformer transformer;
     private final DutchElectionProcessor<Election> electionProcessor;
 
-
     public DutchElectionReader() {
         this.transformer = new DutchElectionTransformer();
         this.electionProcessor = new DutchElectionProcessor<>(transformer);
@@ -45,7 +44,6 @@ public class DutchElectionReader {
             }
         }
         System.out.println("All files are processed.\n");
-
         return transformer.getElections();
     }
 }

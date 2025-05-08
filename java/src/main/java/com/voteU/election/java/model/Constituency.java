@@ -4,8 +4,8 @@ import lombok.*;
 
 import java.util.*;
 
-@Setter
 @Getter
+@Setter
 public class Constituency {
     private int id;
     private String name;
@@ -21,10 +21,6 @@ public class Constituency {
 
     @Override
     public String toString() {
-        return "Constituency{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", parties=" + parties +
-                '}';
+        return "Constituency{" + "id=" + this.id + ", name='" + this.name + '\'' + ", parties=" + this.parties + '}';
     }
 }

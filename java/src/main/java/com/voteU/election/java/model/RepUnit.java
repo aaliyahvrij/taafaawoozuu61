@@ -1,7 +1,10 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
+
 import java.util.*;
 
+@Getter
 public class RepUnit {
     int id;
     String name;
@@ -13,22 +16,6 @@ public class RepUnit {
         this.name = name;
         this.affiliations = new ArrayList<>();
         this.totalVotes = totalVotes;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<Party> getAffiliations() {
-        return this.affiliations;
-    }
-
-    public int getTotalVotes() {
-        return this.totalVotes;
     }
 
     public String toString() {

@@ -12,12 +12,12 @@ import java.util.*;
  */
 public class Election {
     private String id;
-    private String name;
-    private String date;
-    private List<Province> provinces;
-    private Map<Integer, Party> parties;
-    private Map<String, Authority> authorities;
-    private Map<Integer, RepUnit> repUnits;
+    private final String name;
+    private final String date;
+    private final List<Province> provinces;
+    private final Map<Integer, Party> parties;
+    private final Map<String, Authority> authorities;
+    private final Map<Integer, RepUnit> repUnits;
 
     public Election(String id, String name, String date) {
         this.id = id;
@@ -83,13 +83,6 @@ public class Election {
 
     @Override
     public String toString() {
-        return "Election {"
-                + "\n  id='" + this.id + '\''
-                + ",\n  name='" + this.name + '\''
-                + ",\n  date='" + this.date + '\''
-                + ",\n  provinces=" + this.provinces.size()
-                + ",\n  nationalParties=" + this.parties
-                + ",\n  authorities=" + this.authorities
-                + "\n}";
+        return "Election {" + "\n  id='" + this.id + '\'' + ",\n  name='" + this.name + '\'' + ",\n  date='" + this.date + '\'' + ",\n  provinces=" + this.provinces.size() + ",\n  nationalParties=" + this.parties + ",\n  authorities=" + this.authorities + "\n}";
     }
 }

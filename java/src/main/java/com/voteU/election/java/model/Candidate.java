@@ -47,9 +47,6 @@ public class Candidate {
     }
 
     public String toString() {
-        return String.format(
-                "Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]",
-                this.id, this.firstName, this.lastName, this.validVotes, this.shortCode
-        );
+        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s]", this.id, this.firstName, this.lastName, this.validVotes, this.shortCode);
     }
 }

@@ -1,4 +1,4 @@
-export interface Contest{
-  id:number
-  name:string;
+export interface Contest {
+  id: number;
+  name: string;
 }

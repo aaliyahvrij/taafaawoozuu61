@@ -143,8 +143,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
 
-        if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null)
+        if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null) {
             return;
+        }
 
         int contestId, partyId;
         try {
@@ -155,7 +156,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         Election election = elections.get(electionId);
-        if (election == null) return;
+        if (election == null) {
+            return;
+        }
 
         Map<String, Authority> authorityMap = election.getAuthorities();
         Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
