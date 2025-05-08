@@ -6,7 +6,7 @@ export class YearService {
     static async getNationalPartyVotes(electionId : string): Promise<Election | null> {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/election/TK${electionId}/national`,
+          `http://localhost:8080/api/election/TK${electionId}/parties`,
           {
             method: 'GET',
             headers: {

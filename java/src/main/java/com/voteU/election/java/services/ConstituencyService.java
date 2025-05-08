@@ -15,7 +15,7 @@ public class ConstituencyService {
     }
 
     public Map<Integer, Constituency> getConstituenciesByYear(String year) {
-        Election election = electionService.getElectionByYear(year);
+        Election election = electionService.getElection(year);
         if (election == null){
             return null;
         }

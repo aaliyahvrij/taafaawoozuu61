@@ -16,16 +16,16 @@ public class AuthorityService {
         this.electionService = electionService;
     }
 
-    public Map<String, Authority> getAuthoritiesByYear(String year) {
-        Election election = electionService.getElectionByYear(year);
+    public Map<String, Authority> getAllAuthoritiesByElection(String electionId) {
+        Election election = electionService.getElection(electionId);
         if (election == null) {
             return null;
         }
         return election.getAuthorities();
     }
 
-    public Map<String, Authority> getAuthoritiesByConstituencyId(String year, int constituencyId) {
-        Election election = electionService.getElectionByYear(year);
+    public Map<String, Authority> getAuthoritiesByConstituencyId(String electionId, int constituencyId) {
+        Election election = electionService.getElection(electionId);
         Constituency constituency = election.getConstituencies().get(constituencyId);
         if (constituency == null) {
             return null;
@@ -33,16 +33,16 @@ public class AuthorityService {
         return constituency.getAuthorities();
     }
 
-    public Authority getAuthorityById(String year, Integer constituencyId, String authorityId) {
-        Map<String, Authority> authorities = getAuthoritiesByConstituencyId(year, constituencyId);
+    public Authority getAuthorityById(String electionId, Integer constituencyId, String authorityId) {
+        Map<String, Authority> authorities = getAuthoritiesByConstituencyId(electionId, constituencyId);
         if (authorities == null) {
             return null;
         }
         return authorities.get(authorityId);
     }
 
-    public Map<Integer, Party> getPartiesByAuthorityId(String year, Integer constituencyId, String authorityId) {
-        Authority authority = getAuthorityById(year, constituencyId, authorityId);
+    public Map<Integer, Party> getPartiesByAuthorityId(String electionId, Integer constituencyId, String authorityId) {
+        Authority authority = getAuthorityById(electionId, constituencyId, authorityId);
         if (authority == null) {
             return null;
         }

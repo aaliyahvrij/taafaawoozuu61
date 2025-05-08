@@ -23,9 +23,9 @@
             return electionService.readElections();
         }
 
-        @PostMapping("/{electionYear}")
-        public boolean readResultsYear(@PathVariable String electionYear) {
-            return electionService.readElectionYear(electionYear);
+        @PostMapping("/{electionId}")
+        public boolean readResultsElection(@PathVariable String electionId) {
+            return electionService.readElection(electionId);
         }
 
         @GetMapping
@@ -33,18 +33,18 @@
             return electionService.getAll();
         }
 
-        @GetMapping("/{electionYear}")
-        public Election getElection(@PathVariable String electionYear) {
-            return electionService.getElectionByYear(electionYear);
+        @GetMapping("/{electionId}")
+        public Election getElection(@PathVariable String electionId) {
+            return electionService.getElection(electionId);
         }
 
-        @GetMapping("/{electionYear}/national")
-        public Map<Integer, Party> getNationalPartiesByYear(@PathVariable String electionYear){
-            return electionService.getNationalPartiesByYear(electionYear);
+        @GetMapping("/{electionId}/parties")
+        public Map<Integer, Party> getAllPartiesByElection(@PathVariable String electionId){
+            return electionService.getAllPartiesByElection(electionId);
         }
 
-        @GetMapping( "/{year}/authorities")
-        public Map<String, Authority> getAllAuthoritiesByYear(@PathVariable String year) {
-            return authorityService.getAuthoritiesByYear(year);
+        @GetMapping("/{electionId}/authorities")
+        public Map<String, Authority> getAllAuthoritiesByElection(@PathVariable String electionId) {
+            return authorityService.getAllAuthoritiesByElection(electionId);
         }
     }
