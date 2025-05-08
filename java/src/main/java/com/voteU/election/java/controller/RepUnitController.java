@@ -1,6 +1,6 @@
 package com.voteU.election.java.controller;
 
-import com.voteU.election.java.model.ReportingUnit;
+import com.voteU.election.java.model.RepUnit;
 import com.voteU.election.java.services.RepUnitService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ public class RepUnitController {
     }
 
     @GetMapping
-    public Map<Integer, ReportingUnit> getRepUnits() {
-        return repUnitService.getRepUnits();
+    public Map<Integer, RepUnit> getRepUnits(String electionId) {
+        return repUnitService.getRepUnits(electionId);
     }
 }

@@ -1,16 +1,12 @@
 package com.voteU.election.java.utils.xml;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.*;
 import javax.xml.stream.util.StreamReaderDelegate;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.logging.*;
 
 /**
- * The XMLParser does the low-level  and has default scope on purpose because it is to be used only
+ * The XMLParser does the low-level and has default scope on purpose because it is to be used only
  * by an instance of DutchElectionProcessor!
  */
 class XMLParser extends StreamReaderDelegate {

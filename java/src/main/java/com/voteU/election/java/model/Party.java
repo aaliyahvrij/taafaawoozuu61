@@ -2,8 +2,7 @@ package com.voteU.election.java.model;
 
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Party {
     int id;

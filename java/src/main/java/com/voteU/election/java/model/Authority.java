@@ -1,10 +1,11 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+@Getter
 public class Authority {
     @Setter
     private String id;
@@ -19,22 +20,6 @@ public class Authority {
         this.name = "";
         this.authorityParties = new HashMap<>();
         this.contestId = 0;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Map<Integer, Party> getAuthorityParties() {
-        return this.authorityParties;
-    }
-
-    public int getContestId() {
-        return this.contestId;
     }
 
     @Override

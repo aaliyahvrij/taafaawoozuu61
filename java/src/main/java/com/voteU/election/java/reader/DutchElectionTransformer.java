@@ -1,8 +1,7 @@
 package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.*;
-import com.voteU.election.java.utils.xml.DutchElectionProcessor;
-import com.voteU.election.java.utils.xml.Transformer;
+import com.voteU.election.java.utils.xml.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -13,7 +12,7 @@ import java.util.*;
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     private Map<String, Election> elections = new HashMap<>();
-    private Map<String, ReportingUnit> repUnits = new HashMap<>();
+    private Map<String, RepUnit> repUnits = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {

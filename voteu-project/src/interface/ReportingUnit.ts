@@ -1,6 +1,6 @@
 import type {Party} from "@/interface/Party.ts";
 
-export interface ReportingUnit {
+export interface RepUnit {
   id: string;
   name: string;
   affiliations: { [key: number]: Party };

@@ -1,9 +1,9 @@
-import type { ReportingUnit } from '@/interface/ReportingUnit.ts'
+import type { RepUnit } from '@/interface/ReportingUnit.ts'
 
 export class RepUnitService {
-  static async getRepUnits(): Promise<Map<number, ReportingUnit> | null> {
+  static async getRepUnits(electionYear: number): Promise<Map<number, RepUnit> | null> {
     try {
-      const response = await fetch(`http://localhost:8080/api/repunit`, {
+      const response = await fetch(`http://localhost:8080/api/election/TK${electionYear}/repunits`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

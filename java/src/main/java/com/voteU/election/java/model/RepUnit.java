@@ -1,15 +1,14 @@
 package com.voteU.election.java.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ReportingUnit {
+public class RepUnit {
     int id;
     String name;
     List<Party> affiliations;
     int totalVotes;
 
-    public ReportingUnit(int id, String name, int totalVotes) {
+    public RepUnit(int id, String name, int totalVotes) {
         this.id = id;
         this.name = name;
         this.affiliations = new ArrayList<>();
@@ -33,3 +32,4 @@ public class ReportingUnit {
         return String.format("ReportingUnit[id=%d, name=%s]", id, name + ", parties: " + this.affiliations + " - total votes: " + this.totalVotes);
     }
 }
+

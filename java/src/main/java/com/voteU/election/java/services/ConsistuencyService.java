@@ -1,18 +1,15 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Contest;
+import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.reader.DutchElectionReader;
 import org.springframework.stereotype.Service;
-
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ConsistuencyService {
 
     private DutchElectionReader electionReader;
-    private final Map<String, Map<Integer, Contest>> storedElections = new HashMap<>();
+    private final Map<String, Map<Integer, Constituency>> storedElections = new HashMap<>();
 
     public void ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -33,7 +30,7 @@ public class ConsistuencyService {
      *
      * @return A map containing election results grouped by year.
      */
-    public Map<String, Map<Integer, Contest>> getElections() {
+    public Map<String, Map<Integer, Constituency>> getElections() {
         return storedElections;
     }
 

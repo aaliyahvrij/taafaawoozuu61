@@ -1,10 +1,7 @@
 package com.voteU.election.java.model;
 
 import com.voteU.election.java.utils.xml.Transformer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Just a very silly election class that only demonstrates that a {@link Transformer}
@@ -19,7 +16,7 @@ public class Election {
     private List<Province> provinces;
     private Map<Integer, Party> nationalParties;
     private Map<String, Authority> authorities;
-    private Map<Integer, ReportingUnit> repUnits;
+    private Map<Integer, RepUnit> repUnits;
 
     public Election(String id, String name, String date) {
         this.id = id;
@@ -78,7 +75,7 @@ public class Election {
         return this.nationalParties;
     }
 
-    public Map<Integer, ReportingUnit> getRepUnits() { return this.repUnits; }
+    public Map<Integer, RepUnit> getRepUnits() { return this.repUnits; }
 
     @Override
     public String toString() {

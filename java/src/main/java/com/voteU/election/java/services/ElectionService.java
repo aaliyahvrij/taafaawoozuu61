@@ -1,8 +1,6 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Contest;
-import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.*;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import java.util.*;
 public class ElectionService {
     private final DutchElectionReader electionReader;
     private static final Map<String, Election> storedElections = new HashMap<>();
-    public static Election storedElection;
 
     public ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -42,7 +39,7 @@ public class ElectionService {
      * @param electionId the ID of the election (e.g. "TK2021")
      * @return true if found, false otherwise
      */
-    public boolean readElectionYear(String electionId) {
+    public boolean readElection(String electionId) {
         return storedElections.containsKey(electionId);
     }
 
@@ -57,12 +54,17 @@ public class ElectionService {
      * Retrieves a specific election by ID (GET).
      */
     public Election getElection(String electionId) {
-        storedElection = storedElections.get(electionId);
-        if (storedElection != null) {
-            System.out.println("static storedElection is no longer null");
-            System.out.println(storedElection.getId());
-            System.out.println(storedElection.getName());
-        }
         return storedElections.get(electionId);
+    }
+
+    /**
+     * Retrieves all parties by election ID (GET).
+     */
+    public Map<Integer, Party> getAllPartiesByElection(String electionId) {
+        Election election = getElection(electionId);
+        if (election == null) {
+            return null;
+        }
+        return election.getNationalParties();
     }
 }

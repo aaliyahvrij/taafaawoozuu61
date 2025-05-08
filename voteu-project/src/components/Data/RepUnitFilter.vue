@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { type Ref, ref } from 'vue'
-import type { ReportingUnit } from '@/interface/ReportingUnit.ts'
+import type { RepUnit } from '@/interface/RepUnit.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
 
 //:Ref<TYPE> = ref(value)
 const year: Ref<string> = ref('') // waarde wordt veranderd met select
-const repUnit: Ref<Map<number, ReportingUnit> | null> = ref(null)
+const repUnit: Ref<Map<number, RepUnit> | null> = ref(null)
 
 const emit = defineEmits<{
-  (event: 'updateRepUnits', data: Map<number, ReportingUnit>): void
+  (event: 'updateRepUnits', data: Map<number, RepUnit>): void
 }>()
 
-async function fetchRepUnits() {
+async function fetchRepUnits(electionId: number) {
   alert('hii_repUnits')
-  const data = await RepUnitService.getRepUnits()
+  const data = await RepUnitService.getRepUnits(electionId)
   if (data) {
     repUnit.value = data
     emit('updateRepUnits', repUnit.value)

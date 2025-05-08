@@ -1,12 +1,8 @@
 package com.voteU.election.java.controller;
 
-import com.voteU.election.java.model.Contest;
+import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.services.ConsistuencyService;
-import com.voteU.election.java.services.ElectionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -20,7 +16,7 @@ public class ConstituencyController {
     }
 
     @GetMapping
-    public Map<String, Map<Integer, Contest>> getConstituency() {
+    public Map<String, Map<Integer, Constituency>> getConstituency() {
         return consistuencyService.getElections();
     }
 
