@@ -18,8 +18,8 @@ public class RepUnitService {
     /**
      * Retrieves all stored reporting units (GET).
      */
-    public Map<Integer, RepUnit> getRepUnits(String electionId) {
-        System.out.println("ee22: " + electionService.getElection(electionId).getRepUnits().size());
+    public Map<Integer, RepUnit> getAllRepUnitsOfElection(String electionId) {
+        System.out.println("The amount of repUnits: " + electionService.getElection(electionId).getRepUnits().size());
         return electionService.getElection(electionId).getRepUnits();
     }
 }

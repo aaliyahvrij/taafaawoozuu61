@@ -67,4 +67,16 @@ public class ElectionService {
         }
         return election.getNationalParties();
     }
+
+    /**
+     *
+      * Retrieves all reporting units by election ID (GET).
+     */
+    public Map<Integer, RepUnit> getAllRepUnitsOfElection(String electionId) {
+        Election election = getElection(electionId);
+        if (election == null) {
+            return null;
+        }
+        return election.getRepUnits();
+    }
 }

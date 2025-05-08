@@ -12,7 +12,7 @@ public class Constituency {
     private Map<Integer, Party> parties;
     Map<String, Authority> authorities;
 
-    public Constituency(int id,  String name) {
+    public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
         this.parties = new HashMap<>();

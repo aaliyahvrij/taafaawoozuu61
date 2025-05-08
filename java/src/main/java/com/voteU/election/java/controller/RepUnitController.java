@@ -8,7 +8,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/repunit")
+@RequestMapping("/api/{electionId}/repunits")
 public class RepUnitController {
     private final RepUnitService repUnitService;
 
@@ -17,7 +17,7 @@ public class RepUnitController {
     }
 
     @GetMapping
-    public Map<Integer, RepUnit> getRepUnits(String electionId) {
-        return repUnitService.getRepUnits(electionId);
+    public Map<Integer, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
+        return repUnitService.getAllRepUnitsOfElection(electionId);
     }
 }

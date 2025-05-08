@@ -6,8 +6,7 @@ import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Processes election data from XML files and provides access to the results.
