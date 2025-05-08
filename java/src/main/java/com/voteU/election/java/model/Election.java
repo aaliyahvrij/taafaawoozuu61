@@ -1,6 +1,7 @@
 package com.voteU.election.java.model;
 
 import com.voteU.election.java.utils.xml.Transformer;
+
 import java.util.*;
 
 /**
@@ -76,7 +77,9 @@ public class Election {
         return this.parties;
     }
 
-    public Map<Integer, RepUnit> getRepUnits() { return this.repUnits; }
+    public Map<Integer, RepUnit> getRepUnits() {
+        return this.repUnits;
+    }
 
     @Override
     public String toString() {

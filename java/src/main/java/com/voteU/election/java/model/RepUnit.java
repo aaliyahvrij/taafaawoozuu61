@@ -18,12 +18,15 @@ public class RepUnit {
     public int getId() {
         return this.id;
     }
+
     public String getName() {
         return this.name;
     }
+
     public List<Party> getAffiliations() {
         return this.affiliations;
     }
+
     public int getTotalVotes() {
         return this.totalVotes;
     }

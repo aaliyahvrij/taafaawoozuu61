@@ -17,7 +17,7 @@ public interface Transformer<E> {
      * Called once per file with the information about the election. The parameter {@code electionData} (should) hold
      * the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#ELECTION_IDENTIFIER}</li>
+     *     <li>{@link DutchElectionProcessor#ELECTION_ID}</li>
      *     <li>{@link DutchElectionProcessor#ELECTION_NAME}</li>
      *     <li>{@link DutchElectionProcessor#ELECTION_CATEGORY}</li>
      *     <li>{@link DutchElectionProcessor#ELECTION_DATE}</li>
@@ -32,7 +32,7 @@ public interface Transformer<E> {
      * Called once per file with information about the contest. The {@code contestData} can hold the
      * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#CONTEST_IDENTIFIER}</li>
+     *     <li>{@link DutchElectionProcessor#CONTEST_ID}</li>
      *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
      * </ul>
      *
@@ -44,7 +44,7 @@ public interface Transformer<E> {
      * Called multiple times per file with information about an affiliation. The {@code affiliationData} can hold the
      * same information as {@code contestData} in {@link #registerContest(Map)}, and the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#AFFILIATION_IDENTIFIER}</li>
+     *     <li>{@link DutchElectionProcessor#AFFILIATION_ID}</li>
      *     <li>{@link DutchElectionProcessor#REGISTERED_NAME}</li>
      * </ul>
      *
@@ -56,7 +56,7 @@ public interface Transformer<E> {
      * Called multiple times per file with information about a candidate. The {@code candidateData} can hold the
      * same information as {@code affiliationData} in {@link #registerAffiliation(Map)}, and the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#CANDIDATE_IDENTIFIER}</li>
+     *     <li>{@link DutchElectionProcessor#CANDIDATE_ID}</li>
      *     <li>{@link DutchElectionProcessor#INITIALS}</li>
      *     <li>{@link DutchElectionProcessor#FIRST_NAME}</li>
      *     <li>{@link DutchElectionProcessor#LAST_NAME_PREFIX}</li>
@@ -81,6 +81,8 @@ public interface Transformer<E> {
     void registerNationalVotes(Map<String, String> nationalVotesData);
 
     void registerAuthorityVotes(Map<String, String> authorityVotesData);
+
+    void registerVotes(Map<String, String> votesData);
 
     void registerReportingUnit(Map<String, String> reportingUnitData);
 

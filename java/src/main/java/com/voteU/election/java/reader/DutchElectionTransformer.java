@@ -51,7 +51,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Safely get party ID
         String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_ID);
         if (partyIdStr == null) {
-            System.err.println("❌ Missing AFFILIATION_IDENTIFIER in votesData: " + votesData);
+            System.err.println("❌ Missing AFFILIATION_ID in votesData: " + votesData);
             return;
         }
 
@@ -59,7 +59,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         try {
             partyId = Integer.parseInt(partyIdStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid AFFILIATION_IDENTIFIER: '" + partyIdStr + "' in " + votesData);
+            System.err.println("❌ Invalid AFFILIATION_ID: '" + partyIdStr + "' in " + votesData);
             return;
         }
 
@@ -193,6 +193,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
             } catch (NumberFormatException | NullPointerException ignored) {
             }
         }
+    }
+
+    @Override
+    public void registerVotes(Map<String, String> votesData) {
+        //election.data = votesData;
+        //System.out.printf("Found votes information: %s\n", votesData);
     }
 
     @Override

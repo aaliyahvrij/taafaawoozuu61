@@ -1,6 +1,7 @@
 package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.utils.PathUtils;
+
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
 import java.nio.file.Path;
@@ -130,12 +131,13 @@ public class DutchElectionProcessor<E> {
      * <pre>
      * NOTE: It assumes that there are <b>NO</b> whitespace characters between the tags other than within text values!
      * </pre>
+     *
      * @param electionId the identifier for the of the files that should be processed, for example <i>TK2023</i>.
      * @param folderName The name of the folder that contains the files containing the election data.
      * @return returns the result as defined by the {@link Transformer#retrieve()} method.
-     * @throws IOException in case something goes wrong while reading the file.
+     * @throws IOException        in case something goes wrong while reading the file.
      * @throws XMLStreamException when a file has not the expected format. One example is a file that has been formatted
-     * for better readability.
+     *                            for better readability.
      */
     public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
         LOG.info("Loading election data from %s".formatted(folderName));
@@ -143,22 +145,21 @@ public class DutchElectionProcessor<E> {
         Map<String, String> electionData = new HashMap<>();
         electionData.put(ELECTION_ID, electionId);
 
-
-        for(Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId)) ){
+        for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionData, parser);
             processNationalVotes(electionData, parser);
         }
-        for(Path kiesKringFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId)) ){
+        for (Path kiesKringFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(kiesKringFile));
             XMLParser parser = new XMLParser(new FileInputStream(kiesKringFile.toString()));
             processElection(electionData, parser);
             processVotes(electionData, parser, "kieskring");
         }
 
-        for (Path authorityFile: PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
-            System.out.println(folderName+ authorityFile.toString());
+        for (Path authorityFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
+            System.out.println(folderName + authorityFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);
             processVotes(electionData, parser, "gemeente");
@@ -178,7 +179,7 @@ public class DutchElectionProcessor<E> {
     private void processElection(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
         String authorityId = null;
         String authorityName = null;
-        if (parser.findBeginTag(MANAGING_AUTHORITY)){
+        if (parser.findBeginTag(MANAGING_AUTHORITY)) {
             if (parser.findBeginTag(AUTHORITY_ID)) {
                 authorityId = parser.getAttributeValue(null, "Id");
                 authorityName = parser.getElementText();
@@ -221,8 +222,6 @@ public class DutchElectionProcessor<E> {
             }
         }
     }
-
-
 
     private void processContest(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
@@ -290,10 +289,6 @@ public class DutchElectionProcessor<E> {
         String firstName = null;
         String lastNamePrefix = null;
         String lastName = null;
-        String qualifyingAddress = null;
-        String locality = null;
-        String localityName = null;
-        String gender = null;
 
         parser.nextBeginTag(CANDIDATE);
 
@@ -348,7 +343,6 @@ public class DutchElectionProcessor<E> {
         transformer.registerCandidate(candidateData);
     }
 
-
     private void processVotes(Map<String, String> electionData, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
             String contestName = null;
@@ -366,7 +360,7 @@ public class DutchElectionProcessor<E> {
             contestData.put(CONTEST_NAME, contestName);
             contestData.put(CONTEST_ID, String.valueOf(contestId));
 
-            if(parser.findBeginTag(TOTAL_VOTES)){
+            if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
                     case "gemeente":
                         System.out.println("Processing gemeente votes");
@@ -389,9 +383,8 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-
     private void processNationalVotes(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(TOTAL_VOTES)){
+        if (parser.findBeginTag(TOTAL_VOTES)) {
             int affiliationId = 0;
             String name = INVALID_NAME;
             int affiliationVotes = 0;
@@ -430,7 +423,7 @@ public class DutchElectionProcessor<E> {
                         Map<String, String> caTotalVotesData = new HashMap<>(contestData);
                         String candidateId = null;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
-                            candidateId = parser.getAttributeValue(null,SHORT_CODE);
+                            candidateId = parser.getAttributeValue(null, SHORT_CODE);
                         }
 
                         parser.findAndAcceptEndTag(CANDIDATE);
@@ -467,7 +460,7 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processAuthority(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(TOTAL_VOTES)){
+        if (parser.findBeginTag(TOTAL_VOTES)) {
             // System.out.println("Parser at " + parser.getLocalName());
             int affiliationId = 0;
             String name = INVALID_NAME;
@@ -549,10 +542,6 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-
-
-
-
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
             String reportingUnitId = null;
@@ -615,7 +604,7 @@ public class DutchElectionProcessor<E> {
                             reportingUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
                             reportingUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
 
-                            // transformer.registerVotes(reportingUnitData); <<<REPORTING UNIT TRANSFORMER MAKEN
+                            transformer.registerVotes(reportingUnitData); //<<<REPORTING UNIT TRANSFORMER MAKEN
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candidateId, affiliationId, reportingUnitName));
                         }
@@ -630,12 +619,4 @@ public class DutchElectionProcessor<E> {
             parser.findAndAcceptEndTag(REPORTING_UNIT_VOTES);
         }
     }
-
 }
-
-
-
-
-
-
-
