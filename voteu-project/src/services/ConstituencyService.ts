@@ -1,20 +1,27 @@
-import axios from "axios";
-import type { AxiosResponse } from "axios";
+import type { Constituency } from '@/interface/Constituency.ts'
 
-const CONSTITUENCY_API_BASE_URL: string = "http://localhost:8080/api/constituency";
+export class ConstituencyServiceService {
+  static async getConstituenciesByElection(
+    electionId: string,
+  ): Promise<Record<number, Constituency> | null> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/election/TK${electionId}/constituencies`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
-
-export interface Constituency {
-  id: number;
-  name: string;
-
-}
-
-
-class ConstituencyService {
-  getConstituency(): Promise<AxiosResponse<Constituency[]>> {
-    return axios.get<Constituency[]>(CONSTITUENCY_API_BASE_URL);
+      if (!response.ok) {
+        throw new Error('HTTP error!: ' + response.status)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+    return null
   }
 }
-
-export default new ConstituencyService();

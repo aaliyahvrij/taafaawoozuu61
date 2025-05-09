@@ -1,92 +1,51 @@
-<script setup lang="ts">
-
-import {RouterLink} from "vue-router";
-//Todo: make an array of the links and loop through it
-</script>
-
 <template>
-  <div id=nav-block>
-    <div id="navbar" class="navbar">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/how">How does it work?</RouterLink>
-      <RouterLink to="/filter">Filters</RouterLink>
-      <RouterLink to="/compare">Compare</RouterLink>
-      <RouterLink to="/forum">Forum</RouterLink>
-    </div>
-  </div>
+  <aside class="sidenav">
+    <nav>
+      <ul>
+        <li class="link-item"><RouterLink to="/">Home</RouterLink></li>
+        <li class="link-item"><RouterLink to="/about">About</RouterLink></li>
+        <li class="link-item"><RouterLink to="/how">How</RouterLink></li>
+        <li class="link-item"><RouterLink to="/filter">Filter</RouterLink></li>
+        <li class="link-item"><RouterLink to="/compare">Compare</RouterLink></li>
+        <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
+      </ul>
+    </nav>
+  </aside>
 </template>
 
 <style scoped>
-#nav-block {
-  height: 100vh;
-  width: 220px;
-  background-color: #f8f8f8;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+.sidenav {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.navbar {
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding-top: 2rem;
-  height: 100%;
+.sidenav ul {
+  list-style-type: none;  /* Remove bullets */
+  padding: 0;
+  margin: 0;
 }
 
-.navbar a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  margin: 1rem 0;
+.sidenav .link-item {
+  width: 100%;   /* Ensure the div spans the full width */
+  display: block; /* Make each <li> behave like a block element */
+  margin-bottom: 10px; /* Optional: space between links */
+}
+
+.sidenav a {
+  display: block;  /* Makes the <RouterLink> fill the container */
+  text-decoration: none;  /* No underline */
+  color: #333;  /* Default link color */
+  padding: 10px;  /* Add padding for better click area */
   width: 100%;
-  text-align: center;
-  padding: 1rem 0;
-
+  box-sizing: border-box;/* Ensure it spans the entire width */
 }
 
-.navbar a:hover {
-  background-color: #d6e8ff;
-  color: #002970;
+.sidenav a:hover {
+  color: #1976d2;  /* Hover color */
+  background-color: #e0e0e0; /* Optional: highlight background on hover */
 }
-
-#nav-block {
-  position: fixed;
-  height: 100vh;
-  width: 220px;
-  background-color: #f8f8f8;
-  top: 0;
-  left: 0;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
-}
-
-.navbar {
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding-top: 2rem;
-  height: 100%;
-  margin-top: 60px /* Offset by the height of your header */
-}
-
-.navbar a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  margin: 1rem 0;
-  width: 100%;
-  text-align: center;
-  padding: 1rem 0;
-  min-height: 70px;
-
-}
-
-.navbar a:hover {
-  background-color: #d6e8ff;
-  color: #002970;
-}
-
 </style>
+<script setup lang="ts">
+</script>

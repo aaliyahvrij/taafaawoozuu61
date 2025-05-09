@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter @Setter
 public class Candidate {
-    @Id
     private int id;
     private String shortCode;
     private String firstName;

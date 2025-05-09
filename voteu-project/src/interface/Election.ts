@@ -1,5 +1,7 @@
 import type {Province} from "@/interface/Province.ts";
 import type {Party} from "@/interface/Party.ts";
+import type { Constituency } from '@/interface/Constituency.ts'
+import type { Authority } from '@/interface/Authority.ts'
 
 
 export interface Election {
@@ -7,5 +9,6 @@ export interface Election {
   name: string;
   provinces: Province[];
   nationalParties: { [key: number]: Party };
-  Authorities: { [key: string]: Party };
+  constituencies: { [key: number]: Constituency};
+  authorities: { [key: string]: Authority };
 }
