@@ -11,7 +11,7 @@ import java.util.Map;
 public class ConsistuencyService {
 
     private final DutchElectionReader electionReader;
-    private final Map<String, Map<Integer, Constituency>> storedElections = new HashMap<>();
+    private final Map<String, Map<Integer, Constituency>> storedConstituencies = new HashMap<>();
 
     public ConsistuencyService (DutchElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -26,33 +26,32 @@ public class ConsistuencyService {
     public boolean readElections() {
         electionReader.getAll();
 
-        Map<String, Map<Integer, Constituency>> elections = electionReader.getConstituencies();
-        System.out.println("Constituency map size: " + elections.size());
-        System.out.println("Keys: " + elections.keySet());
+        Map<String, Map<Integer, Constituency>> constituencies = electionReader.getConstituencies();
+        System.out.println("Constituency map size: " + constituencies.size());
+        System.out.println("Keys: " + constituencies.keySet());
 
-        if (elections == null || elections.isEmpty())  {
-            System.out.println("Geen verkiezingsdata gevonden!");
+        if (constituencies == null || constituencies.isEmpty())  {
+            System.out.println("no constituencies found!");
             return false;
         }
-        storedElections.putAll(elections);
-        System.out.println("Elections opgeslagen: " + storedElections.keySet());
+        storedConstituencies.putAll(constituencies);
+        System.out.println("Constituencies saved: " + storedConstituencies.keySet());
         return true;
     }
 
 
 
     /**
-     * Retrieves the stored election data (GET equivalent).
+     * Retrieves the stored constituency data (GET equivalent).
      *
-     * @return A map containing election results grouped by year.
+     * @return A map containing constituency results grouped by year.
      */
-    public Map<String, Map<Integer, Constituency>> getElections() {
-        return storedElections;
+    public Map<String, Map<Integer, Constituency>> getStoredConstituencies() {
+        return storedConstituencies;
     }
 
-    //Todo: getConsistuency function
     public Constituency getConstituency(String year, int constituencyId) {
-        Map<Integer, Constituency> constituencys = storedElections.get(year);
+        Map<Integer, Constituency> constituencys = storedConstituencies.get(year);
         return (constituencys != null) ? constituencys.get(constituencyId) : null;
     }
 }
