@@ -170,6 +170,7 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(votesPerReportingStationFile));
             XMLParser parser = new XMLParser(new FileInputStream(votesPerReportingStationFile.toString()));
             processElection(electionData, parser);
+            processReportingUnit(electionData, parser);
             processVotes(electionData, parser, "gemeente");
         }
 
