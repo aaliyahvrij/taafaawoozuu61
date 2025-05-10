@@ -1,9 +1,7 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.utils.PathUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.expression.spel.ast.Selection;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
@@ -534,8 +532,8 @@ public class DutchElectionProcessor<E> {
 
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 System.out.println("found totalVotes");
-                int currentAffiliationId = 0;
-                String currentAffiliationName = null;
+                int affiliationId = 0;
+                String affiliationName = null;
                 int totalVotes = 0;
 
                 while (parser.findBeginTag(SELECTION)) {
@@ -544,18 +542,18 @@ public class DutchElectionProcessor<E> {
 
                     if (parser.getLocalName().equals(AFFILIATION_IDENTIFIER)) {
 
-                        currentAffiliationId = parser.getIntegerAttributeValue(null, ID, -1);
+                        affiliationId = parser.getIntegerAttributeValue(null, ID, -1);
                         if (parser.findBeginTag(REGISTERED_NAME)) {
-                            currentAffiliationName = parser.getElementText().trim();
+                            affiliationName = parser.getElementText().trim();
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_IDENTIFIER);
 
                         if (parser.findBeginTag(VALID_VOTES)) {
                             totalVotes = Integer.parseInt(parser.getElementText().trim());
-                            affiliationVotes.put(currentAffiliationId, totalVotes);
-                            affiliationNames.put(currentAffiliationId, currentAffiliationName);
-                            candidateVotes.putIfAbsent(currentAffiliationId, new HashMap<>());
+                            affiliationVotes.put(affiliationId, totalVotes);
+                            affiliationNames.put(affiliationId, affiliationName);
+                            candidateVotes.putIfAbsent(affiliationId, new HashMap<>());
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
                     } else if (parser.getLocalName().equals(CANDIDATE)) {
@@ -572,8 +570,8 @@ public class DutchElectionProcessor<E> {
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
 
-                            if (candidateId != -1 && currentAffiliationId != -1) {
-                                candidateVotes.get(currentAffiliationId)
+                            if (candidateId != -1 && affiliationId != -1) {
+                                candidateVotes.get(affiliationId)
                                         .put(candidateId, totalVotes);
                             }
 
