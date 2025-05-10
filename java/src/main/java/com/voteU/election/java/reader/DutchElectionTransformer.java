@@ -1,9 +1,6 @@
 package com.voteU.election.java.reader;
 
-import com.voteU.election.java.model.Candidate;
-import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.*;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +18,7 @@ import java.util.Map;
 public class DutchElectionTransformer implements Transformer<Election> {
     Map<String, Election> elections = new HashMap<>();
     Map<String, Map<Integer, Constituency>> constituencyMap = new HashMap<>();
+    Map<String, Map<String, PollingStation>> pollingStationMap = new HashMap<>();
     Map<Integer, Candidate> candidateMap = new HashMap<>();
     Map<String, Party> partyMap = new HashMap<>();
 
@@ -138,37 +136,73 @@ public class DutchElectionTransformer implements Transformer<Election> {
             innerMap.put(contestId, c);
 
             log.info("Entering loop for affiliationVotes: " + affiliationVotes);
-            for (Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet()) {
-                int affiliationId = entry.getKey();
-                String affiliationName = affiliationNames.getOrDefault(affiliationId, "");
-                int affiliationVotesCount = entry.getValue();
-
-                Party party = new Party(affiliationId, affiliationName);
-                party.setVotes(affiliationVotesCount);
-                party.setCandidates(new ArrayList<>());
-
-                Party registeredParty = partyMap.get(String.valueOf(affiliationId));
-                if (registeredParty != null) {
-                    List<Candidate> originalCandidates = registeredParty.getCandidates();
-                    Map<Integer, Integer> candidatesForAffiliation = candidateVotes.getOrDefault(affiliationId, new HashMap<>());
-
-                    for (Candidate original : originalCandidates) {
-                        int votes = candidatesForAffiliation.getOrDefault(original.getId(), 0);
-                        Candidate candidate = new Candidate(original.getId(), original.getFirstName(), original.getLastName());
-                        candidate.setPartyId(affiliationId);
-                        candidate.setVotes(votes);
-                        party.getCandidates().add(candidate);
-                    }
-                }
-
-                c.getParties().add(party);
-
-            }
+            connectPartyWithCandidate(affiliationVotes, candidateVotes, affiliationNames, c.getParties());
 
 
         }
 
 
+    }
+
+    @Override
+    public void registerPollingStation(Map<String, String> reportingUnitData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
+
+        String electionId = reportingUnitData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+        String pollingId = reportingUnitData.get(DutchElectionProcessor.REPORTING_UNIT_IDENTIFIER);
+        String pollingName = reportingUnitData.get(DutchElectionProcessor.REPORTING_UNIT_NAME);
+        String zipCode = reportingUnitData.get(DutchElectionProcessor.ZIPCODE);
+
+        reportingUnitData.put(DutchElectionProcessor.ELECTION_IDENTIFIER, electionId);
+
+        pollingStationMap.putIfAbsent(electionId, new HashMap<>());
+        Map<String, PollingStation> pollingStationWithYear = pollingStationMap.get(electionId);
+
+        if (!pollingStationWithYear.containsKey(pollingId)) {
+            PollingStation p = new PollingStation(pollingId, pollingName, zipCode, new ArrayList<>());
+            pollingStationWithYear.put(pollingId, p);
+
+            log.info("Entering loop for affiliationVotes in gemeente: " + affiliationVotes);
+            connectPartyWithCandidate(affiliationVotes, candidateVotes, affiliationNames, p.getParties());
+
+        }
+
+    }
+
+    private void connectPartyWithCandidate(Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames, List<Party> parties) {
+        for (Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet()) {
+            int affiliationId = entry.getKey();
+            String affiliationName = affiliationNames.getOrDefault(affiliationId, "");
+            int affiliationVotesCount = entry.getValue();
+
+            Party party = new Party(affiliationId, affiliationName);
+            party.setVotes(affiliationVotesCount);
+            party.setCandidates(new ArrayList<>());
+
+            Party registeredParty = partyMap.get(String.valueOf(affiliationId));
+            if (registeredParty != null) {
+                List<Candidate> originalCandidates = registeredParty.getCandidates();
+                Map<Integer, Integer> candidatesForAffiliation = candidateVotes.getOrDefault(affiliationId, new HashMap<>());
+
+                for (Candidate original : originalCandidates) {
+                    int votes = candidatesForAffiliation.getOrDefault(original.getId(), 0);
+                    Candidate candidate = new Candidate(original.getId(), original.getFirstName(), original.getLastName());
+                    candidate.setPartyId(affiliationId);
+                    candidate.setVotes(votes);
+                    party.getCandidates().add(candidate);
+                }
+            }
+
+            parties.add(party);
+
+        }
+    }
+
+    public void addPollingStations(String year, List<PollingStation> list) {
+        Map<String, PollingStation> map = new HashMap<>();
+        for (PollingStation p : list) {
+            map.put(p.getId(), p);
+        }
+        pollingStationMap.put(year, map);
     }
 
     public void addConstituencies(String year, List<Constituency> list) {
@@ -184,6 +218,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public Election retrieve() {
         return null; // This method is not needed since we now track elections by year
     }
+
+
 
 
     public Election getElection(String year) {
