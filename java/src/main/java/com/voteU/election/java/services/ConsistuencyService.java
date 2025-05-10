@@ -23,7 +23,7 @@ public class ConsistuencyService {
      *
      * @return true if the elections were successfully processed and stored, false otherwise.
      */
-    public boolean readElections() {
+    public boolean readConstituencies() {
         electionReader.getAll();
 
         Map<String, Map<Integer, Constituency>> constituencies = electionReader.getConstituencies();
