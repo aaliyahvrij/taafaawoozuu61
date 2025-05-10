@@ -29,6 +29,6 @@ public class ConstituencyController {
 
     @PostMapping
     public boolean readResults() {
-        return consistuencyService.readElections();
+        return consistuencyService.readConstituencies();
     }
 }
