@@ -116,6 +116,17 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // System.out.println(votesData);
     }
 
+    /**
+     * Registers a constituency and associates its affiliations and candidates with vote counts.
+     *
+     * <p>This method initializes a {@link Constituency} for a given election and contest if it does not already exist.
+     * It then populates the constituency's list of parties and their candidates, including their vote counts.</p>
+     *
+     * @param constituencyData   Map containing data about the constituency (e.g., election ID, contest ID, name).
+     * @param affiliationVotes   A map of affiliation IDs to the number of votes they received.
+     * @param candidateVotes     A nested map: affiliation ID → (candidate ID → vote count).
+     * @param affiliationNames   A map of affiliation IDs to their registered names.
+     */
     @Override
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
 
@@ -138,12 +149,20 @@ public class DutchElectionTransformer implements Transformer<Election> {
             log.info("Entering loop for affiliationVotes: " + affiliationVotes);
             connectPartyWithCandidate(affiliationVotes, candidateVotes, affiliationNames, c.getParties());
 
-
         }
-
-
     }
 
+    /**
+     * Registers a polling station and associates its affiliations and candidates with vote counts.
+     *
+     * <p>This method initializes a {@link PollingStation} for a given election and station ID if it does not already exist.
+     * It then populates the polling station’s list of parties and their candidates, including their vote counts.</p>
+     *
+     * @param reportingUnitData  Map containing data about the polling station (e.g., election ID, polling ID, name, ZIP code).
+     * @param affiliationVotes   A map of affiliation IDs to the number of votes they received.
+     * @param candidateVotes     A nested map: affiliation ID → (candidate ID → vote count).
+     * @param affiliationNames   A map of affiliation IDs to their registered names.
+     */
     @Override
     public void registerPollingStation(Map<String, String> reportingUnitData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
 
@@ -165,9 +184,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
             connectPartyWithCandidate(affiliationVotes, candidateVotes, affiliationNames, p.getParties());
 
         }
-
     }
 
+    /**
+     * Links affiliations with their corresponding candidates and vote counts, and adds them to the given list of parties.
+     *
+     * <p>This method creates a new {@link Party} instance for each affiliation, populates it with candidates from the
+     * registered party map, and adds it to the provided list. Each candidate includes their personal info and vote count.</p>
+     *
+     * @param affiliationVotes   A map of affiliation IDs to their total vote counts.
+     * @param candidateVotes     A nested map: affiliation ID → (candidate ID → vote count).
+     * @param affiliationNames   A map of affiliation IDs to their registered names.
+     * @param parties            A list to which newly constructed Party instances will be added.
+     */
     private void connectPartyWithCandidate(Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames, List<Party> parties) {
         for (Map.Entry<Integer, Integer> entry : affiliationVotes.entrySet()) {
             int affiliationId = entry.getKey();
