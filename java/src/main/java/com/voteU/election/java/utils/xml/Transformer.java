@@ -93,4 +93,6 @@ public interface Transformer<E> {
      * @return an instance that encapsulates all the data for an election.
      */
     E retrieve();
+
+    void registerPollingStation(Map<String, String> reportingUnitData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames);
 }
