@@ -72,6 +72,9 @@ public class DutchElectionReader {
         return transformer.getConstituencyMap();
     }
 
+    public Map<String, Map<String, PollingStation>> getPollingStations() {
+        return transformer.getPollingStationMap();
+    }
 
 }
 
