@@ -242,22 +242,21 @@ public class DutchElectionTransformer implements Transformer<Election> {
         constituencyMap.put(year, map);
     }
 
-
     @Override
     public Election retrieve() {
         return null; // This method is not needed since we now track elections by year
     }
 
-
-
-
     public Election getElection(String year) {
         return elections.get(year);
     }
 
-
-public Map<String, Map<Integer, Constituency>> getConstituencyMap() {
+    public Map<String, Map<Integer, Constituency>> getConstituencyMap() {
         return constituencyMap;
+    }
+
+    public Map<String, Map<String, PollingStation>> getPollingStationMap() {
+        return pollingStationMap;
     }
 
     public Map<Integer, Candidate> getCandidateMap() {

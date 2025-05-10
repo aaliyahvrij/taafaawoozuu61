@@ -2,6 +2,7 @@ package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
+import com.voteU.election.java.model.PollingStation;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,11 @@ public class DutchElectionReader {
             if (!transformer.getConstituencyMap().containsKey(electionYear)) {
                 List<Constituency> constituencies = election.getConstituencies();
                 transformer.addConstituencies(electionYear, constituencies);
+            }
+
+            if (!transformer.getPollingStationMap().containsKey(electionYear)) {
+                List<PollingStation> pollingStations = election.getPollingStations();
+                transformer.addPollingStations(electionYear, pollingStations);
             }
         }
 
