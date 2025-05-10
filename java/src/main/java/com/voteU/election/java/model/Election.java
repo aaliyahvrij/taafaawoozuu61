@@ -19,6 +19,7 @@ public class Election {
     private List<Party> parties;
     private List<Candidate> candidates;
     private List<Constituency> constituencies;
+    private List<PollingStation> pollingStations;
     private List<VotingData> nationalVotingData;
 
     public Election(String id, String name, String date) {
@@ -28,6 +29,7 @@ public class Election {
         this.parties = new ArrayList<>();
         this.candidates = new ArrayList<>();
         this.constituencies = new ArrayList<>();
+        this.pollingStations = new ArrayList<>();
         this.nationalVotingData = new ArrayList<>();
         this.provinces = new ArrayList<>();
 
@@ -91,6 +93,10 @@ public class Election {
 
     public List<Constituency> getConstituencies() {
         return constituencies;
+    }
+
+    public List<PollingStation> getPollingStations() {
+        return pollingStations;
     }
 
     public void addConstituencies(Constituency constituency) {
