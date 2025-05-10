@@ -27,12 +27,12 @@ public class PollingStationController {
      * Retrieves a specific polling station by year and polling station ID.
      *
      * @param year        The election year (e.g., "2024").
-     * @param stationId   The unique identifier of the polling station.
+     * @param pollingId   The unique identifier of the polling station.
      * @return The {@link PollingStation} object if found, or null if not found.
      */
-    @GetMapping("/{year}/{stationId}")
-    public PollingStation getPollingStationById(@PathVariable String year, @PathVariable String stationId) {
-        return pollingStationService.getPollingStation(year, stationId);
+    @GetMapping("/{year}/{pollingId}")
+    public PollingStation getPollingStationById(@PathVariable String year, @PathVariable String pollingId) {
+        return pollingStationService.getPollingStation(year, pollingId);
     }
 
     /**
