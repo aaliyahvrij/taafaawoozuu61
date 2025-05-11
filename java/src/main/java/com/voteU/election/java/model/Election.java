@@ -1,7 +1,6 @@
 package com.voteU.election.java.model;
 
 import com.voteU.election.java.utils.xml.Transformer;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

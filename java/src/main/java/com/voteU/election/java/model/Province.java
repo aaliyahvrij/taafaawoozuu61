@@ -1,7 +1,6 @@
 package com.voteU.election.java.model;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Province {
     int id;

@@ -168,7 +168,6 @@ function clearSelectedAuthority(): void {
 
   </div>
   <div class="filtered-data">
-    <h1>Filtered data</h1>
     <div v-if="selectedElection && nationalPartyVotes ">
       <p>Election: {{ selectedElection }}</p>
       <p>National party votes:</p>
