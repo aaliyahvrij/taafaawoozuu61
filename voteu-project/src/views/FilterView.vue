@@ -17,8 +17,10 @@ const authorities = ref<Authority[]>([])
 const selectedAuthority = ref<Authority| null>(null)
 
 const selectionArray = ref<(string | null)[]>([])
+const hasApplied = ref(false)
 
 function handleApply(): void {
+  hasApplied.value = true
   selectionArray.value = []
 
   if (selectedElection.value) selectionArray.value.push(selectedElection.value)
@@ -39,6 +41,7 @@ function handleApply(): void {
 }
 
 function clearSelectedElection(): void {
+  hasApplied.value = false
   selectedElection.value = null
   constituencies.value = []// Reset constituencies when election is cleared
   selectedConstituency.value = null
@@ -47,6 +50,9 @@ function clearSelectedElection(): void {
 }
 
 async function getNationalPartyVotes(electionId: string): Promise<void> {
+  if(!hasApplied.value){
+    return
+  }
   try{
     if(selectedElection.value){
       console.log('Fetching national party votes for election:', electionId)
@@ -169,8 +175,7 @@ function clearSelectedAuthority(): void {
   </div>
   <div class="filtered-data">
     <div v-if="selectedElection && nationalPartyVotes ">
-      <p>Election: {{ selectedElection }}</p>
-      <p>National party votes:</p>
+      <p>National party votes: for Election {{selectedElection}}</p>
       <div v-for="party in nationalPartyVotes" :key="party.id" :value="party">
         {{ party.name }}: {{ party.votes }}
       </div>
