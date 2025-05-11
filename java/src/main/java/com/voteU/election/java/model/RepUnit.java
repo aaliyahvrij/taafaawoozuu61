@@ -6,12 +6,12 @@ import java.util.*;
 
 @Getter
 public class RepUnit {
-    int id;
+    String id;
     String name;
     List<Party> affiliations;
     int totalVotes;
 
-    public RepUnit(int id, String name, int totalVotes) {
+    public RepUnit(String id, String name, int totalVotes) {
         this.id = id;
         this.name = name;
         this.affiliations = new ArrayList<>();
@@ -19,6 +19,6 @@ public class RepUnit {
     }
 
     public String toString() {
-        return String.format("ReportingUnit[id=%d, name=%s]", id, name + ", parties: " + this.affiliations + " - total votes: " + this.totalVotes);
+        return String.format("ReportingUnit[id=%s, name=%s]", this.id, this.name + ", parties: " + this.affiliations + " - total votes: " + this.totalVotes);
     }
 }

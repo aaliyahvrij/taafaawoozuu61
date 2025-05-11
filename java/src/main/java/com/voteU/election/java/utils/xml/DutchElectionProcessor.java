@@ -273,7 +273,7 @@ public class DutchElectionProcessor<E> {
             affiliationData.put(AFFILIATION_ID, String.valueOf(id));
             affiliationData.put(REGISTERED_NAME, name);
 
-            transformer.registerAffiliation(affiliationData);
+            //transformer.registerAffiliation(affiliationData);
 
             parser.findBeginTag(CANDIDATE);
             while (parser.getLocalName().equals(CANDIDATE)) {
@@ -403,7 +403,6 @@ public class DutchElectionProcessor<E> {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
-
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             name = parser.getElementText();
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
@@ -433,11 +432,9 @@ public class DutchElectionProcessor<E> {
                             parser.findAndAcceptEndTag(VALID_VOTES);
                             continue;
                         }
-
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candidateVoteCount = Integer.parseInt(parser.getElementText());
                             parser.findAndAcceptEndTag(VALID_VOTES);
-
                             caTotalVotesData.put(CANDIDATE_ID, candidateId);
                             caTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
                             caTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
@@ -466,7 +463,7 @@ public class DutchElectionProcessor<E> {
         Set<String> registeredCandidateAffiliations = new HashSet<>();
 
         while (parser.getLocalName().equals(SELECTION)) {
-            //System.out.println("FOUND SELECTION TAG");
+            //System.out.println("Found a SELECTION tag");
             parser.next();
             switch (parser.getLocalName()) {
                 case AFFILIATION_ID:
@@ -512,7 +509,6 @@ public class DutchElectionProcessor<E> {
                         parser.findAndAcceptEndTag(VALID_VOTES);
                         continue;
                     }
-
                     if (parser.findBeginTag(VALID_VOTES)) {
                         int candidateVoteCount = Integer.parseInt(parser.getElementText());
                         parser.findAndAcceptEndTag(VALID_VOTES);
@@ -536,29 +532,29 @@ public class DutchElectionProcessor<E> {
 
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
-            String reportingUnitId = null;
-            String reportingUnitName = null;
+            Map<String, String> repUnitData = new HashMap<>(contestData);
+            String repUnitId = null;
+            String repUnitName = null;
             String zipCode = NO_ZIPCODE;
 
             if (parser.findBeginTag(REPORTING_UNIT_ID)) {
-                reportingUnitId = parser.getAttributeValue(null, ID);
-                reportingUnitName = parser.getElementText();
-
+                repUnitId = parser.getAttributeValue(null, ID);
+                repUnitData.put(REPORTING_UNIT_ID, repUnitId);
+                repUnitName = parser.getElementText();
+                repUnitData.put(REPORTING_UNIT_NAME, repUnitName);
+                //System.out.println(repUnitId + " - " + repUnitName);
                 parser.findAndAcceptEndTag(REPORTING_UNIT_ID);
-                int postCodeIndex = reportingUnitName.indexOf("(postcode:");
+                int postCodeIndex = repUnitName.indexOf("(postcode:");
                 if (postCodeIndex >= 0) {
-                    int postCodeEndIndex = reportingUnitName.indexOf(')', postCodeIndex);
+                    int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
                     if (postCodeEndIndex > postCodeIndex) {
-                        zipCode = reportingUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
-                        reportingUnitName = reportingUnitName.substring(0, postCodeIndex).trim() + reportingUnitName.substring(postCodeEndIndex + 1).trim();
+                        zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
+                        repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
                     }
                 }
             }
 
-            Map<String, String> reportingUnitData = new HashMap<>(contestData);
-            reportingUnitData.put(REPORTING_UNIT_ID, reportingUnitId);
-            reportingUnitData.put(REPORTING_UNIT_NAME, reportingUnitName);
-            reportingUnitData.put(ZIPCODE, zipCode);
+            repUnitData.put(ZIPCODE, zipCode);
 
             int affiliationId = 0;
             String name = INVALID_NAME;
@@ -568,8 +564,10 @@ public class DutchElectionProcessor<E> {
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
                         affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
+                        repUnitData.put(AFFILIATION_ID, String.valueOf(affiliationId));
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             name = parser.getElementText();
+                            repUnitData.put(REGISTERED_NAME, name);
                         }
                         parser.findAndAcceptEndTag(REGISTERED_NAME);
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
@@ -578,26 +576,23 @@ public class DutchElectionProcessor<E> {
                             affiliationVotes = Integer.parseInt(parser.getElementText());
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        reportingUnitData.put(AFFILIATION_ID, String.valueOf(affiliationId));
-                        reportingUnitData.put(REGISTERED_NAME, name);
-                        reportingUnitData.put("AffiliationReportingUnitVotes", String.valueOf(affiliationVotes));
+                        repUnitData.put("AffiliationReportingUnitVotes", String.valueOf(affiliationVotes));
                         break;
                     case CANDIDATE:
                         int candidateId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candidateId = parser.getIntegerAttributeValue(null, ID, 0);
                         }
-
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candidateVoteCount = Integer.parseInt(parser.getElementText());
                             parser.findAndAcceptEndTag(VALID_VOTES);
-                            reportingUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
-                            reportingUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
-                            System.out.println(reportingUnitData);
-                            transformer.registerVotes(reportingUnitData); // Data in de transformer zetten
+                            repUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
+                            repUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
+                            //System.out.println(repUnitData);
+                            transformer.registerRepUnit(repUnitData); // Data in de transformer zetten
                         } else {
-                            LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candidateId, affiliationId, reportingUnitName));
+                            LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candidateId, affiliationId, repUnitName));
                         }
                         break;
                     default:

@@ -17,7 +17,7 @@ public class RepUnitController {
     }
 
     @GetMapping
-    public Map<Integer, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
+    public Map<String, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
         return repUnitService.getAllRepUnitsOfElection(electionId);
     }
 }

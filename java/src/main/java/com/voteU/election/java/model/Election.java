@@ -17,7 +17,7 @@ public class Election {
     private final List<Province> provinces;
     private final Map<Integer, Party> parties;
     private final Map<String, Authority> authorities;
-    private final Map<Integer, RepUnit> repUnits;
+    private final Map<String, RepUnit> repUnits;
 
     public Election(String id, String name, String date) {
         this.id = id;
@@ -77,7 +77,7 @@ public class Election {
         return this.authorities;
     }
 
-    public Map<Integer, RepUnit> getRepUnits() {
+    public Map<String, RepUnit> getRepUnits() {
         return this.repUnits;
     }
 

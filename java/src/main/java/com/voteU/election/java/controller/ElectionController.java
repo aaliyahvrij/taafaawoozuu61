@@ -45,7 +45,7 @@ public class ElectionController {
     }
 
     @GetMapping("/{electionId}/repunits")
-    public Map<Integer, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
+    public Map<String, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
         return electionService.getAllRepUnitsOfElection(electionId);
     }
 }

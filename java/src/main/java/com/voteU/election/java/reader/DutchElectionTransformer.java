@@ -2,6 +2,7 @@ package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.utils.xml.*;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -9,6 +10,7 @@ import java.util.*;
 /**
  * A Transformer that processes election data and organizes it into Election objects.
  */
+@Getter
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
     private Map<String, Election> elections = new HashMap<>();
@@ -30,7 +32,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             election = new Election(electionId, electionName, electionDate);
             elections.put(electionId, election);
         }
-        // System.out.println(electionData);
+        //System.out.println(electionData);
     }
 
     @Override
@@ -199,19 +201,57 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerVotes(Map<String, String> votesData) {
-        //election.data = votesData;
-        //System.out.printf("Found votes information: %s\n", votesData);
+    public void registerRepUnit(Map<String, String> repUnitData) {
+        String source = repUnitData.get("Source");
+        boolean isTotalVotes = "TOTAL".equals(source);
+
+        // Safely get reporting unit ID
+        String repUnitId = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_ID);
+        String repUnitName = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_NAME);
+        if (repUnitId == null) {
+            System.err.println("❌ Missing REPORTING_UNIT_ID in repUnitData: " + repUnitData);
+            return;
+        }
+
+        if (repUnitName == null) {
+            repUnitName = "UNKNOWN";
+        }
+
+        String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
+        Election election = elections.get(electionId);
+        Map<String, RepUnit> repUnitMap = election.getRepUnits();
+        RepUnit repUnit = repUnitMap.get(repUnitId);
+
+        // Register a reporting unit on TOTAL only, if not already registered
+        if (isTotalVotes && repUnit == null) {
+            String repUnitVotesStr = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_VOTES);
+            if (repUnitVotesStr == null) {
+                System.err.println("❌ Missing REPORTING_UNIT_VOTES for " + repUnitName + ": " + repUnitData);
+                return;
+            }
+
+            int repUnitVotes;
+            try {
+                repUnitVotes = Integer.parseInt(repUnitVotesStr);
+            } catch (NumberFormatException e) {
+                System.err.println("❌ Invalid REPORTING_UNIT_VOTES value: '" + repUnitVotesStr + "' in " + repUnitData);
+                return;
+            }
+
+            // Create and register the new party
+            repUnit = new RepUnit(repUnitId, repUnitName, repUnitVotes);
+            repUnitMap.put(repUnitId, repUnit);
+            // Removed duplicate logging here to prevent repeated logs during multiple calls
+        }
+
+        if (election != null) {
+            repUnitMap.put(repUnitId, repUnit);
+        }
     }
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {
 
-    }
-
-    @Override
-    public void registerReportingUnit(Map<String, String> reportingUnitData) {
-        System.out.println(reportingUnitData);
     }
 
     /**
@@ -229,7 +269,4 @@ public class DutchElectionTransformer implements Transformer<Election> {
         return elections.get(year);
     }
 
-    public Map<String, Election> getElections() {
-        return elections;
-    }
 }

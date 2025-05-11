@@ -8,7 +8,6 @@ import java.util.*;
 
 @Service
 public class ConsistuencyService {
-
     private DutchElectionReader electionReader;
     private final Map<String, Map<Integer, Constituency>> storedElections = new HashMap<>();
 

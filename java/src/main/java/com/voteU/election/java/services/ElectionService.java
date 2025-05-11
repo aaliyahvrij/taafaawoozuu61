@@ -71,7 +71,7 @@ public class ElectionService {
     /**
      * Retrieves all reporting units by election ID (GET).
      */
-    public Map<Integer, RepUnit> getAllRepUnitsOfElection(String electionId) {
+    public Map<String, RepUnit> getAllRepUnitsOfElection(String electionId) {
         Election election = getElection(electionId);
         if (election == null) {
             return null;

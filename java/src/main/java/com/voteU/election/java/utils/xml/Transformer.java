@@ -24,7 +24,6 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param electionData a {@code Map} containing the information as {@code String}'s.
-     * @return
      */
     void registerElection(Map<String, String> electionData);
 
@@ -53,6 +52,22 @@ public interface Transformer<E> {
     void registerAffiliation(Map<String, String> affiliationData);
 
     /**
+     * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
+     * same information as {@code candidateData} in {@link #registerCandidate(Map)}, and the following information:
+     * <ul>
+     *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
+     * </ul>
+     *
+     * @param nationalVotesData a {@code Map} containing information about the election, contest, affiliation, candidate and
+     *                          the number of votes.
+     */
+    void registerNationalVotes(Map<String, String> nationalVotesData);
+
+    void registerAuthorityVotes(Map<String, String> authorityVotesData);
+
+    void registerRepUnit(Map<String, String> repUnitData);
+
+    /**
      * Called multiple times per file with information about a candidate. The {@code candidateData} can hold the
      * same information as {@code affiliationData} in {@link #registerAffiliation(Map)}, and the following information:
      * <ul>
@@ -67,24 +82,6 @@ public interface Transformer<E> {
      *                      candidate.
      */
     void registerCandidate(Map<String, String> candidateData);
-
-    /**
-     * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
-     * same information as {@code candidateData} in {@link #registerCandidate(Map)}, and the following information:
-     * <ul>
-     *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
-     * </ul>
-     *
-     * @param nationalVotesData a {@code Map} containing information about the election, contest, affiliation, candidate and
-     *                          the number of votes.
-     */
-    void registerNationalVotes(Map<String, String> nationalVotesData);
-
-    void registerAuthorityVotes(Map<String, String> authorityVotesData);
-
-    void registerVotes(Map<String, String> votesData);
-
-    void registerReportingUnit(Map<String, String> reportingUnitData);
 
     /**
      * Returns an instance that encapsulates all the registered data about the election.
