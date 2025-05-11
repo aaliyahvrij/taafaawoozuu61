@@ -69,12 +69,12 @@ public class Election {
         return this.name;
     }
 
-    public Map<String, Authority> getAuthorities() {
-        return this.authorities;
-    }
-
     public Map<Integer, Party> getParties() {
         return this.parties;
+    }
+
+    public Map<String, Authority> getAuthorities() {
+        return this.authorities;
     }
 
     public Map<Integer, RepUnit> getRepUnits() {

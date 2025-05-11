@@ -10,7 +10,7 @@ public class Authority {
     private String id;
     @Setter
     private String name;
-    private Map<Integer, Party> authorityParties;
+    private final Map<Integer, Party> authorityParties;
     @Setter
     private int contestId;
 
@@ -23,6 +23,6 @@ public class Authority {
 
     @Override
     public String toString() {
-        return "id " + this.id + " name " + this.name + " authorityParties " + this.authorityParties.toString();
+        return "id " + this.id + " name " + this.name + " authorityParties " + this.authorityParties;
     }
 }
