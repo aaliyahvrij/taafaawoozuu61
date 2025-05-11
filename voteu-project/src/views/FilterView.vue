@@ -20,7 +20,7 @@ const selectedParty = ref<Party | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 
 const hasApplied = ref(false)
-const currentVoteLevel = ref<'national' | 'constituency' | 'authority' | null>(null)
+const currentVoteLevel = ref<'national' | 'constituency' | 'municipality' | null>(null)
 
 const displayedPartyVotes = computed(() => partyVotes.value)
 
@@ -35,7 +35,7 @@ function handleApply(): void {
   } else if (selectedElection.value && selectedConstituency.value && !selectedAuthority.value) {
     getConstituencyPartyVotes(selectedElection.value, selectedConstituency.value.id.toString())
   } else if (selectedElection.value && selectedConstituency.value && selectedAuthority.value) {
-    //getAuthorityPartyVotes(selectedElection.value, selectedConstituency.value.id.toString(), selectedAuthority.value.id.toString())
+    getAuthorityPartyVotes(selectedElection.value, selectedConstituency.value.id.toString(), selectedAuthority.value.id.toString())
   } else {
     console.warn("Invalid selection state.")
   }
@@ -85,16 +85,16 @@ async function getConstituencyPartyVotes(electionId: string, constituencyId: str
   }
 }
 
-// async function getAuthorityPartyVotes(electionId: string, constituencyId: string, authorityId: string): Promise<void> {
-//   try {
-//     console.log('Fetching authority party votes for election:', electionId, 'constituency:', constituencyId, 'authority:', authorityId)
-//     const response = await AuthorityService.getAuthorityPartyVotes(electionId, constituencyId, authorityId)
-//     partyVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-//     currentVoteLevel.value = 'authority'
-//   } catch (error) {
-//     console.error("Error fetching authority party votes:", error)
-//   }
-// }
+async function getAuthorityPartyVotes(electionId: string, constituencyId: string, authorityId: string): Promise<void> {
+  try {
+    console.log('Fetching authority party votes for election:', electionId, 'constituency:', constituencyId, 'authority:', authorityId)
+    const response = await AuthorityService.getAuthorityVotesByConstituencyId(electionId, constituencyId, authorityId)
+    partyVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'municipality'
+  } catch (error) {
+    console.error("Error fetching authority party votes:", error)
+  }
+}
 
 async function getConstituenciesByElection(election: string | null): Promise<void> {
   try {
