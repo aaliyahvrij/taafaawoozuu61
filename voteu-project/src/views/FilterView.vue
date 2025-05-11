@@ -7,6 +7,7 @@ import type { Authority } from '@/interface/Authority.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import type { Party } from '@/interface/Party.ts'
+import type { Candidate } from '@/interface/Candidate.ts'
 
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
@@ -15,6 +16,8 @@ const constituencies = ref<Constituency[]>([])
 const selectedConstituency = ref<Constituency| null>(null)
 const authorities = ref<Authority[]>([])
 const selectedAuthority = ref<Authority| null>(null)
+const selectedParty = ref<Party| null>(null)
+const selectedCandidate = ref<Candidate| null>(null)
 
 const selectionArray = ref<(string | null)[]>([])
 const hasApplied = ref(false)
@@ -41,6 +44,8 @@ function handleApply(): void {
 }
 
 function clearSelectedElection(): void {
+  selectedParty.value = null
+  nationalPartyVotes.value = null
   hasApplied.value = false
   selectedElection.value = null
   constituencies.value = []// Reset constituencies when election is cleared
@@ -112,6 +117,16 @@ function clearSelectedAuthority(): void {
   selectedAuthority.value = null
 }
 
+function handlePartyChange(party: Party): void {
+  selectedParty.value = party
+  console.log(party)
+}
+
+function handleCandidateChange(candidate: Candidate): void {
+  console.log(candidate)
+  selectedCandidate.value = candidate
+}
+
 </script>
 
 <template>
@@ -174,20 +189,56 @@ function clearSelectedAuthority(): void {
 
   </div>
   <div class="filtered-data">
-    <div v-if="selectedElection && nationalPartyVotes ">
+
+    <div class="party-list"  v-if="selectedElection && nationalPartyVotes && !selectedParty ">
       <p>National party votes: for Election {{selectedElection}}</p>
-      <div v-for="party in nationalPartyVotes" :key="party.id" :value="party">
-        {{ party.name }}: {{ party.votes }}
+      <div class="party-row" v-for="party in nationalPartyVotes" :key="party.id" :value="party"  @click="handlePartyChange(party)">
+        {{ party.name }}: <b>{{ party.votes.toLocaleString()}}</b>
       </div>
     </div>
+
+    <div v-if="selectedParty && selectedElection && !selectedCandidate">
+      <h1>{{selectedParty.name}}</h1>  <button @click="selectedParty = null"> Back</button>
+      <div class="candidate" v-for="candidate in selectedParty.candidates" :key="candidate.id" :value="candidate" @click="handleCandidateChange(candidate)">
+        {{candidate.shortCode}} : {{candidate.votes.toLocaleString()}}
+      </div>
+    </div>
+
+    <div v-if="selectedCandidate && selectedElection">
+      <h1>{{selectedCandidate.shortCode}}</h1>
+      <h1>votes: {{selectedCandidate.votes.toLocaleString()}}</h1>
+      <button @click="selectedCandidate = null"> Back</button>
+    </div>
+
   </div>
 </template>
 <style scoped>
+.candidate {
+  border: 1px solid black;
+  height: 40px;
+}
+.candidate:hover {
+  background-color: #efefef;
+}
+.party-list p{
+  padding:20px
+}
+
+.party-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  height: 40px;
+  padding-left: 10px;
+}
+.party-row:hover {
+  background-color: #efefef;
+}
 
 .filtered-data {
   border: 1px solid black;
   height: auto;
-  min-height: 100px;
+
 }
 .filter-bar {
   display: flex;
