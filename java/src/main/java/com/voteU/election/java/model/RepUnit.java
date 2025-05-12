@@ -19,6 +19,6 @@ public class RepUnit {
     }
 
     public String toString() {
-        return String.format("ReportingUnit[id=%s, name=%s]", this.id, this.name + ", parties: " + this.affiliations + " - total votes: " + this.totalVotes);
+        return String.format("ReportingUnit[id=%s, name=%s, parties=%s, totalVotes=%d]", this.id, this.name, this.affiliations, this.totalVotes);
     }
 }

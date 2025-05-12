@@ -389,7 +389,6 @@ public class DutchElectionProcessor<E> {
             int affiliationId = 0;
             String name = INVALID_NAME;
             int affiliationVotes = 0;
-
             Set<Integer> registeredAffiliationIds = new HashSet<>();
             Set<String> registeredCandidateIds = new HashSet<>();
 
@@ -399,23 +398,22 @@ public class DutchElectionProcessor<E> {
                     case AFFILIATION_ID:
                         Map<String, String> afTotalVotesData = new HashMap<>(contestData);
                         affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
+                        afTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
                         if (registeredAffiliationIds.contains(affiliationId)) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             name = parser.getElementText();
+                            afTotalVotesData.put(REGISTERED_NAME, name);
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiliationVotes = Integer.parseInt(parser.getElementText());
+                            afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        afTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
-                        afTotalVotesData.put(REGISTERED_NAME, name);
-                        afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
-                        afTotalVotesData.put("Source", "TOTAL"); // ✅ important!
                         transformer.registerNationalVotes(afTotalVotesData);
                         registeredAffiliationIds.add(affiliationId);
                         break;
@@ -434,14 +432,14 @@ public class DutchElectionProcessor<E> {
                         }
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candidateVoteCount = Integer.parseInt(parser.getElementText());
-                            parser.findAndAcceptEndTag(VALID_VOTES);
                             caTotalVotesData.put(CANDIDATE_ID, candidateId);
                             caTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
                             caTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
                             caTotalVotesData.put("Source", "TOTAL"); // ✅ important!
-                            transformer.registerNationalVotes(caTotalVotesData);
                             //System.out.println(caTotalVotesData.get("CandidateVotes"));
                             registeredCandidateIds.add(candidateId);
+                            transformer.registerNationalVotes(caTotalVotesData);
+                            parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candidateId, affiliationId));
                         }
@@ -511,13 +509,13 @@ public class DutchElectionProcessor<E> {
                     }
                     if (parser.findBeginTag(VALID_VOTES)) {
                         int candidateVoteCount = Integer.parseInt(parser.getElementText());
-                        parser.findAndAcceptEndTag(VALID_VOTES);
                         caTotalVotesData.put(CANDIDATE_ID, String.valueOf(candidateId));
                         caTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
                         caTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
                         caTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
-                        transformer.registerAuthorityVotes(caTotalVotesData);
                         registeredCandidateAffiliations.add(candidateAffiliationKey);
+                        transformer.registerAuthorityVotes(caTotalVotesData);
+                        parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candidateId, affiliationId));
                     }
@@ -535,6 +533,7 @@ public class DutchElectionProcessor<E> {
             Map<String, String> repUnitData = new HashMap<>(contestData);
             String repUnitId = null;
             String repUnitName = null;
+            //int repUnitVotes = 0;
             String zipCode = NO_ZIPCODE;
 
             if (parser.findBeginTag(REPORTING_UNIT_ID)) {
@@ -582,15 +581,15 @@ public class DutchElectionProcessor<E> {
                         int candidateId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candidateId = parser.getIntegerAttributeValue(null, ID, 0);
+                            repUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candidateVoteCount = Integer.parseInt(parser.getElementText());
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                            repUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
                             repUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
                             //System.out.println(repUnitData);
                             transformer.registerRepUnit(repUnitData); // Data in de transformer zetten
+                            parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candidateId, affiliationId, repUnitName));
                         }

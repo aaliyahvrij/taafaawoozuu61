@@ -203,7 +203,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
     @Override
     public void registerRepUnit(Map<String, String> repUnitData) {
         String source = repUnitData.get("Source");
-        boolean isTotalVotes = "TOTAL".equals(source);
 
         // Safely get reporting unit ID
         String repUnitId = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_ID);
@@ -222,19 +221,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         RepUnit repUnit = repUnitMap.get(repUnitId);
 
-        // Register a reporting unit on TOTAL only, if not already registered
-        if (isTotalVotes && repUnit == null) {
-            String repUnitVotesStr = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_VOTES);
-            if (repUnitVotesStr == null) {
-                System.err.println("❌ Missing REPORTING_UNIT_VOTES for " + repUnitName + ": " + repUnitData);
+        // Register a reporting unit if not already registered
+        if (repUnit == null) {
+            String validVotesStr = repUnitData.get(DutchElectionProcessor.VALID_VOTES);
+            if (validVotesStr == null) {
+                System.err.println("❌ Missing VALID_VOTES for " + repUnitName + ": " + repUnitData);
                 return;
             }
 
             int repUnitVotes;
             try {
-                repUnitVotes = Integer.parseInt(repUnitVotesStr);
+                repUnitVotes = Integer.parseInt(validVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid REPORTING_UNIT_VOTES value: '" + repUnitVotesStr + "' in " + repUnitData);
+                System.err.println("❌ Invalid VALID_VOTES value: '" + validVotesStr + "' in " + repUnitData);
                 return;
             }
 
@@ -268,5 +267,4 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public Election getElection(String year) {
         return elections.get(year);
     }
-
 }
