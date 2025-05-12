@@ -13,7 +13,31 @@
     @Getter
     public class DutchElectionTransformer implements Transformer<Election> {
         private final Map<String, Election> elections = new HashMap<>();
-    
+        private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(
+                Map.entry(3, 1),  // Drenthe
+                Map.entry(5, 2),  // Flevoland
+                Map.entry(2, 3),  // Friesland
+                Map.entry(7, 4),  // Gelderland
+                Map.entry(6, 4),
+                Map.entry(1, 5),  // Groningen
+                Map.entry(19, 6),  // Limburg
+                Map.entry(18, 7),  // Noord-Brabant
+                Map.entry(17, 7),
+                Map.entry(10, 8),  // Noord-Holland
+                Map.entry(9, 8),
+                Map.entry(11, 8),
+                Map.entry(4, 9),  // Overijssel
+                Map.entry(8, 10), // Utrecht
+                Map.entry(16, 11), // Zeeland
+                Map.entry(14, 12),  // Zuid-Holland
+                Map.entry(15, 12),
+                Map.entry(13, 12),
+                Map.entry(12, 12)
+
+
+        );
+
+
         @Override
         public void registerElection(Map<String, String> electionData) {
             String electionId = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
@@ -206,6 +230,17 @@
             // Step 6: Set the parties to the constituency and store it back
             constituency.setParties(parties);
             constituencyMap.put(contestId, constituency);
+
+            Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(contestId);
+            if (provinceId != null) {
+                for (Province province : election.getProvinces()) {
+                    if (province.getId() == provinceId) {
+                        province.getConstituencies().add(constituency);
+                        break;
+                    }
+                }
+            }
+
 
             System.out.println("[registerConstituency] ✅ Constituency " + contestId + " registered with " + parties.size() + " parties.");
             System.out.println("[registerConstituency] 📊 Total constituencies in election '" + electionId + "': " + constituencyMap.size());

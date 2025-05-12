@@ -11,7 +11,10 @@ public class Party {
     int id;
     String name;
     int votes;
+    double percentage;
     List<Candidate> candidates;
+
+
     public Party(int id, String name) {
         this.id = id;
         this.name = name;
