@@ -25,7 +25,7 @@ public class ProvinceController {
         return provinceService.getProvinces(year);
     }
 
-    @GetMapping("/api/province/{year}/{id}/results")
+    @GetMapping("/{year}/{id}/results")
     public ResponseEntity<List<Party>> getProvinceResults(@PathVariable String year, @PathVariable int id) {
         List<Province> provinces = provinceService.getProvinces(year);
 
