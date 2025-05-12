@@ -227,18 +227,14 @@ public class DutchElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
-
             Map<String, String> constiData = new HashMap<>(electionData);
             constiData.put(CONTEST_ID, String.valueOf(id));
             constiData.put(CONTEST_NAME, name);
-
             transformer.registerConstituency(constiData);
-
             parser.findBeginTag(AFFILIATION);
             while (parser.getLocalName().equals(AFFILIATION)) {
                 processAffiliation(constiData, parser);
             }
-
             if (!parser.findAndAcceptEndTag(CONTEST)) {
                 LOG.warning("Can't find %s closing tag.".formatted(CONTEST));
             }
@@ -259,13 +255,10 @@ public class DutchElectionProcessor<E> {
                 parser.findAndAcceptEndTag(REGISTERED_NAME);
                 parser.findAndAcceptEndTag(AFFILIATION_ID);
             }
-
             Map<String, String> affiData = new HashMap<>(constiData);
             affiData.put(AFFILIATION_ID, String.valueOf(id));
             affiData.put(REGISTERED_NAME, name);
-
             //transformer.registerAffiliation(affiData);
-
             parser.findBeginTag(CANDIDATE);
             while (parser.getLocalName().equals(CANDIDATE)) {
                 processCandidate(affiData, parser);

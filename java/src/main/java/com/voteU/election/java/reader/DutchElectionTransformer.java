@@ -56,7 +56,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.err.println("❌ Missing AFFILIATION_ID in votesData: " + votesData);
             return;
         }
-
         int partyId;
         try {
             partyId = Integer.parseInt(partyIdStr);
@@ -64,7 +63,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.err.println("❌ Invalid AFFILIATION_ID: '" + partyIdStr + "' in " + votesData);
             return;
         }
-
         String partyName = votesData.get(DutchElectionProcessor.REGISTERED_NAME);
         if (partyName == null) {
             partyName = "UNKNOWN";
@@ -83,7 +81,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 System.err.println("❌ Missing VALID_VOTES for party " + partyName + ": " + votesData);
                 return;
             }
-
             int partyVotes;
             try {
                 partyVotes = Integer.parseInt(partyVotesStr);
@@ -103,12 +100,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
         if (votesData.containsKey("CandidateVotes")) {
             String candId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = votesData.get("CandidateVotes");
-
             if (candId == null || candiVotesStr == null) {
                 System.err.println("❌ Missing candidate data in: " + votesData);
                 return;
             }
-
             int candiVotes;
             try {
                 candiVotes = Integer.parseInt(candiVotesStr);
@@ -126,11 +121,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 // Removed duplicate logging here for the candidate as well
             }
         }
-
         if (election != null) {
             partyMap.put(partyId, party);
         }
-
         // Ensure only the number of registered parties is logged, not each time for each party
         // This logging happens once at the end, after all votes are processed.
     }
@@ -144,11 +137,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
-
         if (electionId == null || constIdStr == null || authorityId == null || partyIdStr == null) {
             return;
         }
-
         int constId, partyId;
         try {
             constId = Integer.parseInt(constIdStr);
@@ -156,12 +147,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
         } catch (NumberFormatException e) {
             return;
         }
-
         Election election = elections.get(electionId);
         if (election == null) {
             return;
         }
-
         Map<String, Authority> authorityMap = election.getAuthorities();
         Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
             Authority a = new Authority(id);
@@ -169,10 +158,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
             a.setConstId(constId);
             return a;
         });
-
         Map<Integer, Party> partyMap = authority.getAuthorityParties();
         Party party = partyMap.get(partyId);
-
         if (isTotalVotes && party == null) {
             String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
             if (votesStr == null) return;
@@ -184,7 +171,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             } catch (NumberFormatException ignored) {
             }
         }
-
         if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
             try {
                 int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
@@ -221,7 +207,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.err.println("❌ Missing RepUnitTotalVotes for " + repUnitName + ": " + repUnitData);
             return;
         }
-
         int repUnitTotalVotes;
         try {
             repUnitTotalVotes = Integer.parseInt(repUnitTotalVotesStr);

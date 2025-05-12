@@ -34,5 +34,5 @@ public class ConsistuencyService {
         return storedElections;
     }
 
-    //Todo: getConsistuency function
+    // TODO: getConsistuency method
 }

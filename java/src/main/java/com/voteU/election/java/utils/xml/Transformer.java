@@ -47,9 +47,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#REGISTERED_NAME}</li>
      * </ul>
      *
-     * @param affiliationData a {@code Map} containing information about the election, contest and the affiliation.
+     * @param affiData a {@code Map} containing information about the election, contest and the affiliation.
      */
-    void registerAffiliation(Map<String, String> affiliationData);
+    void registerAffiliation(Map<String, String> affiData);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code votesData} can hold the

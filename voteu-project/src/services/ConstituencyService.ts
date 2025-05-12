@@ -4,7 +4,7 @@ import type { AxiosResponse } from 'axios'
 const CONSTITUENCY_API_BASE_URL: string = 'http://localhost:8080/api/constituency'
 
 interface Constituency {
-  //todo: fill this interface with typing from the backend model
+  // TODO: fill this interface with typing from the backend model
 }
 
 class ConstituencyService {
