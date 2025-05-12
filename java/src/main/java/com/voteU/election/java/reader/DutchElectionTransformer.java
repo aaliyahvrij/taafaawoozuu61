@@ -65,7 +65,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
 
-        String partyName = votesData.get(DutchElectionProcessor.AFFILIATION_NAME);
+        String partyName = votesData.get(DutchElectionProcessor.REGISTERED_NAME);
         if (partyName == null) {
             partyName = "UNKNOWN";
         }
@@ -141,7 +141,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String constIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
         String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
-        String partyName = authorityData.getOrDefault(DutchElectionProcessor.AFFILIATION_NAME, "UNKNOWN");
+        String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
 
