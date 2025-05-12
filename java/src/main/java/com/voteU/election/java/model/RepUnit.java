@@ -8,13 +8,13 @@ import java.util.*;
 public class RepUnit {
     String id;
     String name;
-    List<Party> affiliations;
+    String affiliations;
     int totalVotes;
 
-    public RepUnit(String id, String name, int totalVotes) {
+    public RepUnit(String id, String name, String affiliations, int totalVotes) {
         this.id = id;
         this.name = name;
-        this.affiliations = new ArrayList<>();
+        this.affiliations = affiliations;
         this.totalVotes = totalVotes;
     }
 

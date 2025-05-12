@@ -202,50 +202,41 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerRepUnit(Map<String, String> repUnitData) {
-        String source = repUnitData.get("Source");
-
-        // Safely get reporting unit ID
-        String repUnitId = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_ID);
-        String repUnitName = repUnitData.get(DutchElectionProcessor.REPORTING_UNIT_NAME);
+        String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
+        Election election = elections.get(electionId);
+        Map<String, RepUnit> repUnitMap = election.getRepUnits();
+        String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
+        RepUnit repUnit;
+        String repUnitName = repUnitData.get(DutchElectionProcessor.REP_UNIT_NAME);
+        String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
+        String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
         if (repUnitId == null) {
             System.err.println("❌ Missing REPORTING_UNIT_ID in repUnitData: " + repUnitData);
             return;
         }
-
         if (repUnitName == null) {
             repUnitName = "UNKNOWN";
         }
-
-        String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
-        Election election = elections.get(electionId);
-        Map<String, RepUnit> repUnitMap = election.getRepUnits();
-        RepUnit repUnit = repUnitMap.get(repUnitId);
-
-        // Register a reporting unit if not already registered
-        if (repUnit == null) {
-            String validVotesStr = repUnitData.get(DutchElectionProcessor.VALID_VOTES);
-            if (validVotesStr == null) {
-                System.err.println("❌ Missing VALID_VOTES for " + repUnitName + ": " + repUnitData);
-                return;
-            }
-
-            int repUnitVotes;
-            try {
-                repUnitVotes = Integer.parseInt(validVotesStr);
-            } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid VALID_VOTES value: '" + validVotesStr + "' in " + repUnitData);
-                return;
-            }
-
-            // Create and register the new party
-            repUnit = new RepUnit(repUnitId, repUnitName, repUnitVotes);
-            repUnitMap.put(repUnitId, repUnit);
-            // Removed duplicate logging here to prevent repeated logs during multiple calls
+        if (repUnitTotalVotesStr == null) {
+            System.err.println("❌ Missing RepUnitTotalVotes for " + repUnitName + ": " + repUnitData);
+            return;
         }
 
-        if (election != null) {
-            repUnitMap.put(repUnitId, repUnit);
+        int repUnitTotalVotes;
+        try {
+            repUnitTotalVotes = Integer.parseInt(repUnitTotalVotesStr);
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Invalid VALID_VOTES value: '" + repUnitTotalVotesStr + "' in " + repUnitData);
+            return;
         }
+
+        // Create and register the new party
+        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitTotalVotes);
+        repUnitMap.put(repUnitId, repUnit);
+
+        /*if (election != null) {
+            repUnitMap.put(repUnitId, repUnit);
+        }*/
     }
 
     @Override

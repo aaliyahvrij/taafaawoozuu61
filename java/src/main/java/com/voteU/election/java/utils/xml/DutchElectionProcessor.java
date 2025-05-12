@@ -101,10 +101,10 @@ public class DutchElectionProcessor<E> {
      The tag names on the reporting unit level within the XML files which are also used as keys in the maps when calling
      the methods of the transformer.
      */
-    public static final String REPORTING_UNIT_ID = "ReportingUnitIdentifier";
-    public static final String REPORTING_UNIT_NAME = "ReportingStationName";
+    public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
+    public static final String REP_UNIT_NAME = "ReportingStationName";
     public static final String SELECTION = "Selection";
-    public static final String REPORTING_UNIT_VOTES = "ReportingUnitVotes";
+    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String VALID_VOTES = "ValidVotes";
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
@@ -374,11 +374,11 @@ public class DutchElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
-            // Skip the REPORTING_UNIT_VOTES section if commented out or if it's unwanted
-            while (parser.nextBeginTag(REPORTING_UNIT_VOTES)) {
+            // Skip the REP_UNIT_VOTES section if commented out or if it's unwanted
+            while (parser.nextBeginTag(REP_UNIT_VOTES)) {
                 //System.out.println("Processing reporting unit votes");
-                processReportingUnit(contestData, parser);
-                parser.findAndAcceptEndTag(REPORTING_UNIT_VOTES);
+                processRepUnit(contestData, parser);
+                parser.findAndAcceptEndTag(REP_UNIT_VOTES);
             }
             parser.findAndAcceptEndTag(CONTEST);
         }
@@ -454,7 +454,7 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processAuthority(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
-        System.out.println("Parser at " + parser.getLocalName());
+        //System.out.println("Parser at " + parser.getLocalName());
         int affiliationId = 0;
         String name = INVALID_NAME;
         int affiliationVotes = 0;
@@ -528,21 +528,22 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
+    private void processRepUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
+        if (parser.findBeginTag(REP_UNIT_VOTES)) {
             Map<String, String> repUnitData = new HashMap<>(contestData);
             String repUnitId = null;
             String repUnitName = null;
-            //int repUnitVotes = 0;
+            List<String> repUnitAffiliations = new ArrayList<>();
+            int repUnitTotalVotes = 0;
             String zipCode = NO_ZIPCODE;
 
-            if (parser.findBeginTag(REPORTING_UNIT_ID)) {
+            if (parser.findBeginTag(REP_UNIT_ID)) {
                 repUnitId = parser.getAttributeValue(null, ID);
-                repUnitData.put(REPORTING_UNIT_ID, repUnitId);
+                repUnitData.put(REP_UNIT_ID, repUnitId);
                 repUnitName = parser.getElementText();
-                repUnitData.put(REPORTING_UNIT_NAME, repUnitName);
+                repUnitData.put(REP_UNIT_NAME, repUnitName);
                 //System.out.println(repUnitId + " - " + repUnitName);
-                parser.findAndAcceptEndTag(REPORTING_UNIT_ID);
+                parser.findAndAcceptEndTag(REP_UNIT_ID);
                 int postCodeIndex = repUnitName.indexOf("(postcode:");
                 if (postCodeIndex >= 0) {
                     int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
@@ -555,51 +556,55 @@ public class DutchElectionProcessor<E> {
 
             repUnitData.put(ZIPCODE, zipCode);
 
-            int affiliationId = 0;
-            String name = INVALID_NAME;
-            int affiliationVotes = 0;
+            int affId = 0;
+            String affiName = INVALID_NAME;
+            int affiVotes = 0;
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.next();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
-                        affiliationId = parser.getIntegerAttributeValue(null, ID, 0);
-                        repUnitData.put(AFFILIATION_ID, String.valueOf(affiliationId));
+                        affId = parser.getIntegerAttributeValue(null, ID, 0);
+                        repUnitData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (parser.findBeginTag(REGISTERED_NAME)) {
-                            name = parser.getElementText();
-                            repUnitData.put(REGISTERED_NAME, name);
+                            affiName = parser.getElementText();
+                            repUnitData.put(REGISTERED_NAME, affiName);
                         }
                         parser.findAndAcceptEndTag(REGISTERED_NAME);
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         // Skipping the total ValidVotes for this affiliation
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            affiliationVotes = Integer.parseInt(parser.getElementText());
+                            affiVotes = Integer.parseInt(parser.getElementText());
+                            repUnitAffiliations.add(affiName);
+                            repUnitTotalVotes = repUnitTotalVotes + affiVotes;
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        repUnitData.put("AffiliationReportingUnitVotes", String.valueOf(affiliationVotes));
+                        repUnitData.put("AffiliationRepUnitVotes", String.valueOf(affiVotes));
                         break;
                     case CANDIDATE:
-                        int candidateId = 0;
+                        int candId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
-                            candidateId = parser.getIntegerAttributeValue(null, ID, 0);
-                            repUnitData.put(CANDIDATE_ID, String.valueOf(candidateId));
+                            candId = parser.getIntegerAttributeValue(null, ID, 0);
+                            repUnitData.put(CANDIDATE_ID, String.valueOf(candId));
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candidateVoteCount = Integer.parseInt(parser.getElementText());
                             repUnitData.put("CandidateReportingUnitVotes", String.valueOf(candidateVoteCount));
                             //System.out.println(repUnitData);
-                            transformer.registerRepUnit(repUnitData); // Data in de transformer zetten
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
-                            LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candidateId, affiliationId, repUnitName));
+                            LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
                         }
                         break;
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
+                repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
+                repUnitData.put("RepUnitTotalVotes", String.valueOf(repUnitTotalVotes));
+                transformer.registerRepUnit(repUnitData);
                 parser.findAndAcceptEndTag(SELECTION);
             }
-            parser.findAndAcceptEndTag(REPORTING_UNIT_VOTES);
+            parser.findAndAcceptEndTag(REP_UNIT_VOTES);
         }
     }
 }
