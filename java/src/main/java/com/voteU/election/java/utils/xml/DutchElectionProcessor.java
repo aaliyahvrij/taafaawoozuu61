@@ -487,9 +487,9 @@ public class DutchElectionProcessor<E> {
     private void processVotes(Map<String, String> electionData, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
             String contestName = null;
-            int contestId = 0;
+            int constId = 0;
             if (parser.findBeginTag(CONTEST_ID)) {
-                contestId = parser.getIntegerAttributeValue(null, ID, 0);
+                constId = parser.getIntegerAttributeValue(null, ID, 0);
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     contestName = parser.getElementText();
                     parser.findAndAcceptEndTag(CONTEST_NAME);
@@ -498,7 +498,7 @@ public class DutchElectionProcessor<E> {
             }
             Map<String, String> constiData = new HashMap<>(electionData);
             constiData.put(CONTEST_NAME, contestName);
-            constiData.put(CONTEST_ID, String.valueOf(contestId));
+            constiData.put(CONTEST_ID, String.valueOf(constId));
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
                     case "kieskring":

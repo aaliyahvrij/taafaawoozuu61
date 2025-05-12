@@ -12,13 +12,13 @@ public class Authority {
     private String name;
     private final Map<Integer, Party> authorityParties;
     @Setter
-    private int contestId;
+    private int constId;
 
     public Authority(String id) {
         this.id = id;
         this.name = "";
         this.authorityParties = new HashMap<>();
-        this.contestId = 0;
+        this.constId = 0;
     }
 
     @Override

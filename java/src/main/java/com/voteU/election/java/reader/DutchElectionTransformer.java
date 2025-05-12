@@ -138,20 +138,20 @@ public class DutchElectionTransformer implements Transformer<Election> {
     @Override
     public void registerAuthority(Map<String, String> authorityData) {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
-        String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
+        String constIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
         String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
         String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
 
-        if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null) {
+        if (electionId == null || constIdStr == null || authorityId == null || partyIdStr == null) {
             return;
         }
 
-        int contestId, partyId;
+        int constId, partyId;
         try {
-            contestId = Integer.parseInt(contestIdStr);
+            constId = Integer.parseInt(constIdStr);
             partyId = Integer.parseInt(partyIdStr);
         } catch (NumberFormatException e) {
             return;
@@ -166,7 +166,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
             Authority a = new Authority(id);
             a.setName(authorityName);
-            a.setContestId(contestId);
+            a.setConstId(constId);
             return a;
         });
 
