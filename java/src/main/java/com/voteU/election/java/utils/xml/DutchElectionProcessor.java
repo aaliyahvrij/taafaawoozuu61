@@ -149,7 +149,7 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionData, parser);
-            processNationalVotes(electionData, parser);
+            processNation(electionData, parser);
         }
         for (Path kieskringFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(kieskringFile));
@@ -384,7 +384,7 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processNationalVotes(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
+    private void processNation(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VOTES)) {
             int affiliationId = 0;
             String name = INVALID_NAME;
@@ -392,8 +392,8 @@ public class DutchElectionProcessor<E> {
             Set<Integer> registeredAffiliationIds = new HashSet<>();
             Set<String> registeredCandidateIds = new HashSet<>();
 
-            while (parser.findBeginTag(SELECTION)) {
-                parser.next();
+            while (parser.getLocalName().equals(SELECTION)) {
+                parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
                         Map<String, String> afTotalVotesData = new HashMap<>(contestData);
@@ -414,7 +414,7 @@ public class DutchElectionProcessor<E> {
                             afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        transformer.registerNationalVotes(afTotalVotesData);
+                        transformer.registerNation(afTotalVotesData);
                         registeredAffiliationIds.add(affiliationId);
                         break;
                     case CANDIDATE:
@@ -438,7 +438,7 @@ public class DutchElectionProcessor<E> {
                             caTotalVotesData.put("Source", "TOTAL"); // ✅ important!
                             //System.out.println(caTotalVotesData.get("CandidateVotes"));
                             registeredCandidateIds.add(candidateId);
-                            transformer.registerNationalVotes(caTotalVotesData);
+                            transformer.registerNation(caTotalVotesData);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candidateId, affiliationId));
@@ -462,7 +462,7 @@ public class DutchElectionProcessor<E> {
 
         while (parser.getLocalName().equals(SELECTION)) {
             //System.out.println("Found a SELECTION tag");
-            parser.next();
+            parser.nextTag();
             switch (parser.getLocalName()) {
                 case AFFILIATION_ID:
                     //System.out.println("Parser inside AFFILIATION_ID tag...");
@@ -487,7 +487,7 @@ public class DutchElectionProcessor<E> {
                     afTotalVotesData.put(REGISTERED_NAME, name);
                     afTotalVotesData.put(VALID_VOTES, String.valueOf(affiliationVotes));
                     afTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
-                    transformer.registerAuthorityVotes(afTotalVotesData);
+                    transformer.registerAuthority(afTotalVotesData);
                     break;
                 case CANDIDATE:
                     //System.out.println("Parser inside CANDIDATE tag...");
@@ -514,7 +514,7 @@ public class DutchElectionProcessor<E> {
                         caTotalVotesData.put(AFFILIATION_ID, String.valueOf(affiliationId));
                         caTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
                         registeredCandidateAffiliations.add(candidateAffiliationKey);
-                        transformer.registerAuthorityVotes(caTotalVotesData);
+                        transformer.registerAuthority(caTotalVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candidateId, affiliationId));

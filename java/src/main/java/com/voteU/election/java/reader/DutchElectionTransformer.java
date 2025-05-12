@@ -46,7 +46,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNationalVotes(Map<String, String> votesData) {
+    public void registerNation(Map<String, String> votesData) {
         String source = votesData.get("Source");
         boolean isTotalVotes = "TOTAL".equals(source);
 
@@ -136,7 +136,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerAuthorityVotes(Map<String, String> authorityData) {
+    public void registerAuthority(Map<String, String> authorityData) {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
         String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
@@ -211,7 +211,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
         String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
         if (repUnitId == null) {
-            System.err.println("❌ Missing REPORTING_UNIT_ID in repUnitData: " + repUnitData);
+            System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
             return;
         }
         if (repUnitName == null) {
@@ -226,17 +226,13 @@ public class DutchElectionTransformer implements Transformer<Election> {
         try {
             repUnitTotalVotes = Integer.parseInt(repUnitTotalVotesStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid VALID_VOTES value: '" + repUnitTotalVotesStr + "' in " + repUnitData);
+            System.err.println("❌ Invalid RepUnitTotalVotes value: '" + repUnitTotalVotesStr + "' in " + repUnitData);
             return;
         }
 
-        // Create and register the new party
+        // Create and register the new reporting unit
         repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitTotalVotes);
         repUnitMap.put(repUnitId, repUnit);
-
-        /*if (election != null) {
-            repUnitMap.put(repUnitId, repUnit);
-        }*/
     }
 
     @Override
