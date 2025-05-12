@@ -16,7 +16,7 @@
     
         @Override
         public void registerElection(Map<String, String> electionData) {
-            String electionId = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+            String electionId = electionData.get(DutchElectionProcessor.ELECTION_ID);
             String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
             String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
     
@@ -46,12 +46,12 @@
         }
     
         @Override
-        public void registerNationalVotes(Map<String, String> votesData) {
+        public void registerNation(Map<String, String> votesData) {
             String source = votesData.get("Source");
             boolean isTotalVotes = "TOTAL".equals(source);
     
             // Safely get party ID
-            String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+            String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_ID);
             if (partyIdStr == null) {
                 System.err.println("❌ Missing AFFILIATION_IDENTIFIER in votesData: " + votesData);
                 return;
@@ -71,7 +71,7 @@
             }
     
             // Check if the party already exists
-            String electionId = votesData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
+            String electionId = votesData.get(DutchElectionProcessor.ELECTION_ID);
             Election election = elections.get(electionId);
             Map<Integer, Party> partyMap = election.getNationalParties();
             Party party = partyMap.get(partyId);
@@ -101,7 +101,7 @@
     
             // Handle candidate votes
             if (votesData.containsKey("CandidateVotes")) {
-                String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
+                String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
                 String candidateVotesStr = votesData.get("CandidateVotes");
     
                 if (candidateId == null || candidateVotesStr == null) {
@@ -142,8 +142,8 @@
                 Map<Integer, String> affiliationNames
         ) {
             // Step 1: Extract required info
-            String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-            int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
+            String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_ID);
+            int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_ID));
             String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
 
             System.out.println("[registerConstituency] ➤ Starting for contestId: " + contestId + ", contestName: " + contestName);
@@ -213,11 +213,11 @@
 
 
         @Override
-        public void registerAuthorityVotes(Map<String, String> authorityData) {
-            String electionId = authorityData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-            String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
-            String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_IDENTIFIER);
-            String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+        public void registerAuthority(Map<String, String> authorityData) {
+            String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
+            String contestIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
+            String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
+            String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
             String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
             String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
             boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
@@ -263,7 +263,7 @@
     
             if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
                 try {
-                    int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER));
+                    int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
                     int candidateVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
     
                     if (!party.hasCandidateId(candidateId)) {
@@ -288,14 +288,14 @@
     
         @Override
         public void registerCandidate(Map<String, String> candidateData) {
-            String caIdStr = candidateData.get(DutchElectionProcessor.CANDIDATE_IDENTIFIER);
+            String caIdStr = candidateData.get(DutchElectionProcessor.CANDIDATE_ID);
             String caFirstName = candidateData.get(DutchElectionProcessor.FIRST_NAME);
             String caLastName = candidateData.get(DutchElectionProcessor.LAST_NAME);
             String localityName = candidateData.get(DutchElectionProcessor.LOCALITY_NAME);
             String gender = candidateData.get(DutchElectionProcessor.GENDER);
-            String electionId = candidateData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
-            String contestIdStr = candidateData.get(DutchElectionProcessor.CONTEST_IDENTIFIER);
-            String affIdStr = candidateData.get(DutchElectionProcessor.AFFILIATION_IDENTIFIER);
+            String electionId = candidateData.get(DutchElectionProcessor.ELECTION_ID);
+            String contestIdStr = candidateData.get(DutchElectionProcessor.CONTEST_ID);
+            String affIdStr = candidateData.get(DutchElectionProcessor.AFFILIATION_ID);
     
             if (caIdStr != null && caLastName != null
                     && electionId != null && contestIdStr != null && affIdStr != null) {
