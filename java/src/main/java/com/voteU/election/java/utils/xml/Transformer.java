@@ -37,11 +37,11 @@ public interface Transformer<E> {
      *
      * @param contestData a {@code Map} containing information about the election and the contest.
      */
-    void registerContest(Map<String, String> contestData);
+    void registerConstituency(Map<String, String> contestData);
 
     /**
      * Called multiple times per file with information about an affiliation. The {@code affiliationData} can hold the
-     * same information as {@code contestData} in {@link #registerContest(Map)}, and the following information:
+     * same information as {@code contestData} in {@link #registerConstituency(Map)}, and the following information:
      * <ul>
      *     <li>{@link DutchElectionProcessor#AFFILIATION_ID}</li>
      *     <li>{@link DutchElectionProcessor#REGISTERED_NAME}</li>

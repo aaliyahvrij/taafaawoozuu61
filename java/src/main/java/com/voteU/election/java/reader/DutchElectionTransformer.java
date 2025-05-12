@@ -36,12 +36,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerContest(Map<String, String> contestData) {
+    public void registerConstituency(Map<String, String> constiData) {
         // Handle contest data if needed
     }
 
     @Override
-    public void registerAffiliation(Map<String, String> affiliationData) {
+    public void registerAffiliation(Map<String, String> affiData) {
         // Optional: Handle affiliation data if required separately
     }
 
@@ -109,9 +109,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 return;
             }
 
-            int candidateVotes;
+            int candiVotes;
             try {
-                candidateVotes = Integer.parseInt(candiVotesStr);
+                candiVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
                 System.err.println("❌ Invalid CandidateVotes value: '" + candiVotesStr + "' in " + votesData);
                 return;
@@ -121,7 +121,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             if (isTotalVotes && party != null && !party.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
-                candidate.setValidVotes(candidateVotes);
+                candidate.setValidVotes(candiVotes);
                 party.addCandidate(candidate);
                 // Removed duplicate logging here for the candidate as well
             }
