@@ -525,7 +525,7 @@ public class DutchElectionProcessor<E> {
             Map<String, String> repUnitData = new HashMap<>(contestData);
             String repUnitId = null;
             String repUnitName = null;
-            List<String> repUnitAffiliations = new ArrayList<>();
+            List<String> repUnitAffis = new ArrayList<>();
             int repUnitTotalVotes = 0;
             String zipCode = NO_ZIPCODE;
 
@@ -558,7 +558,7 @@ public class DutchElectionProcessor<E> {
                         repUnitData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             affiName = parser.getElementText();
-                            repUnitAffiliations.add(affiName);
+                            repUnitAffis.add(affiName);
                             repUnitData.put(REGISTERED_NAME, affiName);
                         }
                         parser.findAndAcceptEndTag(REGISTERED_NAME);
@@ -578,8 +578,8 @@ public class DutchElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int candidateVoteCount = Integer.parseInt(parser.getElementText());
-                            repUnitData.put("CandiReportingUnitVotes", String.valueOf(candidateVoteCount));
+                            int candiVoteCount = Integer.parseInt(parser.getElementText());
+                            repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVoteCount));
                             //System.out.println(repUnitData);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
@@ -589,7 +589,7 @@ public class DutchElectionProcessor<E> {
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
-                repUnitData.put("RepUnitAffis", String.join(",", repUnitAffiliations));
+                repUnitData.put("RepUnitAffis", String.join(",", repUnitAffis));
                 repUnitData.put("RepUnitTotalVotes", String.valueOf(repUnitTotalVotes));
                 transformer.registerRepUnit(repUnitData);
                 parser.findAndAcceptEndTag(SELECTION);

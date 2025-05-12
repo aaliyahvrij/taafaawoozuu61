@@ -23,7 +23,7 @@ public class Party {
         candidates.add(candidate);
     }
 
-    public boolean hasCandidateShortCode(String candidateId) {
+    public boolean hasCandiShortCode(String candidateId) {
         for (Candidate candidate : this.candidates) {
             if (candidate.getShortCode().equals(candidateId)) {
                 return true;
@@ -32,7 +32,7 @@ public class Party {
         return false;
     }
 
-    public boolean hasCandidateId(int candidateId) {
+    public boolean hasCandId(int candidateId) {
         for (Candidate candidate : this.candidates) {
             if (candidate.getId() == candidateId) {
                 return true;

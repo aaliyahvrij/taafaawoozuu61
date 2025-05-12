@@ -101,26 +101,26 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         // Handle candidate votes
         if (votesData.containsKey("CandidateVotes")) {
-            String candidateId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
-            String candidateVotesStr = votesData.get("CandidateVotes");
+            String candId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
+            String candiVotesStr = votesData.get("CandidateVotes");
 
-            if (candidateId == null || candidateVotesStr == null) {
+            if (candId == null || candiVotesStr == null) {
                 System.err.println("❌ Missing candidate data in: " + votesData);
                 return;
             }
 
             int candidateVotes;
             try {
-                candidateVotes = Integer.parseInt(candidateVotesStr);
+                candidateVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid CandidateVotes value: '" + candidateVotesStr + "' in " + votesData);
+                System.err.println("❌ Invalid CandidateVotes value: '" + candiVotesStr + "' in " + votesData);
                 return;
             }
 
             // Check if the candidate already exists and is added to the party
-            if (isTotalVotes && party != null && !party.hasCandidateShortCode(candidateId)) {
+            if (isTotalVotes && party != null && !party.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
-                candidate.shortCode = candidateId;
+                candidate.shortCode = candId;
                 candidate.setValidVotes(candidateVotes);
                 party.addCandidate(candidate);
                 // Removed duplicate logging here for the candidate as well
@@ -189,7 +189,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             try {
                 int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
                 int candiVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
-                if (!party.hasCandidateId(candId)) {
+                if (!party.hasCandId(candId)) {
                     Candidate candidate = new Candidate();
                     candidate.setId(candId);
                     candidate.setValidVotes(candiVotes);
