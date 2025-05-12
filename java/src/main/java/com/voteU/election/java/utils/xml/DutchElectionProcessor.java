@@ -193,7 +193,6 @@ public class DutchElectionProcessor<E> {
                 if (parser.findBeginTag(ELECTION_NAME)) {
                     String electionName = parser.getElementText();
                     parser.findAndAcceptEndTag(ELECTION_NAME);
-
                     electionData.put(ELECTION_NAME, electionName);
                 }
                 if (parser.findBeginTag(ELECTION_CATEGORY)) {
@@ -433,7 +432,6 @@ public class DutchElectionProcessor<E> {
                     //System.out.println("Parser is inside of CANDIDATE tag");
                     Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
                     int candId = 0;
-
                     if (parser.findBeginTag(CANDIDATE_ID)) {
                         //System.out.println("Found candidate identifier");
                         candId = parser.getIntegerAttributeValue(null, ID, 0);

@@ -37,7 +37,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerConstituency(Map<String, String> constiData) {
-        // Handle contest data if needed
+        // Handle constituency data if needed
     }
 
     @Override
@@ -93,7 +93,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             party = new Party(partyId, partyName);
             party.setVotes(partyVotes);
             partyMap.put(partyId, party);
-            // Removed duplicate logging here to prevent repeated logs during multiple calls
         }
 
         // Handle candidate votes
@@ -113,17 +112,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
 
             // Check if the candidate already exists and is added to the party
-            if (isTotalVotes && party != null && !party.hasCandiShortCode(candId)) {
+            if (isTotalVotes && !party.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
                 candidate.setValidVotes(candiVotes);
                 party.addCandidate(candidate);
-                // Removed duplicate logging here for the candidate as well
             }
         }
-        if (election != null) {
-            partyMap.put(partyId, party);
-        }
+        partyMap.put(partyId, party);
         // Ensure only the number of registered parties is logged, not each time for each party
         // This logging happens once at the end, after all votes are processed.
     }
