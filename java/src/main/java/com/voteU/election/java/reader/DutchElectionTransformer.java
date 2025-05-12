@@ -187,12 +187,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
             try {
-                int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
-                int candidateVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
-                if (!party.hasCandidateId(candidateId)) {
+                int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
+                int candiVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
+                if (!party.hasCandidateId(candId)) {
                     Candidate candidate = new Candidate();
-                    candidate.setId(candidateId);
-                    candidate.setValidVotes(candidateVotes);
+                    candidate.setId(candId);
+                    candidate.setValidVotes(candiVotes);
                     party.addCandidate(candidate);
                 }
             } catch (NumberFormatException | NullPointerException ignored) {
@@ -208,7 +208,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
         RepUnit repUnit;
         String repUnitName = repUnitData.get(DutchElectionProcessor.REP_UNIT_NAME);
-        String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
+        String repUnitAffis = repUnitData.get("RepUnitAffis");
         String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
         if (repUnitId == null) {
             System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
@@ -231,7 +231,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Create and register the new reporting unit
-        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitTotalVotes);
+        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffis, repUnitTotalVotes);
         repUnitMap.put(repUnitId, repUnit);
     }
 
