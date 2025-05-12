@@ -78,7 +78,7 @@ public class DutchElectionProcessor<E> {
      */
     public static final String AFFILIATION = "Affiliation";
     public static final String AFFILIATION_ID = "AffiliationIdentifier";
-    public static final String REGISTERED_NAME = "RegisteredName";
+    public static final String AFFILIATION_NAME = "RegisteredName";
 
     /*
      The tag names on the candidate level within the XML files which are also used as keys in the maps when calling
@@ -262,16 +262,16 @@ public class DutchElectionProcessor<E> {
             String name = INVALID_NAME;
             if (parser.findBeginTag(AFFILIATION_ID)) {
                 id = parser.getIntegerAttributeValue(null, ID, 0);
-                if (parser.findBeginTag(REGISTERED_NAME)) {
+                if (parser.findBeginTag(AFFILIATION_NAME)) {
                     name = parser.getElementText();
                 }
-                parser.findAndAcceptEndTag(REGISTERED_NAME);
+                parser.findAndAcceptEndTag(AFFILIATION_NAME);
                 parser.findAndAcceptEndTag(AFFILIATION_ID);
             }
 
             Map<String, String> affiData = new HashMap<>(constiData);
             affiData.put(AFFILIATION_ID, String.valueOf(id));
-            affiData.put(REGISTERED_NAME, name);
+            affiData.put(AFFILIATION_NAME, name);
 
             //transformer.registerAffiliation(affiData);
 
@@ -359,10 +359,10 @@ public class DutchElectionProcessor<E> {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
-                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                        if (parser.findBeginTag(AFFILIATION_NAME)) {
                             affiName = parser.getElementText();
-                            afTotalVotesData.put(REGISTERED_NAME, affiName);
-                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                            afTotalVotesData.put(AFFILIATION_NAME, affiName);
+                            parser.findAndAcceptEndTag(AFFILIATION_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
@@ -431,10 +431,10 @@ public class DutchElectionProcessor<E> {
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         continue;
                     }
-                    if (parser.findBeginTag(REGISTERED_NAME)) {
+                    if (parser.findBeginTag(AFFILIATION_NAME)) {
                         affiName = parser.getElementText();
-                        affiTotalVotesData.put(REGISTERED_NAME, affiName);
-                        parser.findAndAcceptEndTag(REGISTERED_NAME);
+                        affiTotalVotesData.put(AFFILIATION_NAME, affiName);
+                        parser.findAndAcceptEndTag(AFFILIATION_NAME);
                     }
                     parser.findAndAcceptEndTag(AFFILIATION_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
@@ -556,12 +556,12 @@ public class DutchElectionProcessor<E> {
                     case AFFILIATION_ID:
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
                         repUnitData.put(AFFILIATION_ID, String.valueOf(affId));
-                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                        if (parser.findBeginTag(AFFILIATION_NAME)) {
                             affiName = parser.getElementText();
                             repUnitAffis.add(affiName);
-                            repUnitData.put(REGISTERED_NAME, affiName);
+                            repUnitData.put(AFFILIATION_NAME, affiName);
                         }
-                        parser.findAndAcceptEndTag(REGISTERED_NAME);
+                        parser.findAndAcceptEndTag(AFFILIATION_NAME);
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiVotes = Integer.parseInt(parser.getElementText());
