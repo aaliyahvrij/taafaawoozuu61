@@ -36,11 +36,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstituency(Map<String, String> constiData) {
-        // Handle constituency data if needed
-    }
-
-    @Override
     public void registerNation(Map<String, String> nationData) {
         String source = nationData.get("Source");
         boolean isTotalVotes = "TOTAL".equals(source);
@@ -120,6 +115,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
+    public void registerConstituency(Map<String, String> constiData) {
+        // Handle constituency data if needed
+    }
+
+    @Override
     public void registerAuthority(Map<String, String> authorityData) {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
         String constIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
@@ -129,6 +129,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
         if (electionId == null || constIdStr == null || authorityId == null || affIdStr == null) {
+            System.err.println("❌ Missing authority data in: " + authorityData);
             return;
         }
         int constId, affId;
@@ -179,7 +180,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerRepUnit(Map<String, String> repUnitData) {
-        final String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
+        String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);

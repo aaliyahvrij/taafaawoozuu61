@@ -4,10 +4,10 @@ import java.util.Map;
 
 /**
  * A {@link Transformer} transforms the election information which is contained in a {@link Map},
- * Map&lt;String, String>, into the models as used by the application. As part of this transformation it is also
- * responsible for making all the needed relationships between the different classes and instances.<br>
- * For example when {@link #registerCandidate(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
- * After all the data has been transformed it should be able to return an instance of a class that encapsulates all
+ * Map&lt;String, String>, into the models as used by the application. As part of this transformation, it is also
+ * responsible for making all the necessary relationships between the different classes and instances.<br>
+ * For example, when {@link #registerCandidate(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
+ * After all the data has been transformed, it should be able to return an instance of a class that encapsulates all
  * the data in the application-specific data classes.
  *
  * @param <E>
@@ -28,18 +28,6 @@ public interface Transformer<E> {
     void registerElection(Map<String, String> electionData);
 
     /**
-     * Called once per file with information about the contest. The {@code contestData} can hold the
-     * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
-     * <ul>
-     *     <li>{@link DutchElectionProcessor#CONTEST_ID}</li>
-     *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
-     * </ul>
-     *
-     * @param constiData a {@code Map} containing information about the election and the contest.
-     */
-    void registerConstituency(Map<String, String> constiData);
-
-    /**
      * Called multiple times per file with information about a candidate. The {@code nationData} can hold the
      * same information as {@code candiData} in {@link #registerCandidate(Map)}, and the following information:
      * <ul>
@@ -50,6 +38,18 @@ public interface Transformer<E> {
      * candidate and the number of votes.
      */
     void registerNation(Map<String, String> nationData);
+
+    /**
+     * Called once per file with information about the contest. The {@code contestData} can hold the
+     * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
+     * <ul>
+     *     <li>{@link DutchElectionProcessor#CONTEST_ID}</li>
+     *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
+     * </ul>
+     *
+     * @param constiData a {@code Map} containing information about the election and the contest.
+     */
+    void registerConstituency(Map<String, String> constiData);
 
     void registerAuthority(Map<String, String> authorityData);
 
