@@ -554,7 +554,6 @@ public class DutchElectionProcessor<E> {
             }
             parser.findAndAcceptEndTag(PERSON_NAME);
         }
-        parser.findAndAcceptEndTag(CANDIDATE);
         transformer.registerCandidate(candiData);
     }
 }
