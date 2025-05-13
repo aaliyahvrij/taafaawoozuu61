@@ -58,12 +58,12 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
-     * @param nationalVotesData a {@code Map} containing information about the election, contest, affiliation, candidate and
+     * @param nationData a {@code Map} containing information about the election, contest, affiliation, candidate and
      *                          the number of votes.
      */
-    void registerNation(Map<String, String> nationalVotesData);
+    void registerNation(Map<String, String> nationData);
 
-    void registerAuthority(Map<String, String> authorityVotesData);
+    void registerAuthority(Map<String, String> authorityData);
 
     void registerRepUnit(Map<String, String> repUnitData);
 
