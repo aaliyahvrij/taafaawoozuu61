@@ -12,11 +12,11 @@ public class Province {
     @Setter
     String name;
     @Getter
-    List<Constituency> contests;
+    List<Constituency> constituencies;
 
     public Province(int id, String name) {
         this.id = id;
         this.name = name;
-        this.contests = new ArrayList<>();
+        this.constituencies = new ArrayList<>();
     }
 }

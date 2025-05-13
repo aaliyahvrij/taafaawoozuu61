@@ -2,7 +2,6 @@ package com.voteU.election.java.controller;
 
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.services.ElectionService;
-//import com.voteU.election.java.services.RepUnitService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -12,11 +11,9 @@ import java.util.Map;
 @RequestMapping("/api/election")
 public class ElectionController {
     private final ElectionService electionService;
-    //private final RepUnitService repUnitService;
 
-    public ElectionController(ElectionService electionService/*, RepUnitService repUnitService*/) {
+    public ElectionController(ElectionService electionService) {
         this.electionService = electionService;
-        //this.repUnitService = repUnitService;
     }
 
     @PostMapping
