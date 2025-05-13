@@ -10,8 +10,9 @@ import java.util.logging.Logger;
 
 /**
  * Processes the XML data files for the Dutch elections. It is completely model agnostic. This means that it
- * doesn't have any knowledge of the data model that is being used by the application. All the datamodel specific
- * logic must be provided by a separate class that implements the {@link Transformer} interface.<br>
+ * doesn't have any knowledge of the data model that is being used by the application.
+ * All the datamodel-specific logic must be provided by a separate class that implements
+ * the {@link Transformer} interface.<br>
  * At its current state it processes the files in a two-step process. First it constructs the 'kieskringen' and
  * the 'kieslijsten'. Secondly, it processes the vote counts. It behaves similar as the
  * <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
@@ -50,7 +51,7 @@ public class DutchElectionProcessor<E> {
     public static final String SHORT_CODE = "ShortCode";
 
     /*
-     The tag names on the election level within the XML files which are also used as keys in the maps when calling
+     The tag names on the election level within the XML files, which are also used as keys in the maps when calling
      the methods of the transformer.
      */
     public static final String ELECTION = "Election";
@@ -61,19 +62,33 @@ public class DutchElectionProcessor<E> {
     public static final String TOTAL_VOTES = "TotalVotes";
 
     /*
-     The tag names on the contest level within the XML files which are also used as keys in the maps when calling
+     The tag names on the contest level within the XML files, which are also used as keys in the maps when calling
      the methods of the transformer.
      */
     public static final String CONTEST = "Contest";
     public static final String CONTEST_ID = "ContestIdentifier";
     public static final String CONTEST_NAME = "ContestName";
 
+    /*
+     The tag names on the authority level within the XML files, which are also used as keys in the maps when calling
+     the methods of the transformer.
+     */
     public static final String MANAGING_AUTHORITY = "ManagingAuthority";
     public static final String AUTHORITY_ID = "AuthorityIdentifier";
     public static final String AUTHORITY_NAME = "AuthorityName";
 
     /*
-     The tag names on the affiliation level within the XML files which are also used as keys in the maps when calling
+     The tag names on the reporting unit level within the XML files, which are also used as keys in the maps when calling
+     the methods of the transformer.
+     */
+    public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
+    public static final String SELECTION = "Selection";
+    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
+    public static final String VALID_VOTES = "ValidVotes";
+    public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
+
+    /*
+     The tag names on the affiliation level within the XML files, which are also used as keys in the maps when calling
      the methods of the transformer.
      */
     public static final String AFFILIATION = "Affiliation";
@@ -81,7 +96,7 @@ public class DutchElectionProcessor<E> {
     public static final String REGISTERED_NAME = "RegisteredName";
 
     /*
-     The tag names on the candidate level within the XML files which are also used as keys in the maps when calling
+     The tag names on the candidate level within the XML files, which are also used as keys in the maps when calling
      the methods of the transformer.
      */
     public static final String CANDIDATE = "Candidate";
@@ -96,16 +111,6 @@ public class DutchElectionProcessor<E> {
     public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
     public static final String LOCALITY = "Locality";
     public static final String LOCALITY_NAME = "LocalityName";
-
-    /*
-     The tag names on the reporting unit level within the XML files which are also used as keys in the maps when calling
-     the methods of the transformer.
-     */
-    public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
-    public static final String SELECTION = "Selection";
-    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
-    public static final String VALID_VOTES = "ValidVotes";
-    public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
     // Used internally
     private static final String NAME_TYPE = "NameType";
@@ -287,6 +292,7 @@ public class DutchElectionProcessor<E> {
                             candId = parser.getAttributeValue(null, SHORT_CODE);
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
+
                         // If this candidate has already been registered, skip it
                         if (registeredCandIds.contains(candId)) {
                             parser.findAndAcceptEndTag(VALID_VOTES);
