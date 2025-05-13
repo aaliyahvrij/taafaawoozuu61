@@ -429,7 +429,7 @@ public class DutchElectionProcessor<E> {
             String repUnitId = null;
             String repUnitName = null;
             List<String> repUnitAffiliations = new ArrayList<>();
-            int repUnitTotalVotes = 0;
+            int repUnitVotes = 0;
             String zipCode = NO_ZIPCODE;
             if (parser.findBeginTag(REP_UNIT_ID)) {
                 repUnitId = parser.getAttributeValue(null, ID);
@@ -441,12 +441,12 @@ public class DutchElectionProcessor<E> {
                     int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
                     if (postCodeEndIndex > postCodeIndex) {
                         zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
+                        repUnitData.put(ZIPCODE, zipCode);
                         repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
                     }
                 }
                 parser.findAndAcceptEndTag(REP_UNIT_ID);
             }
-            repUnitData.put(ZIPCODE, zipCode);
 
             int affId = 0;
             String affiName = INVALID_NAME;
@@ -467,7 +467,7 @@ public class DutchElectionProcessor<E> {
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiVotes = Integer.parseInt(parser.getElementText());
                             repUnitData.put("AffiRepUnitVotes", String.valueOf(affiVotes));
-                            repUnitTotalVotes = repUnitTotalVotes + affiVotes;
+                            repUnitVotes = repUnitVotes + affiVotes;
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
                         break;
@@ -490,7 +490,7 @@ public class DutchElectionProcessor<E> {
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
                 repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
-                repUnitData.put("RepUnitTotalVotes", String.valueOf(repUnitTotalVotes));
+                repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
                 transformer.registerRepUnit(repUnitData);
                 parser.findAndAcceptEndTag(SELECTION);
             }

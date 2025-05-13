@@ -187,7 +187,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         RepUnit repUnit;
         String repUnitName = repUnitData.get("RepUnitName");
         String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
-        String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
+        String repUnitVotesStr = repUnitData.get("RepUnitVotes");
         if (repUnitId == null) {
             System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
             return;
@@ -195,20 +195,20 @@ public class DutchElectionTransformer implements Transformer<Election> {
         if (repUnitName == null) {
             repUnitName = "UNKNOWN";
         }
-        if (repUnitTotalVotesStr == null) {
-            System.err.println("❌ Missing RepUnitTotalVotes for " + repUnitName + ": " + repUnitData);
+        if (repUnitVotesStr == null) {
+            System.err.println("❌ Missing RepUnitVotes for " + repUnitName + ": " + repUnitData);
             return;
         }
-        int repUnitTotalVotes;
+        int repUnitVotes;
         try {
-            repUnitTotalVotes = Integer.parseInt(repUnitTotalVotesStr);
+            repUnitVotes = Integer.parseInt(repUnitVotesStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid RepUnitTotalVotes value: '" + repUnitTotalVotesStr + "' in " + repUnitData);
+            System.err.println("❌ Invalid RepUnitVotes value: '" + repUnitVotesStr + "' in " + repUnitData);
             return;
         }
 
         // Create and register the new reporting unit
-        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitTotalVotes);
+        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitVotes);
         repUnitMap.put(repUnitId, repUnit);
     }
 
