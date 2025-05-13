@@ -495,11 +495,11 @@ public class DutchElectionProcessor<E> {
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
-                repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
-                repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
-                transformer.registerRepUnit(repUnitData);
                 parser.findAndAcceptEndTag(SELECTION);
             }
+            repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
+            repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
+            transformer.registerRepUnit(repUnitData);
             parser.findAndAcceptEndTag(REP_UNIT_VOTES);
         }
     }
