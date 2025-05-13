@@ -331,26 +331,26 @@ public class DutchElectionProcessor<E> {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
-                        Map<String, String> afTotalVotesData = new HashMap<>(constiData);
+                        Map<String, String> affiTotalVotesData = new HashMap<>(constiData);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        afTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                        affiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (registeredAffIds.contains(affId)) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             affiName = parser.getElementText();
-                            afTotalVotesData.put(REGISTERED_NAME, affiName);
+                            affiTotalVotesData.put(REGISTERED_NAME, affiName);
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiVotes = Integer.parseInt(parser.getElementText());
-                            afTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
+                            affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        System.out.println(afTotalVotesData);
-                        transformer.registerNation(afTotalVotesData);
+                        System.out.println(affiTotalVotesData);
+                        transformer.registerNation(affiTotalVotesData);
                         registeredAffIds.add(affId);
                         break;
                     case CANDIDATE:
