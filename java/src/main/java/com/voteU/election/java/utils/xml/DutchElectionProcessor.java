@@ -281,9 +281,9 @@ public class DutchElectionProcessor<E> {
                             affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        System.out.println(affiTotalVotesData);
-                        transformer.registerNation(affiTotalVotesData);
+                        //System.out.println(affiTotalVotesData);
                         registeredAffIds.add(affId);
+                        transformer.registerNation(affiTotalVotesData);
                         break;
                     case CANDIDATE:
                         Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
@@ -303,7 +303,7 @@ public class DutchElectionProcessor<E> {
                             candiTotalVotesData.put(CANDIDATE_ID, candId);
                             candiTotalVotesData.put("CandiVotes", String.valueOf(candiVoteCount));
                             candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                            candiTotalVotesData.put("Source", "TOTAL"); // ✅ important!
+                            candiTotalVotesData.put("Source", "TOTAL");
                             //System.out.println(candiTotalVotesData.get("CandiVotes"));
                             registeredCandIds.add(candId);
                             transformer.registerNation(candiTotalVotesData);
@@ -381,7 +381,7 @@ public class DutchElectionProcessor<E> {
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     }
                     affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
-                    affiTotalVotesData.put("Source", "AUTHORITY"); // ✅ important!
+                    affiTotalVotesData.put("Source", "AUTHORITY");
                     transformer.registerAuthority(affiTotalVotesData);
                     break;
                 case CANDIDATE:
@@ -402,11 +402,11 @@ public class DutchElectionProcessor<E> {
                         continue;
                     }
                     if (parser.findBeginTag(VALID_VOTES)) {
-                        int candiVoteCount = Integer.parseInt(parser.getElementText());
+                        int candiVotes = Integer.parseInt(parser.getElementText());
                         candiTotalVotesData.put(CANDIDATE_ID, String.valueOf(candId));
-                        candiTotalVotesData.put("CandiVotes", String.valueOf(candiVoteCount));
+                        candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
                         candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                        candiTotalVotesData.put("Source", "AUTHORITY"); // ✅ important!
+                        candiTotalVotesData.put("Source", "AUTHORITY");
                         registeredCandiAffiliations.add(candiAffiKey);
                         transformer.registerAuthority(candiTotalVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
@@ -435,7 +435,6 @@ public class DutchElectionProcessor<E> {
                 repUnitData.put(REP_UNIT_ID, repUnitId);
                 repUnitName = parser.getElementText();
                 repUnitData.put("RepUnitName", repUnitName);
-                //System.out.println(repUnitId + " - " + repUnitName);
                 int postCodeIndex = repUnitName.indexOf("(postcode:");
                 if (postCodeIndex >= 0) {
                     int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
@@ -461,8 +460,8 @@ public class DutchElectionProcessor<E> {
                             affiName = parser.getElementText();
                             repUnitAffiliations.add(affiName);
                             repUnitData.put(REGISTERED_NAME, affiName);
+                            parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
-                        parser.findAndAcceptEndTag(REGISTERED_NAME);
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiVotes = Integer.parseInt(parser.getElementText());
