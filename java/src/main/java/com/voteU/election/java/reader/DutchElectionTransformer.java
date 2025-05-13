@@ -41,11 +41,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerAffiliation(Map<String, String> affiData) {
-        // Optional: Handle affiliation data if required separately
-    }
-
-    @Override
     public void registerNation(Map<String, String> nationData) {
         String source = nationData.get("Source");
         boolean isTotalVotes = "TOTAL".equals(source);

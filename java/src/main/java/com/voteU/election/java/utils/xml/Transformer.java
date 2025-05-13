@@ -40,26 +40,14 @@ public interface Transformer<E> {
     void registerConstituency(Map<String, String> constiData);
 
     /**
-     * Called multiple times per file with information about an affiliation. The {@code affiliationData} can hold the
-     * same information as {@code contestData} in {@link #registerConstituency(Map)}, and the following information:
-     * <ul>
-     *     <li>{@link DutchElectionProcessor#AFFILIATION_ID}</li>
-     *     <li>{@link DutchElectionProcessor#REGISTERED_NAME}</li>
-     * </ul>
-     *
-     * @param affiData a {@code Map} containing information about the election, contest and the affiliation.
-     */
-    void registerAffiliation(Map<String, String> affiData);
-
-    /**
-     * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
-     * same information as {@code candidateData} in {@link #registerCandidate(Map)}, and the following information:
+     * Called multiple times per file with information about a candidate. The {@code nationData} can hold the
+     * same information as {@code candiData} in {@link #registerCandidate(Map)}, and the following information:
      * <ul>
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
-     * @param nationData a {@code Map} containing information about the election, contest, affiliation, candidate and
-     *                          the number of votes.
+     * @param nationData a {@code Map} containing information about the election, constituency, affiliation,
+     * candidate and the number of votes.
      */
     void registerNation(Map<String, String> nationData);
 
@@ -68,8 +56,7 @@ public interface Transformer<E> {
     void registerRepUnit(Map<String, String> repUnitData);
 
     /**
-     * Called multiple times per file with information about a candidate. The {@code candidateData} can hold the
-     * same information as {@code affiliationData} in {@link #registerAffiliation(Map)}, and the following information:
+     * Called multiple times per file with information about a candidate.
      * <ul>
      *     <li>{@link DutchElectionProcessor#CANDIDATE_ID}</li>
      *     <li>{@link DutchElectionProcessor#INITIALS}</li>

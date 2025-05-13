@@ -149,10 +149,10 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processNation(electionData, parser);
         }
-        for (Path constituencyFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
-            LOG.fine("Found: %s".formatted(constituencyFile));
-            System.out.println(folderName + constituencyFile.toString());
-            XMLParser parser = new XMLParser(new FileInputStream(constituencyFile.toString()));
+        for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
+            LOG.fine("Found: %s".formatted(constiFile));
+            System.out.println(folderName + constiFile.toString());
+            XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElection(electionData, parser);
             processVotes(electionData, parser, "kieskring");
         }
@@ -162,10 +162,9 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processVotes(electionData, parser, "gemeente");
         }
-        List<Path> files = PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId));
-        for (Path electionFile : files) {
-            LOG.fine("Found: %s".formatted(electionFile));
-            XMLParser parser = new XMLParser(new FileInputStream(electionFile.toString()));
+        for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
+            LOG.fine("Found: %s".formatted(candiFile));
+            XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElection(electionData, parser);
             processConstituency(electionData, parser);
         }
@@ -255,7 +254,6 @@ public class DutchElectionProcessor<E> {
             Map<String, String> affiData = new HashMap<>(constiData);
             affiData.put(AFFILIATION_ID, String.valueOf(id));
             affiData.put(REGISTERED_NAME, name);
-            //transformer.registerAffiliation(affiData);
             parser.findBeginTag(CANDIDATE);
             while (parser.getLocalName().equals(CANDIDATE)) {
                 processCandidate(affiData, parser);
