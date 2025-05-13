@@ -51,48 +51,48 @@ public class DutchElectionTransformer implements Transformer<Election> {
         boolean isTotalVotes = "TOTAL".equals(source);
 
         // Safely get party ID
-        String partyIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_ID);
-        if (partyIdStr == null) {
+        String affIdStr = votesData.get(DutchElectionProcessor.AFFILIATION_ID);
+        if (affIdStr == null) {
             System.err.println("❌ Missing AFFILIATION_ID in votesData: " + votesData);
             return;
         }
-        int partyId;
+        int affId;
         try {
-            partyId = Integer.parseInt(partyIdStr);
+            affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid AFFILIATION_ID: '" + partyIdStr + "' in " + votesData);
+            System.err.println("❌ Invalid AFFILIATION_ID: '" + affIdStr + "' in " + votesData);
             return;
         }
-        String partyName = votesData.get(DutchElectionProcessor.REGISTERED_NAME);
-        if (partyName == null) {
-            partyName = "UNKNOWN";
+        String affiName = votesData.get(DutchElectionProcessor.REGISTERED_NAME);
+        if (affiName == null) {
+            affiName = "UNKNOWN";
         }
 
         // Check if the party already exists
         String electionId = votesData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<Integer, Party> partyMap = election.getParties();
-        Party party = partyMap.get(partyId);
+        Party affiliation = partyMap.get(affId);
 
         // Register party on TOTAL only, if not already registered
-        if (isTotalVotes && party == null) {
-            String partyVotesStr = votesData.get(DutchElectionProcessor.VALID_VOTES);
-            if (partyVotesStr == null) {
-                System.err.println("❌ Missing VALID_VOTES for party " + partyName + ": " + votesData);
+        if (isTotalVotes && affiliation == null) {
+            String affiVotesStr = votesData.get(DutchElectionProcessor.VALID_VOTES);
+            if (affiVotesStr == null) {
+                System.err.println("❌ Missing VALID_VOTES for party " + affiName + ": " + votesData);
                 return;
             }
-            int partyVotes;
+            int affiVotes;
             try {
-                partyVotes = Integer.parseInt(partyVotesStr);
+                affiVotes = Integer.parseInt(affiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid VALID_VOTES value: '" + partyVotesStr + "' in " + votesData);
+                System.err.println("❌ Invalid VALID_VOTES value: '" + affiVotesStr + "' in " + votesData);
                 return;
             }
 
             // Create and register the new party
-            party = new Party(partyId, partyName);
-            party.setVotes(partyVotes);
-            partyMap.put(partyId, party);
+            affiliation = new Party(affId, affiName);
+            affiliation.setVotes(affiVotes);
+            partyMap.put(affId, affiliation);
         }
 
         // Handle candidate votes
@@ -112,14 +112,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
 
             // Check if the candidate already exists and is added to the party
-            if (isTotalVotes && !party.hasCandiShortCode(candId)) {
+            if (isTotalVotes && !affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
                 candidate.setValidVotes(candiVotes);
-                party.addCandidate(candidate);
+                affiliation.addCandidate(candidate);
             }
         }
-        partyMap.put(partyId, party);
+        partyMap.put(affId, affiliation);
         // Ensure only the number of registered parties is logged, not each time for each party
         // This logging happens once at the end, after all votes are processed.
     }
@@ -129,17 +129,17 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
         String constIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
-        String partyIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
-        String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
+        String affIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
+        String affiName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
-        if (electionId == null || constIdStr == null || authorityId == null || partyIdStr == null) {
+        if (electionId == null || constIdStr == null || authorityId == null || affIdStr == null) {
             return;
         }
-        int constId, partyId;
+        int constId, affId;
         try {
             constId = Integer.parseInt(constIdStr);
-            partyId = Integer.parseInt(partyIdStr);
+            affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
             return;
         }
@@ -154,16 +154,16 @@ public class DutchElectionTransformer implements Transformer<Election> {
             a.setConstId(constId);
             return a;
         });
-        Map<Integer, Party> partyMap = authority.getAuthorityParties();
-        Party party = partyMap.get(partyId);
+        Map<Integer, Party> affiMap = authority.getAuthorityParties();
+        Party party = affiMap.get(affId);
         if (isTotalVotes && party == null) {
             String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
             if (votesStr == null) return;
             try {
                 int votes = Integer.parseInt(votesStr);
-                party = new Party(partyId, partyName);
+                party = new Party(affId, affiName);
                 party.setVotes(votes);
-                partyMap.put(partyId, party);
+                affiMap.put(affId, party);
             } catch (NumberFormatException ignored) {
             }
         }
@@ -184,7 +184,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerRepUnit(Map<String, String> repUnitData) {
-        String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
+        final String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
@@ -217,16 +217,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerCandidate(Map<String, String> candidateData) {
+    public void registerCandidate(Map<String, String> candiData) {
 
-    }
-
-    /**
-     * This method is not needed since we now track elections by year.
-     */
-    @Override
-    public Election retrieve() {
-        return null; // Return null or logic to retrieve a specific election
     }
 
     /**

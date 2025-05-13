@@ -8,7 +8,7 @@ public class Candidate {
     private int id;
     @Getter
     public String shortCode;
-    private int partyId;
+    private int affId;
     private String firstName;
     private String lastName;
     public int validVotes;
@@ -18,7 +18,7 @@ public class Candidate {
         this.shortCode = "";
         this.firstName = "";
         this.lastName = "";
-        this.partyId = 0;
+        this.affId = 0;
         this.validVotes = 0;
     }
 

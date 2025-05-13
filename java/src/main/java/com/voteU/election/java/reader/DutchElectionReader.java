@@ -29,14 +29,11 @@ public class DutchElectionReader {
      */
     public Map<String, Election> getAll() {
         String[] electionIds = {"TK2021", "TK2023"};
-        Map<String, Election> elections = new HashMap<>();
 
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
             try {
-                // Process election data
-                Election election = electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
-                elections.put(electionId, election);
+                electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
                 log.info("Processed Election " + electionId);
             } catch (Exception e) {
                 System.out.println("Could not process " + electionId);

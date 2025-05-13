@@ -35,9 +35,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
      * </ul>
      *
-     * @param contestData a {@code Map} containing information about the election and the contest.
+     * @param constiData a {@code Map} containing information about the election and the contest.
      */
-    void registerConstituency(Map<String, String> contestData);
+    void registerConstituency(Map<String, String> constiData);
 
     /**
      * Called multiple times per file with information about an affiliation. The {@code affiliationData} can hold the
@@ -78,15 +78,8 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#LAST_NAME}</li>
      * </ul>
      *
-     * @param candidateData a {@code Map} containing information about the election, contest, affiliation and the
+     * @param candiData a {@code Map} containing information about the election, contest, affiliation and the
      *                      candidate.
      */
-    void registerCandidate(Map<String, String> candidateData);
-
-    /**
-     * Returns an instance that encapsulates all the registered data about the election.
-     *
-     * @return an instance that encapsulates all the data for an election.
-     */
-    E retrieve();
+    void registerCandidate(Map<String, String> candiData);
 }

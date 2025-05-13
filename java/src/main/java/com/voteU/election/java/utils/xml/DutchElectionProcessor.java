@@ -134,12 +134,11 @@ public class DutchElectionProcessor<E> {
      *
      * @param electionId the identifier for the of the files that should be processed, for example <i>TK2023</i>.
      * @param folderName The name of the folder that contains the files containing the election data.
-     * @return returns the result as defined by the {@link Transformer#retrieve()} method.
      * @throws IOException        in case something goes wrong while reading the file.
      * @throws XMLStreamException when a file has not the expected format. One example is a file that has been formatted
      *                            for better readability.
      */
-    public E processResults(String electionId, String folderName) throws IOException, XMLStreamException {
+    public void processResults(String electionId, String folderName) throws IOException, XMLStreamException {
         LOG.info("Loading election data from %s".formatted(folderName));
         Map<String, String> electionData = new HashMap<>();
         electionData.put(ELECTION_ID, electionId);
@@ -170,7 +169,6 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processConstituency(electionData, parser);
         }
-        return transformer.retrieve();
     }
 
     private void processElection(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
@@ -446,11 +444,11 @@ public class DutchElectionProcessor<E> {
                         continue;
                     }
                     if (parser.findBeginTag(VALID_VOTES)) {
-                        int candidateVoteCount = Integer.parseInt(parser.getElementText());
+                        int candiVoteCount = Integer.parseInt(parser.getElementText());
                         candiTotalVotesData.put(CANDIDATE_ID, String.valueOf(candId));
-                        candiTotalVotesData.put("CandidateVotes", String.valueOf(candidateVoteCount));
+                        candiTotalVotesData.put("CandidateVotes", String.valueOf(candiVoteCount));
                         candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                        candiTotalVotesData.put("Source", "GEMEENTE");// ✅ important!
+                        candiTotalVotesData.put("Source", "GEMEENTE"); // ✅ important!
                         registeredCandiAffis.add(candiAffiKey);
                         transformer.registerAuthority(candiTotalVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
@@ -468,18 +466,18 @@ public class DutchElectionProcessor<E> {
 
     private void processVotes(Map<String, String> electionData, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
-            String contestName = null;
+            String constiName = null;
             int constId = 0;
             if (parser.findBeginTag(CONTEST_ID)) {
                 constId = parser.getIntegerAttributeValue(null, ID, 0);
                 if (parser.findBeginTag(CONTEST_NAME)) {
-                    contestName = parser.getElementText();
+                    constiName = parser.getElementText();
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
             Map<String, String> constiData = new HashMap<>(electionData);
-            constiData.put(CONTEST_NAME, contestName);
+            constiData.put(CONTEST_NAME, constiName);
             constiData.put(CONTEST_ID, String.valueOf(constId));
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
@@ -562,7 +560,6 @@ public class DutchElectionProcessor<E> {
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVoteCount = Integer.parseInt(parser.getElementText());
                             repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVoteCount));
-                            //System.out.println(repUnitData);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
