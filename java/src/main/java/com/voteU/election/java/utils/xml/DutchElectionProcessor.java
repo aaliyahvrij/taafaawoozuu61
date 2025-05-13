@@ -338,9 +338,11 @@ public class DutchElectionProcessor<E> {
             }
             transformer.registerConstituency(constiData);
 
-            parser.findBeginTag(AFFILIATION);
-            while (parser.getLocalName().equals(AFFILIATION)) {
-                processAffiliation(constiData, parser);
+            if (parser.findBeginTag(AFFILIATION)) {
+                while (parser.getLocalName().equals(AFFILIATION)) {
+                    processAffiliation(constiData, parser);
+                    parser.findAndAcceptEndTag(AFFILIATION);
+                }
             }
             if (!parser.findAndAcceptEndTag(CONTEST)) {
                 LOG.warning("Can't find %s closing tag.".formatted(CONTEST));
@@ -497,25 +499,22 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processAffiliation(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(AFFILIATION)) {
-            int id = 0;
-            String name = INVALID_NAME;
-            if (parser.findBeginTag(AFFILIATION_ID)) {
-                id = parser.getIntegerAttributeValue(null, ID, 0);
-                if (parser.findBeginTag(REGISTERED_NAME)) {
-                    name = parser.getElementText();
-                }
-                parser.findAndAcceptEndTag(REGISTERED_NAME);
-                parser.findAndAcceptEndTag(AFFILIATION_ID);
+        int id = 0;
+        String name = INVALID_NAME;
+        if (parser.findBeginTag(AFFILIATION_ID)) {
+            id = parser.getIntegerAttributeValue(null, ID, 0);
+            if (parser.findBeginTag(REGISTERED_NAME)) {
+                name = parser.getElementText();
             }
-            Map<String, String> affiData = new HashMap<>(constiData);
-            affiData.put(AFFILIATION_ID, String.valueOf(id));
-            affiData.put(REGISTERED_NAME, name);
-            parser.findBeginTag(CANDIDATE);
-            while (parser.getLocalName().equals(CANDIDATE)) {
-                processCandidate(affiData, parser);
-            }
-            parser.findAndAcceptEndTag(AFFILIATION);
+            parser.findAndAcceptEndTag(REGISTERED_NAME);
+            parser.findAndAcceptEndTag(AFFILIATION_ID);
+        }
+        Map<String, String> affiData = new HashMap<>(constiData);
+        affiData.put(AFFILIATION_ID, String.valueOf(id));
+        affiData.put(REGISTERED_NAME, name);
+        parser.findBeginTag(CANDIDATE);
+        while (parser.getLocalName().equals(CANDIDATE)) {
+            processCandidate(affiData, parser);
         }
     }
 
