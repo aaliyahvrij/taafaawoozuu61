@@ -1,6 +1,8 @@
 package com.voteU.election.java.model;
 
 import com.voteU.election.java.utils.xml.Transformer;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
@@ -11,12 +13,18 @@ import java.util.*;
  * <b>Please do NOT include this code in your project!</b>
  */
 public class Election {
+    @Getter
+    @Setter
     private String id;
+    @Getter
     private final String name;
     private final String date;
     private final List<Province> provinces;
-    private final Map<Integer, Party> parties;
+    @Getter
     private final Map<String, Authority> authorities;
+    @Getter
+    private final Map<Integer, Party> affiliations;
+    @Getter
     private final Map<String, RepUnit> repUnits;
 
     public Election(String id, String name, String date) {
@@ -24,8 +32,8 @@ public class Election {
         this.name = name;
         this.date = date;
         this.provinces = new ArrayList<>();
-        this.parties = new HashMap<>();
         this.authorities = new HashMap<>();
+        this.affiliations = new HashMap<>();
         this.repUnits = new HashMap<>();
 
         // Initializing provinces
@@ -57,32 +65,8 @@ public class Election {
         this.provinces.add(Zuid_Holland);
     }
 
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Map<Integer, Party> getParties() {
-        return this.parties;
-    }
-
-    public Map<String, Authority> getAuthorities() {
-        return this.authorities;
-    }
-
-    public Map<String, RepUnit> getRepUnits() {
-        return this.repUnits;
-    }
-
     @Override
     public String toString() {
-        return "Election {" + "\n  id='" + this.id + '\'' + ",\n  name='" + this.name + '\'' + ",\n  date='" + this.date + '\'' + ",\n  provinces=" + this.provinces.size() + ",\n  nationalParties=" + this.parties + ",\n  authorities=" + this.authorities + "\n}";
+        return "Election {" + "\n  id: '" + this.id + '\'' + ",\n  name: '" + this.name + '\'' + ",\n  date: '" + this.date + '\'' + ",\n  amount of provinces: " + this.provinces.size() + ",\n  nationalAffiliations=" + this.affiliations + ",\n  authorities: " + this.authorities + "\n}";
     }
 }

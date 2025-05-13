@@ -391,7 +391,7 @@ public class DutchElectionProcessor<E> {
         int affId = 0;
         String affiName = INVALID_NAME;
         int affiVotes = 0;
-        Set<String> registeredCandiAffis = new HashSet<>();
+        Set<String> registeredCandiAffiliations = new HashSet<>();
 
         while (parser.getLocalName().equals(SELECTION)) {
             parser.nextTag();
@@ -434,7 +434,7 @@ public class DutchElectionProcessor<E> {
 
                     parser.findAndAcceptEndTag(CANDIDATE);
                     // If this candidate has already been registered, skip it
-                    if (registeredCandiAffis.contains(candiAffiKey)) {
+                    if (registeredCandiAffiliations.contains(candiAffiKey)) {
                         parser.findAndAcceptEndTag(VALID_VOTES);
                         continue;
                     }
@@ -444,7 +444,7 @@ public class DutchElectionProcessor<E> {
                         candiTotalVotesData.put("CandiVotes", String.valueOf(candiVoteCount));
                         candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
                         candiTotalVotesData.put("Source", "GEMEENTE"); // ✅ important!
-                        registeredCandiAffis.add(candiAffiKey);
+                        registeredCandiAffiliations.add(candiAffiKey);
                         transformer.registerAuthority(candiTotalVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
@@ -500,7 +500,7 @@ public class DutchElectionProcessor<E> {
             Map<String, String> repUnitData = new HashMap<>(constiData);
             String repUnitId = null;
             String repUnitName = null;
-            List<String> repUnitAffis = new ArrayList<>();
+            List<String> repUnitAffiliations = new ArrayList<>();
             int repUnitTotalVotes = 0;
             String zipCode = NO_ZIPCODE;
 
@@ -533,7 +533,7 @@ public class DutchElectionProcessor<E> {
                         repUnitData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             affiName = parser.getElementText();
-                            repUnitAffis.add(affiName);
+                            repUnitAffiliations.add(affiName);
                             repUnitData.put(REGISTERED_NAME, affiName);
                         }
                         parser.findAndAcceptEndTag(REGISTERED_NAME);
@@ -563,7 +563,7 @@ public class DutchElectionProcessor<E> {
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
-                repUnitData.put("RepUnitAffis", String.join(",", repUnitAffis));
+                repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
                 repUnitData.put("RepUnitTotalVotes", String.valueOf(repUnitTotalVotes));
                 transformer.registerRepUnit(repUnitData);
                 parser.findAndAcceptEndTag(SELECTION);

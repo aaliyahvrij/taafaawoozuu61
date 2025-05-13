@@ -66,7 +66,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Check if the affiliation already exists
         String electionId = nationData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
-        Map<Integer, Party> affiMap = election.getParties();
+        Map<Integer, Party> affiMap = election.getAffiliations();
         Party affiliation = affiMap.get(affId);
 
         // Register the affiliation only on TOTAL VOTES, if it is not already registered
@@ -185,7 +185,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
         RepUnit repUnit;
         String repUnitName = repUnitData.get(DutchElectionProcessor.REP_UNIT_NAME);
-        String repUnitAffis = repUnitData.get("RepUnitAffis");
+        String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
         String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
         if (repUnitId == null) {
             System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
@@ -207,7 +207,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Create and register the new reporting unit
-        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffis, repUnitTotalVotes);
+        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitTotalVotes);
         repUnitMap.put(repUnitId, repUnit);
     }
 

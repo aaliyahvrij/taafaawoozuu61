@@ -29,7 +29,6 @@ public class DutchElectionReader {
      */
     public Map<String, Election> getAll() {
         String[] electionIds = {"TK2021", "TK2023"};
-
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
             try {
