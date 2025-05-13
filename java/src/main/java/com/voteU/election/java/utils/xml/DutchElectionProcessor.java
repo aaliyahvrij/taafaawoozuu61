@@ -452,7 +452,7 @@ public class DutchElectionProcessor<E> {
             }
 
             int affId = 0;
-            String affiName = INVALID_NAME;
+            String affiName;
             int affiVotes = 0;
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
@@ -472,6 +472,9 @@ public class DutchElectionProcessor<E> {
                             repUnitData.put("AffiRepUnitVotes", String.valueOf(affiVotes));
                             repUnitVotes = repUnitVotes + affiVotes;
                             parser.findAndAcceptEndTag(VALID_VOTES);
+                        }
+                        else {
+                            LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
                         }
                         break;
                     case CANDIDATE:
