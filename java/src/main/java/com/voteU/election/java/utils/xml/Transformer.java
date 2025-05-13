@@ -8,7 +8,7 @@ import java.util.Map;
  * responsible for making all the needed relationships between the different classes and instances.<br>
  * For example when {@link #registerCandidate(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
  * After all the data has been transformed it should be able to return an instance of a class that encapsulates all
- * the data in the application specific data classes.
+ * the data in the application-specific data classes.
  *
  * @param <E>
  */

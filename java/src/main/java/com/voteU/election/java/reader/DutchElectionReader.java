@@ -36,7 +36,7 @@ public class DutchElectionReader {
                 electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
                 log.info("Processed Election " + electionId);
             } catch (Exception e) {
-                System.out.println("Could not process " + electionId);
+                System.out.println("Could not process Election " + electionId);
                 e.printStackTrace();
             }
         }

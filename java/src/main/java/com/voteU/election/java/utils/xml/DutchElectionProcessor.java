@@ -142,7 +142,6 @@ public class DutchElectionProcessor<E> {
         LOG.info("Loading election data from %s".formatted(folderName));
         Map<String, String> electionData = new HashMap<>();
         electionData.put(ELECTION_ID, electionId);
-
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
@@ -312,8 +311,6 @@ public class DutchElectionProcessor<E> {
         if (lastName != null) {
             candidateData.put(LAST_NAME, lastName);
         }
-
-        // Register the candidate data with the transformer
         transformer.registerCandidate(candidateData);
     }
 

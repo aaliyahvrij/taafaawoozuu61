@@ -13,7 +13,7 @@ import java.util.*;
 @Getter
 @Slf4j
 public class DutchElectionTransformer implements Transformer<Election> {
-    private Map<String, Election> elections = new HashMap<>();
+    private final Map<String, Election> elections = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionData) {
