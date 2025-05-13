@@ -1,6 +1,8 @@
 package com.voteU.election.java.utils.xml;
 
-import java.util.Map;
+import com.voteU.election.java.model.Party;
+
+import java.util.*;
 
 /**
  * A {@link Transformer} transforms the election information which is contained in a {@link Map},
@@ -35,7 +37,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param nationData a {@code Map} containing information about the election, constituency, affiliation,
-     * candidate and the number of votes.
+     *                   candidate and the number of votes.
      */
     void registerNation(Map<String, String> nationData);
 
@@ -53,7 +55,7 @@ public interface Transformer<E> {
 
     void registerAuthority(Map<String, String> authorityData);
 
-    void registerRepUnit(Map<String, Object> repUnitData);
+    void registerRepUnit(Map<String, String> repUnitData, List<Party> repUnitData_affiliations);
 
     /**
      * Called multiple times per file with information about a candidate.
@@ -66,7 +68,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param candiData a {@code Map} containing information about the election, contest, affiliation and the
-     *                      candidate.
+     *                  candidate.
      */
     void registerCandidate(Map<String, String> candiData);
 }

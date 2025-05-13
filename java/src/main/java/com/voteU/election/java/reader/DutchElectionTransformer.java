@@ -177,14 +177,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, Object> repUnitData) {
+    public void registerRepUnit(Map<String, String> repUnitData, List<Party> repUnitData_affiliations) {
         String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
+        RepUnit repUnit;
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
-        RepUnit repUnit;
         String repUnitName = repUnitData.get("RepUnitName");
-        String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
+        List<Party> repUnitAffiliations = repUnitData_affiliations;
         String repUnitVotesStr = repUnitData.get("RepUnitVotes");
         if (repUnitId == null) {
             System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
@@ -206,8 +206,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Create and register the new reporting unit
-        repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitVotes);
-        repUnitMap.put(repUnitId, repUnit);
+        //repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliations, repUnitVotes);
+        //repUnitMap.put(repUnitId, repUnit);
     }
 
     @Override

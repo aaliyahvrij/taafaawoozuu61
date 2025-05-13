@@ -426,7 +426,7 @@ public class DutchElectionProcessor<E> {
 
     private void processRepUnit(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REP_UNIT_VOTES)) {
-            Map<String, Object> repUnitData = new HashMap<>(constiData); // Map<String, String or Party>
+            Map<String, String> repUnitData = new HashMap<>(constiData);
             String repUnitId = null;
             String repUnitName = null;
             List<Party> repUnitAffiliations = new ArrayList<>();
@@ -475,6 +475,7 @@ public class DutchElectionProcessor<E> {
                             LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
                         }
                         affiliation = new Party(affId, affiName, affiVotes);
+                        repUnitAffiliations.add(affiliation);
                         break;
                     case CANDIDATE:
                         int candId = 0;
@@ -498,7 +499,7 @@ public class DutchElectionProcessor<E> {
             }
             repUnitData.put("RepUnitAffiliations", repUnitAffiliations);
             repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
-            transformer.registerRepUnit(repUnitData);
+            transformer.registerRepUnit(repUnitData, repUnitAffiliations);
             parser.findAndAcceptEndTag(REP_UNIT_VOTES);
         }
     }
