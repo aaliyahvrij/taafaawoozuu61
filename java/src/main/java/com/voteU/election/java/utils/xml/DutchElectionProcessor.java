@@ -157,13 +157,13 @@ public class DutchElectionProcessor<E> {
             System.out.println(folderName + constiFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElection(electionData, parser);
-            processVotes(electionData, parser, "kieskring");
+            processVotes(electionData, parser, "constituency");
         }
         for (Path authorityFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
             System.out.println(folderName + authorityFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);
-            processVotes(electionData, parser, "gemeente");
+            processVotes(electionData, parser, "authority");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(candiFile));
@@ -218,24 +218,24 @@ public class DutchElectionProcessor<E> {
         if (parser.findBeginTag(CONTEST)) {
             String constiName = null;
             int constId = 0;
+            Map<String, String> constiData = new HashMap<>(electionData);
             if (parser.findBeginTag(CONTEST_ID)) {
                 constId = parser.getIntegerAttributeValue(null, ID, 0);
+                constiData.put(CONTEST_ID, String.valueOf(constId));
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     constiName = parser.getElementText();
+                    constiData.put(CONTEST_NAME, constiName);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
-            Map<String, String> constiData = new HashMap<>(electionData);
-            constiData.put(CONTEST_NAME, constiName);
-            constiData.put(CONTEST_ID, String.valueOf(constId));
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
-                    case "kieskring":
+                    case "constituency":
                         //System.out.println("Processing constituency votes");
                         //processConstituency(constiData, parser);
                         break;
-                    case "gemeente":
+                    case "authority":
                         //System.out.println("Processing authority votes");
                         processAuthority(constiData, parser);
                         break;

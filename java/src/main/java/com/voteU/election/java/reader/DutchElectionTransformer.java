@@ -64,7 +64,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<Integer, Party> affiMap = election.getAffiliations();
         Party affiliation = affiMap.get(affId);
 
-        // Register the affiliation only on TOTAL VOTES, if it is not already registered
+        // Register the affiliation votes data within the TotalVotes tag if it is not already registered
         if (isTotalVotes && affiliation == null) {
             String affiVotesStr = nationData.get(DutchElectionProcessor.VALID_VOTES);
             if (affiVotesStr == null) {
@@ -110,7 +110,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
         }
         affiMap.put(affId, affiliation);
-        // Ensure only the number of registered parties is logged, not each time for each affiliation
+        // Ensure only the number of registered affiliations is logged, not each time for each affiliation
         // This logging happens once at the end, after all votes are processed.
     }
 
