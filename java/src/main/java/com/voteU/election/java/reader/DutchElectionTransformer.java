@@ -184,7 +184,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
         RepUnit repUnit;
-        String repUnitName = repUnitData.get(DutchElectionProcessor.REP_UNIT_NAME);
+        String repUnitName = repUnitData.get("RepUnitName");
         String repUnitAffiliations = repUnitData.get("RepUnitAffiliations");
         String repUnitTotalVotesStr = repUnitData.get("RepUnitTotalVotes");
         if (repUnitId == null) {
