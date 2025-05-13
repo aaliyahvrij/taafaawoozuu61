@@ -499,22 +499,23 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processAffiliation(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
-        int id = 0;
-        String name = INVALID_NAME;
+        Map<String, String> affiData = new HashMap<>(constiData);
         if (parser.findBeginTag(AFFILIATION_ID)) {
-            id = parser.getIntegerAttributeValue(null, ID, 0);
+            int affId = 0;
+            String affiName = INVALID_NAME;
+            affId = parser.getIntegerAttributeValue(null, ID, 0);
+            affiData.put(AFFILIATION_ID, String.valueOf(affId));
             if (parser.findBeginTag(REGISTERED_NAME)) {
-                name = parser.getElementText();
+                affiName = parser.getElementText();
+                affiData.put(REGISTERED_NAME, affiName);
+                parser.findAndAcceptEndTag(REGISTERED_NAME);
             }
-            parser.findAndAcceptEndTag(REGISTERED_NAME);
             parser.findAndAcceptEndTag(AFFILIATION_ID);
         }
-        Map<String, String> affiData = new HashMap<>(constiData);
-        affiData.put(AFFILIATION_ID, String.valueOf(id));
-        affiData.put(REGISTERED_NAME, name);
         parser.findBeginTag(CANDIDATE);
         while (parser.getLocalName().equals(CANDIDATE)) {
             processCandidate(affiData, parser);
+            parser.findAndAcceptEndTag(CANDIDATE);
         }
     }
 
