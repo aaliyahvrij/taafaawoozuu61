@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * doesn't have any knowledge of the data model that is being used by the application. All the datamodel specific
  * logic must be provided by a separate class that implements the {@link Transformer} interface.<br>
  * At its current state it processes the files in a two-step process. First it constructs the 'kieskringen' and
- * the 'kieslijsten', secondly it processes the vote counts. It behaves similar as the
+ * the 'kieslijsten'. Secondly, it processes the vote counts. It behaves similar as the
  * <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
  * The full dataset consists of three types of files.
  * <ol>
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * <em>It assumes that filenames have NOT been changed and that the content has not been altered!
  * The code assumes that there is no whitespace between the open and closing tags.</em><br>
  * <br>
- * Here is an example on how this class could be used.
+ * Here is an example of how this class could be used.
  * <pre>
  *     DutchElectionTransformer creator = new DutchElectionTransformer();
  *     DutchElectionProcessor<Election> electionProcessor = new DutchElectionProcessor<>(creator);
@@ -102,7 +102,7 @@ public class DutchElectionProcessor<E> {
      the methods of the transformer.
      */
     public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
-    public static final String REP_UNIT_NAME = "ReportingStationName";
+    public static final String REP_UNIT_NAME = "";
     public static final String SELECTION = "Selection";
     public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String VALID_VOTES = "ValidVotes";
