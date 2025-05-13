@@ -96,9 +96,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Handle candidate votes
-        if (votesData.containsKey("CandidateVotes")) {
+        if (votesData.containsKey("CandiVotes")) {
             String candId = votesData.get(DutchElectionProcessor.CANDIDATE_ID);
-            String candiVotesStr = votesData.get("CandidateVotes");
+            String candiVotesStr = votesData.get("CandiVotes");
             if (candId == null || candiVotesStr == null) {
                 System.err.println("❌ Missing candidate data in: " + votesData);
                 return;
@@ -107,7 +107,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             try {
                 candiVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid CandidateVotes value: '" + candiVotesStr + "' in " + votesData);
+                System.err.println("❌ Invalid CandiVotes value: '" + candiVotesStr + "' in " + votesData);
                 return;
             }
 
@@ -167,10 +167,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
             } catch (NumberFormatException ignored) {
             }
         }
-        if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
+        if (authorityData.containsKey("CandiVotes") && party != null && isTotalVotes) {
             try {
                 int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
-                int candiVotes = Integer.parseInt(authorityData.get("CandidateVotes"));
+                int candiVotes = Integer.parseInt(authorityData.get("CandiVotes"));
                 if (!party.hasCandId(candId)) {
                     Candidate candidate = new Candidate();
                     candidate.setId(candId);
