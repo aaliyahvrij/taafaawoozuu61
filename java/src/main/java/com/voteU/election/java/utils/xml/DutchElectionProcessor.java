@@ -520,54 +520,41 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processCandidate(Map<String, String> affiData, XMLParser parser) throws XMLStreamException {
-        int id = 0;
+        int candId = 0;
         String initials = null;
         String firstName = null;
         String lastNamePrefix = null;
         String lastName = null;
-        parser.nextBeginTag(CANDIDATE);
+        Map<String, String> candiData = new HashMap<>(affiData);
         if (parser.findBeginTag(CANDIDATE_ID)) {
-            id = parser.getIntegerAttributeValue(null, ID, 0);
+            candId = parser.getIntegerAttributeValue(null, ID, 0);
+            candiData.put(CANDIDATE_ID, String.valueOf(candId));
             parser.findAndAcceptEndTag(CANDIDATE_ID);
         }
         if (parser.findBeginTag(PERSON_NAME)) {
             if (parser.findBeginTag(NAME_LINE) && INITIALS.equals(parser.getAttributeValue("", NAME_TYPE))) {
                 initials = parser.getElementText().trim();
+                candiData.put(INITIALS, initials);
                 parser.findAndAcceptEndTag(NAME_LINE);
             }
             if (parser.getLocalName().equals(FIRST_NAME)) {
                 firstName = parser.getElementText().trim();
+                candiData.put(FIRST_NAME, firstName);
                 parser.findAndAcceptEndTag(FIRST_NAME);
             }
             if (parser.getLocalName().equals(LAST_NAME_PREFIX)) {
                 lastNamePrefix = parser.getElementText().trim();
+                candiData.put(LAST_NAME_PREFIX, lastNamePrefix);
                 parser.findAndAcceptEndTag(LAST_NAME_PREFIX);
             }
             if (parser.findBeginTag(LAST_NAME)) {
                 lastName = parser.getElementText().trim();
+                candiData.put(LAST_NAME, lastName);
                 parser.findAndAcceptEndTag(LAST_NAME);
             }
             parser.findAndAcceptEndTag(PERSON_NAME);
         }
         parser.findAndAcceptEndTag(CANDIDATE);
-
-        // Create a map to store candidate data
-        Map<String, String> candidateData = new HashMap<>(affiData);
-        candidateData.put(CANDIDATE_ID, String.valueOf(id));
-
-        // Add extracted data to candidateData map
-        if (initials != null) {
-            candidateData.put(INITIALS, initials);
-        }
-        if (firstName != null) {
-            candidateData.put(FIRST_NAME, firstName);
-        }
-        if (lastName != null) {
-            candidateData.put(LAST_NAME_PREFIX, lastNamePrefix);
-        }
-        if (lastName != null) {
-            candidateData.put(LAST_NAME, lastName);
-        }
-        transformer.registerCandidate(candidateData);
+        transformer.registerCandidate(candiData);
     }
 }
