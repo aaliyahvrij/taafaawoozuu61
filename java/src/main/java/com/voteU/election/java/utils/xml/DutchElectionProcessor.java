@@ -430,12 +430,11 @@ public class DutchElectionProcessor<E> {
             String repUnitName = null;
             List<String> repUnitAffiliations = new ArrayList<>();
             int repUnitVotes = 0;
-            String zipCode = NO_ZIPCODE;
+            String zipCode;
             if (parser.findBeginTag(REP_UNIT_ID)) {
                 repUnitId = parser.getAttributeValue(null, ID);
                 repUnitData.put(REP_UNIT_ID, repUnitId);
                 repUnitName = parser.getElementText();
-                repUnitData.put("RepUnitName", repUnitName);
                 int postCodeIndex = repUnitName.indexOf("(postcode:");
                 if (postCodeIndex >= 0) {
                     int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
@@ -443,6 +442,10 @@ public class DutchElectionProcessor<E> {
                         zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
                         repUnitData.put(ZIPCODE, zipCode);
                         repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
+                        repUnitData.put("RepUnitName", repUnitName);
+                    }
+                    else {
+                        repUnitData.put("RepUnitName", repUnitName);
                     }
                 }
                 parser.findAndAcceptEndTag(REP_UNIT_ID);
