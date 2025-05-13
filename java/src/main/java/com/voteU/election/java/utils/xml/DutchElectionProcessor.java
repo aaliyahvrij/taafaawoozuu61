@@ -315,7 +315,6 @@ public class DutchElectionProcessor<E> {
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
-                //System.out.println("About to close processNation SELECTION tag");
                 parser.findAndAcceptEndTag(SELECTION);
             }
             parser.findAndAcceptEndTag(TOTAL_VOTES);
@@ -379,9 +378,9 @@ public class DutchElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFILIATION_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
                         affiVotes = Integer.parseInt(parser.getElementText());
+                        affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     }
-                    affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
                     affiTotalVotesData.put("Source", "AUTHORITY");
                     transformer.registerAuthority(affiTotalVotesData);
                     break;
@@ -418,7 +417,6 @@ public class DutchElectionProcessor<E> {
                 default:
                     LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
             }
-            //System.out.println("About to close processAuthority SELECTION tag");
             parser.findAndAcceptEndTag(SELECTION);
         }
     }
