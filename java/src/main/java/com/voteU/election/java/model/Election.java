@@ -35,8 +35,6 @@ public class Election {
         this.authorities = new HashMap<>();
         this.affiliations = new HashMap<>();
         this.repUnits = new HashMap<>();
-
-        // Initializing provinces
         Province Drenthe = new Province(1, "Drenthe");
         Province Flevoland = new Province(2, "Flevoland");
         Province Friesland = new Province(3, "Friesland");
@@ -49,8 +47,6 @@ public class Election {
         Province Utrecht = new Province(10, "Utrecht");
         Province Zeeland = new Province(11, "Zeeland");
         Province Zuid_Holland = new Province(12, "Zuid-Holland");
-
-        // Adding provinces to the list
         this.provinces.add(Drenthe);
         this.provinces.add(Flevoland);
         this.provinces.add(Friesland);
