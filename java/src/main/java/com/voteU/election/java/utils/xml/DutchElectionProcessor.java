@@ -326,18 +326,19 @@ public class DutchElectionProcessor<E> {
         if (parser.findBeginTag(CONTEST)) {
             int id = 0;
             String name = null;
+            Map<String, String> constiData = new HashMap<>(electionData);
             if (parser.findBeginTag(CONTEST_ID)) {
                 id = parser.getIntegerAttributeValue(null, ID, 0);
+                constiData.put(CONTEST_ID, String.valueOf(id));
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     name = parser.getElementText();
+                    constiData.put(CONTEST_NAME, name);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
-            Map<String, String> constiData = new HashMap<>(electionData);
-            constiData.put(CONTEST_ID, String.valueOf(id));
-            constiData.put(CONTEST_NAME, name);
             transformer.registerConstituency(constiData);
+
             parser.findBeginTag(AFFILIATION);
             while (parser.getLocalName().equals(AFFILIATION)) {
                 processAffiliation(constiData, parser);
