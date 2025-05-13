@@ -299,9 +299,9 @@ public class DutchElectionProcessor<E> {
                             continue;
                         }
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int candiVoteCount = Integer.parseInt(parser.getElementText());
+                            int candiVotes = Integer.parseInt(parser.getElementText());
                             candiTotalVotesData.put(CANDIDATE_ID, candId);
-                            candiTotalVotesData.put("CandiVotes", String.valueOf(candiVoteCount));
+                            candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
                             candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
                             candiTotalVotesData.put("Source", "TOTAL");
                             //System.out.println(candiTotalVotesData.get("CandiVotes"));
@@ -478,8 +478,8 @@ public class DutchElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int candiVoteCount = Integer.parseInt(parser.getElementText());
-                            repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVoteCount));
+                            int candiVotes = Integer.parseInt(parser.getElementText());
+                            repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
