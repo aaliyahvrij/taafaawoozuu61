@@ -136,7 +136,7 @@ public class DutchElectionProcessor<E> {
      * NOTE: It assumes that there are <b>NO</b> whitespace characters between the tags other than within text values!
      * </pre>
      *
-     * @param electionId the identifier for the of the files that should be processed, for example <i>TK2023</i>.
+     * @param electionId the identifier for the of the files that should be processed, for example, <i>TK2023</i>.
      * @param folderName The name of the folder that contains the files containing the election data.
      * @throws IOException        in case something goes wrong while reading the file.
      * @throws XMLStreamException when a file has not the expected format. One example is a file that has been formatted
@@ -259,7 +259,7 @@ public class DutchElectionProcessor<E> {
             Set<Integer> registeredAffIds = new HashSet<>();
             Set<String> registeredCandIds = new HashSet<>();
             while (parser.getLocalName().equals(SELECTION)) {
-                System.out.println("processNation - SELECTION tag found");
+                //System.out.println("processNation - SELECTION tag found");
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
@@ -315,7 +315,7 @@ public class DutchElectionProcessor<E> {
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
-                System.out.println("About to close processNation SELECTION tag");
+                //System.out.println("About to close processNation SELECTION tag");
                 parser.findAndAcceptEndTag(SELECTION);
             }
             parser.findAndAcceptEndTag(TOTAL_VOTES);
@@ -381,7 +381,7 @@ public class DutchElectionProcessor<E> {
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     }
                     affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
-                    affiTotalVotesData.put("Source", "GEMEENTE"); // ✅ important!
+                    affiTotalVotesData.put("Source", "AUTHORITY"); // ✅ important!
                     transformer.registerAuthority(affiTotalVotesData);
                     break;
                 case CANDIDATE:
@@ -406,7 +406,7 @@ public class DutchElectionProcessor<E> {
                         candiTotalVotesData.put(CANDIDATE_ID, String.valueOf(candId));
                         candiTotalVotesData.put("CandiVotes", String.valueOf(candiVoteCount));
                         candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                        candiTotalVotesData.put("Source", "GEMEENTE"); // ✅ important!
+                        candiTotalVotesData.put("Source", "AUTHORITY"); // ✅ important!
                         registeredCandiAffiliations.add(candiAffiKey);
                         transformer.registerAuthority(candiTotalVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
@@ -417,7 +417,7 @@ public class DutchElectionProcessor<E> {
                 default:
                     LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
             }
-            System.out.println("About to close processAuthority SELECTION tag");
+            //System.out.println("About to close processAuthority SELECTION tag");
             parser.findAndAcceptEndTag(SELECTION);
         }
     }

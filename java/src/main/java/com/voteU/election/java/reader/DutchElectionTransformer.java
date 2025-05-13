@@ -127,7 +127,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String affIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
         String affiName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
-        boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
+        boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
         if (electionId == null || constIdStr == null || authorityId == null || affIdStr == null) {
             return;
         }
