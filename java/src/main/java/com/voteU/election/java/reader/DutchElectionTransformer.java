@@ -80,8 +80,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
 
             // Create and register the new affiliation
-            affiliation = new Party(affId, affiName);
-            affiliation.setVotes(affiVotes);
+            affiliation = new Party(affId, affiName, affiVotes);
             affiMap.put(affId, affiliation);
         }
 
@@ -153,12 +152,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<Integer, Party> affiMap = authority.getAuthorityParties();
         Party affiliation = affiMap.get(affId);
         if (isTotalVotes && affiliation == null) {
-            String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
-            if (votesStr == null) return;
+            String affiVotesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
+            if (affiVotesStr == null) return;
             try {
-                int votes = Integer.parseInt(votesStr);
-                affiliation = new Party(affId, affiName);
-                affiliation.setVotes(votes);
+                int affiVotes = Integer.parseInt(affiVotesStr);
+                affiliation = new Party(affId, affiName, affiVotes);
                 affiMap.put(affId, affiliation);
             } catch (NumberFormatException ignored) {
             }
@@ -179,7 +177,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, String> repUnitData) {
+    public void registerRepUnit(Map<String, Object> repUnitData) {
         String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();

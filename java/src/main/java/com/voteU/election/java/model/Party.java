@@ -9,32 +9,31 @@ public class Party {
     int id;
     String name;
     List<Candidate> candidates;
-    @Setter
     int votes;
 
-    public Party(int id, String name) {
+    public Party(int id, String name, int votes) {
         this.id = id;
         this.name = name;
         this.candidates = new ArrayList<>();
-        this.votes = 0;
+        this.votes = votes;
     }
 
     public void addCandidate(Candidate candidate) {
         candidates.add(candidate);
     }
 
-    public boolean hasCandiShortCode(String candidateId) {
+    public boolean hasCandiShortCode(String candId) {
         for (Candidate candidate : this.candidates) {
-            if (candidate.getShortCode().equals(candidateId)) {
+            if (candidate.getShortCode().equals(candId)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean hasCandId(int candidateId) {
+    public boolean hasCandId(int candId) {
         for (Candidate candidate : this.candidates) {
-            if (candidate.getId() == candidateId) {
+            if (candidate.getId() == candId) {
                 return true;
             }
         }
@@ -43,6 +42,6 @@ public class Party {
 
     @Override
     public String toString() {
-        return String.format("Party[id=%d, name=%s, votes=%d, candidates=%s]", this.id, this.name, this.votes, this.candidates);
+        return String.format("Party[id=%d, name=%s, candidates=%s, votes=%d]", this.id, this.name, this.candidates, this.votes);
     }
 }

@@ -1,5 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
+import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.PathUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -425,10 +426,10 @@ public class DutchElectionProcessor<E> {
 
     private void processRepUnit(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(REP_UNIT_VOTES)) {
-            Map<String, String> repUnitData = new HashMap<>(constiData);
+            Map<String, Object> repUnitData = new HashMap<>(constiData); // Map<String, String or Party>
             String repUnitId = null;
             String repUnitName = null;
-            List<String> repUnitAffiliations = new ArrayList<>();
+            List<Party> repUnitAffiliations = new ArrayList<>();
             int repUnitVotes = 0;
             String zipCode;
             if (parser.findBeginTag(REP_UNIT_ID)) {
@@ -452,30 +453,28 @@ public class DutchElectionProcessor<E> {
             }
 
             int affId = 0;
-            String affiName;
+            String affiName = "";
             int affiVotes = 0;
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
+                        Party affiliation;
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        repUnitData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             affiName = parser.getElementText();
-                            repUnitAffiliations.add(affiName);
-                            repUnitData.put(REGISTERED_NAME, affiName);
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             affiVotes = Integer.parseInt(parser.getElementText());
-                            repUnitData.put("AffiRepUnitVotes", String.valueOf(affiVotes));
                             repUnitVotes = repUnitVotes + affiVotes;
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
                         else {
                             LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
                         }
+                        affiliation = new Party(affId, affiName, affiVotes);
                         break;
                     case CANDIDATE:
                         int candId = 0;
@@ -497,7 +496,7 @@ public class DutchElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(SELECTION);
             }
-            repUnitData.put("RepUnitAffiliations", String.join(",", repUnitAffiliations));
+            repUnitData.put("RepUnitAffiliations", repUnitAffiliations);
             repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
             transformer.registerRepUnit(repUnitData);
             parser.findAndAcceptEndTag(REP_UNIT_VOTES);

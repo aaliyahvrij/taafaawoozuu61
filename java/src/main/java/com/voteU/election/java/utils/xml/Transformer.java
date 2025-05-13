@@ -53,7 +53,7 @@ public interface Transformer<E> {
 
     void registerAuthority(Map<String, String> authorityData);
 
-    void registerRepUnit(Map<String, String> repUnitData);
+    void registerRepUnit(Map<String, Object> repUnitData);
 
     /**
      * Called multiple times per file with information about a candidate.
