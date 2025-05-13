@@ -429,7 +429,7 @@ public class DutchElectionProcessor<E> {
                         //System.out.println("Found candidate identifier");
                         candId = parser.getIntegerAttributeValue(null, ID, 0);
                     }
-                    // Form a composite key using both candidate ID and affiliation ID
+                    // Form a composite key using both candId and affId
                     String candiAffiKey = candId + "_" + affId;
 
                     parser.findAndAcceptEndTag(CANDIDATE);

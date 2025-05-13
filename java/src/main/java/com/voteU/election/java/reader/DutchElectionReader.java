@@ -42,4 +42,16 @@ public class DutchElectionReader {
         System.out.println("All files are processed.\n");
         return transformer.getElections();
     }
+
+    public Election getElection(String electionId) {
+        String path = "/EML_bestanden_" + electionId;
+        try {
+            electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+            log.info("Processed Election {}", electionId);
+        } catch (Exception e) {
+            log.error("Could not process {}", electionId, e);
+        }
+        System.out.println("All files are processed.\n");
+        return transformer.getElection(electionId);
+    }
 }
