@@ -465,6 +465,7 @@ public class DutchElectionProcessor<E> {
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
                             repUnitData.put(CANDIDATE_ID, String.valueOf(candId));
+                            parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
