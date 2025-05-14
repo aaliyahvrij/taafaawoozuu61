@@ -190,6 +190,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
         if (repUnitName == null) {
+            System.err.println("❌ Missing RepUnitName in repUnitData: " + repUnitData);
             repUnitName = "UNKNOWN";
         }
         if (repUnitVotesStr == null) {
