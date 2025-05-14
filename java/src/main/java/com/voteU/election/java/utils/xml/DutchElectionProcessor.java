@@ -76,7 +76,6 @@ public class DutchElectionProcessor<E> {
      */
     public static final String MANAGING_AUTHORITY = "ManagingAuthority";
     public static final String AUTHORITY_ID = "AuthorityIdentifier";
-    public static final String AUTHORITY_NAME = "AuthorityName";
 
     /*
      The tag names on the reporting unit level within the XML files, which are also used as keys in the maps when calling
@@ -180,7 +179,7 @@ public class DutchElectionProcessor<E> {
                 String authorityId = parser.getAttributeValue(null, "Id");
                 electionData.put(AUTHORITY_ID, authorityId);
                 String authorityName = parser.getElementText();
-                electionData.put(AUTHORITY_NAME, authorityName);
+                electionData.put("AuthorityName", authorityName);
                 parser.findAndAcceptEndTag(AUTHORITY_ID);
             }
             parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
@@ -191,18 +190,18 @@ public class DutchElectionProcessor<E> {
             if (electionData.containsKey(ELECTION_ID) && expectedElectionId.equals(electionId)) {
                 if (parser.findBeginTag(ELECTION_NAME)) {
                     String electionName = parser.getElementText();
-                    parser.findAndAcceptEndTag(ELECTION_NAME);
                     electionData.put(ELECTION_NAME, electionName);
+                    parser.findAndAcceptEndTag(ELECTION_NAME);
                 }
                 if (parser.findBeginTag(ELECTION_CATEGORY)) {
                     String electionCategory = parser.getElementText();
-                    parser.findAndAcceptEndTag(ELECTION_CATEGORY);
                     electionData.put(ELECTION_CATEGORY, electionCategory);
+                    parser.findAndAcceptEndTag(ELECTION_CATEGORY);
                 }
                 if (parser.findBeginTag(ELECTION_DATE)) {
                     String electionDate = parser.getElementText();
-                    parser.findAndAcceptEndTag(ELECTION_DATE);
                     electionData.put(ELECTION_DATE, electionDate);
+                    parser.findAndAcceptEndTag(ELECTION_DATE);
                 }
                 transformer.registerElection(electionData);
                 parser.findAndAcceptEndTag(ELECTION_ID);

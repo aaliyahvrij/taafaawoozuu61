@@ -136,7 +136,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionId = authorityData.get(DutchElectionProcessor.ELECTION_ID);
         String constIdStr = authorityData.get(DutchElectionProcessor.CONTEST_ID);
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
-        String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
+        String authorityName = authorityData.get("AuthorityName");
         String affIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
         String affiName = authorityData.get(DutchElectionProcessor.REGISTERED_NAME);
         boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
