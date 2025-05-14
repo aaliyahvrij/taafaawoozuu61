@@ -175,18 +175,16 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processElection(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
-        String authorityId = null;
-        String authorityName = null;
         if (parser.findBeginTag(MANAGING_AUTHORITY)) {
             if (parser.findBeginTag(AUTHORITY_ID)) {
-                authorityId = parser.getAttributeValue(null, "Id");
-                authorityName = parser.getElementText();
+                String authorityId = parser.getAttributeValue(null, "Id");
+                electionData.put(AUTHORITY_ID, authorityId);
+                String authorityName = parser.getElementText();
+                electionData.put(AUTHORITY_NAME, authorityName);
                 parser.findAndAcceptEndTag(AUTHORITY_ID);
             }
             parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
         }
-        electionData.put(AUTHORITY_NAME, authorityName);
-        electionData.put(AUTHORITY_ID, authorityId);
         if (parser.findBeginTag(ELECTION_ID)) {
             String expectedElectionId = electionData.get(ELECTION_ID);
             String electionId = parser.getAttributeValue(null, ID);
