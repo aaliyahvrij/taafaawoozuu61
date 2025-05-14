@@ -281,6 +281,7 @@ public class DutchElectionProcessor<E> {
                         String candId = null;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candId = parser.getAttributeValue(null, SHORT_CODE);
+                            parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
 
