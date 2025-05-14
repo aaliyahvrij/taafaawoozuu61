@@ -497,7 +497,6 @@ public class DutchElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(SELECTION);
             }
-            repUnitData.put("RepUnitAffiliations", repUnitAffiliations);
             repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
             transformer.registerRepUnit(repUnitData, repUnitAffiliations);
             parser.findAndAcceptEndTag(REP_UNIT_VOTES);

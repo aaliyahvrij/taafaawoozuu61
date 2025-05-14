@@ -8,10 +8,10 @@ import java.util.*;
 public class RepUnit {
     String id;
     String name;
-    String affiliations;
+    List<Party> affiliations;
     int totalVotes;
 
-    public RepUnit(String id, String name, String affiliations, int totalVotes) {
+    public RepUnit(String id, String name, List<Party> affiliations, int totalVotes) {
         this.id = id;
         this.name = name;
         this.affiliations = affiliations;
@@ -19,6 +19,6 @@ public class RepUnit {
     }
 
     public String toString() {
-        return String.format("ReportingUnit[id=%s, name=%s, parties=%s, totalVotes=%d]", this.id, this.name, this.affiliations, this.totalVotes);
+        return String.format("ReportingUnit[id=%s, name=%s, affiliations=%s, totalVotes=%d]", this.id, this.name, this.affiliations, this.totalVotes);
     }
 }
