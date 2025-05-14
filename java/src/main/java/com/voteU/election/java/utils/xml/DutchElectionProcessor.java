@@ -258,27 +258,27 @@ public class DutchElectionProcessor<E> {
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
                         //System.out.println("processNation - Found an affiliation identifier.");
-                        Map<String, String> affiTotalVotesData = new HashMap<>(constiData);
+                        Map<String, String> affiNationData = new HashMap<>(constiData);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        affiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                        affiNationData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (registeredAffIds.contains(affId)) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             String affiName = parser.getElementText();
-                            affiTotalVotesData.put(REGISTERED_NAME, affiName);
+                            affiNationData.put(REGISTERED_NAME, affiName);
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int affiVotes = Integer.parseInt(parser.getElementText());
-                            affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
+                            affiNationData.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        //System.out.println(affiTotalVotesData);
+                        //System.out.println(affiNationData);
                         registeredAffIds.add(affId);
-                        transformer.registerNation(affiTotalVotesData);
+                        transformer.registerNation(affiNationData);
                         break;
                     case CANDIDATE:
                         String candId = null;
