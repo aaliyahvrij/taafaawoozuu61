@@ -21,15 +21,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
         if (electionId == null) {
-            System.out.println("❌ Missing ELECTION_ID in electionData: " + electionData);
+            System.err.println("❌ Missing ELECTION_ID in electionData: " + electionData);
             return;
         }
         if (electionName == null) {
-            System.out.println("❌ Missing ELECTION_NAME in electionData: " + electionData);
+            System.err.println("❌ Missing ELECTION_NAME in electionData: " + electionData);
             return;
         }
         if (electionDate == null) {
-            System.out.println("❌ Missing ELECTION_DATE in electionData: " + electionData);
+            System.err.println("❌ Missing ELECTION_DATE in electionData: " + electionData);
             return;
         }
 
@@ -102,7 +102,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 return;
             }
             if (candiVotesStr == null) {
-                System.out.println("❌ Missing CandiVotes in nationData: " + nationData);
+                System.err.println("❌ Missing CandiVotes in nationData: " + nationData);
                 return;
             }
             int candiVotes;
@@ -140,8 +140,20 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String affIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
         String affiName = authorityData.get(DutchElectionProcessor.REGISTERED_NAME);
         boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
-        if (electionId == null || constIdStr == null || authorityId == null || affIdStr == null) {
-            System.err.println("❌ Missing authority data in: " + authorityData);
+        if (electionId == null) {
+            System.err.println("❌ Missing ELECTION_ID in authorityData: " + authorityData);
+            return;
+        }
+        if (constIdStr == null) {
+            System.err.println("❌ Missing CONTEST_ID in authorityData: " + authorityData);
+            return;
+        }
+        if (authorityId == null) {
+            System.err.println("❌ Missing AUTHORITY_ID in authorityData: " + authorityData);
+            return;
+        }
+        if (affIdStr == null) {
+            System.err.println("❌ Missing AFFILIATION_ID in authorityData: " + authorityData);
             return;
         }
         int constId, affId;
