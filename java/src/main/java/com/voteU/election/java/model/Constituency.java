@@ -21,6 +21,6 @@ public class Constituency {
 
     @Override
     public String toString() {
-        return "Constituency{" + "id=" + this.id + ", name='" + this.name + '\'' + ", parties=" + this.affiliations + '}';
+        return "Constituency{" + "id=" + this.id + ", name='" + this.name + '\'' + ", affiliations=" + this.affiliations + '}';
     }
 }

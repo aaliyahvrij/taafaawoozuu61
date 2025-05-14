@@ -3,14 +3,15 @@ package com.voteU.election.java.model;
 import lombok.*;
 
 public class Candidate {
-    @Setter
     @Getter
+    @Setter
     private int id;
     @Getter
     public String shortCode;
     private int affId;
     private String firstName;
     private String lastName;
+    @Setter
     public int validVotes;
 
     public Candidate() {
@@ -40,10 +41,6 @@ public class Candidate {
 
     public int getValidVotes() {
         return this.validVotes;
-    }
-
-    public void setValidVotes(int validVotes) {
-        this.validVotes = validVotes;
     }
 
     public String toString() {

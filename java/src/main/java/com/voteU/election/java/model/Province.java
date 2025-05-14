@@ -4,14 +4,12 @@ import lombok.*;
 
 import java.util.*;
 
+@Getter
 public class Province {
-    @Getter
     @Setter
     int id;
-    @Getter
     @Setter
     String name;
-    @Getter
     List<Constituency> constituencies;
 
     public Province(int id, String name) {

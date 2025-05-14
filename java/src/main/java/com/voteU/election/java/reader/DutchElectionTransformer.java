@@ -46,7 +46,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String source = nationData.get("Source");
         boolean isTotalVotes = "TOTAL".equals(source);
 
-        // Safely get the affId
+        // Safely get the affiliation id
         String affIdStr = nationData.get(DutchElectionProcessor.AFFILIATION_ID);
         if (affIdStr == null) {
             System.err.println("❌ Missing AFFILIATION_ID in nationData: " + nationData);
@@ -60,7 +60,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
 
-        // Safely get the affiName
+        // Safely get the affiliation name
         String affiName = nationData.get(DutchElectionProcessor.REGISTERED_NAME);
         if (affiName == null) {
             System.err.println("❌ Missing AFFILIATION_NAME in nationData: " + nationData);
@@ -162,7 +162,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             a.setConstId(constId);
             return a;
         });
-        Map<Integer, Party> affiMap = authority.getAuthorityParties();
+        Map<Integer, Party> affiMap = authority.getAffiliations();
         Party affiliation = affiMap.get(affId);
         if (isTotalVotes && affiliation == null) {
             String affiVotesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);

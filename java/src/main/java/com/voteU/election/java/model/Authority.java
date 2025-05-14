@@ -10,19 +10,19 @@ public class Authority {
     private String id;
     @Setter
     private String name;
-    private final Map<Integer, Party> authorityParties;
     @Setter
     private int constId;
+    private final Map<Integer, Party> affiliations;
 
     public Authority(String id) {
         this.id = id;
         this.name = "";
-        this.authorityParties = new HashMap<>();
         this.constId = 0;
+        this.affiliations = new HashMap<>();
     }
 
     @Override
     public String toString() {
-        return "id " + this.id + " name " + this.name + " authorityParties " + this.authorityParties;
+        return "id: " + this.id + " - name: " + this.name + " - constId: " + this.constId + " - affiliations: " + this.affiliations;
     }
 }

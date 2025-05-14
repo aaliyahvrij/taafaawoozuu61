@@ -23,9 +23,9 @@ public class Election {
     @Getter
     private final Map<String, Authority> authorities;
     @Getter
-    private final Map<Integer, Party> affiliations;
-    @Getter
     private final Map<String, RepUnit> repUnits;
+    @Getter
+    private final Map<Integer, Party> affiliations;
 
     public Election(String id, String name, String date) {
         this.id = id;
@@ -33,8 +33,8 @@ public class Election {
         this.date = date;
         this.provinces = new ArrayList<>();
         this.authorities = new HashMap<>();
-        this.affiliations = new HashMap<>();
         this.repUnits = new HashMap<>();
+        this.affiliations = new HashMap<>();
         Province Drenthe = new Province(1, "Drenthe");
         Province Flevoland = new Province(2, "Flevoland");
         Province Friesland = new Province(3, "Friesland");
