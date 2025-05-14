@@ -37,8 +37,8 @@ public class ElectionController {
     }
 
     @GetMapping("/{electionId}/parties")
-    public Map<Integer, Party> getAllAffiliationsByElection(@PathVariable String electionId) {
-        return electionService.getAllAffiliationsByElection(electionId);
+    public Map<Integer, Party> getAllAffiliationsOfElection(@PathVariable String electionId) {
+        return electionService.getAllAffiliationsOfElection(electionId);
     }
 
     @GetMapping("/{electionId}/repunits")
