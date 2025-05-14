@@ -1,15 +1,12 @@
 package com.voteU.election.java.reader;
 
-import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.PollingStation;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 /**
  * Processes election data from XML files and provides access to the results.
  */
@@ -39,8 +36,8 @@ public class DutchElectionReader {
             try {
                 // Process election data
                 Election election = electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
-                    elections.put(electionId, election);
-                    log.info("Processed Election " + electionId);
+                elections.put(electionId, election);
+                log.info("Processed Election " + electionId);
             } catch(Exception e){
                 System.out.println("Could not process " + electionId);
                 e.printStackTrace();
@@ -52,28 +49,22 @@ public class DutchElectionReader {
             String electionYear = entry.getKey();
             Election election = transformer.getElection(electionYear);
             electionsMap.put(electionYear, election);
-
-            if (!transformer.getConstituencyMap().containsKey(electionYear)) {
-                List<Constituency> constituencies = election.getConstituencies();
-                transformer.addConstituencies(electionYear, constituencies);
-            }
-
-            if (!transformer.getPollingStationMap().containsKey(electionYear)) {
-                List<PollingStation> pollingStations = election.getPollingStations();
-                transformer.addPollingStations(electionYear, pollingStations);
-            }
         }
-
-
         return electionsMap;
     }
 
-    public Map<String, Map<Integer, Constituency>> getConstituencies() {
-        return transformer.getConstituencyMap();
-    }
+    public Election getElection(String electionId) {
+            String path = "/EML_bestanden_" + electionId;
+            try {
+                // Process election data
+                electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+                log.info("Processed Election " + electionId);
+            } catch(Exception e){
+                log.error("Could not process {}", electionId, e);
+            }
 
-    public Map<String, Map<String, PollingStation>> getPollingStations() {
-        return transformer.getPollingStationMap();
+        System.out.println("All files are processed.\n");
+        return transformer.getElection(electionId);
     }
 
 }

@@ -1,34 +1,34 @@
 package com.voteU.election.java.controller;
 import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.services.ConsistuencyService;
-import org.springframework.http.ResponseEntity;
+import com.voteU.election.java.model.Party;
+import com.voteU.election.java.services.ConstituencyService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/constituency")
+@RequestMapping("/api/election/{year}/constituencies")
 public class ConstituencyController {
 
-    private final ConsistuencyService consistuencyService;
+    private final ConstituencyService constituencyService;
 
-    public ConstituencyController(ConsistuencyService consistuencyService) {
-        this.consistuencyService = consistuencyService;
-    }
-
-    @GetMapping("/{year}/{contestId}")
-    public Constituency getConstituencyById(@PathVariable String year, @PathVariable int contestId) {
-        return consistuencyService.getConstituency(year, contestId);
+    public ConstituencyController(ConstituencyService constituencyService) {
+        this.constituencyService = constituencyService;
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Map<Integer, Constituency>>> getConstituency() {
-        return ResponseEntity.ok(consistuencyService.getStoredConstituencies());
+    public Map<Integer, Constituency> getConstituenciesByYear(@PathVariable String year){
+        return constituencyService.getConstituenciesByYear(year);
     }
 
-
-    @PostMapping
-    public boolean readResults() {
-        return consistuencyService.readConstituencies();
+    @GetMapping("/{constituencyId}")
+    public Constituency getConstituencyById(@PathVariable String year, @PathVariable Integer constituencyId){
+        return constituencyService.getConstituencyById(year, constituencyId);
     }
+
+    @GetMapping("/{constituencyId}/parties")
+    public Map<Integer, Party> getPartiesByConstituencyId(@PathVariable String year, @PathVariable Integer constituencyId){
+        return constituencyService.getPartiesByConstituencyId(year, constituencyId);
+    }
+
 }
+

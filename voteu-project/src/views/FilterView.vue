@@ -1,104 +1,291 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
+import { AuthorityService } from '@/services/AuthorityService.ts'
+import { ElectionService } from '@/services/ElectionService.ts'
 
-import ConstituencyFilter from "@/components/Data/ConstituencyFilter.vue";
-import YearFilter from '@/components/Data/YearFilter.vue'
-import {ref} from "vue";
-import type {Election} from "@/interface/Election.ts";
-import type {Party} from "@/interface/Party.ts";
+import type { Constituency } from '@/interface/Constituency.ts'
+import type { Authority } from '@/interface/Authority.ts'
+import type { Party } from '@/interface/Party.ts'
+import type { Candidate } from '@/interface/Candidate.ts'
 
+const selectedElection = ref<'2021' | '2023' | null>(null)
+const constituencies = ref<Constituency[]>([])
+const authorities = ref<Authority[]>([])
+const partyVotes = ref<Party[] | null>(null)
 
+const selectedConstituency = ref<Constituency | null>(null)
+const selectedAuthority = ref<Authority | null>(null)
+const selectedParty = ref<Party | null>(null)
+const selectedCandidate = ref<Candidate | null>(null)
 
-// Store elections data
-const parties = ref<Party[]>([])
+const hasApplied = ref(false)
+const currentVoteLevel = ref<'national' | 'constituency' | 'municipality' | null>(null)
 
-// Handle elections data sent from the child
-function handleElectionsUpdate(data: Election) {
-  parties.value = data.parties;// Update parent elections data
+const displayedPartyVotes = computed(() => partyVotes.value)
+
+function handleApply(): void {
+  hasApplied.value = true
+  selectedParty.value = null
+  partyVotes.value = null
+  selectedCandidate.value = null
+
+  if (selectedElection.value && !selectedConstituency.value) {
+    getNationalPartyVotes(selectedElection.value)
+  } else if (selectedElection.value && selectedConstituency.value && !selectedAuthority.value) {
+    getConstituencyPartyVotes(selectedElection.value, selectedConstituency.value.id.toString())
+  } else if (selectedElection.value && selectedConstituency.value && selectedAuthority.value) {
+    getAuthorityPartyVotes(selectedElection.value, selectedConstituency.value.id.toString(), selectedAuthority.value.id.toString())
+  } else {
+    console.warn("Invalid selection state.")
+  }
+}
+
+function clearSelectedElection(): void {
+  selectedParty.value = null
+  partyVotes.value = null
+  hasApplied.value = false
+  selectedElection.value = null
+  selectedConstituency.value = null
+  constituencies.value = []
+  selectedAuthority.value = null
+  authorities.value = []
+  currentVoteLevel.value = null
+}
+
+function clearSelectedConstituency(): void {
+  selectedConstituency.value = null
+  selectedAuthority.value = null
+  authorities.value = []
+}
+
+function clearSelectedAuthority(): void {
+  selectedAuthority.value = null
+}
+
+async function getNationalPartyVotes(electionId: string): Promise<void> {
+  try {
+    console.log('Fetching national party votes for election:', electionId)
+    const response = await ElectionService.getNationalPartyVotes(electionId)
+    partyVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'national'
+  } catch (error) {
+    console.error("Error fetching national party votes:", error)
+  }
+}
+
+async function getConstituencyPartyVotes(electionId: string, constituencyId: string): Promise<void> {
+  try {
+    console.log('Fetching constituency party votes for election:', electionId, 'constituency:', constituencyId)
+    const response = await ConstituencyServiceService.getConstituencyPartyVotes(electionId, constituencyId)
+    partyVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'constituency'
+  } catch (error) {
+    console.error("Error fetching constituency party votes:", error)
+  }
+}
+
+async function getAuthorityPartyVotes(electionId: string, constituencyId: string, authorityId: string): Promise<void> {
+  try {
+    console.log('Fetching authority party votes for election:', electionId, 'constituency:', constituencyId, 'authority:', authorityId)
+    const response = await AuthorityService.getAuthorityVotesByConstituencyId(electionId, constituencyId, authorityId)
+    partyVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'municipality'
+  } catch (error) {
+    console.error("Error fetching authority party votes:", error)
+  }
+}
+
+async function getConstituenciesByElection(election: string | null): Promise<void> {
+  try {
+    if (election) {
+      console.log('Fetching constituencies for election:', election)
+      const response = await ConstituencyServiceService.getConstituenciesByElection(election)
+      constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
+    } else {
+      constituencies.value = []
+    }
+  } catch (error) {
+    console.error("Error fetching constituencies:", error)
+  }
+}
+
+async function getAuthoritiesByConstituency(electionId: string | null, constituencyId: string | undefined): Promise<void> {
+  try {
+    if (electionId && constituencyId) {
+      console.log('Fetching authorities for election:', electionId, 'constituency:', constituencyId)
+      const response = await AuthorityService.getAuthoritiesByConstituencyId(electionId, constituencyId)
+      authorities.value = Array.isArray(response) ? response : Object.values(response || {})
+    }
+  } catch (error) {
+    console.error("Error fetching authorities:", error)
+  }
+}
+
+function handlePartyChange(party: Party): void {
+  selectedParty.value = party
+}
+
+function handleCandidateChange(candidate: Candidate): void {
+  selectedCandidate.value = candidate
 }
 </script>
-
 <template>
-  <div class="main-template">
-
-  <div class="filters-wrapper">
-    <YearFilter  @update-elections="handleElectionsUpdate"/>
-    <ConstituencyFilter/>
-  </div>
-
-    <div class="data-wrapper">
-      <div class="data-content">
-
-        <div v-if="parties.length > 0">
-          <div>Party votes:</div>
-          <div class="party-list-scroll">
-          <div class="party" v-for="party in parties" :key="party.id">
-            <div class="party-name"> {{ party.name  }}</div>  : {{ party.votes.toLocaleString() }} votes
-          </div>
-          </div>
-        </div>
-
-        <div v-else>
-          <p>Choose your filters.</p>
-        </div>
-
+  <div class="filter-bar">
+    <label>Select election: </label>
+    <div class="election-filter">
+      <select v-model="selectedElection" @change="getConstituenciesByElection(selectedElection)">
+        <option value="" disabled>Select an election</option>
+        <option value="2021">2021</option>
+        <option value="2023">2023</option>
+      </select>
+      <div class="tag" v-if="selectedElection">
+        {{ selectedElection }}
+        <svg @click="clearSelectedElection()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+        </svg>
       </div>
     </div>
 
+    <div class="constituency-filter">
+      <select v-if="constituencies.length > 0" v-model="selectedConstituency" @change="getAuthoritiesByConstituency(selectedElection, selectedConstituency?.id.toString())">
+        <option value="" disabled>Select a constituency</option>
+        <option v-for="constituency in constituencies" :key="constituency.id" :value="constituency">
+          {{ constituency.name }}
+        </option>
+      </select>
+      <div class="tag" v-if="selectedConstituency">
+        {{ selectedConstituency.name }}
+        <svg @click="clearSelectedConstituency()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+        </svg>
+      </div>
     </div>
+
+    <div class="authority-filter">
+      <select v-if="authorities.length > 0" v-model="selectedAuthority">
+        <option value="" disabled>Select a municipality</option>
+        <option v-for="authority in authorities" :key="authority.id" :value="authority">
+          {{ authority.name }}
+        </option>
+      </select>
+      <div class="tag" v-if="selectedAuthority">
+        {{ selectedAuthority.name }}
+        <svg @click="clearSelectedAuthority()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+        </svg>
+      </div>
+    </div>
+
+    <div>
+      <button @click="handleApply()">Apply</button>
+    </div>
+  </div>
+
+
+  <div class="filtered-data">
+    <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
+      <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
+      <div class="party-row" v-for="party in displayedPartyVotes" :key="party.id" @click="handlePartyChange(party)">
+        {{ party.name }}: <b>{{ party.votes.toLocaleString() }}</b>
+      </div>
+    </div>
+
+
+    <div v-if="selectedParty && selectedElection && !selectedCandidate">
+      <h1>{{ selectedParty.name }}</h1>
+      <button @click="selectedParty = null">Back</button>
+      <div class="candidate" v-for="candidate in selectedParty.candidates" :key="candidate.id" @click="handleCandidateChange(candidate)">
+        <p v-if="candidate.shortCode">
+          {{ candidate.shortCode }} : {{ candidate.votes.toLocaleString() }}
+        </p>
+        <p v-if="candidate.firstName && candidate.lastName">
+          {{ candidate.firstName }} {{ candidate.lastName }} : {{ candidate.votes.toLocaleString() }}
+        </p>
+      </div>
+    </div>
+
+
+    <div v-if="selectedCandidate && selectedElection">
+      <h1 v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h1>
+      <h1 v-if="selectedCandidate.firstName && selectedCandidate.lastName">
+        {{selectedCandidate.firstName}} {{selectedCandidate.lastName}}
+        <h4>Gender: {{selectedCandidate.gender}}</h4>
+        <h4>Locality: {{selectedCandidate.locality}}</h4>
+      </h1>
+      <h1>Votes: {{ selectedCandidate.votes.toLocaleString() }}</h1>
+      <button @click="selectedCandidate = null">Back</button>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.main-template{
+.candidate {
+  border: 1px solid black;
+  height: 40px;
+}
+.candidate:hover {
+  background-color: #efefef;
+}
+.party-list p{
+  padding:20px
+}
+
+.party-row {
   display: flex;
-  flex-direction: column;
-  height: 600px;
-  width: 1000px;
+  align-items: center;
+  border: 1px solid black;
+  height: 40px;
+  padding-left: 10px;
+}
+.party-row:hover {
+  background-color: #efefef;
 }
 
-.data-wrapper{
-  border: #880D1E;
-  border-style: solid;
-  height: 900px;
-}
+.filtered-data {
+  border: 1px solid black;
+  height: auto;
 
-.data-content{
-  color: black;
 }
-
-.party-list-scroll{
-  max-height: 400px; /* adjust as needed */
-  overflow-y: auto;
-}
-
-.party{
+.filter-bar {
   display: flex;
   flex-direction: row;
-  height: 50px;
-  padding: 5px;
 }
 
-.party:hover{
+.election-filter, .constituency-filter, .authority-filter {
+  min-width: 120px;
+  margin-right: 10px;
+}
+
+.election-filter select, .constituency-filter select, .authority-filter select {
+  width: 100%;
+}
+
+.tag {
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* optional: space between text and icon */
   background-color: #002970;
   color: white;
+  text-align: center;
+  border-radius: 15px;
+  width: 100%;
+  margin-top: 10px;
 }
-.party-name{
-  font-weight: bold;
+
+.tag svg {
+  cursor: pointer;
+}
+
+.tag:hover {
+  background-color: #00379a;
 }
 
 
-.filters-wrapper {
-  padding: 2rem;
-  margin-left: 0;
-  margin-top: 2rem;
-  display: flex;
-  color:black;
-  border-color: #ffffff;
-  border-style: solid;
-  flex-direction: row;
-  background-color: #ffffff;
-  width: 1000px;
-  height: 150px;
 
-
+.tag button:hover {
+  cursor: pointer;
 }
 </style>

@@ -1,20 +1,48 @@
-import axios from "axios";
-import type { AxiosResponse } from "axios";
+import type { Constituency } from '@/interface/Constituency.ts'
+import type { Party } from '@/interface/Party.ts'
 
-const CONSTITUENCY_API_BASE_URL: string = "http://localhost:8080/api/constituency";
+export class ConstituencyServiceService {
+  static async getConstituenciesByElection(electionId: string,): Promise<Record<number, Constituency> | null> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/election/TK${electionId}/constituencies`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
+      if (!response.ok) {
+        throw new Error('HTTP error!: ' + response.status)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+    return null
+  }
 
-export interface Constituency {
-  id: number;
-  name: string;
+  static async getConstituencyPartyVotes(electionId: string, constituencyId: string): Promise<Record<number, Party> | null> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/parties`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
-}
-
-
-class ConstituencyService {
-  getConstituency(): Promise<AxiosResponse<Constituency[]>> {
-    return axios.get<Constituency[]>(CONSTITUENCY_API_BASE_URL);
+      if (!response.ok) {
+        throw new Error('HTTP error!: ' + response.status)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+    return null
   }
 }
-
-export default new ConstituencyService();

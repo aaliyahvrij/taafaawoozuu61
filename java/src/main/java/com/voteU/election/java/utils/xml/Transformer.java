@@ -74,7 +74,8 @@ public interface Transformer<E> {
      * @param votesData a {@code Map} containing information about the election, contest, affiliation, candidate and
      *                  the number of votes.
      */
-    void registerVotes(Map<String, String> votesData);
+
+    void registerNationalVotes(Map<String, String> votesData);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code votesData} can hold the
@@ -82,17 +83,18 @@ public interface Transformer<E> {
      * <ul>
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
-     *
      * @param constituencyData a {@code Map} containing information about the constituency, affiliation, candidate and their votes
-     * @param affiliationNames
      */
-    void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames);
+    void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Integer> candidateVotes);
 
+    void registerAuthorityVotes(Map<String, String> AuthorityData);
     /**
      * Returns an instance that encapsulates all the registered data about the election.
      * @return an instance that encapsulates all the data for an election.
      */
-    E retrieve();
 
     void registerPollingStation(Map<String, String> reportingUnitData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames);
+
+    E retrieve();
+
 }

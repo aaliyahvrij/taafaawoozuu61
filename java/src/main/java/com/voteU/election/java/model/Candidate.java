@@ -1,56 +1,33 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class Candidate {
-    int id;
-    int partyId;
-    String firstName;
-    String lastName;
-    int votes;
+    private int id;
+    private String shortCode;
+    private String firstName;
+    private String lastName;
+    private int votes;
+    private int partyId;
+    private String gender;
+    private String locality;
 
 
-    public Candidate(int id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+
+
+
+    public Candidate() {
+        this.id = 0;
+        this.shortCode = "";
+        this.firstName = "";
+        this.lastName = "";
         this.votes = 0;
+        this.gender = "";
+        this.locality = "";
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public int getVotes() {
-        return votes;
-    }
-
-    public void setVotes(int votes) {
-        this.votes = votes;
-    }
-
-    public int getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(int partyId) {
-        this.partyId = partyId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int setId(int id) {
-        this.id = id;
-        return id;
-    }
-
     public String toString() {
-        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d]", id, firstName, lastName, votes);
+        return String.format("Candidate[id=%d, firstName=%s, lastName=%s, votes=%d, shortCode=%s, gender=%s, locality=%s]", this.id, this.firstName, this.lastName, this.votes, this.shortCode, this.gender, this.locality);
     }
-
 }
-

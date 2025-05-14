@@ -1,41 +1,26 @@
 package com.voteU.election.java.model;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Setter
+@Getter
 public class Constituency {
-    int id;
-    String name;
-    private List<Party> parties;
+    private int id;
+    private String name;
+    private Map<Integer, Party> parties;
+    Map<String, Authority> authorities;
 
-    public Constituency(int id, List<Party> parties, String name) {
+    public Constituency(int id,  String name) {
         this.id = id;
-        this.parties = parties;
         this.name = name;
+        this.parties = new HashMap<>();
+        this.authorities = new HashMap<>();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Party> getParties() {
-        return parties;
-    }
-
-    public void setParties(List<Party> parties) {
-        this.parties = parties;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

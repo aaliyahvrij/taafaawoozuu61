@@ -1,63 +1,54 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Election;
+import com.voteU.election.java.model.*;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 @Slf4j
 @Service
 public class ElectionService {
-
     private final DutchElectionReader electionReader;
-    private final Map<String, Election> storedElections = new HashMap<>();
+    private final Map<String, Election> electionsByElectionId = new HashMap<>();
 
     public ElectionService(DutchElectionReader electionReader) {
         this.electionReader = electionReader;
     }
 
-    /**
-     * Loads all elections from the reader and stores them internally.
-     * This is intended to be called via a POST-like operation.
-     *
-     * @return true if elections were loaded successfully, false otherwise
-     */
     public boolean readElections() {
         Map<String, Election> elections = electionReader.getAll();
         if (elections == null || elections.isEmpty()) {
             log.warn("No election data found during readElections().");
             return false;
         }
-        storedElections.putAll(elections);
+        electionsByElectionId.putAll(elections);
         return true;
     }
 
-    /**
-     * Checks if a specific election year is available in memory.
-     *
-     * @param electionId the ID of the election (e.g. "TK2021")
-     * @return true if found, false otherwise
-     */
-    public boolean readElectionYear(String electionId) {
-        return storedElections.containsKey(electionId);
+    public boolean readElection(String electionId) {
+        Election election = electionReader.getElection(electionId);
+        if (election == null) {
+            log.warn("No election data found for year {} during readElectionYear().", electionId);
+            return false;
+        }
+        electionsByElectionId.put(electionId, election);
+        return true;
     }
 
-    /**
-     * Retrieves all stored elections (GET).
-     */
     public Map<String, Election> getAll() {
-        return storedElections;
+        return electionsByElectionId;
     }
 
-    /**
-     * Retrieves a specific election by ID (GET).
-     */
     public Election getElection(String electionId) {
-        return storedElections.get(electionId);
+        return electionsByElectionId.get(electionId);
     }
 
-
+    public Map<Integer, Party> getAllPartiesByElection(String electionId) {
+        Election election = getElection(electionId);
+        if (election == null) {
+            return null;
+        }
+        return election.getNationalParties();
+    }
 }
