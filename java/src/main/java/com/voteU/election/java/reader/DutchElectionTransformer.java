@@ -92,7 +92,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             affiMap.put(affId, affiliation);
         }
 
-        // Handle candidate votes
+        // Handle candidate data
         if (nationData.containsKey("CandiVotes")) {
             String candId = nationData.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationData.get("CandiVotes");

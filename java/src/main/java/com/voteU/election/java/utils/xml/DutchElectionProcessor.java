@@ -81,9 +81,9 @@ public class DutchElectionProcessor<E> {
      The tag names on the reporting unit level within the XML files, which are also used as keys in the maps when calling
      the methods of the transformer.
      */
+    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
-    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String VALID_VOTES = "ValidVotes";
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 

@@ -14,12 +14,12 @@ import java.util.*;
 @Slf4j
 @Component
 public class DutchElectionReader {
+    private final DutchElectionProcessor<Election> processor;
     private final DutchElectionTransformer transformer;
-    private final DutchElectionProcessor<Election> electionProcessor;
 
     public DutchElectionReader() {
         this.transformer = new DutchElectionTransformer();
-        this.electionProcessor = new DutchElectionProcessor<>(transformer);
+        this.processor = new DutchElectionProcessor<>(transformer);
     }
 
     /**
@@ -32,7 +32,7 @@ public class DutchElectionReader {
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
             try {
-                electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+                processor.processResults(electionId, PathUtils.getResourcePath(path));
                 log.info("Processed Election " + electionId);
             } catch (Exception e) {
                 System.out.println("Could not process Election " + electionId);
@@ -46,7 +46,7 @@ public class DutchElectionReader {
     public Election getElection(String electionId) {
         String path = "/EML_bestanden_" + electionId;
         try {
-            electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+            processor.processResults(electionId, PathUtils.getResourcePath(path));
             log.info("Processed Election {}", electionId);
         } catch (Exception e) {
             log.error("Could not process {}", electionId, e);
