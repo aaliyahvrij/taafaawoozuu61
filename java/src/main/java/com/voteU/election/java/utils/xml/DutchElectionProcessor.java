@@ -283,7 +283,6 @@ public class DutchElectionProcessor<E> {
                         transformer.registerNation(affiTotalVotesData);
                         break;
                     case CANDIDATE:
-                        Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
                         String candId = null;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candId = parser.getAttributeValue(null, SHORT_CODE);
@@ -297,12 +296,13 @@ public class DutchElectionProcessor<E> {
                         }
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
+                            Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
                             candiTotalVotesData.put(CANDIDATE_ID, candId);
+                            registeredCandIds.add(candId);
                             candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
+                            //System.out.println(candiTotalVotesData.get("CandiVotes"));
                             candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
                             candiTotalVotesData.put("Source", "TOTAL");
-                            //System.out.println(candiTotalVotesData.get("CandiVotes"));
-                            registeredCandIds.add(candId);
                             transformer.registerNation(candiTotalVotesData);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
