@@ -43,8 +43,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerNation(Map<String, String> nationData) {
-        String source = nationData.get("Source");
-        boolean isTotalVotes = "TOTAL".equals(source);
+        boolean isTotalVotes = "TOTAL".equals(nationData.get("Source"));
 
         // Safely get the affiliation id
         String affIdStr = nationData.get(DutchElectionProcessor.AFFILIATION_ID);
@@ -176,27 +175,29 @@ public class DutchElectionTransformer implements Transformer<Election> {
         });
         Map<Integer, Party> affiMap = authority.getAffiliations();
         Party affiliation = affiMap.get(affId);
-        if (isTotalVotes && affiliation == null) {
-            String affiVotesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
-            if (affiVotesStr == null) return;
-            try {
-                int affiVotes = Integer.parseInt(affiVotesStr);
-                affiliation = new Party(affId, affiName, affiVotes);
-                affiMap.put(affId, affiliation);
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        if (authorityData.containsKey("CandiVotes") && affiliation != null && isTotalVotes) {
-            try {
-                int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
-                int candiVotes = Integer.parseInt(authorityData.get("CandiVotes"));
-                if (!affiliation.hasCandId(candId)) {
-                    Candidate candidate = new Candidate();
-                    candidate.setId(candId);
-                    candidate.setValidVotes(candiVotes);
-                    affiliation.addCandidate(candidate);
+        if (isTotalVotes) {
+            if (affiliation == null) {
+                String affiVotesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
+                if (affiVotesStr == null) return;
+                try {
+                    int affiVotes = Integer.parseInt(affiVotesStr);
+                    affiliation = new Party(affId, affiName, affiVotes);
+                    affiMap.put(affId, affiliation);
+                } catch (NumberFormatException ignored) {
                 }
-            } catch (NumberFormatException | NullPointerException ignored) {
+            }
+            if (authorityData.containsKey("CandiVotes") && affiliation != null) {
+                try {
+                    int candId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
+                    int candiVotes = Integer.parseInt(authorityData.get("CandiVotes"));
+                    if (!affiliation.hasCandId(candId)) {
+                        Candidate candidate = new Candidate();
+                        candidate.setId(candId);
+                        candidate.setValidVotes(candiVotes);
+                        affiliation.addCandidate(candidate);
+                    }
+                } catch (NumberFormatException | NullPointerException ignored) {
+                }
             }
         }
     }
