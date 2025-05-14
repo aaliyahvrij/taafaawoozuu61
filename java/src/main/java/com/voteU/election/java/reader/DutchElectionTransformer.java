@@ -21,15 +21,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
         if (electionId == null) {
-            System.out.println("Incomplete election data: Missing ID.");
+            System.out.println("❌ Missing ELECTION_ID in electionData: " + electionData);
             return;
         }
         if (electionName == null) {
-            System.out.println("Incomplete election data: Missing name.");
+            System.out.println("❌ Missing ELECTION_NAME in electionData: " + electionData);
             return;
         }
         if (electionDate == null) {
-            System.out.println("Incomplete election data: Missing date.");
+            System.out.println("❌ Missing ELECTION_DATE in electionData: " + electionData);
             return;
         }
 
@@ -56,7 +56,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         try {
             affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid AFFILIATION_ID: '" + affIdStr + "' in nationData: " + nationData);
+            System.err.println("❌ Invalid AFFILIATION_ID '" + affIdStr + "' in nationData: " + nationData);
             return;
         }
 
@@ -84,7 +84,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             try {
                 affiVotes = Integer.parseInt(affiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid VALID_VOTES value: '" + affiVotesStr + "' in nationData: " + nationData);
+                System.err.println("❌ Invalid VALID_VOTES value '" + affiVotesStr + "' in nationData: " + nationData);
                 return;
             }
 
@@ -97,15 +97,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
         if (nationData.containsKey("CandiVotes")) {
             String candId = nationData.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationData.get("CandiVotes");
-            if (candId == null || candiVotesStr == null) {
-                System.err.println("❌ Missing candidate data in: " + nationData);
+            if (candId == null) {
+                System.err.println("❌ Missing CANDIDATE_ID in nationData: " + nationData);
+                return;
+            }
+            if (candiVotesStr == null) {
+                System.out.println("❌ Missing CandiVotes in nationData: " + nationData);
                 return;
             }
             int candiVotes;
             try {
                 candiVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid CandiVotes value: '" + candiVotesStr + "' in nationData: " + nationData);
+                System.err.println("❌ Invalid CandiVotes value '" + candiVotesStr + "' in nationData: " + nationData);
                 return;
             }
 
@@ -189,7 +193,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerRepUnit(Map<String, String> repUnitData, List<Party> repUnitData_affiliations) {
         String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
-        RepUnit repUnit;
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = repUnitData.get(DutchElectionProcessor.REP_UNIT_ID);
         String repUnitName = repUnitData.get("RepUnitName");
@@ -209,12 +212,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
         try {
             repUnitVotes = Integer.parseInt(repUnitVotesStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid RepUnitVotes value: '" + repUnitVotesStr + "' in repUnitData: " + repUnitData);
+            System.err.println("❌ Invalid RepUnitVotes value '" + repUnitVotesStr + "' in repUnitData: " + repUnitData);
             return;
         }
 
         // Create and register the new reporting unit
-        repUnit = new RepUnit(repUnitId, repUnitName, repUnitData_affiliations, repUnitVotes);
+        RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitData_affiliations, repUnitVotes);
         repUnitMap.put(repUnitId, repUnit);
     }
 
