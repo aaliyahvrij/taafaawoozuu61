@@ -52,8 +52,8 @@ public class DutchElectionProcessor<E> {
     public static final String SHORT_CODE = "ShortCode";
 
     /*
-     The tag names on the election level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the election level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String ELECTION = "Election";
     public static final String ELECTION_ID = "ElectionIdentifier";
@@ -63,23 +63,23 @@ public class DutchElectionProcessor<E> {
     public static final String TOTAL_VOTES = "TotalVotes";
 
     /*
-     The tag names on the contest level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the contest level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String CONTEST = "Contest";
     public static final String CONTEST_ID = "ContestIdentifier";
     public static final String CONTEST_NAME = "ContestName";
 
     /*
-     The tag names on the authority level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the authority level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String MANAGING_AUTHORITY = "ManagingAuthority";
     public static final String AUTHORITY_ID = "AuthorityIdentifier";
 
     /*
-     The tag names on the reporting unit level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the reporting unit level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
@@ -88,16 +88,16 @@ public class DutchElectionProcessor<E> {
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
     /*
-     The tag names on the affiliation level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the affiliation level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String AFFILIATION = "Affiliation";
     public static final String AFFILIATION_ID = "AffiliationIdentifier";
     public static final String REGISTERED_NAME = "RegisteredName";
 
     /*
-     The tag names on the candidate level within the XML files, which are also used as keys in the maps when calling
-     the methods of the transformer.
+     The tag names on the candidate level within the XML files, which are also used as keys in the maps
+     when calling the methods of the transformer.
      */
     public static final String CANDIDATE = "Candidate";
     public static final String CANDIDATE_ID = "CandidateIdentifier";
@@ -114,8 +114,6 @@ public class DutchElectionProcessor<E> {
 
     // Used internally
     private static final String NAME_TYPE = "NameType";
-    private static final String INVALID_NAME = "INVALID";
-    private static final String NO_ZIPCODE = "";
 
     /**
      * Creates a new instance that will use the provided transformer for transforming the data into the
