@@ -380,6 +380,7 @@ public class DutchElectionProcessor<E> {
                     if (parser.findBeginTag(CANDIDATE_ID)) {
                         //System.out.println("Found a candidate identifier.");
                         candId = parser.getIntegerAttributeValue(null, ID, 0);
+                        parser.findAndAcceptEndTag(CANDIDATE_ID);
                     }
 
                     // Form a composite key using both candId and affId
