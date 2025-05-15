@@ -416,12 +416,10 @@ public class DutchElectionProcessor<E> {
         if (parser.findBeginTag(REP_UNIT_VOTES)) {
             Map<String, String> repUnitData = new HashMap<>(constiData);
             String repUnitName = null;
-            List<Party> repUnitAffiliations = new ArrayList<>();
+            Map<Integer, Party> repUnitAffiliations = new HashMap<>();
             int repUnitVotes = 0;
             Party affiliation;
             int affId = 0;
-            int affIndex = -1;
-            int candIndex = 0;
             int selectionIndex = 0;
             if (parser.findBeginTag(REP_UNIT_ID)) {
                 String repUnitId = parser.getAttributeValue(null, ID);
@@ -462,8 +460,7 @@ public class DutchElectionProcessor<E> {
                             LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
                         }
                         affiliation = new Party(affId, affiName, affiVotes);
-                        repUnitAffiliations.add(affiliation);
-                        affIndex = affIndex + 1;
+                        repUnitAffiliations.put(affId, affiliation);
                         break;
                     case CANDIDATE:
                         int candId = 0;
@@ -479,12 +476,11 @@ public class DutchElectionProcessor<E> {
                             Candidate candidate = new Candidate();
                             candidate.setId(candId);
                             candidate.setVotes(candiVotes);
-                            repUnitAffiliations.get(affIndex).addCandidate(candidate);
+                            repUnitAffiliations.get(affId).addCandidate(candidate);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
                         }
-                        candIndex = candIndex + 1;
                         break;
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));

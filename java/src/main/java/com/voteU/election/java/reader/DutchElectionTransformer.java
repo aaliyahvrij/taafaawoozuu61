@@ -203,7 +203,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, String> repUnitData, List<Party> repUnitData_affiliations) {
+    public void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Party> repUnitData_affiliations) {
         String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
@@ -254,15 +254,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 Map<Integer, Constituency> constituencies = election.getConstituencies();
                 Constituency constituency = constituencies.get(constId);
                 if (constituency != null) {
-                    // Update or insert candidate in Constituency-level Affiliation
+                    // Update or insert a candidate in Constituency-level Affiliation
                     Map<Integer, Party> affiliations = constituency.getAffiliations();
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
 
-                    // Update or insert candidate in each Authority-level Affiliation
+                    // Update or insert a candidate in each Authority-level Affiliation
                     Map<String, Authority> authorities = constituency.getAuthorities();
                     for (Authority authority : authorities.values()) {
                         Map<Integer, Party> affiMap = authority.getAffiliations();
                         populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
+                        Map<String, RepUnit> repUnits = authority.getRepUnits();
+                        for (RepUnit repUnit : repUnits.values()) {
+                            populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
+                        }
                     }
                 }
             }
