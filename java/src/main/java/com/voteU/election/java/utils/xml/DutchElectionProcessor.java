@@ -251,63 +251,65 @@ public class DutchElectionProcessor<E> {
             int affId = 0;
             Set<Integer> registeredAffIds = new HashSet<>();
             Set<String> registeredCandIds = new HashSet<>();
-            while (parser.getLocalName().equals(SELECTION)) {
-                parser.nextTag();
-                switch (parser.getLocalName()) {
-                    case AFFILIATION_ID:
-                        //System.out.println("processNation - Found an affiliation identifier.");
-                        Map<String, String> nationLevel_affiData = new HashMap<>(constiData);
-                        affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        nationLevel_affiData.put(AFFILIATION_ID, String.valueOf(affId));
-                        if (registeredAffIds.contains(affId)) {
+            if (parser.findBeginTag(SELECTION)) {
+                while (parser.getLocalName().equals(SELECTION)) {
+                    parser.nextTag();
+                    switch (parser.getLocalName()) {
+                        case AFFILIATION_ID:
+                            //System.out.println("processNation - Found an affiliation identifier.");
+                            Map<String, String> nationLevel_affiData = new HashMap<>(constiData);
+                            affId = parser.getIntegerAttributeValue(null, ID, 0);
+                            nationLevel_affiData.put(AFFILIATION_ID, String.valueOf(affId));
+                            if (registeredAffIds.contains(affId)) {
+                                parser.findAndAcceptEndTag(AFFILIATION_ID);
+                                continue;
+                            }
+                            if (parser.findBeginTag(REGISTERED_NAME)) {
+                                String affiName = parser.getElementText();
+                                nationLevel_affiData.put(REGISTERED_NAME, affiName);
+                                parser.findAndAcceptEndTag(REGISTERED_NAME);
+                            }
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
-                            continue;
-                        }
-                        if (parser.findBeginTag(REGISTERED_NAME)) {
-                            String affiName = parser.getElementText();
-                            nationLevel_affiData.put(REGISTERED_NAME, affiName);
-                            parser.findAndAcceptEndTag(REGISTERED_NAME);
-                        }
-                        parser.findAndAcceptEndTag(AFFILIATION_ID);
-                        if (parser.findBeginTag(VALID_VOTES)) {
-                            int affiVotes = Integer.parseInt(parser.getElementText());
-                            nationLevel_affiData.put(VALID_VOTES, String.valueOf(affiVotes));
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                        }
-                        registeredAffIds.add(affId);
-                        transformer.registerNation(nationLevel_affiData);
-                        break;
-                    case CANDIDATE:
-                        String candId = null;
-                        if (parser.findBeginTag(CANDIDATE_ID)) {
-                            candId = parser.getAttributeValue(null, SHORT_CODE);
-                            parser.findAndAcceptEndTag(CANDIDATE_ID);
-                        }
-                        parser.findAndAcceptEndTag(CANDIDATE);
+                            if (parser.findBeginTag(VALID_VOTES)) {
+                                int affiVotes = Integer.parseInt(parser.getElementText());
+                                nationLevel_affiData.put(VALID_VOTES, String.valueOf(affiVotes));
+                                parser.findAndAcceptEndTag(VALID_VOTES);
+                            }
+                            registeredAffIds.add(affId);
+                            transformer.registerNation(nationLevel_affiData);
+                            break;
+                        case CANDIDATE:
+                            String candId = null;
+                            if (parser.findBeginTag(CANDIDATE_ID)) {
+                                candId = parser.getAttributeValue(null, SHORT_CODE);
+                                parser.findAndAcceptEndTag(CANDIDATE_ID);
+                            }
+                            parser.findAndAcceptEndTag(CANDIDATE);
 
-                        // If this candidate has already been registered, skip it
-                        if (registeredCandIds.contains(candId)) {
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                            continue;
-                        }
-                        if (parser.findBeginTag(VALID_VOTES)) {
-                            int candiVotes = Integer.parseInt(parser.getElementText());
-                            Map<String, String> candiVotesData = new HashMap<>(constiData);
-                            candiVotesData.put(CANDIDATE_ID, candId);
-                            registeredCandIds.add(candId);
-                            candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
-                            candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                            candiVotesData.put("Source", "TOTAL");
-                            transformer.registerNation(candiVotesData);
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                        } else {
-                            LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
-                        }
-                        break;
-                    default:
-                        LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
+                            // If this candidate has already been registered, skip it
+                            if (registeredCandIds.contains(candId)) {
+                                parser.findAndAcceptEndTag(VALID_VOTES);
+                                continue;
+                            }
+                            if (parser.findBeginTag(VALID_VOTES)) {
+                                int candiVotes = Integer.parseInt(parser.getElementText());
+                                Map<String, String> candiVotesData = new HashMap<>(constiData);
+                                candiVotesData.put(CANDIDATE_ID, candId);
+                                registeredCandIds.add(candId);
+                                candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
+                                candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                                candiVotesData.put("Source", "TOTAL");
+                                transformer.registerNation(candiVotesData);
+                                parser.findAndAcceptEndTag(VALID_VOTES);
+                            } else {
+                                LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
+                            }
+                            break;
+                        default:
+                            LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
+                    }
+                    parser.findAndAcceptEndTag(SELECTION);
                 }
-                parser.findAndAcceptEndTag(SELECTION);
             }
             parser.findAndAcceptEndTag(TOTAL_VOTES);
         }
@@ -433,8 +435,7 @@ public class DutchElectionProcessor<E> {
                         repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
                         repUnitData.put("RepUnitName", repUnitName);
                     }
-                }
-                else {
+                } else {
                     repUnitData.put("RepUnitName", repUnitName);
                 }
                 parser.findAndAcceptEndTag(REP_UNIT_ID);
