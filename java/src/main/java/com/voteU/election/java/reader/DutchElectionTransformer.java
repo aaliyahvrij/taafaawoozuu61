@@ -41,44 +41,44 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNation(Map<String, String> nationLevel_affiMap) {
-        boolean isTotalVotes = "TOTAL".equals(nationLevel_affiMap.get("Source"));
+    public void registerNation(Map<String, String> nationMap) {
+        boolean isTotalVotes = "TOTAL".equals(nationMap.get("Source"));
         // Safely get the affiliation id
-        String affIdStr = nationLevel_affiMap.get(DutchElectionProcessor.AFFILIATION_ID);
+        String affIdStr = nationMap.get(DutchElectionProcessor.AFFILIATION_ID);
         if (affIdStr == null) {
-            System.err.println("Missing AFFILIATION_ID in nationLevel_affiMap: " + nationLevel_affiMap);
+            System.err.println("Missing AFFILIATION_ID in nationMap: " + nationMap);
             return;
         }
         int affId;
         try {
             affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
-            System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationLevel_affiMap: " + nationLevel_affiMap);
+            System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationMap: " + nationMap);
             return;
         }
         // Safely get the affiliation name
-        String affiName = nationLevel_affiMap.get(DutchElectionProcessor.AFFILIATION_NAME);
+        String affiName = nationMap.get(DutchElectionProcessor.AFFILIATION_NAME);
         if (affiName == null) {
-            System.err.println("Missing AFFILIATION_NAME in nationLevel_affiMap: " + nationLevel_affiMap);
+            System.err.println("Missing AFFILIATION_NAME in nationMap: " + nationMap);
             return;
         }
         // Check if the affiliation already exists
-        String electionId = nationLevel_affiMap.get(DutchElectionProcessor.ELECTION_ID);
+        String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<Integer, Affiliation> affiMap = election.getAffiliations();
         Affiliation affiliation = affiMap.get(affId);
         // Register the affiliation votes data within the TotalVotes tag if it is not already registered
         if (isTotalVotes && affiliation == null) {
-            String affiVotesStr = nationLevel_affiMap.get(DutchElectionProcessor.VALID_VOTES);
+            String affiVotesStr = nationMap.get(DutchElectionProcessor.VALID_VOTES);
             if (affiVotesStr == null) {
-                System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationLevel_affiMap: " + nationLevel_affiMap);
+                System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationMap: " + nationMap);
                 return;
             }
             int affiVotes;
             try {
                 affiVotes = Integer.parseInt(affiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationLevel_affiMap: " + nationLevel_affiMap);
+                System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationMap: " + nationMap);
                 return;
             }
             // Create and register the new affiliation
@@ -86,22 +86,22 @@ public class DutchElectionTransformer implements Transformer<Election> {
             affiMap.put(affId, affiliation);
         }
         // Handle candidate data
-        if (nationLevel_affiMap.containsKey("CandiVotes")) {
-            String candId = nationLevel_affiMap.get(DutchElectionProcessor.CANDIDATE_ID);
-            String candiVotesStr = nationLevel_affiMap.get("CandiVotes");
+        if (nationMap.containsKey("CandiVotes")) {
+            String candId = nationMap.get(DutchElectionProcessor.CANDIDATE_ID);
+            String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
-                System.err.println("Missing CANDIDATE_ID in nationLevel_affiMap: " + nationLevel_affiMap);
+                System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
                 return;
             }
             if (candiVotesStr == null) {
-                System.err.println("Missing CandiVotes in nationLevel_affiMap: " + nationLevel_affiMap);
+                System.err.println("Missing CandiVotes in nationMap: " + nationMap);
                 return;
             }
             int candiVotes;
             try {
                 candiVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid CandiVotes value '" + candiVotesStr + "' in nationLevel_affiMap: " + nationLevel_affiMap);
+                System.err.println("Invalid CandiVotes value '" + candiVotesStr + "' in nationMap: " + nationMap);
                 return;
             }
             // Check if the candidate already exists and is added to the affiliation

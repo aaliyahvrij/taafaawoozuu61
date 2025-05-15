@@ -36,10 +36,10 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
-     * @param nationLevel_affiMap a {@code Map} containing information about the election, constituency, affiliation,
+     * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
      *                   candidate and the number of votes.
      */
-    void registerNation(Map<String, String> nationLevel_affiMap);
+    void registerNation(Map<String, String> nationMap);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the
