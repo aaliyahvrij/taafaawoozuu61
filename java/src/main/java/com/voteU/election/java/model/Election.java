@@ -1,16 +1,9 @@
 package com.voteU.election.java.model;
 
-import com.voteU.election.java.utils.xml.Transformer;
 import lombok.*;
 
 import java.util.*;
 
-/**
- * Just a very silly election class that only demonstrates that a {@link Transformer}
- * can return an instance of a class.
- *
- * <b>Please do NOT include this code in your project!</b>
- */
 @Getter
 @Setter
 public class Election {

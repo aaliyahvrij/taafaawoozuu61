@@ -21,15 +21,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
         if (electionId == null) {
-            System.err.println("❌ Missing ELECTION_ID in electionData: " + electionData);
+            System.err.println("Missing ELECTION_ID in electionData: " + electionData);
             return;
         }
         if (electionName == null) {
-            System.err.println("❌ Missing ELECTION_NAME in electionData: " + electionData);
+            System.err.println("Missing ELECTION_NAME in electionData: " + electionData);
             return;
         }
         if (electionDate == null) {
-            System.err.println("❌ Missing ELECTION_DATE in electionData: " + electionData);
+            System.err.println("Missing ELECTION_DATE in electionData: " + electionData);
             return;
         }
 
@@ -48,21 +48,21 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Safely get the affiliation id
         String affIdStr = nationData.get(DutchElectionProcessor.AFFILIATION_ID);
         if (affIdStr == null) {
-            System.err.println("❌ Missing AFFILIATION_ID in nationData: " + nationData);
+            System.err.println("Missing AFFILIATION_ID in nationData: " + nationData);
             return;
         }
         int affId;
         try {
             affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid AFFILIATION_ID '" + affIdStr + "' in nationData: " + nationData);
+            System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationData: " + nationData);
             return;
         }
 
         // Safely get the affiliation name
         String affiName = nationData.get(DutchElectionProcessor.REGISTERED_NAME);
         if (affiName == null) {
-            System.err.println("❌ Missing AFFILIATION_NAME in nationData: " + nationData);
+            System.err.println("Missing AFFILIATION_NAME in nationData: " + nationData);
             return;
         }
 
@@ -76,14 +76,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
         if (isTotalVotes && affiliation == null) {
             String affiVotesStr = nationData.get(DutchElectionProcessor.VALID_VOTES);
             if (affiVotesStr == null) {
-                System.err.println("❌ Missing VALID_VOTES for affiliation " + affiName + " in nationData: " + nationData);
+                System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationData: " + nationData);
                 return;
             }
             int affiVotes;
             try {
                 affiVotes = Integer.parseInt(affiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid VALID_VOTES value '" + affiVotesStr + "' in nationData: " + nationData);
+                System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationData: " + nationData);
                 return;
             }
 
@@ -97,18 +97,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
             String candId = nationData.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationData.get("CandiVotes");
             if (candId == null) {
-                System.err.println("❌ Missing CANDIDATE_ID in nationData: " + nationData);
+                System.err.println("Missing CANDIDATE_ID in nationData: " + nationData);
                 return;
             }
             if (candiVotesStr == null) {
-                System.err.println("❌ Missing CandiVotes in nationData: " + nationData);
+                System.err.println("Missing CandiVotes in nationData: " + nationData);
                 return;
             }
             int candiVotes;
             try {
                 candiVotes = Integer.parseInt(candiVotesStr);
             } catch (NumberFormatException e) {
-                System.err.println("❌ Invalid CandiVotes value '" + candiVotesStr + "' in nationData: " + nationData);
+                System.err.println("Invalid CandiVotes value '" + candiVotesStr + "' in nationData: " + nationData);
                 return;
             }
 
@@ -140,19 +140,19 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String affiName = authorityData.get(DutchElectionProcessor.REGISTERED_NAME);
         boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
         if (electionId == null) {
-            System.err.println("❌ Missing ELECTION_ID in authorityData: " + authorityData);
+            System.err.println("Missing ELECTION_ID in authorityData: " + authorityData);
             return;
         }
         if (constIdStr == null) {
-            System.err.println("❌ Missing CONTEST_ID in authorityData: " + authorityData);
+            System.err.println("Missing CONTEST_ID in authorityData: " + authorityData);
             return;
         }
         if (authorityId == null) {
-            System.err.println("❌ Missing AUTHORITY_ID in authorityData: " + authorityData);
+            System.err.println("Missing AUTHORITY_ID in authorityData: " + authorityData);
             return;
         }
         if (affIdStr == null) {
-            System.err.println("❌ Missing AFFILIATION_ID in authorityData: " + authorityData);
+            System.err.println("Missing AFFILIATION_ID in authorityData: " + authorityData);
             return;
         }
         int constId, affId;
@@ -211,21 +211,21 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String repUnitName = repUnitData.get("RepUnitName");
         String repUnitVotesStr = repUnitData.get("RepUnitVotes");
         if (repUnitId == null) {
-            System.err.println("❌ Missing REP_UNIT_ID in repUnitData: " + repUnitData);
+            System.err.println("Missing REP_UNIT_ID in repUnitData: " + repUnitData);
             return;
         }
         if (repUnitName == null) {
-            System.err.println("❌ Missing RepUnitName in repUnitData: " + repUnitData);
+            System.err.println("Missing RepUnitName in repUnitData: " + repUnitData);
         }
         if (repUnitVotesStr == null) {
-            System.err.println("❌ Missing RepUnitVotes in repUnitData: " + repUnitData);
+            System.err.println("Missing RepUnitVotes in repUnitData: " + repUnitData);
             return;
         }
         int repUnitVotes;
         try {
             repUnitVotes = Integer.parseInt(repUnitVotesStr);
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid RepUnitVotes value '" + repUnitVotesStr + "' in repUnitData: " + repUnitData);
+            System.err.println("Invalid RepUnitVotes value '" + repUnitVotesStr + "' in repUnitData: " + repUnitData);
             return;
         }
 
