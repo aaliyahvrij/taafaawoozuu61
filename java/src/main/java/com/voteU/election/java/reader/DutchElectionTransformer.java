@@ -236,7 +236,66 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerCandidate(Map<String, String> candiData) {
+        String candIdStr = candiData.get(DutchElectionProcessor.CANDIDATE_ID);
+        String firstName = candiData.get(DutchElectionProcessor.FIRST_NAME);
+        String lastName = candiData.get(DutchElectionProcessor.LAST_NAME);
+        String gender = candiData.get(DutchElectionProcessor.GENDER);
+        String localityName = candiData.get(DutchElectionProcessor.LOCALITY_NAME);
+        String electionId = candiData.get(DutchElectionProcessor.ELECTION_ID);
+        String constIdStr = candiData.get(DutchElectionProcessor.CONTEST_ID);
+        String affIdStr = candiData.get(DutchElectionProcessor.AFFILIATION_ID);
 
+        if (candIdStr != null && lastName != null && electionId != null && constIdStr != null && affIdStr != null) {
+            int candId = Integer.parseInt(candIdStr);
+            int constId = Integer.parseInt(constIdStr);
+            int affId = Integer.parseInt(affIdStr);
+            Election election = elections.get(electionId);
+            if (election != null) {
+                Map<Integer, Constituency> constituencies = election.getConstituencies();
+                Constituency constituency = constituencies.get(constId);
+                if (constituency != null) {
+                    // Update or insert candidate in Constituency-level Affiliation
+                    Map<Integer, Party> affiliations = constituency.getAffiliations();
+                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
+
+                    // Update or insert candidate in each Authority-level Affiliation
+                    Map<String, Authority> authorities = constituency.getAuthorities();
+                    for (Authority authority : authorities.values()) {
+                        Map<Integer, Party> affiMap = authority.getAffiliations();
+                        populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
+                    }
+                }
+            }
+        }
+    }
+
+    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Party> affiliations) {
+        Party affiliation = affiliations.get(affId);
+        if (affiliation != null) {
+            List<Candidate> candidates = affiliation.getCandidates();
+            Candidate existingCandidate = null;
+            for (Candidate candidate : candidates) {
+                if (candidate.getId() == candId && candidate.getAffId() == affId) {
+                    existingCandidate = candidate;
+                    break;
+                }
+            }
+            if (existingCandidate != null) {
+                existingCandidate.setFirstName(firstName);
+                existingCandidate.setLastName(lastName);
+                existingCandidate.setGender(gender);
+                existingCandidate.setLocality(localityName);
+            } else {
+                Candidate newCandidate = new Candidate();
+                newCandidate.setId(candId);
+                newCandidate.setFirstName(firstName);
+                newCandidate.setLastName(lastName);
+                newCandidate.setGender(gender);
+                newCandidate.setLocality(localityName);
+                newCandidate.setAffId(affId); // This may be missing in your original, depending on Candidate class
+                affiliation.addCandidate(newCandidate);
+            }
+        }
     }
 
     /**
