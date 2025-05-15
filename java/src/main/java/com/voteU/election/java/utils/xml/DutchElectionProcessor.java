@@ -293,13 +293,13 @@ public class DutchElectionProcessor<E> {
                         }
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
-                            Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
-                            candiTotalVotesData.put(CANDIDATE_ID, candId);
+                            Map<String, String> candiVotesData = new HashMap<>(constiData);
+                            candiVotesData.put(CANDIDATE_ID, candId);
                             registeredCandIds.add(candId);
-                            candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
-                            candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                            candiTotalVotesData.put("Source", "TOTAL");
-                            transformer.registerNation(candiTotalVotesData);
+                            candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
+                            candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                            candiVotesData.put("Source", "TOTAL");
+                            transformer.registerNation(candiVotesData);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
@@ -351,28 +351,28 @@ public class DutchElectionProcessor<E> {
             switch (parser.getLocalName()) {
                 case AFFILIATION_ID:
                     //System.out.println("processAuthority - Found an affiliation identifier.");
-                    Map<String, String> affiTotalVotesData = new HashMap<>(constiData);
+                    Map<String, String> affiVotesData = new HashMap<>(constiData);
                     affId = parser.getIntegerAttributeValue(null, ID, 0);
-                    affiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                    affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
 
                     // Avoid processing the same affiliation multiple times
-                    if (affiTotalVotesData.containsKey(String.valueOf(affId))) {
+                    if (affiVotesData.containsKey(String.valueOf(affId))) {
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         continue;
                     }
                     if (parser.findBeginTag(REGISTERED_NAME)) {
                         String affiName = parser.getElementText();
-                        affiTotalVotesData.put(REGISTERED_NAME, affiName);
+                        affiVotesData.put(REGISTERED_NAME, affiName);
                         parser.findAndAcceptEndTag(REGISTERED_NAME);
                     }
                     parser.findAndAcceptEndTag(AFFILIATION_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
                         int affiVotes = Integer.parseInt(parser.getElementText());
-                        affiTotalVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
+                        affiVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     }
-                    affiTotalVotesData.put("Source", "AUTHORITY");
-                    transformer.registerAuthority(affiTotalVotesData);
+                    affiVotesData.put("Source", "AUTHORITY");
+                    transformer.registerAuthority(affiVotesData);
                     break;
                 case CANDIDATE:
                     Map<String, String> candiVotesData = new HashMap<>(constiData);
