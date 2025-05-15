@@ -21,6 +21,7 @@ public class Election {
     private String date;
     private Map<Integer, Party> nationalParties;
     private Map<Integer, Constituency> constituencies;
+    private Map<String, PollingStation> pollingStations;
     private Map<String, Authority> authorities;
 
     public Election(String id, String name, String date) {
