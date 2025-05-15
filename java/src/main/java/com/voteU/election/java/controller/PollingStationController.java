@@ -1,5 +1,7 @@
 package com.voteU.election.java.controller;
 
+import com.voteU.election.java.model.Constituency;
+import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.PollingStation;
 import com.voteU.election.java.services.PollingStationService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,7 @@ import java.util.Map;
  * and trigger reading/parsing of polling station election data into memory.
  */
 @RestController
-@RequestMapping("/api/pollingStation")
+@RequestMapping("/api/election/{year}/pollingStations")
 public class PollingStationController {
 
     private final PollingStationService pollingStationService;
@@ -23,36 +25,18 @@ public class PollingStationController {
         this.pollingStationService = pollingStationService;
     }
 
-    /**
-     * Retrieves a specific polling station by year and polling station ID.
-     *
-     * @param year        The election year (e.g., "2024").
-     * @param pollingId   The unique identifier of the polling station.
-     * @return The {@link PollingStation} object if found, or null if not found.
-     */
-    @GetMapping("/{year}/{pollingId}")
-    public PollingStation getPollingStationById(@PathVariable String year, @PathVariable String pollingId) {
-        return pollingStationService.getPollingStation(year, pollingId);
-    }
-
-    /**
-     * Retrieves all stored polling station results grouped by election year.
-     *
-     * @return A {@link ResponseEntity} containing a map of all polling station data.
-     */
     @GetMapping
-    public ResponseEntity<Map<String, Map<String, PollingStation>>> getPollingStations() {
-        return ResponseEntity.ok(pollingStationService.getStoredPollingStations());
+    public Map<String, PollingStation> getPollingStationByYear(@PathVariable String year) {
+        return pollingStationService.getPollingStationsByYear(year);
     }
 
-    /**
-     * Reads and processes polling station election results from the source.
-     * This is a trigger endpoint typically called once to load data into memory.
-     *
-     * @return true if data was successfully read and stored, false otherwise.
-     */
-    @PostMapping
-    public boolean readResults() {
-        return pollingStationService.readPollingStations();
+    @GetMapping("/{pollingId}")
+    public PollingStation getPollingStationById(@PathVariable String year, @PathVariable String pollingId){
+        return pollingStationService.getPollingStationsById(year, pollingId);
+    }
+
+    @GetMapping("/{pollingId}/parties")
+    public Map<Integer, Party> getPartiesByPollingId(@PathVariable String year, @PathVariable String pollingId){
+        return pollingStationService.getPartiesByPollingStationsId(year, pollingId);
     }
 }
