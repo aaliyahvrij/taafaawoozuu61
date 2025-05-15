@@ -345,71 +345,73 @@ public class DutchElectionProcessor<E> {
 
     private void processAuthority(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
         //System.out.println("processAuthority - parser at " + parser.getLocalName());
-        int affId = 0;
-        Set<String> registeredCandiAffiliations = new HashSet<>();
-        while (parser.getLocalName().equals(SELECTION)) {
-            parser.nextTag();
-            switch (parser.getLocalName()) {
-                case AFFILIATION_ID:
-                    //System.out.println("processAuthority - Found an affiliation identifier.");
-                    Map<String, String> affiVotesData = new HashMap<>(constiData);
-                    affId = parser.getIntegerAttributeValue(null, ID, 0);
-                    affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+        if (parser.findBeginTag(SELECTION)) {
+            int affId = 0;
+            Set<String> registeredCandiAffiliations = new HashSet<>();
+            while (parser.getLocalName().equals(SELECTION)) {
+                parser.nextTag();
+                switch (parser.getLocalName()) {
+                    case AFFILIATION_ID:
+                        //System.out.println("processAuthority - Found an affiliation identifier.");
+                        Map<String, String> affiVotesData = new HashMap<>(constiData);
+                        affId = parser.getIntegerAttributeValue(null, ID, 0);
+                        affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
 
-                    // Avoid processing the same affiliation multiple times
-                    if (affiVotesData.containsKey(String.valueOf(affId))) {
+                        // Avoid processing the same affiliation multiple times
+                        if (affiVotesData.containsKey(String.valueOf(affId))) {
+                            parser.findAndAcceptEndTag(AFFILIATION_ID);
+                            continue;
+                        }
+                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                            String affiName = parser.getElementText();
+                            affiVotesData.put(REGISTERED_NAME, affiName);
+                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                        }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
-                        continue;
-                    }
-                    if (parser.findBeginTag(REGISTERED_NAME)) {
-                        String affiName = parser.getElementText();
-                        affiVotesData.put(REGISTERED_NAME, affiName);
-                        parser.findAndAcceptEndTag(REGISTERED_NAME);
-                    }
-                    parser.findAndAcceptEndTag(AFFILIATION_ID);
-                    if (parser.findBeginTag(VALID_VOTES)) {
-                        int affiVotes = Integer.parseInt(parser.getElementText());
-                        affiVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
-                        parser.findAndAcceptEndTag(VALID_VOTES);
-                    }
-                    affiVotesData.put("Source", "AUTHORITY");
-                    transformer.registerAuthority(affiVotesData);
-                    break;
-                case CANDIDATE:
-                    Map<String, String> candiVotesData = new HashMap<>(constiData);
-                    int candId = 0;
-                    if (parser.findBeginTag(CANDIDATE_ID)) {
-                        //System.out.println("Found a candidate identifier.");
-                        candId = parser.getIntegerAttributeValue(null, ID, 0);
-                        parser.findAndAcceptEndTag(CANDIDATE_ID);
-                    }
+                        if (parser.findBeginTag(VALID_VOTES)) {
+                            int affiVotes = Integer.parseInt(parser.getElementText());
+                            affiVotesData.put(VALID_VOTES, String.valueOf(affiVotes));
+                            parser.findAndAcceptEndTag(VALID_VOTES);
+                        }
+                        affiVotesData.put("Source", "AUTHORITY");
+                        transformer.registerAuthority(affiVotesData);
+                        break;
+                    case CANDIDATE:
+                        Map<String, String> candiVotesData = new HashMap<>(constiData);
+                        int candId = 0;
+                        if (parser.findBeginTag(CANDIDATE_ID)) {
+                            //System.out.println("Found a candidate identifier.");
+                            candId = parser.getIntegerAttributeValue(null, ID, 0);
+                            parser.findAndAcceptEndTag(CANDIDATE_ID);
+                        }
 
-                    // Form a composite key using both candId and affId
-                    String candiAffiKey = candId + "_" + affId;
-                    parser.findAndAcceptEndTag(CANDIDATE);
+                        // Form a composite key using both candId and affId
+                        String candiAffiKey = candId + "_" + affId;
+                        parser.findAndAcceptEndTag(CANDIDATE);
 
-                    // If this candidate has already been registered, skip it
-                    if (registeredCandiAffiliations.contains(candiAffiKey)) {
-                        parser.findAndAcceptEndTag(VALID_VOTES);
-                        continue;
-                    }
-                    if (parser.findBeginTag(VALID_VOTES)) {
-                        int candiVotes = Integer.parseInt(parser.getElementText());
-                        candiVotesData.put(CANDIDATE_ID, String.valueOf(candId));
-                        candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
-                        candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                        candiVotesData.put("Source", "AUTHORITY");
-                        registeredCandiAffiliations.add(candiAffiKey);
-                        transformer.registerAuthority(candiVotesData);
-                        parser.findAndAcceptEndTag(VALID_VOTES);
-                    } else {
-                        LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
-                    }
-                    break;
-                default:
-                    LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
+                        // If this candidate has already been registered, skip it
+                        if (registeredCandiAffiliations.contains(candiAffiKey)) {
+                            parser.findAndAcceptEndTag(VALID_VOTES);
+                            continue;
+                        }
+                        if (parser.findBeginTag(VALID_VOTES)) {
+                            int candiVotes = Integer.parseInt(parser.getElementText());
+                            candiVotesData.put(CANDIDATE_ID, String.valueOf(candId));
+                            candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
+                            candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                            candiVotesData.put("Source", "AUTHORITY");
+                            registeredCandiAffiliations.add(candiAffiKey);
+                            transformer.registerAuthority(candiVotesData);
+                            parser.findAndAcceptEndTag(VALID_VOTES);
+                        } else {
+                            LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
+                        }
+                        break;
+                    default:
+                        LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
+                }
+                parser.findAndAcceptEndTag(SELECTION);
             }
-            parser.findAndAcceptEndTag(SELECTION);
         }
     }
 
