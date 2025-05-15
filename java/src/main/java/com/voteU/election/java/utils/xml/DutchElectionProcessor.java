@@ -256,27 +256,26 @@ public class DutchElectionProcessor<E> {
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
                         //System.out.println("processNation - Found an affiliation identifier.");
-                        Map<String, String> affiNationData = new HashMap<>(constiData);
+                        Map<String, String> nationLevel_affiData = new HashMap<>(constiData);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        affiNationData.put(AFFILIATION_ID, String.valueOf(affId));
+                        nationLevel_affiData.put(AFFILIATION_ID, String.valueOf(affId));
                         if (registeredAffIds.contains(affId)) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             String affiName = parser.getElementText();
-                            affiNationData.put(REGISTERED_NAME, affiName);
+                            nationLevel_affiData.put(REGISTERED_NAME, affiName);
                             parser.findAndAcceptEndTag(REGISTERED_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int affiVotes = Integer.parseInt(parser.getElementText());
-                            affiNationData.put(VALID_VOTES, String.valueOf(affiVotes));
+                            nationLevel_affiData.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        //System.out.println(affiNationData);
                         registeredAffIds.add(affId);
-                        transformer.registerNation(affiNationData);
+                        transformer.registerNation(nationLevel_affiData);
                         break;
                     case CANDIDATE:
                         String candId = null;
