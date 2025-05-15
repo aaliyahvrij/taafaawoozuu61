@@ -375,7 +375,7 @@ public class DutchElectionProcessor<E> {
                     transformer.registerAuthority(affiTotalVotesData);
                     break;
                 case CANDIDATE:
-                    Map<String, String> candiTotalVotesData = new HashMap<>(constiData);
+                    Map<String, String> candiVotesData = new HashMap<>(constiData);
                     int candId = 0;
                     if (parser.findBeginTag(CANDIDATE_ID)) {
                         //System.out.println("Found a candidate identifier.");
@@ -394,12 +394,12 @@ public class DutchElectionProcessor<E> {
                     }
                     if (parser.findBeginTag(VALID_VOTES)) {
                         int candiVotes = Integer.parseInt(parser.getElementText());
-                        candiTotalVotesData.put(CANDIDATE_ID, String.valueOf(candId));
-                        candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
-                        candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-                        candiTotalVotesData.put("Source", "AUTHORITY");
+                        candiVotesData.put(CANDIDATE_ID, String.valueOf(candId));
+                        candiVotesData.put("CandiVotes", String.valueOf(candiVotes));
+                        candiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                        candiVotesData.put("Source", "AUTHORITY");
                         registeredCandiAffiliations.add(candiAffiKey);
-                        transformer.registerAuthority(candiTotalVotesData);
+                        transformer.registerAuthority(candiVotesData);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));

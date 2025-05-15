@@ -254,11 +254,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 Map<Integer, Constituency> constituencies = election.getConstituencies();
                 Constituency constituency = constituencies.get(constId);
                 if (constituency != null) {
-                    // Update or insert a candidate in Constituency-level Affiliation
+                    // Update or insert a candidate in a constituency-level affiliation
                     Map<Integer, Party> affiliations = constituency.getAffiliations();
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
 
-                    // Update or insert a candidate in each Authority-level Affiliation
+                    // Update or insert a candidate in each authority-level affiliation
                     Map<String, Authority> authorities = constituency.getAuthorities();
                     for (Authority authority : authorities.values()) {
                         Map<Integer, Party> affiMap = authority.getAffiliations();
