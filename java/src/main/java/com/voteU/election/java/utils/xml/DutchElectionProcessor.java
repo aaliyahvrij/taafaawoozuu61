@@ -247,10 +247,10 @@ public class DutchElectionProcessor<E> {
 
     private void processNation(Map<String, String> constiData, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VOTES)) {
+            int affId = 0;
+            Set<Integer> registeredAffIds = new HashSet<>();
+            Set<String> registeredCandIds = new HashSet<>();
             if (parser.findBeginTag(SELECTION)) {
-                int affId = 0;
-                Set<Integer> registeredAffIds = new HashSet<>();
-                Set<String> registeredCandIds = new HashSet<>();
                 while (parser.getLocalName().equals(SELECTION)) {
                     parser.nextTag();
                     switch (parser.getLocalName()) {
@@ -354,6 +354,12 @@ public class DutchElectionProcessor<E> {
                         Map<String, String> affiVotesData = new HashMap<>(constiData);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
                         affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+
+                        // Avoid processing the same affiliation multiple times
+                        if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
+                            parser.findAndAcceptEndTag(AFFILIATION_ID);
+                            continue;
+                        }
                         if (parser.findBeginTag(REGISTERED_NAME)) {
                             String affiName = parser.getElementText();
                             affiVotesData.put(REGISTERED_NAME, affiName);
