@@ -1,5 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
+import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.PathUtils;
 
@@ -417,6 +418,11 @@ public class DutchElectionProcessor<E> {
             String repUnitName = null;
             List<Party> repUnitAffiliations = new ArrayList<>();
             int repUnitVotes = 0;
+            Party affiliation;
+            int affId = 0;
+            int affIndex = -1;
+            int candIndex = 0;
+            int selectionIndex = 0;
             if (parser.findBeginTag(REP_UNIT_ID)) {
                 String repUnitId = parser.getAttributeValue(null, ID);
                 repUnitData.put(REP_UNIT_ID, repUnitId);
@@ -438,10 +444,8 @@ public class DutchElectionProcessor<E> {
             }
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
-                int affId = 0;
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
-                        Party affiliation;
                         String affiName = "";
                         int affiVotes = 0;
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -459,6 +463,7 @@ public class DutchElectionProcessor<E> {
                         }
                         affiliation = new Party(affId, affiName, affiVotes);
                         repUnitAffiliations.add(affiliation);
+                        affIndex = affIndex + 1;
                         break;
                     case CANDIDATE:
                         int candId = 0;
@@ -471,15 +476,22 @@ public class DutchElectionProcessor<E> {
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
                             repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVotes));
+                            Candidate candidate = new Candidate();
+                            candidate.setId(candId);
+                            candidate.setValidVotes(candiVotes);
+                            repUnitAffiliations.get(affIndex).addCandidate(candidate);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
                         }
+                        candIndex = candIndex + 1;
                         break;
                     default:
                         LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
                 }
+                selectionIndex = selectionIndex + 1;
                 parser.findAndAcceptEndTag(SELECTION);
+                if (selectionIndex == 2) break;
             }
             repUnitData.put("RepUnitVotes", String.valueOf(repUnitVotes));
             transformer.registerRepUnit(repUnitData, repUnitAffiliations);
