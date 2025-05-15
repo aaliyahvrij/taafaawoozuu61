@@ -296,7 +296,6 @@ public class DutchElectionProcessor<E> {
                             candiTotalVotesData.put(CANDIDATE_ID, candId);
                             registeredCandIds.add(candId);
                             candiTotalVotesData.put("CandiVotes", String.valueOf(candiVotes));
-                            //System.out.println(candiTotalVotesData.get("CandiVotes"));
                             candiTotalVotesData.put(AFFILIATION_ID, String.valueOf(affId));
                             candiTotalVotesData.put("Source", "TOTAL");
                             transformer.registerNation(candiTotalVotesData);
@@ -430,9 +429,10 @@ public class DutchElectionProcessor<E> {
                         repUnitData.put(ZIPCODE, zipCode);
                         repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
                         repUnitData.put("RepUnitName", repUnitName);
-                    } else {
-                        repUnitData.put("RepUnitName", repUnitName);
                     }
+                }
+                else {
+                    repUnitData.put("RepUnitName", repUnitName);
                 }
                 parser.findAndAcceptEndTag(REP_UNIT_ID);
             }
