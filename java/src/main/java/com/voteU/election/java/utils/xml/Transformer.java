@@ -25,9 +25,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#ELECTION_DATE}</li>
      * </ul>
      *
-     * @param electionData a {@code Map} containing the information as {@code String}'s.
+     * @param electionMap a {@code Map} containing the information as {@code String}'s.
      */
-    void registerElection(Map<String, String> electionData);
+    void registerElection(Map<String, String> electionMap);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationData} can hold the
@@ -36,10 +36,10 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
-     * @param nationData a {@code Map} containing information about the election, constituency, affiliation,
+     * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
      *                   candidate and the number of votes.
      */
-    void registerNation(Map<String, String> nationData);
+    void registerNation(Map<String, String> nationMap);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the
@@ -49,13 +49,13 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
      * </ul>
      *
-     * @param constiData a {@code Map} containing information about the election and the contest.
+     * @param constiMap a {@code Map} containing information about the election and the contest.
      */
-    void registerConstituency(Map<String, String> constiData);
+    void registerConstituency(Map<String, String> constiMap);
 
-    void registerAuthority(Map<String, String> authorityData);
+    void registerAuthority(Map<String, String> authorityMap);
 
-    void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Affiliation> repUnitData_affiliations);
+    void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitMap_affiliations);
 
     /**
      * Called multiple times per file with information about a candidate.
@@ -67,8 +67,8 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#LAST_NAME}</li>
      * </ul>
      *
-     * @param candiData a {@code Map} containing information about the election, contest, affiliation and the
+     * @param candiMap a {@code Map} containing information about the election, contest, affiliation and the
      *                  candidate.
      */
-    void registerCandidate(Map<String, String> candiData);
+    void registerCandidate(Map<String, String> candiMap);
 }
