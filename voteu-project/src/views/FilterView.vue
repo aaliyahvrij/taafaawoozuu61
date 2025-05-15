@@ -3,26 +3,26 @@ import ConstituencyFilter from '@/components/Data/ConstituencyFilter.vue'
 import YearFilter from '@/components/Data/YearFilter.vue'
 import { type Ref, ref } from 'vue'
 import type { Election } from '@/interface/Election.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Affiliation } from '@/interface/Affiliation.ts'
 import RepUnitFilter from '@/components/Data/RepUnitFilter.vue'
 
 // Store elections data
-const parties: Ref<Party[]> = ref([])
-const selectedParty: Ref<Party | null> = ref(null)
+const affiliations: Ref<Affiliation[]> = ref([])
+const selectedAffiliation: Ref<Affiliation | null> = ref(null)
 
 // Handle elections data sent from the child
 function handleElectionsUpdate(data: Election) {
-  parties.value = Object.values(data.nationalParties)
-  console.log(parties.value) // Update parent elections data
+  affiliations.value = Object.values(data.nationalParties)
+  console.log(affiliations.value) // Update parent elections data
 }
 
-// When clicking a party
-function handlePartyClick(party: Party) {
-  selectedParty.value = party
+// When clicking an affiliation
+function handleAffiClick(affiliation: Affiliation) {
+  selectedAffiliation.value = affiliation
 }
 
 function goBack() {
-  selectedParty.value = null
+  selectedAffiliation.value = null
 }
 </script>
 
@@ -36,30 +36,30 @@ function goBack() {
 
     <div class="data-wrapper">
       <div class="data-content">
-        <!-- Show candidate list if a party is selected -->
-        <div v-if="selectedParty">
+        <!-- Show candidate list if an affiliation is selected -->
+        <div v-if="selectedAffiliation">
           <div>
-            <strong>{{ selectedParty.name }}</strong> Candidates:
+            <strong>{{ selectedAffiliation.name }}</strong> Candidates:
             <button @click="goBack">Back</button>
           </div>
-          <div class="party-list-scroll">
-            <div class="party" v-for="candidate in selectedParty.candidates" :key="candidate.id">
+          <div class="affi-list-scroll">
+            <div class="affiliation" v-for="candidate in selectedAffiliation.candidates" :key="candidate.id">
               {{ candidate.shortCode }} : {{ candidate.votes.toLocaleString() }} votes
             </div>
           </div>
         </div>
 
-        <div v-if="parties.length > 0">
-          <div>Party votes:</div>
-          <div class="party-list-scroll">
+        <div v-if="affiliations.length > 0">
+          <div>Affiliation votes:</div>
+          <div class="affi-list-scroll">
             <div
-              class="party"
-              v-for="party in parties"
-              :key="party.id"
-              @click="handlePartyClick(party)"
+              class="affiliation"
+              v-for="affiliation in affiliations"
+              :key="affiliation.id"
+              @click="handleAffiClick(affiliation)"
             >
-              <div class="party-name">{{ party.name }}</div>
-              : {{ party.votes.toLocaleString() }} votes
+              <div class="affi-name">{{ affiliation.name }}</div>
+              : {{ affiliation.votes.toLocaleString() }} votes
             </div>
           </div>
         </div>
@@ -90,24 +90,24 @@ function goBack() {
   color: black;
 }
 
-.party-list-scroll {
+.affi-list-scroll {
   max-height: 400px; /* adjust as needed */
   overflow-y: auto;
 }
 
-.party {
+.affiliation {
   display: flex;
   flex-direction: row;
   height: 50px;
   padding: 5px;
 }
 
-.party:hover {
+.affiliation:hover {
   background-color: #002970;
   color: white;
 }
 
-.party-name {
+.affi-name {
   font-weight: bold;
 }
 

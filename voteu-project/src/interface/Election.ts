@@ -1,10 +1,10 @@
 import type { Province } from '@/interface/Province.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export interface Election {
   id: string
   name: string
   provinces: Province[]
-  nationalParties: { [key: number]: Party }
-  affiliations: { [key: number]: Party }
+  nationalParties: { [key: number]: Affiliation }
+  affiliations: { [key: number]: Affiliation }
 }

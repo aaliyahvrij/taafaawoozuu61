@@ -1,7 +1,7 @@
-import type { Contest } from '@/interface/Contest.ts'
+import type { Constituency } from '@/interface/Constituency.ts'
 
 export interface Province {
   id: number
   name: string
-  contests: Contest[]
+  constituencies: Constituency[]
 }

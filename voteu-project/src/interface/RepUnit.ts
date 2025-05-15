@@ -1,8 +1,8 @@
-import type { Party } from '@/interface/Party.ts'
+import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export interface RepUnit {
   id: string
   name: string
-  affiliations: { [key: number]: Party }
-  totalVotes: number
+  affiliations: { [key: number]: Affiliation }
+  votes: number
 }

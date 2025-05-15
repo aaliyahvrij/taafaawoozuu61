@@ -1,6 +1,6 @@
 import type { Candidate } from '@/interface/Candidate.ts'
 
-export interface Party {
+export interface Affiliation {
   id: number
   name: string
   candidates: Candidate[] // Adjust type if candidates have data
