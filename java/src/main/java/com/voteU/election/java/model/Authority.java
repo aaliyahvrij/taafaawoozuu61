@@ -11,12 +11,14 @@ public class Authority {
     String id;
     String name;
     Map<Integer, Party> authorityParties;
+    Map<String, PollingStation> pollingStations;
     int constituencyId;
 
     public Authority(String id) {
         this.id = id;
         this.name = "";
         this.authorityParties = new HashMap<>();
+        this.pollingStations = new HashMap<>();
         this.constituencyId = 0;
     }
 
