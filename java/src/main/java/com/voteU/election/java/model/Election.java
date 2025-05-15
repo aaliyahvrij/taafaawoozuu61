@@ -13,7 +13,7 @@ public class Election {
     private final Map<Integer, Constituency> constituencies;
     private final Map<String, Authority> authorities;
     private final Map<String, RepUnit> repUnits;
-    private final Map<Integer, Party> affiliations;
+    private final Map<Integer, Affiliation> affiliations;
 
     public Election(String id, String name, String date) {
         this.id = id;

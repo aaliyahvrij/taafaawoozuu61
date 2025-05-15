@@ -1,6 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.Affiliation;
 
 import java.util.*;
 
@@ -55,7 +55,7 @@ public interface Transformer<E> {
 
     void registerAuthority(Map<String, String> authorityData);
 
-    void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Party> repUnitData_affiliations);
+    void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Affiliation> repUnitData_affiliations);
 
     /**
      * Called multiple times per file with information about a candidate.

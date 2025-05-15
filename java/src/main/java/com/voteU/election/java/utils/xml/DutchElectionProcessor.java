@@ -1,7 +1,7 @@
 package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.model.Candidate;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.Affiliation;
 import com.voteU.election.java.utils.PathUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -94,7 +94,7 @@ public class DutchElectionProcessor<E> {
      */
     public static final String AFFILIATION = "Affiliation";
     public static final String AFFILIATION_ID = "AffiliationIdentifier";
-    public static final String REGISTERED_NAME = "RegisteredName";
+    public static final String AFFILIATION_NAME = "RegisteredName";
 
     /*
      The tag names on the candidate level within the XML files, which are also used as keys in the maps
@@ -258,17 +258,16 @@ public class DutchElectionProcessor<E> {
                             //System.out.println("processNation - Found an affiliation identifier.");
                             Map<String, String> nationLevel_affiData = new HashMap<>(constiData);
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
-                            nationLevel_affiData.put(AFFILIATION_ID, String.valueOf(affId));
-
                             // Avoid processing the same affiliation multiple times
                             if (registeredAffIds.contains(affId)) {
                                 parser.findAndAcceptEndTag(AFFILIATION_ID);
                                 continue;
                             }
-                            if (parser.findBeginTag(REGISTERED_NAME)) {
+                            nationLevel_affiData.put(AFFILIATION_ID, String.valueOf(affId));
+                            if (parser.findBeginTag(AFFILIATION_NAME)) {
                                 String affiName = parser.getElementText();
-                                nationLevel_affiData.put(REGISTERED_NAME, affiName);
-                                parser.findAndAcceptEndTag(REGISTERED_NAME);
+                                nationLevel_affiData.put(AFFILIATION_NAME, affiName);
+                                parser.findAndAcceptEndTag(AFFILIATION_NAME);
                             }
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             if (parser.findBeginTag(VALID_VOTES)) {
@@ -283,15 +282,14 @@ public class DutchElectionProcessor<E> {
                             String candId = null;
                             if (parser.findBeginTag(CANDIDATE_ID)) {
                                 candId = parser.getAttributeValue(null, SHORT_CODE);
+                                // If this candidate has already been registered, skip it
+                                if (registeredCandIds.contains(candId)) {
+                                    parser.findAndAcceptEndTag(CANDIDATE_ID);
+                                    continue;
+                                }
                                 parser.findAndAcceptEndTag(CANDIDATE_ID);
                             }
                             parser.findAndAcceptEndTag(CANDIDATE);
-
-                            // If this candidate has already been registered, skip it
-                            if (registeredCandIds.contains(candId)) {
-                                parser.findAndAcceptEndTag(VALID_VOTES);
-                                continue;
-                            }
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int candiVotes = Integer.parseInt(parser.getElementText());
                                 Map<String, String> nationLevel_candiData = new HashMap<>(constiData);
@@ -355,17 +353,16 @@ public class DutchElectionProcessor<E> {
                         //System.out.println("processAuthority - Found an affiliation identifier.");
                         Map<String, String> affiVotesData = new HashMap<>(constiData);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
-
                         // Avoid processing the same affiliation multiple times
                         if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
                         }
-                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                        affiVotesData.put(AFFILIATION_ID, String.valueOf(affId));
+                        if (parser.findBeginTag(AFFILIATION_NAME)) {
                             String affiName = parser.getElementText();
-                            affiVotesData.put(REGISTERED_NAME, affiName);
-                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                            affiVotesData.put(AFFILIATION_NAME, affiName);
+                            parser.findAndAcceptEndTag(AFFILIATION_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
@@ -384,16 +381,14 @@ public class DutchElectionProcessor<E> {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
-
-                        // Form a composite key using both candId and affId
+                        // Form a composite key from candId and affId
                         String candiAffiKey = candId + "_" + affId;
-                        parser.findAndAcceptEndTag(CANDIDATE);
-
                         // If this candidate has already been registered, skip it
                         if (registeredCandiAffiliations.contains(candiAffiKey)) {
-                            parser.findAndAcceptEndTag(VALID_VOTES);
+                            parser.findAndAcceptEndTag(CANDIDATE);
                             continue;
                         }
+                        parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
                             candiVotesData.put(CANDIDATE_ID, String.valueOf(candId));
@@ -419,9 +414,9 @@ public class DutchElectionProcessor<E> {
         if (parser.findBeginTag(REP_UNIT_VOTES)) {
             Map<String, String> repUnitData = new HashMap<>(constiData);
             String repUnitName = null;
-            Map<Integer, Party> repUnitAffiliations = new HashMap<>();
+            Map<Integer, Affiliation> repUnitAffiliations = new HashMap<>();
             int repUnitVotes = 0;
-            Party affiliation;
+            Affiliation affiliation;
             int affId = 0;
             int selectionIndex = 0;
             if (parser.findBeginTag(REP_UNIT_ID)) {
@@ -449,9 +444,9 @@ public class DutchElectionProcessor<E> {
                         String affiName = "";
                         int affiVotes = 0;
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        if (parser.findBeginTag(REGISTERED_NAME)) {
+                        if (parser.findBeginTag(AFFILIATION_NAME)) {
                             affiName = parser.getElementText();
-                            parser.findAndAcceptEndTag(REGISTERED_NAME);
+                            parser.findAndAcceptEndTag(AFFILIATION_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFILIATION_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
@@ -461,7 +456,7 @@ public class DutchElectionProcessor<E> {
                         } else {
                             LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
                         }
-                        affiliation = new Party(affId, affiName, affiVotes);
+                        affiliation = new Affiliation(affId, affiName, affiVotes);
                         repUnitAffiliations.put(affId, affiliation);
                         break;
                     case CANDIDATE:
@@ -503,10 +498,10 @@ public class DutchElectionProcessor<E> {
         if (parser.findBeginTag(AFFILIATION_ID)) {
             int affId = parser.getIntegerAttributeValue(null, ID, 0);
             affiData.put(AFFILIATION_ID, String.valueOf(affId));
-            if (parser.findBeginTag(REGISTERED_NAME)) {
+            if (parser.findBeginTag(AFFILIATION_NAME)) {
                 String affiName = parser.getElementText();
-                affiData.put(REGISTERED_NAME, affiName);
-                parser.findAndAcceptEndTag(REGISTERED_NAME);
+                affiData.put(AFFILIATION_NAME, affiName);
+                parser.findAndAcceptEndTag(AFFILIATION_NAME);
             }
             parser.findAndAcceptEndTag(AFFILIATION_ID);
         }

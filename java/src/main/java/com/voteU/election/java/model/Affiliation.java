@@ -5,13 +5,13 @@ import lombok.*;
 import java.util.*;
 
 @Getter
-public class Party {
+public class Affiliation {
     int id;
     String name;
     List<Candidate> candidates;
     int votes;
 
-    public Party(int id, String name, int votes) {
+    public Affiliation(int id, String name, int votes) {
         this.id = id;
         this.name = name;
         this.candidates = new ArrayList<>();

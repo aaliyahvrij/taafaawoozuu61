@@ -60,7 +60,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         // Safely get the affiliation name
-        String affiName = nationData.get(DutchElectionProcessor.REGISTERED_NAME);
+        String affiName = nationData.get(DutchElectionProcessor.AFFILIATION_NAME);
         if (affiName == null) {
             System.err.println("Missing AFFILIATION_NAME in nationData: " + nationData);
             return;
@@ -69,8 +69,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Check if the affiliation already exists
         String electionId = nationData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
-        Map<Integer, Party> affiMap = election.getAffiliations();
-        Party affiliation = affiMap.get(affId);
+        Map<Integer, Affiliation> affiMap = election.getAffiliations();
+        Affiliation affiliation = affiMap.get(affId);
 
         // Register the affiliation votes data within the TotalVotes tag if it is not already registered
         if (isTotalVotes && affiliation == null) {
@@ -86,9 +86,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationData: " + nationData);
                 return;
             }
-
             // Create and register the new affiliation
-            affiliation = new Party(affId, affiName, affiVotes);
+            affiliation = new Affiliation(affId, affiName, affiVotes);
             affiMap.put(affId, affiliation);
         }
 
@@ -111,7 +110,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 System.err.println("Invalid CandiVotes value '" + candiVotesStr + "' in nationData: " + nationData);
                 return;
             }
-
             // Check if the candidate already exists and is added to the affiliation
             if (isTotalVotes && !affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
@@ -137,7 +135,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String authorityId = authorityData.get(DutchElectionProcessor.AUTHORITY_ID);
         String authorityName = authorityData.get("AuthorityName");
         String affIdStr = authorityData.get(DutchElectionProcessor.AFFILIATION_ID);
-        String affiName = authorityData.get(DutchElectionProcessor.REGISTERED_NAME);
+        String affiName = authorityData.get(DutchElectionProcessor.AFFILIATION_NAME);
         boolean isTotalVotes = "AUTHORITY".equals(authorityData.get("Source"));
         if (electionId == null) {
             System.err.println("Missing ELECTION_ID in authorityData: " + authorityData);
@@ -173,15 +171,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
             a.setConstId(constId);
             return a;
         });
-        Map<Integer, Party> affiMap = authority.getAffiliations();
-        Party affiliation = affiMap.get(affId);
+        Map<Integer, Affiliation> affiMap = authority.getAffiliations();
+        Affiliation affiliation = affiMap.get(affId);
         if (isTotalVotes) {
             if (affiliation == null) {
                 String affiVotesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
                 if (affiVotesStr == null) return;
                 try {
                     int affiVotes = Integer.parseInt(affiVotesStr);
-                    affiliation = new Party(affId, affiName, affiVotes);
+                    affiliation = new Affiliation(affId, affiName, affiVotes);
                     affiMap.put(affId, affiliation);
                 } catch (NumberFormatException ignored) {
                 }
@@ -203,7 +201,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Party> repUnitData_affiliations) {
+    public void registerRepUnit(Map<String, String> repUnitData, Map<Integer, Affiliation> repUnitData_affiliations) {
         String electionId = repUnitData.get(DutchElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
@@ -228,7 +226,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.err.println("Invalid RepUnitVotes value '" + repUnitVotesStr + "' in repUnitData: " + repUnitData);
             return;
         }
-
         // Create and register the new reporting unit
         RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitData_affiliations, repUnitVotes);
         repUnitMap.put(repUnitId, repUnit);
@@ -244,7 +241,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionId = candiData.get(DutchElectionProcessor.ELECTION_ID);
         String constIdStr = candiData.get(DutchElectionProcessor.CONTEST_ID);
         String affIdStr = candiData.get(DutchElectionProcessor.AFFILIATION_ID);
-
         if (candIdStr != null && lastName != null && electionId != null && constIdStr != null && affIdStr != null) {
             int candId = Integer.parseInt(candIdStr);
             int constId = Integer.parseInt(constIdStr);
@@ -255,13 +251,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 Constituency constituency = constituencies.get(constId);
                 if (constituency != null) {
                     // Update or insert a candidate in a constituency-level affiliation
-                    Map<Integer, Party> affiliations = constituency.getAffiliations();
+                    Map<Integer, Affiliation> affiliations = constituency.getAffiliations();
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
-
                     // Update or insert a candidate in each authority-level affiliation
                     Map<String, Authority> authorities = constituency.getAuthorities();
                     for (Authority authority : authorities.values()) {
-                        Map<Integer, Party> affiMap = authority.getAffiliations();
+                        Map<Integer, Affiliation> affiMap = authority.getAffiliations();
                         populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
                         Map<String, RepUnit> repUnits = authority.getRepUnits();
                         for (RepUnit repUnit : repUnits.values()) {
@@ -273,8 +268,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
-    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Party> affiliations) {
-        Party affiliation = affiliations.get(affId);
+    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Affiliation> affiliations) {
+        Affiliation affiliation = affiliations.get(affId);
         if (affiliation != null) {
             List<Candidate> candidates = affiliation.getCandidates();
             Candidate existingCandidate = null;

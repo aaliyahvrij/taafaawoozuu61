@@ -13,7 +13,7 @@ public class Authority {
     @Setter
     private int constId;
     private final Map<String, RepUnit> repUnits;
-    private final Map<Integer, Party> affiliations;
+    private final Map<Integer, Affiliation> affiliations;
 
     public Authority(String id) {
         this.id = id;

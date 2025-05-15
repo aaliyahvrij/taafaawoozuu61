@@ -9,7 +9,7 @@ import java.util.*;
 public class Constituency {
     private int id;
     private String name;
-    private Map<Integer, Party> affiliations;
+    private Map<Integer, Affiliation> affiliations;
     Map<String, Authority> authorities;
 
     public Constituency(int id, String name) {
