@@ -17,8 +17,4 @@ public class RepUnit {
         this.affiliations = affiliations;
         this.votes = votes;
     }
-
-    public String toString() {
-        return String.format("ReportingUnit[id=%s, name=%s, affiliations=%s, votes=%d]", this.id, this.name, this.affiliations, this.votes);
-    }
 }

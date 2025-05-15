@@ -20,9 +20,4 @@ public class Authority {
         this.constId = 0;
         this.affiliations = new HashMap<>();
     }
-
-    @Override
-    public String toString() {
-        return "id: " + this.id + " - name: " + this.name + " - constId: " + this.constId + " - affiliations: " + this.affiliations;
-    }
 }

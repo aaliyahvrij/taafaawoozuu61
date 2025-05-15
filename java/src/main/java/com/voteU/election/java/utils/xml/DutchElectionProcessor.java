@@ -478,7 +478,7 @@ public class DutchElectionProcessor<E> {
                             repUnitData.put("CandiRepUnitVotes", String.valueOf(candiVotes));
                             Candidate candidate = new Candidate();
                             candidate.setId(candId);
-                            candidate.setValidVotes(candiVotes);
+                            candidate.setVotes(candiVotes);
                             repUnitAffiliations.get(affIndex).addCandidate(candidate);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {

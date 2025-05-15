@@ -9,19 +9,19 @@ public class Candidate {
     public String shortCode;
     private String firstName;
     private String lastName;
+    private String gender;
+    private String localityName;
     private int affId;
-    public int validVotes;
+    public int votes;
 
     public Candidate() {
         this.id = 0;
         this.shortCode = "";
         this.firstName = "";
         this.lastName = "";
+        this.gender = "";
+        this.localityName = "";
         this.affId = 0;
-        this.validVotes = 0;
-    }
-
-    public String toString() {
-        return String.format("Candidate[id=%d, shortCode=%s, firstName=%s, lastName=%s, affId=%d, validVotes=%d]", this.id, this.shortCode, this.firstName, this.lastName, this.affId, this.validVotes);
+        this.votes = 0;
     }
 }

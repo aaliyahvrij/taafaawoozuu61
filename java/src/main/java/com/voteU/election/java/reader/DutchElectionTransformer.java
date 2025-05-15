@@ -116,7 +116,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             if (isTotalVotes && !affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
-                candidate.setValidVotes(candiVotes);
+                candidate.setVotes(candiVotes);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -193,7 +193,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                     if (!affiliation.hasCandId(candId)) {
                         Candidate candidate = new Candidate();
                         candidate.setId(candId);
-                        candidate.setValidVotes(candiVotes);
+                        candidate.setVotes(candiVotes);
                         affiliation.addCandidate(candidate);
                     }
                 } catch (NumberFormatException | NullPointerException ignored) {
@@ -284,14 +284,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 existingCandidate.setFirstName(firstName);
                 existingCandidate.setLastName(lastName);
                 existingCandidate.setGender(gender);
-                existingCandidate.setLocality(localityName);
+                existingCandidate.setLocalityName(localityName);
             } else {
                 Candidate newCandidate = new Candidate();
                 newCandidate.setId(candId);
                 newCandidate.setFirstName(firstName);
                 newCandidate.setLastName(lastName);
                 newCandidate.setGender(gender);
-                newCandidate.setLocality(localityName);
+                newCandidate.setLocalityName(localityName);
                 newCandidate.setAffId(affId); // This may be missing in your original, depending on Candidate class
                 affiliation.addCandidate(newCandidate);
             }

@@ -39,9 +39,4 @@ public class Party {
         }
         return false;
     }
-
-    @Override
-    public String toString() {
-        return String.format("Party[id=%d, name=%s, candidates=%s, votes=%d]", this.id, this.name, this.candidates, this.votes);
-    }
 }

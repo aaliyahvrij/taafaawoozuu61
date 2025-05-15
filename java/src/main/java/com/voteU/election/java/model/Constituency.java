@@ -18,9 +18,4 @@ public class Constituency {
         this.affiliations = new HashMap<>();
         this.authorities = new HashMap<>();
     }
-
-    @Override
-    public String toString() {
-        return "Constituency{" + "id=" + this.id + ", name='" + this.name + '\'' + ", affiliations=" + this.affiliations + '}';
-    }
 }
