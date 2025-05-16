@@ -42,7 +42,6 @@
         public Map<Integer, Party> getAllPartiesByElection(@PathVariable String electionId){
             return electionService.getAllPartiesByElection(electionId);
         }
-
         @GetMapping("/{electionId}/authorities")
         public Map<String, Authority> getAllAuthoritiesByElection(@PathVariable String electionId) {
             return authorityService.getAllAuthoritiesByElection(electionId);
