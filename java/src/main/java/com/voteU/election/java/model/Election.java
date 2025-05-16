@@ -22,7 +22,6 @@ public class Election {
     private String date;
     private int votes;
     private Map<Integer, Constituency> constituencies;
-    private Map<String, Authority> authorities;
     private Map<Integer, Party> parties;
 
     public Election(String id, String name, String date) {
@@ -31,7 +30,6 @@ public class Election {
         this.date = date;
         this.votes = 0;
         this.constituencies = new HashMap<>();
-        this.authorities = new HashMap<>();
         this.parties = new HashMap<>();
 
     }

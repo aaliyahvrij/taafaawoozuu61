@@ -20,7 +20,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
 
-
         if (electionId == null || electionName == null || electionDate == null) {
             System.out.println("Incomplete election data: Missing ID, Name, or Date.");
             return;
@@ -216,6 +215,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
         String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
         boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
+
+        // Validate basic data
         if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null) return;
 
         int contestId, partyId;
@@ -226,11 +227,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
 
+        // Retrieve election and constituency
         Election election = elections.get(electionId);
         if (election == null) return;
 
+        Constituency constituency = election.getConstituencies().get(contestId);
+        if (constituency == null) {
+            System.err.println("[registerAuthority] ❌ Constituency with ID " + contestId + " not found in election " + electionId);
+            return;
+        }
 
-        Map<String, Authority> authorityMap = election.getAuthorities();
+        // Get or create authority in constituency
+        Map<String, Authority> authorityMap = constituency.getAuthorities();
         Authority authorityInMap = authorityMap.computeIfAbsent(authorityId, id -> {
             Authority authority = new Authority(id);
             authority.setName(authorityName);
@@ -238,8 +246,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return authority;
         });
 
+        // Register party votes under authority
         Map<Integer, Party> partyMap = authorityInMap.getAuthorityParties();
         Party party = partyMap.get(partyId);
+
         if (isTotalVotes && party == null) {
             String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
             if (votesStr == null) return;
@@ -249,15 +259,15 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 party = new Party(partyId, partyName);
                 party.setVotes(votes);
                 partyMap.put(partyId, party);
-                int totalVotes = 0;
-                for (Party p : partyMap.values()) {
-                    totalVotes += p.getVotes();
-                }
+
+                // Update total authority votes
+                int totalVotes = partyMap.values().stream().mapToInt(Party::getVotes).sum();
                 authorityInMap.setVotes(totalVotes);
 
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
+
+        // Register candidate votes (if applicable)
         if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
             try {
                 int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
@@ -270,16 +280,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
                     candidate.setAffId(partyId);
                     party.addCandidate(candidate);
                 }
-            } catch (NumberFormatException | NullPointerException ignored) {
-            }
-        }
-        Constituency constituency = election.getConstituencies().get(contestId);
-        if (constituency != null) {
-            Map<String, Authority> authorities = constituency.getAuthorities();
-            authorities.put(authorityId, authorityInMap);
+            } catch (NumberFormatException | NullPointerException ignored) {}
         }
     }
-
 
     @Override
     public void registerCandidate(Map<String, String> candidateData) {

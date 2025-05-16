@@ -14,13 +14,6 @@ public class AuthorityService {
         this.electionService = electionService;
     }
 
-    public Map<String, Authority> getAllAuthoritiesByElection(String electionId) {
-        Election election = electionService.getElection(electionId);
-        if (election == null) {
-            return null;
-        }
-        return election.getAuthorities();
-    }
 
     public Map<String, Authority> getAuthoritiesByConstituencyId(String electionId, int constituencyId) {
         Election election = electionService.getElection(electionId);
