@@ -21,8 +21,9 @@ public class Election {
     private String date;
     private Map<Integer, Party> nationalParties;
     private Map<Integer, Constituency> constituencies;
-    private Map<String, PollingStation> pollingStations;
     private Map<String, Authority> authorities;
+    private Map<String, PollingStation> pollingStations;
+
 
     public Election(String id, String name, String date) {
         this.id = id;
@@ -30,8 +31,8 @@ public class Election {
         this.date = date;
         this.nationalParties = new HashMap<>();
         this.constituencies = new HashMap<>();
-        this.pollingStations = new HashMap<>();
         this.authorities = new HashMap<>();
+        this.pollingStations = new HashMap<>();
     }
 
     @Override
@@ -42,8 +43,8 @@ public class Election {
                 ", date='" + date + '\'' +
                 ", nationalParties=" + nationalParties +
                 ", constituencies=" + constituencies +
-                ", pollingStations=" + pollingStations +
                 ", authorities=" + authorities +
+                ", pollingStations=" + pollingStations +
                 '}';
     }
 
