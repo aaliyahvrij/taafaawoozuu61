@@ -344,6 +344,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
 
         pollingStation.setParties(parties);
+        pollingStationMap.put(pollingId, pollingStation);
 
         Authority authority = election.getAuthorities().get(pollingId);
         if (authority != null) {
