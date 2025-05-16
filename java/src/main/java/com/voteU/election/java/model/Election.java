@@ -30,19 +30,22 @@ public class Election {
         this.date = date;
         this.nationalParties = new HashMap<>();
         this.constituencies = new HashMap<>();
+        this.pollingStations = new HashMap<>();
         this.authorities = new HashMap<>();
     }
 
     @Override
     public String toString() {
-        return "Election {" +
-                "\n  id='" + id + '\'' +
-                ",\n  name='" + name + '\'' +
-                ",\n  date='" + date + '\'' +
-                ",\n  nationalParties=" + nationalParties +
-                ",\n  contests=" + constituencies +
-                "\n}";
+        return "Election{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", date='" + date + '\'' +
+                ", nationalParties=" + nationalParties +
+                ", constituencies=" + constituencies +
+                ", pollingStations=" + pollingStations +
+                ", authorities=" + authorities +
+                '}';
     }
 
-    }
+}
 
