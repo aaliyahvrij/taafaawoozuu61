@@ -49,6 +49,6 @@ public class ElectionService {
         if (election == null) {
             return null;
         }
-        return election.getNationalParties();
+        return election.getAffilations();
     }
 }

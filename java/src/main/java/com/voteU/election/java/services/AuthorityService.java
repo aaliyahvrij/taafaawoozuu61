@@ -1,11 +1,9 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Authority;
-import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.model.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,5 +45,20 @@ public class AuthorityService {
             return null;
         }
         return authority.getAuthorityParties();
+    }
+
+    public Party getPartyById(String electionId, Integer constituencyId, String authorityId, Integer partyId) {
+        Map<Integer, Party> parties = getPartiesByAuthorityId(electionId, constituencyId, authorityId);
+        if (parties == null) {
+            return null;
+        }
+        return parties.get(partyId);
+    }
+    public List<Candidate> getCandidatesByPartyId(String electionId, Integer constituencyId, String authorityId, Integer partyId) {
+        Party party = getPartyById(electionId, constituencyId, authorityId, partyId);
+        if (party == null) {
+            return null;
+        }
+        return party.getCandidates();
     }
 }

@@ -73,7 +73,7 @@
             // Check if the party already exists
             String electionId = votesData.get(DutchElectionProcessor.ELECTION_ID);
             Election election = elections.get(electionId);
-            Map<Integer, Party> partyMap = election.getNationalParties();
+            Map<Integer, Party> partyMap = election.getAffilations();
             Party party = partyMap.get(partyId);
     
             // Register party on TOTAL only, if not already registered
@@ -193,7 +193,7 @@
                     Candidate candidate = new Candidate();
                     candidate.setId(candidateId);
                     candidate.setVotes(votes);
-                    candidate.setPartyId(partyId);
+                    candidate.setAffId(partyId);
 
                     candidates.add(candidate);
                 }
@@ -221,7 +221,6 @@
             String partyName = authorityData.getOrDefault(DutchElectionProcessor.REGISTERED_NAME, "UNKNOWN");
             String authorityName = authorityData.get(DutchElectionProcessor.AUTHORITY_NAME);
             boolean isTotalVotes = "GEMEENTE".equals(authorityData.get("Source"));
-    
             if (electionId == null || contestIdStr == null || authorityId == null || partyIdStr == null)
                 return;
     
@@ -247,7 +246,6 @@
     
             Map<Integer, Party> partyMap = authorityInMap.getAuthorityParties();
             Party party = partyMap.get(partyId);
-    
             if (isTotalVotes && party == null) {
                 String votesStr = authorityData.get(DutchElectionProcessor.VALID_VOTES);
                 if (votesStr == null) return;
@@ -257,10 +255,15 @@
                     party = new Party(partyId, partyName);
                     party.setVotes(votes);
                     partyMap.put(partyId, party);
+                    int totalVotes = 0;
+                    for (Party p : partyMap.values()) {
+                        totalVotes += p.getVotes();
+                    }
+                    authorityInMap.setVotes(totalVotes);
+
                 } catch (NumberFormatException ignored) {
                 }
             }
-    
             if (authorityData.containsKey("CandidateVotes") && party != null && isTotalVotes) {
                 try {
                     int candidateId = Integer.parseInt(authorityData.get(DutchElectionProcessor.CANDIDATE_ID));
@@ -270,13 +273,12 @@
                         Candidate candidate = new Candidate();
                         candidate.setId(candidateId);
                         candidate.setVotes(candidateVotes);
-                        candidate.setPartyId(partyId);
+                        candidate.setAffId(partyId);
                         party.addCandidate(candidate);
                     }
                 } catch (NumberFormatException | NullPointerException ignored) {
                 }
             }
-    
             Constituency constituency = election.getConstituencies().get(contestId);
             if (constituency != null) {
                 Map<String, Authority> authorities = constituency.getAuthorities();
@@ -333,7 +335,7 @@
                 Candidate existingCandidate = null;
 
                 for (Candidate candidate : candidates) {
-                    if (candidate.getId() == caId && candidate.getPartyId() == affId) {
+                    if (candidate.getId() == caId && candidate.getAffId() == affId) {
                         existingCandidate = candidate;
                         break;
                     }
@@ -343,7 +345,7 @@
                     existingCandidate.setFirstName(caFirstName);
                     existingCandidate.setLastName(caLastName);
                     existingCandidate.setGender(gender);
-                    existingCandidate.setLocality(localityName);
+                    existingCandidate.setLocalityName(localityName);
                 } else {
                     Candidate newCandidate = new Candidate();
                     newCandidate.setId(caId);
