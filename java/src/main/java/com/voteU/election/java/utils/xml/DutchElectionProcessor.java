@@ -152,11 +152,19 @@ public class DutchElectionProcessor<E> {
             processConstituency(electionData, parser);
         }
 
-        for (Path authorityFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
-            System.out.println(folderName + authorityFile.toString());
+        List<Path> filesToScan = PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId));
+        int totalFiles = filesToScan.size();
+        int currentIndex = 0;
+
+        for (Path authorityFile : filesToScan) {
+            double percentDone = ((currentIndex + 1) / (double) totalFiles) * 100;
+            System.out.printf("[%.2f%%] Processing %s%n", percentDone, authorityFile.getFileName());
+
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);
             processVotes(electionData, parser, "gemeente");
+
+            currentIndex++;
         }
 
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {

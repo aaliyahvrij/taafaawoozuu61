@@ -14,7 +14,7 @@ public class Constituency {
     private Map<Integer, Party> parties;
     Map<String, Authority> authorities;
 
-    public Constituency(int id,  String name) {
+    public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
         this.parties = new HashMap<>();
@@ -24,10 +24,6 @@ public class Constituency {
 
     @Override
     public String toString() {
-        return "Constituency{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", parties=" + parties +
-                '}';
+        return "Constituency{" + "id=" + id + ", name='" + name + '\'' + ", parties=" + parties + '}';
     }
 }
