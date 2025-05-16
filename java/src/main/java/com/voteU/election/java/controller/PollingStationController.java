@@ -16,7 +16,7 @@ import java.util.Map;
  * and trigger reading/parsing of polling station election data into memory.
  */
 @RestController
-@RequestMapping("/api/election/{year}/pollingStations")
+@RequestMapping("/api/election/{year}/authorities/pollingStations")
 public class PollingStationController {
 
     private final PollingStationService pollingStationService;
