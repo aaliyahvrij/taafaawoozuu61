@@ -3,6 +3,7 @@ package com.voteU.election.java.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ public class PollingStation {
         this.id = id;
         this.name = name;
         this.zipCode = zipCode;
+        this.parties = new HashMap<>();
+        this.authorityId = "";
     }
 
     @Override
