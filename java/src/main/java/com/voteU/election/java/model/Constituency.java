@@ -21,7 +21,6 @@ public class Constituency {
         this.authorities = new HashMap<>();
     }
 
-
     @Override
     public String toString() {
         return "Constituency{" +
