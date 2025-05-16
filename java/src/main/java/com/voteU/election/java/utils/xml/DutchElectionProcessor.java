@@ -720,7 +720,6 @@ public class DutchElectionProcessor<E> {
 
                 } else if (parser.getLocalName().equals(CANDIDATE)) {
 
-                    log.info("Found candidate tag");
                     int candidateId = -1;
 
                     if (parser.findBeginTag(CANDIDATE_IDENTIFIER)) {
