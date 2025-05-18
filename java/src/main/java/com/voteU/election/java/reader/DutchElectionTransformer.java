@@ -11,34 +11,32 @@
      * A Transformer that processes election data and organizes it into Election objects.
      */
     @Getter
-    public class DutchElectionTransformer implements Transformer<Election> {
-        private final Map<String, Election> elections = new HashMap<>();
-        private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(
-                Map.entry(3, 1),  // Drenthe
-                Map.entry(5, 2),  // Flevoland
-                Map.entry(2, 3),  // Friesland
-                Map.entry(7, 4),  // Gelderland
-                Map.entry(6, 4),
-                Map.entry(1, 5),  // Groningen
-                Map.entry(19, 6),  // Limburg
-                Map.entry(18, 7),  // Noord-Brabant
-                Map.entry(17, 7),
-                Map.entry(10, 8),  // Noord-Holland
-                Map.entry(9, 8),
-                Map.entry(11, 8),
-                Map.entry(4, 9),  // Overijssel
-                Map.entry(8, 10), // Utrecht
-                Map.entry(16, 11), // Zeeland
-                Map.entry(14, 12),  // Zuid-Holland
-                Map.entry(15, 12),
-                Map.entry(13, 12),
-                Map.entry(12, 12)
+        public class DutchElectionTransformer implements Transformer<Election> {
+            private final Map<String, Election> elections = new HashMap<>();
+            private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(
+                    Map.entry(3, 1),  // Drenthe
+                    Map.entry(5, 2),  // Flevoland
+                    Map.entry(2, 3),  // Friesland
+                    Map.entry(7, 4),  // Gelderland
+                    Map.entry(6, 4),
+                    Map.entry(1, 5),  // Groningen
+                    Map.entry(19, 6),  // Limburg
+                    Map.entry(18, 7),  // Noord-Brabant
+                    Map.entry(17, 7),
+                    Map.entry(10, 8),  // Noord-Holland
+                    Map.entry(9, 8),
+                    Map.entry(11, 8),
+                    Map.entry(4, 9),  // Overijssel
+                    Map.entry(8, 10), // Utrecht
+                    Map.entry(16, 11), // Zeeland
+                    Map.entry(14, 12),  // Zuid-Holland
+                    Map.entry(15, 12),
+                    Map.entry(13, 12),
+                    Map.entry(12, 12)
+            );
 
 
-        );
-
-
-        @Override
+            @Override
         public void registerElection(Map<String, String> electionData) {
             String electionId = electionData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
             String electionName = electionData.get(DutchElectionProcessor.ELECTION_NAME);
@@ -55,10 +53,12 @@
             if (election == null) {
                 election = new Election(electionId, electionName, electionDate);
                 elections.put(electionId, election);
+
             }
+                registerProvinceConstituencies(election.getId());
             // System.out.println(electionData);
         }
-    
+
         @Override
         public void registerContest(Map<String, String> contestData) {
             // Handle contest data if needed
@@ -132,7 +132,7 @@
                     System.err.println("❌ Missing candidate data in: " + votesData);
                     return;
                 }
-    
+
                 int candidateVotes;
                 try {
                     candidateVotes = Integer.parseInt(candidateVotesStr);
@@ -140,7 +140,7 @@
                     System.err.println("❌ Invalid CandidateVotes value: '" + candidateVotesStr + "' in " + votesData);
                     return;
                 }
-    
+
                 // Check if the candidate already exists and is added to the party
                 if (isTotalVotes && !party.hasCandidateShortCode(candidateId)) {
                     Candidate candidate = new Candidate();
@@ -150,19 +150,13 @@
                     // Removed duplicate logging here for the candidate as well
                 }
             }
-    
+
             partyMap.put(partyId, party);
-    
+
             // Ensure only the number of registered parties is logged, not each time for each party
             // This logging happens once at the end, after all votes are processed.
-    
-        }
-
-
-        public void registerProvince (){
 
         }
-
 
         public void registerConstituency(
                 Map<String, String> constituencyData,
@@ -236,15 +230,6 @@
             constituency.setParties(parties);
             constituencyMap.put(contestId, constituency);
 
-            Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(contestId);
-            if (provinceId != null) {
-                for (Province province : election.getProvinces()) {
-                    if (province.getId() == provinceId) {
-                        province.getConstituencies().add(constituency);
-                        break;
-                    }
-                }
-            }
 
 
             System.out.println("[registerConstituency] ✅ Constituency " + contestId + " registered with " + parties.size() + " parties.");
@@ -365,6 +350,8 @@
             }
         }
 
+
+
         private void populateCandidate(String caFirstName, String caLastName, String localityName, String gender, int caId, int affId, Map<Integer, Party> parties) {
             Party party = parties.get(affId);
 
@@ -394,6 +381,70 @@
             }
         }
 
+        public void registerProvinceConstituencies(String electionId) {
+            Election election = elections.get(electionId);
+            if (election == null) {
+                System.err.println("[registerProvinceConstituencies] ❌ No election found for ID: '" + electionId + "'.");
+                return;
+            }
+
+            Map<Integer, Constituency> constituencyMap = election.getConstituencies();
+            if (constituencyMap == null || constituencyMap.isEmpty()) {
+                System.out.println("[registerProvinceConstituencies] ⚠️ No constituencies found for election: " + electionId);
+                return;
+            }
+
+            // Maak een nieuwe lijst voor de provinces, zodat we zeker een verse kopie hebben
+            List<Province> updatedProvinces = new ArrayList<>();
+            for (int i = 1; i <= 12; i++) {
+                Province province = new Province(i, getProvinceName(i));
+                updatedProvinces.add(province);
+            }
+
+            for (Map.Entry<Integer, Integer> entry : DISTRICT_TO_PROVINCE_ID.entrySet()) {
+                int constituencyId = entry.getKey();
+                int provinceId = entry.getValue();
+
+                Constituency constituency = constituencyMap.get(constituencyId);
+                if (constituency == null) {
+                    System.out.println("[registerProvinceConstituencies] ⚠️ Constituency not found for ID: " + constituencyId);
+                    continue;
+                }
+
+                Province matchedProvince = updatedProvinces.stream()
+                        .filter(p -> p.getId() == provinceId)
+                        .findFirst()
+                        .orElse(null);
+
+                if (matchedProvince != null) {
+                    matchedProvince.getConstituencies().add(constituency);
+                    System.out.println("[registerProvinceConstituencies] ✅ Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
+                } else {
+                    System.err.println("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
+                }
+            }
+
+            // Zet de nieuwe, gekoppelde provinces in de election
+            election.setProvinces(updatedProvinces);
+        }
+
+        private String getProvinceName(int id) {
+            return switch (id) {
+                case 1 -> "Drenthe";
+                case 2 -> "Flevoland";
+                case 3 -> "Friesland";
+                case 4 -> "Gelderland";
+                case 5 -> "Groningen";
+                case 6 -> "Limburg";
+                case 7 -> "Noord-Brabant";
+                case 8 -> "Noord-Holland";
+                case 9 -> "Overijssel";
+                case 10 -> "Utrecht";
+                case 11 -> "Zeeland";
+                case 12 -> "Zuid-Holland";
+                default -> "Onbekend";
+            };
+        }
 
         /**
          * This method is not needed since we now track elections by year.
