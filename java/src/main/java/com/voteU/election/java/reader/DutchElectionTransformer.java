@@ -66,7 +66,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
             affiliation = affiMap.get(affId);
             System.out.println("affiliation object: " + affiliation);
         }
-        boolean isTotalVotes = "TOTAL".equals(nationMap.get("Source"));
         // Handle affiliation-specific data
         if (!nationMap.containsKey(DutchElectionProcessor.CANDIDATE_ID)) {
             // Safely get the affiliation name
@@ -77,7 +76,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 return;
             }
             // Register the affiliation votes data within the TotalVotes tag if it is not already registered
-            if (isTotalVotes && affiliation == null) {
+            if (affiliation == null) {
                 String affiVotesStr = nationMap.get(DutchElectionProcessor.VALID_VOTES);
                 if (affiVotesStr == null) {
                     System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationMap: " + nationMap);
@@ -115,7 +114,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 return;
             }
             // Check if the candidate has already been registered, and added to their respective affiliation
-            if (isTotalVotes && !affiliation.hasCandiShortCode(candId)) {
+            if (!affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
                 candidate.setVotes(candiVotes);
@@ -137,7 +136,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String authorityName = prcsAuthorityMap.get("AuthorityName");
         String affIdStr = prcsAuthorityMap.get(DutchElectionProcessor.AFFILIATION_ID);
         String affiName = prcsAuthorityMap.get(DutchElectionProcessor.AFFILIATION_NAME);
-        boolean isTotalVotes = "AUTHORITY".equals(prcsAuthorityMap.get("Source"));
         if (electionId == null) {
             System.err.println("Missing ELECTION_ID in authorityMap: " + prcsAuthorityMap);
             return;
@@ -174,29 +172,27 @@ public class DutchElectionTransformer implements Transformer<Election> {
         });
         Map<Integer, Affiliation> affiMap = authority.getAffiliations();
         Affiliation affiliation = affiMap.get(affId);
-        if (isTotalVotes) {
-            if (affiliation == null) {
-                String affiVotesStr = prcsAuthorityMap.get(DutchElectionProcessor.VALID_VOTES);
-                if (affiVotesStr == null) return;
-                try {
-                    int affiVotes = Integer.parseInt(affiVotesStr);
-                    affiliation = new Affiliation(affId, affiName, affiVotes);
-                    affiMap.put(affId, affiliation);
-                } catch (NumberFormatException ignored) {
-                }
+        if (affiliation == null) {
+            String affiVotesStr = prcsAuthorityMap.get(DutchElectionProcessor.VALID_VOTES);
+            if (affiVotesStr == null) return;
+            try {
+                int affiVotes = Integer.parseInt(affiVotesStr);
+                affiliation = new Affiliation(affId, affiName, affiVotes);
+                affiMap.put(affId, affiliation);
+            } catch (NumberFormatException ignored) {
             }
-            if (authorityMap.containsKey("CandiVotes") && affiliation != null) {
-                try {
-                    int candId = Integer.parseInt(prcsAuthorityMap.get(DutchElectionProcessor.CANDIDATE_ID));
-                    int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
-                    if (!affiliation.hasCandId(candId)) {
-                        Candidate candidate = new Candidate();
-                        candidate.setId(candId);
-                        candidate.setVotes(candiVotes);
-                        affiliation.addCandidate(candidate);
-                    }
-                } catch (NumberFormatException | NullPointerException ignored) {
+        }
+        if (authorityMap.containsKey("CandiVotes") && affiliation != null) {
+            try {
+                int candId = Integer.parseInt(prcsAuthorityMap.get(DutchElectionProcessor.CANDIDATE_ID));
+                int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
+                if (!affiliation.hasCandId(candId)) {
+                    Candidate candidate = new Candidate();
+                    candidate.setId(candId);
+                    candidate.setVotes(candiVotes);
+                    affiliation.addCandidate(candidate);
                 }
+            } catch (NumberFormatException | NullPointerException ignored) {
             }
         }
     }

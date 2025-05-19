@@ -264,7 +264,6 @@ public class DutchElectionProcessor<E> {
                                 registeredCandIds.add(candId);
                                 nationalLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
                                 nationalLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
-                                nationalLevel_candiMap.put("Source", "TOTAL");
                                 transformer.registerNationalLevel_TotalVotes(nationalLevel_candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
@@ -352,7 +351,6 @@ public class DutchElectionProcessor<E> {
                             affiVotesMap.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
-                        affiVotesMap.put("Source", "AUTHORITY");
                         transformer.registerAuthority(affiVotesMap);
                         break;
                     case CANDIDATE:
@@ -376,7 +374,6 @@ public class DutchElectionProcessor<E> {
                             candiVotesMap.put(CANDIDATE_ID, String.valueOf(candId));
                             candiVotesMap.put(AFFILIATION_ID, String.valueOf(affId));
                             candiVotesMap.put("CandiVotes", String.valueOf(candiVotes));
-                            candiVotesMap.put("Source", "AUTHORITY");
                             registeredCandiAffiliations.add(candiAffiKey);
                             transformer.registerAuthority(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
