@@ -109,8 +109,8 @@ public class ElectionProcessor<E> {
     public static final String LAST_NAME_PREFIX = "NamePrefix";
     public static final String LAST_NAME = "LastName";
     public static final String GENDER = "Gender";
-    public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
-    public static final String LOCALITY = "Locality";
+    //public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
+    //public static final String LOCALITY = "Locality";
     public static final String LOCALITY_NAME = "LocalityName";
 
     // Used internally
@@ -289,7 +289,7 @@ public class ElectionProcessor<E> {
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     String constiName = parser.getElementText();
                     constiMap.put(CONTEST_NAME, constiName);
-                    transformer.registerConstituency(constiMap);
+                    transformer.registerConstiOrAuthorityLevel_ConstiData(constiMap);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);

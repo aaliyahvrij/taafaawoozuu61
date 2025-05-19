@@ -113,6 +113,7 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle candidate-specific data
         if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(ElectionProcessor.CANDIDATE_ID);
+            String shortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
                 System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
@@ -132,14 +133,14 @@ public class ElectionTransformer implements Transformer<Election> {
             // Check if the candidate has already been registered, and added to their respective affiliation
             if (!affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate(Integer.parseInt(candId), candiVotes);
-                candidate.setShortCode(candId);
+                candidate.setShortCode(shortCode);
                 affiliation.addCandidate(candidate);
             }
         }
     }
 
     @Override
-    public void registerConstituency(Map<String, String> prcsConstiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes) {
+    public void registerConstiOrAuthorityLevel_ConstiData(Map<String, String> prcsConstiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes) {
         String electionId = prcsConstiMap.get(ElectionProcessor.ELECTION_ID);
         int constId = Integer.parseInt(prcsConstiMap.get(ElectionProcessor.CONTEST_ID));
         String constiName = prcsConstiMap.get(ElectionProcessor.CONTEST_NAME);
