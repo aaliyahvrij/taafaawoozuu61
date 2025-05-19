@@ -156,13 +156,13 @@ public class DutchElectionProcessor<E> {
             System.out.println(folderName + constiFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElection(electionMap, parser);
-            processVotes(electionMap, parser, "constituency");
+            processConstiOrAuthorityLevel_TotalVotes(electionMap, parser, "constituency");
         }
         for (Path authorityFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
             System.out.println(folderName + authorityFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionMap, parser);
-            processVotes(electionMap, parser, "authority");
+            processConstiOrAuthorityLevel_TotalVotes(electionMap, parser, "authority");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(candiFile));
@@ -211,7 +211,7 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processVotes(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
+    private void processConstiOrAuthorityLevel_TotalVotes(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONTEST_ID)) {
@@ -333,6 +333,7 @@ public class DutchElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFILIATION);
                 }
             }
+            parser.findAndAcceptEndTag(CONTEST);
             if (!parser.findAndAcceptEndTag(CONTEST)) {
                 LOG.warning("Can't find %s closing tag.".formatted(CONTEST));
             }
