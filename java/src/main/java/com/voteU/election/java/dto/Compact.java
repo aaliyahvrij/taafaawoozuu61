@@ -9,6 +9,7 @@ public class Compact {
     int intId;
     String stringId;
     String name;
+    String postCode;
     int votes;
     int partiesSize;
 
@@ -23,6 +24,7 @@ public class Compact {
         this.stringId = stringId;
         this.name = name;
         this.votes = votes;
+        this.postCode = "";
         this.partiesSize = partiesSize;
     }
 }

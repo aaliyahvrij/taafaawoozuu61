@@ -140,8 +140,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         int contestId = Integer.parseInt(constituencyData.get(DutchElectionProcessor.CONTEST_IDENTIFIER));
         String contestName = constituencyData.get(DutchElectionProcessor.CONTEST_NAME);
 
-        System.out.println("[registerConstituency] ➤ Starting for contestId: " + contestId + ", contestName: " + contestName);
-        System.out.println("[registerConstituency] ➤ Election ID: " + electionId);
 
         // Step 2: Retrieve election
         Election election = elections.get(electionId);
@@ -193,6 +191,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             party.setCandidates(candidates);
             parties.put(partyId, party);
+            // Update total authority votes
+            int totalConstituencyVotes = parties.values().stream().mapToInt(Party::getVotes).sum();
+            constituency.setVotes(totalConstituencyVotes);
+
         }
 
         // Step 6: Set the parties to the constituency and store it back

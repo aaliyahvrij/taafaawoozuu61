@@ -1,4 +1,5 @@
 package com.voteU.election.java.services;
+import com.voteU.election.java.dto.Compact;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -26,6 +27,7 @@ public class ConstituencyService {
         }
         return constituencies;
     }
+
 
     public Constituency getConstituencyById(String year, int constituencyId) {
         Map<Integer, Constituency> constituencies = getConstituenciesByYear(year);

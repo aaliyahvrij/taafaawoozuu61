@@ -210,8 +210,8 @@ function handleCandidateChange(candidate: Candidate): void {
       <h1 v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h1>
       <h1 v-if="selectedCandidate.firstName && selectedCandidate.lastName">
         {{selectedCandidate.firstName}} {{selectedCandidate.lastName}}
-        <h4>Gender: {{selectedCandidate.gender}}</h4>
-        <h4>Locality: {{selectedCandidate.locality}}</h4>
+        Gender: {{selectedCandidate.gender}}
+        Locality: {{selectedCandidate.locality}}
       </h1>
       <h1>Votes: {{ selectedCandidate.votes.toLocaleString() }}</h1>
       <button @click="selectedCandidate = null">Back</button>
