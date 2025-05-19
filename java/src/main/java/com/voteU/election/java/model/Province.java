@@ -10,9 +10,9 @@ public class Province {
     String name;
     List<Constituency> constituencies;
 
-    /*public Province() {
+    public Province() {
         this.constituencies = new ArrayList<>();
-    }*/
+    }
 
     public Province(int id, String name) {
         this.id = id;
