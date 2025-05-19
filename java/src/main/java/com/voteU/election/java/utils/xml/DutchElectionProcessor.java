@@ -256,28 +256,28 @@ public class DutchElectionProcessor<E> {
                     switch (parser.getLocalName()) {
                         case AFFILIATION_ID:
                             //System.out.println("processNation - Found an affiliation identifier.");
-                            Map<String, String> nationLevel_affiMap = new HashMap<>(constiMap);
+                            Map<String, String> nationalLevel_affiMap = new HashMap<>(constiMap);
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
                             // Avoid processing the same affiliation multiple times
                             if (registeredAffIds.contains(affId)) {
                                 parser.findAndAcceptEndTag(AFFILIATION_ID);
                                 continue;
                             }
-                            nationLevel_affiMap.put(AFFILIATION_ID, String.valueOf(affId));
+                            nationalLevel_affiMap.put(AFFILIATION_ID, String.valueOf(affId));
                             if (parser.findBeginTag(AFFILIATION_NAME)) {
                                 String affiName = parser.getElementText();
                                 System.out.println("nationMap - Found an affiliation name: " + affiName);
-                                nationLevel_affiMap.put(AFFILIATION_NAME, affiName);
+                                nationalLevel_affiMap.put(AFFILIATION_NAME, affiName);
                                 parser.findAndAcceptEndTag(AFFILIATION_NAME);
                             }
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int affiVotes = Integer.parseInt(parser.getElementText());
-                                nationLevel_affiMap.put(VALID_VOTES, String.valueOf(affiVotes));
+                                nationalLevel_affiMap.put(VALID_VOTES, String.valueOf(affiVotes));
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             registeredAffIds.add(affId);
-                            transformer.registerNationalLevelTotalVotes(nationLevel_affiMap);
+                            transformer.registerNationalLevelTotalVotes(nationalLevel_affiMap);
                             break;
                         case CANDIDATE:
                             String candId = null;
@@ -293,13 +293,13 @@ public class DutchElectionProcessor<E> {
                             parser.findAndAcceptEndTag(CANDIDATE);
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int candiVotes = Integer.parseInt(parser.getElementText());
-                                Map<String, String> nationLevel_candiMap = new HashMap<>(constiMap);
-                                nationLevel_candiMap.put(CANDIDATE_ID, candId);
+                                Map<String, String> nationalLevel_candiMap = new HashMap<>(constiMap);
+                                nationalLevel_candiMap.put(CANDIDATE_ID, candId);
                                 registeredCandIds.add(candId);
-                                nationLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
-                                nationLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
-                                nationLevel_candiMap.put("Source", "TOTAL");
-                                transformer.registerNationalLevelTotalVotes(nationLevel_candiMap);
+                                nationalLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
+                                nationalLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
+                                nationalLevel_candiMap.put("Source", "TOTAL");
+                                transformer.registerNationalLevelTotalVotes(nationalLevel_candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
                                 LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
