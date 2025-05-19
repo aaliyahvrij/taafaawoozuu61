@@ -14,11 +14,11 @@ public class Candidate {
     private int affId;
     public int votes;
 
-    public Candidate() {
-        this.id = 0;
+    public Candidate(int id, String firstName, String lastName) {
+        this.id = id;
         this.shortCode = "";
-        this.firstName = "";
-        this.lastName = "";
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = "";
         this.localityName = "";
         this.affId = 0;

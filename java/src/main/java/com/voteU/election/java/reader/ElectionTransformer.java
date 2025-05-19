@@ -3,6 +3,7 @@ package com.voteU.election.java.reader;
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.utils.xml.*;
 import lombok.Getter;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -14,6 +15,20 @@ import java.util.*;
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> elections = new HashMap<>();
+    private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
+            Map.entry(5, 2),  // Flevoland
+            Map.entry(2, 3),  // Friesland
+            Map.entry(7, 4),  // Gelderland
+            Map.entry(6, 4), Map.entry(1, 5),  // Groningen
+            Map.entry(19, 6),  // Limburg
+            Map.entry(18, 7),  // Noord-Brabant
+            Map.entry(17, 7), Map.entry(10, 8),  // Noord-Holland
+            Map.entry(9, 8), Map.entry(11, 8), Map.entry(4, 9),  // Overijssel
+            Map.entry(8, 10), // Utrecht
+            Map.entry(16, 11), // Zeeland
+            Map.entry(14, 12),  // Zuid-Holland
+            Map.entry(15, 12), Map.entry(13, 12), Map.entry(12, 12));
+
 
     @Override
     public void registerElection(Map<String, String> electionMap) {
@@ -97,6 +112,8 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle candidate-specific data
         if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(ElectionProcessor.CANDIDATE_ID);
+            String firstName =  nationMap.get(ElectionProcessor.FIRST_NAME);
+            String lastName =  nationMap.get(ElectionProcessor.LAST_NAME);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
                 System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
@@ -115,7 +132,7 @@ public class ElectionTransformer implements Transformer<Election> {
             }
             // Check if the candidate has already been registered, and added to their respective affiliation
             if (!affiliation.hasCandiShortCode(candId)) {
-                Candidate candidate = new Candidate();
+                Candidate candidate = new Candidate(Integer.parseInt(candId), firstName, lastName);
                 candidate.shortCode = candId;
                 candidate.setVotes(candiVotes);
                 affiliation.addCandidate(candidate);
@@ -126,8 +143,8 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerConstituency(Map<String, String> prcsConstiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes) {
         String electionId = prcsConstiMap.get(ElectionProcessor.ELECTION_ID);
-        int contestId = Integer.parseInt(prcsConstiMap.get(ElectionProcessor.CONTEST_ID));
-        String contestName = prcsConstiMap.get(ElectionProcessor.CONTEST_NAME);
+        int constId = Integer.parseInt(prcsConstiMap.get(ElectionProcessor.CONTEST_ID));
+        String constiName = prcsConstiMap.get(ElectionProcessor.CONTEST_NAME);
         Election election = elections.get(electionId);
         if (election == null) return;
         Map<Integer, Constituency> constiMap = election.getConstituencies();
@@ -135,37 +152,45 @@ public class ElectionTransformer implements Transformer<Election> {
             constiMap = new HashMap<>();
             election.setConstituencies(constiMap);
         }
-        Constituency constituency = constiMap.get(contestId);
+        Constituency constituency = constiMap.get(constId);
         if (constituency == null) {
-            constituency = new Constituency(contestId, contestName);
-            constiMap.put(contestId, constituency);
+            constituency = new Constituency(constId, constiName);
+            constiMap.put(constId, constituency);
         }
         // Add affiliations to the constituency
         for (Map.Entry<Integer, String> entry : affiNames.entrySet()) {
-            int partyId = entry.getKey();
-            String partyName = entry.getValue();
-            int totalVotes = affiVotes.getOrDefault(partyId, 0);
-            Affiliation affiliation = new Affiliation(partyId, partyName, totalVotes);
-            Map<Integer, Integer> votesForCandidates = candiVotes.getOrDefault(partyId, new HashMap<>());
-            Affiliation globalAffiliation = affiMap.get(String.valueOf(partyId));
+            int affId = entry.getKey();
+            String affiName = entry.getValue();
+            int totalVotes = affiVotes.getOrDefault(affId, 0);
+            Affiliation affiliation = new Affiliation(affId, affiName, totalVotes);
+            Map<Integer, Integer> votesForCandidates = candiVotes.getOrDefault(affId, new HashMap<>());
+            Affiliation globalAffiliation = affiMap.get(String.valueOf(affId));
             if (globalAffiliation != null && globalAffiliation.getCandidates() != null) {
                 for (Candidate original : globalAffiliation.getCandidates()) {
                     Candidate clone = new Candidate(original.getId(), original.getFirstName(), original.getLastName());
-                    clone.setAffId(partyId);
+                    clone.setAffId(affId);
                     clone.setVotes(votesForCandidates.getOrDefault(clone.getId(), 0));
                     affiliation.getCandidates().add(clone);
                 }
             }
-            Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(contestId);
+            Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(constId);
             if (provinceId != null) {
-                for (Province province : election.getProvinces()) {
-                    if (province.getId() == provinceId) {
+                for (var province : election.getProvinces().entrySet()) {
+                    if (Integer.parseInt(province.getValue()) == provinceId) {
                         province.getConstituencies().add(constituency);
-                        break;
                     }
                 }
+                if (election.getProvinces().containsValue(provinceId)) {
+                    //if (province.getId() == provinceId) {
+                    //province.getConstituencies().add(constituency);
+                    for (Constituency c : province.getConstituencies()) {
+
+                    }
+                    break;
+                    //}
+                }
             }
-            constituency.getAffiliations().add(affiliation);
+            constituency.getAffiliations().put(affId, affiliation);
         }
     }
 
@@ -226,10 +251,11 @@ public class ElectionTransformer implements Transformer<Election> {
         if (authorityMap.containsKey("CandiVotes") && affiliation != null) {
             try {
                 int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
+                String firstName = prcsAuthorityMap.get(ElectionProcessor.FIRST_NAME);
+                String lastName = prcsAuthorityMap.get(ElectionProcessor.LAST_NAME);
                 int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
                 if (!affiliation.hasCandId(candId)) {
-                    Candidate candidate = new Candidate();
-                    candidate.setId(candId);
+                    Candidate candidate = new Candidate(candId, firstName, lastName);
                     candidate.setVotes(candiVotes);
                     affiliation.addCandidate(candidate);
                 }
@@ -328,10 +354,7 @@ public class ElectionTransformer implements Transformer<Election> {
                 existingCandidate.setGender(gender);
                 existingCandidate.setLocalityName(localityName);
             } else {
-                Candidate newCandidate = new Candidate();
-                newCandidate.setId(candId);
-                newCandidate.setFirstName(firstName);
-                newCandidate.setLastName(lastName);
+                Candidate newCandidate = new Candidate(candId, firstName, lastName);
                 newCandidate.setGender(gender);
                 newCandidate.setLocalityName(localityName);
                 newCandidate.setAffId(affId); // This may be missing in your original, depending on Candidate class
