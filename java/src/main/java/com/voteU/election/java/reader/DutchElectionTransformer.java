@@ -42,10 +42,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerNationalLevelTotalVotes(Map<String, String> nationMap) {
-        boolean isTotalVotes = "TOTAL".equals(nationMap.get("Source"));
         String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
+        System.out.println("electionId in nationMap: " + electionId);
         Election election = elections.get(electionId);
         Map<Integer, Affiliation> affiMap = election.getAffiliations();
+        System.out.println("Amount of affiliations in this election: " + affiMap.size());
         Affiliation affiliation;
         // Safely get the affiliation id
         String affIdStr = nationMap.get(DutchElectionProcessor.AFFILIATION_ID);
@@ -57,14 +58,16 @@ public class DutchElectionTransformer implements Transformer<Election> {
         int affId = 0;
         try {
             affId = Integer.parseInt(affIdStr);
+            System.out.println("affId in nationMap: " + affId);
         } catch (NumberFormatException e) {
             System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationMap: " + nationMap);
             return;
         }
         finally {
-            System.out.println(" 'affiliation'");
             affiliation = affiMap.get(affId);
+            System.out.println("affiliation object: " + affiliation);
         }
+        boolean isTotalVotes = "TOTAL".equals(nationMap.get("Source"));
         // Handle affiliation-specific data
         if (!nationMap.containsKey(DutchElectionProcessor.CANDIDATE_ID)) {
             // Safely get the affiliation name
@@ -94,7 +97,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
         }
         // Handle candidate-specific data
-        else if (nationMap.containsKey("CandiVotes")) {
+        if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {

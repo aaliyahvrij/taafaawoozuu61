@@ -227,11 +227,9 @@ public class DutchElectionProcessor<E> {
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
                     case "constituency":
-                        //System.out.println("Processing constituency votes");
-                        //processConstituency(constiData, parser);
+                        processConstituency(constiMap, parser);
                         break;
                     case "authority":
-                        //System.out.println("Processing authority votes");
                         processAuthority(constiMap, parser);
                         break;
                 }
@@ -315,9 +313,9 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processConstituency(Map<String, String> electionData, XMLParser parser) throws XMLStreamException {
+    private void processConstituency(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
-            Map<String, String> constiMap = new HashMap<>(electionData);
+            Map<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONTEST_ID)) {
                 int constId = parser.getIntegerAttributeValue(null, ID, 0);
                 constiMap.put(CONTEST_ID, String.valueOf(constId));
@@ -442,9 +440,9 @@ public class DutchElectionProcessor<E> {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFILIATION_ID:
+                        affId = parser.getIntegerAttributeValue(null, ID, 0);
                         String affiName = "";
                         int affiVotes = 0;
-                        affId = parser.getIntegerAttributeValue(null, ID, 0);
                         if (parser.findBeginTag(AFFILIATION_NAME)) {
                             affiName = parser.getElementText();
                             parser.findAndAcceptEndTag(AFFILIATION_NAME);
