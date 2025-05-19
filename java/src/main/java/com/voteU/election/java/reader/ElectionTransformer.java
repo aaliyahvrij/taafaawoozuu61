@@ -112,8 +112,8 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle candidate-specific data
         if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(ElectionProcessor.CANDIDATE_ID);
-            String firstName =  nationMap.get(ElectionProcessor.FIRST_NAME);
-            String lastName =  nationMap.get(ElectionProcessor.LAST_NAME);
+            String firstName = nationMap.get(ElectionProcessor.FIRST_NAME);
+            String lastName = nationMap.get(ElectionProcessor.LAST_NAME);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
                 System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
@@ -175,19 +175,11 @@ public class ElectionTransformer implements Transformer<Election> {
             }
             Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(constId);
             if (provinceId != null) {
-                for (var province : election.getProvinces().entrySet()) {
-                    if (Integer.parseInt(province.getValue()) == provinceId) {
+                for (Province province : election.getProvinces().values()) {
+                    if (province.getId() == provinceId) {
                         province.getConstituencies().add(constituency);
+                        break;
                     }
-                }
-                if (election.getProvinces().containsValue(provinceId)) {
-                    //if (province.getId() == provinceId) {
-                    //province.getConstituencies().add(constituency);
-                    for (Constituency c : province.getConstituencies()) {
-
-                    }
-                    break;
-                    //}
                 }
             }
             constituency.getAffiliations().put(affId, affiliation);
