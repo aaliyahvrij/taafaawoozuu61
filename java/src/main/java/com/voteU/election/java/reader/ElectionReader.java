@@ -2,7 +2,7 @@ package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.utils.PathUtils;
-import com.voteU.election.java.utils.xml.DutchElectionProcessor;
+import com.voteU.election.java.utils.xml.ElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,13 @@ import java.util.*;
  */
 @Slf4j
 @Component
-public class DutchElectionReader {
-    private final DutchElectionProcessor<Election> processor;
-    private final DutchElectionTransformer transformer;
+public class ElectionReader {
+    private final ElectionProcessor<Election> processor;
+    private final ElectionTransformer transformer;
 
-    public DutchElectionReader() {
-        this.transformer = new DutchElectionTransformer();
-        this.processor = new DutchElectionProcessor<>(transformer);
+    public ElectionReader() {
+        this.transformer = new ElectionTransformer();
+        this.processor = new ElectionProcessor<>(transformer);
     }
 
     /**

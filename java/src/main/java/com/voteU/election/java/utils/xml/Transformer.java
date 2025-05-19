@@ -19,10 +19,10 @@ public interface Transformer<E> {
      * Called once per file with the information about the election. The parameter {@code electionData} (should) hold
      * the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#ELECTION_ID}</li>
-     *     <li>{@link DutchElectionProcessor#ELECTION_NAME}</li>
-     *     <li>{@link DutchElectionProcessor#ELECTION_CATEGORY}</li>
-     *     <li>{@link DutchElectionProcessor#ELECTION_DATE}</li>
+     *     <li>{@link ElectionProcessor#ELECTION_ID}</li>
+     *     <li>{@link ElectionProcessor#ELECTION_NAME}</li>
+     *     <li>{@link ElectionProcessor#ELECTION_CATEGORY}</li>
+     *     <li>{@link ElectionProcessor#ELECTION_DATE}</li>
      * </ul>
      *
      * @param electionMap a {@code Map} containing the information as {@code String}'s.
@@ -33,7 +33,7 @@ public interface Transformer<E> {
      * Called multiple times per file with information about a candidate. The {@code nationData} can hold the
      * same information as {@code candiData} in {@link #registerCandidate(Map)}, and the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
+     *     <li>{@link ElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
@@ -45,13 +45,13 @@ public interface Transformer<E> {
      * Called once per file with information about the contest. The {@code contestData} can hold the
      * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
      * <ul>
-     *     <li>{@link DutchElectionProcessor#CONTEST_ID}</li>
-     *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
+     *     <li>{@link ElectionProcessor#CONTEST_ID}</li>
+     *     <li>{@link ElectionProcessor#CONTEST_NAME}</li>
      * </ul>
      *
-     * //@param constiMap a {@code Map} containing information about the election and the contest.
+     * @param constiMap a {@code Map} containing information about the election and the contest.
      */
-    //void registerConstituency(Map<String, String> constiMap);
+    void registerConstituency(Map<String, String> constiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes);
 
     void registerAuthority(Map<String, String> authorityMap);
 
@@ -60,11 +60,11 @@ public interface Transformer<E> {
     /**
      * Called multiple times per file with information about a candidate.
      * <ul>
-     *     <li>{@link DutchElectionProcessor#CANDIDATE_ID}</li>
-     *     <li>{@link DutchElectionProcessor#INITIALS}</li>
-     *     <li>{@link DutchElectionProcessor#FIRST_NAME}</li>
-     *     <li>{@link DutchElectionProcessor#LAST_NAME_PREFIX}</li>
-     *     <li>{@link DutchElectionProcessor#LAST_NAME}</li>
+     *     <li>{@link ElectionProcessor#CANDIDATE_ID}</li>
+     *     <li>{@link ElectionProcessor#INITIALS}</li>
+     *     <li>{@link ElectionProcessor#FIRST_NAME}</li>
+     *     <li>{@link ElectionProcessor#LAST_NAME_PREFIX}</li>
+     *     <li>{@link ElectionProcessor#LAST_NAME}</li>
      * </ul>
      *
      * @param candiMap a {@code Map} containing information about the election, contest, affiliation and the

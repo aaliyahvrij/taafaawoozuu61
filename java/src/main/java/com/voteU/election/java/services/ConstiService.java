@@ -1,17 +1,17 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.reader.DutchElectionReader;
+import com.voteU.election.java.reader.ElectionReader;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class ConsistuencyService {
-    private DutchElectionReader electionReader;
+public class ConstiService {
+    private ElectionReader electionReader;
     private final Map<String, Map<Integer, Constituency>> storedElections = new HashMap<>();
 
-    public void ElectionService(DutchElectionReader electionReader) {
+    public void ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
     }
 

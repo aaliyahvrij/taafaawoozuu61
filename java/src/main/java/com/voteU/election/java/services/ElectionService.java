@@ -1,7 +1,7 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.model.*;
-import com.voteU.election.java.reader.DutchElectionReader;
+import com.voteU.election.java.reader.ElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +10,10 @@ import java.util.*;
 @Slf4j
 @Service
 public class ElectionService {
-    private final DutchElectionReader electionReader;
+    private final ElectionReader electionReader;
     private static final Map<String, Election> storedElections = new HashMap<>();
 
-    public ElectionService(DutchElectionReader electionReader) {
+    public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
     }
 

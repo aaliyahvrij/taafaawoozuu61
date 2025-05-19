@@ -12,14 +12,14 @@ import java.util.*;
  */
 @Getter
 @Slf4j
-public class DutchElectionTransformer implements Transformer<Election> {
+public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> elections = new HashMap<>();
 
     @Override
     public void registerElection(Map<String, String> electionMap) {
-        String electionId = electionMap.get(DutchElectionProcessor.ELECTION_ID);
-        String electionName = electionMap.get(DutchElectionProcessor.ELECTION_NAME);
-        String electionDate = electionMap.get(DutchElectionProcessor.ELECTION_DATE);
+        String electionId = electionMap.get(ElectionProcessor.ELECTION_ID);
+        String electionName = electionMap.get(ElectionProcessor.ELECTION_NAME);
+        String electionDate = electionMap.get(ElectionProcessor.ELECTION_DATE);
         if (electionId == null) {
             System.err.println("Missing ELECTION_ID in electionMap: " + electionMap);
             return;
@@ -42,14 +42,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerNationalLevel_TotalVotes(Map<String, String> nationMap) {
-        String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
+        String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
         System.out.println("electionId in nationMap: " + electionId);
         Election election = elections.get(electionId);
         Map<Integer, Affiliation> affiMap = election.getAffiliations();
         System.out.println("Amount of affiliations in this election: " + affiMap.size());
         Affiliation affiliation;
         // Safely get the affiliation id
-        String affIdStr = nationMap.get(DutchElectionProcessor.AFFILIATION_ID);
+        String affIdStr = nationMap.get(ElectionProcessor.AFFILIATION_ID);
         System.out.println("affIdStr in nationMap: " + affIdStr);
         if (affIdStr == null) {
             System.err.println("Missing AFFILIATION_ID in nationMap: " + nationMap);
@@ -67,9 +67,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.out.println("affiliation object: " + affiliation);
         }
         // Handle affiliation-specific data
-        if (!nationMap.containsKey(DutchElectionProcessor.CANDIDATE_ID)) {
+        if (!nationMap.containsKey(ElectionProcessor.CANDIDATE_ID)) {
             // Safely get the affiliation name
-            String affiName = nationMap.get(DutchElectionProcessor.AFFILIATION_NAME);
+            String affiName = nationMap.get(ElectionProcessor.AFFILIATION_NAME);
             if (affiName == null) {
                 System.out.println("AFFILIATION_NAME in nationMap: " + affiName);
                 System.err.println("Missing AFFILIATION_NAME in nationMap: " + nationMap);
@@ -77,7 +77,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             }
             // Register the affiliation votes data within the TotalVotes tag if it is not already registered
             if (affiliation == null) {
-                String affiVotesStr = nationMap.get(DutchElectionProcessor.VALID_VOTES);
+                String affiVotesStr = nationMap.get(ElectionProcessor.VALID_VOTES);
                 if (affiVotesStr == null) {
                     System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationMap: " + nationMap);
                     return;
@@ -96,7 +96,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
         // Handle candidate-specific data
         if (nationMap.containsKey("CandiVotes")) {
-            String candId = nationMap.get(DutchElectionProcessor.CANDIDATE_ID);
+            String candId = nationMap.get(ElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
                 System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
@@ -123,19 +123,60 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
-    /*@Override
-    public void registerConstituency(Map<String, String> constiMap) {
-        // Handle constituency data if needed
-    }*/
+    @Override
+    public void registerConstituency(Map<String, String> prcsConstiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes) {
+        String electionId = prcsConstiMap.get(ElectionProcessor.ELECTION_ID);
+        int contestId = Integer.parseInt(prcsConstiMap.get(ElectionProcessor.CONTEST_ID));
+        String contestName = prcsConstiMap.get(ElectionProcessor.CONTEST_NAME);
+        Election election = elections.get(electionId);
+        if (election == null) return;
+        Map<Integer, Constituency> constiMap = election.getConstituencies();
+        if (constiMap == null) {
+            constiMap = new HashMap<>();
+            election.setConstituencies(constiMap);
+        }
+        Constituency constituency = constiMap.get(contestId);
+        if (constituency == null) {
+            constituency = new Constituency(contestId, contestName);
+            constiMap.put(contestId, constituency);
+        }
+        // Add affiliations to the constituency
+        for (Map.Entry<Integer, String> entry : affiNames.entrySet()) {
+            int partyId = entry.getKey();
+            String partyName = entry.getValue();
+            int totalVotes = affiVotes.getOrDefault(partyId, 0);
+            Affiliation affiliation = new Affiliation(partyId, partyName, totalVotes);
+            Map<Integer, Integer> votesForCandidates = candiVotes.getOrDefault(partyId, new HashMap<>());
+            Affiliation globalAffiliation = affiMap.get(String.valueOf(partyId));
+            if (globalAffiliation != null && globalAffiliation.getCandidates() != null) {
+                for (Candidate original : globalAffiliation.getCandidates()) {
+                    Candidate clone = new Candidate(original.getId(), original.getFirstName(), original.getLastName());
+                    clone.setAffId(partyId);
+                    clone.setVotes(votesForCandidates.getOrDefault(clone.getId(), 0));
+                    affiliation.getCandidates().add(clone);
+                }
+            }
+            Integer provinceId = DISTRICT_TO_PROVINCE_ID.get(contestId);
+            if (provinceId != null) {
+                for (Province province : election.getProvinces()) {
+                    if (province.getId() == provinceId) {
+                        province.getConstituencies().add(constituency);
+                        break;
+                    }
+                }
+            }
+            constituency.getAffiliations().add(affiliation);
+        }
+    }
 
     @Override
     public void registerAuthority(Map<String, String> prcsAuthorityMap) {
-        String electionId = prcsAuthorityMap.get(DutchElectionProcessor.ELECTION_ID);
-        String constIdStr = prcsAuthorityMap.get(DutchElectionProcessor.CONTEST_ID);
-        String authorityId = prcsAuthorityMap.get(DutchElectionProcessor.AUTHORITY_ID);
+        String electionId = prcsAuthorityMap.get(ElectionProcessor.ELECTION_ID);
+        String constIdStr = prcsAuthorityMap.get(ElectionProcessor.CONTEST_ID);
+        String authorityId = prcsAuthorityMap.get(ElectionProcessor.AUTHORITY_ID);
         String authorityName = prcsAuthorityMap.get("AuthorityName");
-        String affIdStr = prcsAuthorityMap.get(DutchElectionProcessor.AFFILIATION_ID);
-        String affiName = prcsAuthorityMap.get(DutchElectionProcessor.AFFILIATION_NAME);
+        String affIdStr = prcsAuthorityMap.get(ElectionProcessor.AFFILIATION_ID);
+        String affiName = prcsAuthorityMap.get(ElectionProcessor.AFFILIATION_NAME);
         if (electionId == null) {
             System.err.println("Missing ELECTION_ID in authorityMap: " + prcsAuthorityMap);
             return;
@@ -173,7 +214,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<Integer, Affiliation> affiMap = authority.getAffiliations();
         Affiliation affiliation = affiMap.get(affId);
         if (affiliation == null) {
-            String affiVotesStr = prcsAuthorityMap.get(DutchElectionProcessor.VALID_VOTES);
+            String affiVotesStr = prcsAuthorityMap.get(ElectionProcessor.VALID_VOTES);
             if (affiVotesStr == null) return;
             try {
                 int affiVotes = Integer.parseInt(affiVotesStr);
@@ -184,7 +225,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
         if (authorityMap.containsKey("CandiVotes") && affiliation != null) {
             try {
-                int candId = Integer.parseInt(prcsAuthorityMap.get(DutchElectionProcessor.CANDIDATE_ID));
+                int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
                 int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
                 if (!affiliation.hasCandId(candId)) {
                     Candidate candidate = new Candidate();
@@ -199,10 +240,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> prcsRepUnitMap_affiliations) {
-        String electionId = prcsRepUnitMap.get(DutchElectionProcessor.ELECTION_ID);
+        String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
         Election election = elections.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
-        String repUnitId = prcsRepUnitMap.get(DutchElectionProcessor.REP_UNIT_ID);
+        String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
         String repUnitVotesStr = prcsRepUnitMap.get("RepUnitVotes");
         if (repUnitId == null) {
@@ -230,14 +271,14 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerCandidate(Map<String, String> candiMap) {
-        String candIdStr = candiMap.get(DutchElectionProcessor.CANDIDATE_ID);
-        String firstName = candiMap.get(DutchElectionProcessor.FIRST_NAME);
-        String lastName = candiMap.get(DutchElectionProcessor.LAST_NAME);
-        String gender = candiMap.get(DutchElectionProcessor.GENDER);
-        String localityName = candiMap.get(DutchElectionProcessor.LOCALITY_NAME);
-        String electionId = candiMap.get(DutchElectionProcessor.ELECTION_ID);
-        String constIdStr = candiMap.get(DutchElectionProcessor.CONTEST_ID);
-        String affIdStr = candiMap.get(DutchElectionProcessor.AFFILIATION_ID);
+        String candIdStr = candiMap.get(ElectionProcessor.CANDIDATE_ID);
+        String firstName = candiMap.get(ElectionProcessor.FIRST_NAME);
+        String lastName = candiMap.get(ElectionProcessor.LAST_NAME);
+        String gender = candiMap.get(ElectionProcessor.GENDER);
+        String localityName = candiMap.get(ElectionProcessor.LOCALITY_NAME);
+        String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
+        String constIdStr = candiMap.get(ElectionProcessor.CONTEST_ID);
+        String affIdStr = candiMap.get(ElectionProcessor.AFFILIATION_ID);
         if (candIdStr != null && lastName != null && electionId != null && constIdStr != null && affIdStr != null) {
             int candId = Integer.parseInt(candIdStr);
             int constId = Integer.parseInt(constIdStr);

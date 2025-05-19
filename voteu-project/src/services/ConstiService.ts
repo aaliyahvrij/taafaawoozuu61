@@ -7,10 +7,10 @@ interface Constituency {
   // TODO: fill this interface with typing from the backend model
 }
 
-class ConstituencyService {
+class ConstiService {
   getConstituency(): Promise<AxiosResponse<Constituency[]>> {
     return axios.get<Constituency[]>(CONSTITUENCY_API_BASE_URL)
   }
 }
 
-export default new ConstituencyService()
+export default new ConstiService()

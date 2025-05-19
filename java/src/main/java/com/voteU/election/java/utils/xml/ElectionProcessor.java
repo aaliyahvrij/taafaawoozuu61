@@ -44,8 +44,8 @@ import java.util.logging.Logger;
  * <br>
  * <em>You are encouraged to alter this class so it suits your needs! :-)</em>
  */
-public class DutchElectionProcessor<E> {
-    private static final Logger LOG = Logger.getLogger(DutchElectionProcessor.class.getName());
+public class ElectionProcessor<E> {
+    private static final Logger LOG = Logger.getLogger(ElectionProcessor.class.getName());
     private final Transformer<E> transformer;
 
     // Common attribute name that is use on multiple tags.
@@ -123,7 +123,7 @@ public class DutchElectionProcessor<E> {
      * @param transformer the {@link Transformer} that will take care of transforming the data into the
      *                    application-specific models.
      */
-    public DutchElectionProcessor(Transformer<E> transformer) {
+    public ElectionProcessor(Transformer<E> transformer) {
         this.transformer = transformer;
     }
 
@@ -289,7 +289,7 @@ public class DutchElectionProcessor<E> {
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     String constiName = parser.getElementText();
                     constiMap.put(CONTEST_NAME, constiName);
-                    //transformer.registerConstituency(constiMap);
+                    transformer.registerConstituency(constiMap);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
@@ -357,7 +357,7 @@ public class DutchElectionProcessor<E> {
                         Map<String, String> candiVotesMap = new HashMap<>(constiMap);
                         int candId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
-                            //System.out.println("Found a candidate identifier.");
+                            //System.out.println("processAuthority - Found a candidate identifier.");
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
@@ -536,10 +536,13 @@ public class DutchElectionProcessor<E> {
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
             transformer.registerCandiLevel_ConstiData(constiMap);
-            parser.findBeginTag(AFFILIATION);
-            while (parser.getLocalName().equals(AFFILIATION)) {
-                processAffiliation(constiMap, parser);
+            if (parser.findBeginTag(AFFILIATION)) {
+                while (parser.getLocalName().equals(AFFILIATION)) {
+                    processAffiliation(constiMap, parser);
+                    parser.findAndAcceptEndTag(AFFILIATION);
+                }
             }
+            parser.findAndAcceptEndTag(CONTEST);
             if (!parser.findAndAcceptEndTag(CONTEST)) {
                 LOG.warning("Can't find %s closing tag.".formatted(CONTEST));
             }
