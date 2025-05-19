@@ -1,3 +1,7 @@
+/**
+ * example of chart data
+ */
+
 export const partyData = {
   labels: [
     'VVD',         // Volkspartij voor Vrijheid en Democratie

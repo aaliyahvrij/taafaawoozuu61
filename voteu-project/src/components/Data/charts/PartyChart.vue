@@ -7,11 +7,17 @@ import { Chart, registerables, type ChartConfiguration } from 'chart.js';
 // Register necessary chart.js components
 Chart.register(...registerables);
 
-
+/**\
+ * Chart configuration
+ */
 const partyConfig: ChartConfiguration<'pie', number[], string> = {
   type: 'pie',
   data: partyData
 }
+
+/**
+ * Initialize chart.js
+ */
 
 onMounted(() => {
   const partyChartId = document.getElementById('partyChart') as HTMLCanvasElement;
