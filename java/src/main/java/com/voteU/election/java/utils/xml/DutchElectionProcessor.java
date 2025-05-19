@@ -178,6 +178,7 @@ public class DutchElectionProcessor<E> {
             processElection(electionData, parser);
             processVotes2(electionData, parser);
 
+            currentIndex++;
         }
 
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {

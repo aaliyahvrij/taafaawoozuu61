@@ -28,6 +28,25 @@ public class ConstituencyService {
         return constituencies;
     }
 
+    public Map<Integer, Compact> getConstituenciesByYearCompact(String year) {
+        Election election = electionService.getElection(year);
+        if (election == null){
+            return null;
+        }
+        Map<Integer, Constituency> constituencies = election.getConstituencies();
+        if (constituencies == null || constituencies.isEmpty()) {
+            System.out.println("No constituencies found for election year: " + year);
+            return null;
+        }
+        Map<Integer, Compact> compactConstituencyMap = new HashMap<>();
+        for (Constituency constituency : constituencies.values()) {
+            Compact compactConstituency = new Compact(constituency.getId(),constituency.getName(),constituency.getVotes(),constituency.getParties().size());
+            compactConstituencyMap.put(constituency.getId(),compactConstituency);
+        }
+        return compactConstituencyMap;
+    }
+
+
 
     public Constituency getConstituencyById(String year, int constituencyId) {
         Map<Integer, Constituency> constituencies = getConstituenciesByYear(year);

@@ -5,7 +5,7 @@ export class ConstituencyServiceService {
   static async getConstituenciesByElection(electionId: string,): Promise<Record<number, Constituency> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {
