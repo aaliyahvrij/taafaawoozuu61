@@ -410,84 +410,81 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processRepUnit(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(REP_UNIT_VOTES)) {
-            Map<String, String> repUnitMap = new HashMap<>(constiMap);
-            String repUnitName = null;
-            Map<Integer, Affiliation> repUnitAffiliations = new HashMap<>();
-            int repUnitVotes = 0;
-            Affiliation affiliation;
-            int affId = 0;
-            int selectionIndex = 0;
-            if (parser.findBeginTag(REP_UNIT_ID)) {
-                String repUnitId = parser.getAttributeValue(null, ID);
-                repUnitMap.put(REP_UNIT_ID, repUnitId);
-                repUnitName = parser.getElementText();
-                int postCodeIndex = repUnitName.indexOf("(postcode:");
-                if (postCodeIndex >= 0) {
-                    int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
-                    if (postCodeEndIndex > postCodeIndex) {
-                        String zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
-                        repUnitMap.put(ZIPCODE, zipCode);
-                        repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
-                        repUnitMap.put("RepUnitName", repUnitName);
-                    }
-                } else {
+        Map<String, String> repUnitMap = new HashMap<>(constiMap);
+        String repUnitName = null;
+        Map<Integer, Affiliation> repUnitAffiliations = new HashMap<>();
+        int repUnitVotes = 0;
+        Affiliation affiliation;
+        int affId = 0;
+        int selectionIndex = 0;
+        if (parser.findBeginTag(REP_UNIT_ID)) {
+            String repUnitId = parser.getAttributeValue(null, ID);
+            repUnitMap.put(REP_UNIT_ID, repUnitId);
+            repUnitName = parser.getElementText();
+            int postCodeIndex = repUnitName.indexOf("(postcode:");
+            if (postCodeIndex >= 0) {
+                int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
+                if (postCodeEndIndex > postCodeIndex) {
+                    String zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
+                    repUnitMap.put(ZIPCODE, zipCode);
+                    repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
                     repUnitMap.put("RepUnitName", repUnitName);
                 }
-                parser.findAndAcceptEndTag(REP_UNIT_ID);
+            } else {
+                repUnitMap.put("RepUnitName", repUnitName);
             }
-            while (parser.getLocalName().equals(SELECTION)) {
-                parser.nextTag();
-                switch (parser.getLocalName()) {
-                    case AFFILIATION_ID:
-                        affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        String affiName = "";
-                        int affiVotes = 0;
-                        if (parser.findBeginTag(AFFILIATION_NAME)) {
-                            affiName = parser.getElementText();
-                            parser.findAndAcceptEndTag(AFFILIATION_NAME);
-                        }
-                        parser.findAndAcceptEndTag(AFFILIATION_ID);
-                        if (parser.findBeginTag(VALID_VOTES)) {
-                            affiVotes = Integer.parseInt(parser.getElementText());
-                            repUnitVotes = repUnitVotes + affiVotes;
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                        } else {
-                            LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
-                        }
-                        affiliation = new Affiliation(affId, affiName, affiVotes);
-                        repUnitAffiliations.put(affId, affiliation);
-                        break;
-                    case CANDIDATE:
-                        int candId = 0;
-                        if (parser.findBeginTag(CANDIDATE_ID)) {
-                            candId = parser.getIntegerAttributeValue(null, ID, 0);
-                            parser.findAndAcceptEndTag(CANDIDATE_ID);
-                        }
-                        parser.findAndAcceptEndTag(CANDIDATE);
-                        if (parser.findBeginTag(VALID_VOTES)) {
-                            int candiVotes = Integer.parseInt(parser.getElementText());
-                            Candidate candidate = new Candidate();
-                            candidate.setId(candId);
-                            candidate.setAffId(affId);
-                            candidate.setVotes(candiVotes);
-                            repUnitAffiliations.get(affId).addCandidate(candidate);
-                            parser.findAndAcceptEndTag(VALID_VOTES);
-                        } else {
-                            LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
-                        }
-                        break;
-                    default:
-                        LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
-                }
-                selectionIndex = selectionIndex + 1;
-                parser.findAndAcceptEndTag(SELECTION);
-                if (selectionIndex == 3) break;
-            }
-            repUnitMap.put("RepUnitVotes", String.valueOf(repUnitVotes));
-            transformer.registerRepUnit(repUnitMap, repUnitAffiliations);
-            parser.findAndAcceptEndTag(REP_UNIT_VOTES);
+            parser.findAndAcceptEndTag(REP_UNIT_ID);
         }
+        while (parser.getLocalName().equals(SELECTION)) {
+            parser.nextTag();
+            switch (parser.getLocalName()) {
+                case AFFILIATION_ID:
+                    affId = parser.getIntegerAttributeValue(null, ID, 0);
+                    String affiName = "";
+                    int affiVotes = 0;
+                    if (parser.findBeginTag(AFFILIATION_NAME)) {
+                        affiName = parser.getElementText();
+                        parser.findAndAcceptEndTag(AFFILIATION_NAME);
+                    }
+                    parser.findAndAcceptEndTag(AFFILIATION_ID);
+                    if (parser.findBeginTag(VALID_VOTES)) {
+                        affiVotes = Integer.parseInt(parser.getElementText());
+                        repUnitVotes = repUnitVotes + affiVotes;
+                        parser.findAndAcceptEndTag(VALID_VOTES);
+                    } else {
+                        LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
+                    }
+                    affiliation = new Affiliation(affId, affiName, affiVotes);
+                    repUnitAffiliations.put(affId, affiliation);
+                    break;
+                case CANDIDATE:
+                    int candId = 0;
+                    if (parser.findBeginTag(CANDIDATE_ID)) {
+                        candId = parser.getIntegerAttributeValue(null, ID, 0);
+                        parser.findAndAcceptEndTag(CANDIDATE_ID);
+                    }
+                    parser.findAndAcceptEndTag(CANDIDATE);
+                    if (parser.findBeginTag(VALID_VOTES)) {
+                        int candiVotes = Integer.parseInt(parser.getElementText());
+                        Candidate candidate = new Candidate();
+                        candidate.setId(candId);
+                        candidate.setAffId(affId);
+                        candidate.setVotes(candiVotes);
+                        repUnitAffiliations.get(affId).addCandidate(candidate);
+                        parser.findAndAcceptEndTag(VALID_VOTES);
+                    } else {
+                        LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
+                    }
+                    break;
+                default:
+                    LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
+            }
+            selectionIndex = selectionIndex + 1;
+            parser.findAndAcceptEndTag(SELECTION);
+            if (selectionIndex == 3) break;
+        }
+        repUnitMap.put("RepUnitVotes", String.valueOf(repUnitVotes));
+        transformer.registerRepUnit(repUnitMap, repUnitAffiliations);
     }
 
     private void processAffiliation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
