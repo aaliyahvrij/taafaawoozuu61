@@ -13,8 +13,8 @@ public class PollingStation {
     private String id;
     private String name;
     private String zipCode;
-    private Map<Integer, Party> parties;
     private int votes;
+    private Map<Integer, Party> parties;
     private String authorityId;
 
     public PollingStation(String id, String name, String zipCode) {
