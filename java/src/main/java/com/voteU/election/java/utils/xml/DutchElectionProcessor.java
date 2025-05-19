@@ -521,6 +521,30 @@ public class DutchElectionProcessor<E> {
     }
 
     private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-
+        if (parser.findBeginTag(CONTEST)) {
+            Map<String, String> constiMap = new HashMap<>(electionMap);
+            int constId;
+            String constiName;
+            if (parser.findBeginTag(CONTEST_ID)) {
+                constId = parser.getIntegerAttributeValue(null, ID, 0);
+                constiMap.put(CONTEST_ID, String.valueOf(constId));
+                if (parser.findBeginTag(CONTEST_NAME)) {
+                    constiName = parser.getElementText();
+                    constiMap.put(CONTEST_NAME, constiName);
+                    parser.findAndAcceptEndTag(CONTEST_NAME);
+                }
+                parser.findAndAcceptEndTag(CONTEST_ID);
+            }
+            transformer.registerCandiLevel_ConstiData(constiMap);
+            parser.findBeginTag(AFFILIATION);
+            while (parser.getLocalName().equals(AFFILIATION)) {
+                processAffiliation(constiMap, parser);
+            }
+            if (!parser.findAndAcceptEndTag(CONTEST)) {
+                LOG.warning("Can't find %s closing tag.".formatted(CONTEST));
+            }
+        } else {
+            LOG.warning("Can't find %s opening tag.".formatted(CONTEST));
+        }
     }
 }
