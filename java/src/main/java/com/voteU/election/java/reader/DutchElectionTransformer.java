@@ -62,8 +62,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         } catch (NumberFormatException e) {
             System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationMap: " + nationMap);
             return;
-        }
-        finally {
+        } finally {
             affiliation = affiMap.get(affId);
             System.out.println("affiliation object: " + affiliation);
         }
@@ -268,6 +267,11 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 }
             }
         }
+    }
+
+    @Override
+    public void registerCandiLevel_ConstiData(Map<String, String> constiMap) {
+
     }
 
     private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Affiliation> affiliations) {

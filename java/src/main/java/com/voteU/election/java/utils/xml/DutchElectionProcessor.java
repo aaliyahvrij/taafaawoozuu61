@@ -168,6 +168,7 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(candiFile));
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElection(electionMap, parser);
+            processCandiLevel_ConstiData(electionMap, parser);
         }
     }
 
@@ -520,5 +521,9 @@ public class DutchElectionProcessor<E> {
             parser.findAndAcceptEndTag(PERSON_NAME);
         }
         transformer.registerCandidate(candiMap);
+    }
+
+    private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+
     }
 }

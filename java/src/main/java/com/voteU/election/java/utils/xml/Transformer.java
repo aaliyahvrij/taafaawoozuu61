@@ -71,4 +71,6 @@ public interface Transformer<E> {
      *                  candidate.
      */
     void registerCandidate(Map<String, String> candiMap);
+
+    void registerCandiLevel_ConstiData(Map<String, String> constiMap);
 }
