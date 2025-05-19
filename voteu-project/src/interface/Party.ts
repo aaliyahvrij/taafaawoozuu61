@@ -5,4 +5,5 @@ export interface Party {
   name: string;
   candidates: Candidate[]; // Adjust type if candidates have data
   votes: number;
+  percentage: number;
 }

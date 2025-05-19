@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +22,7 @@ public class Election {
     private String name;
     private String date;
     private int votes;
+    private List<Province> provinces;
     private Map<Integer, Constituency> constituencies;
     private Map<Integer, Party> parties;
 
