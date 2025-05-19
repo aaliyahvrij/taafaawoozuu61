@@ -11,22 +11,20 @@ import java.util.Map;
 public class Constituency {
     private int id;
     private String name;
+    private int votes;
     private Map<Integer, Party> parties;
     Map<String, Authority> authorities;
 
-    public Constituency(int id,  String name) {
+    public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
+        this.votes = 0;
         this.parties = new HashMap<>();
         this.authorities = new HashMap<>();
     }
 
     @Override
     public String toString() {
-        return "Constituency{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", parties=" + parties +
-                '}';
+        return "Constituency{" + "id=" + id + ", name='" + name + '\'' + ", parties=" + parties + '}';
     }
 }

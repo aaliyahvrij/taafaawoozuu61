@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,39 +15,38 @@ import java.util.Map;
  * <b>Please do NOT include this code in you project!</b>
  */
 
-@Getter @Setter
+@Getter
+@Setter
 public class Election {
     private String id;
     private String name;
     private String date;
-    private Map<Integer, Party> nationalParties;
+    private int votes;
+    private List<Province> provinces;
     private Map<Integer, Constituency> constituencies;
-    private Map<String, Authority> authorities;
-    private Map<String, PollingStation> pollingStations;
-
+    private Map<Integer, Party> parties;
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.nationalParties = new HashMap<>();
+        this.votes = 0;
         this.constituencies = new HashMap<>();
-        this.authorities = new HashMap<>();
-        this.pollingStations = new HashMap<>();
+        this.parties = new HashMap<>();
+
     }
+    public void recalculateTotalVotes() {
+        int totalVotes = 0;
+        for (Party party : this.getParties().values()) {
+            totalVotes += party.getVotes();
+        }
+        this.setVotes(totalVotes);  // Assuming you have setVotes() method
+    }
+
 
     @Override
     public String toString() {
-        return "Election{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", date='" + date + '\'' +
-                ", nationalParties=" + nationalParties +
-                ", constituencies=" + constituencies +
-                ", authorities=" + authorities +
-                ", pollingStations=" + pollingStations +
-                '}';
+        return "Election {" + "\n id='" + this.id + '\'' + ",\n  name='" + this.name + '\'' + ",\n  date='" + this.date + '\'' + ",\n  parties=" + this.parties + ",\n  contests=" + this.constituencies + "\n}";
     }
-
 }
 

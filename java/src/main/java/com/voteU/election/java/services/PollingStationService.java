@@ -1,50 +1,38 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
+import com.voteU.election.java.dto.Compact;
+import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.PollingStation;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
-
 @Service
 public class PollingStationService {
+    private final AuthorityService authorityService;
 
-    private final ElectionService electionService;
-
-    public PollingStationService(ElectionService electionService) {
-        this.electionService = electionService;
+    public PollingStationService(AuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 
-    public Map<String, PollingStation> getPollingStationsByYear(String year) {
-        Election election = electionService.getElection(year);
-        if (election == null){
-            return null;
-        }
-        Map<String, PollingStation> pollingStations = election.getPollingStations();
-        if (pollingStations == null || pollingStations.isEmpty()) {
-            System.out.println("No polling stations found for election year: " + year);
-            return null;
-        }
-        return pollingStations;
+    public Map<String, PollingStation> getPollingStationsByAuthorityId(@PathVariable String electionId, @PathVariable int constituencyId, @PathVariable String authorityId) {
+        Authority authority = authorityService.getAuthorityById(electionId,constituencyId,authorityId);
+        return authority.getPollingStations();
     }
 
-    public PollingStation getPollingStationsById(String year, String pollingId) {
-        Map<String, PollingStation> pollingStations = getPollingStationsByYear(year);
-        if (pollingStations == null){
-            return null;
-        }
-        return pollingStations.get(pollingId);
+    public PollingStation getPollingStationById(@PathVariable String electionId, @PathVariable int constituencyId, @PathVariable String authorityId, @PathVariable String pollingStationId) {
+        Authority authority = authorityService.getAuthorityById(electionId,constituencyId,authorityId);
+        return authority.getPollingStations().get(pollingStationId);
     }
 
-    public Map<Integer, Party> getPartiesByPollingStationsId(String year, String pollingId) {
-        PollingStation pollingStation = getPollingStationsById(year, pollingId);
-        if (pollingStation == null){
-            return null;
-        }
-        return pollingStation.getParties();
-    }
+//    public Compact getPollingStationByIdCompact(@PathVariable String electionId, @PathVariable int constituencyId, @PathVariable String authorityId, @PathVariable String pollingStationId) {
+//        Authority authority = authorityService.getAuthorityById(electionId,constituencyId,authorityId);
+//        PollingStation pollingStation =  authority.getPollingStations().get(pollingStationId);
+//        String id = pollingStation.getId();
+//        String name = pollingStation.getName();
+//        String zipCode = pollingStation.getZipCode();
+//        int votes = pollingStation.getVotes();
+//        //return new Compact()
+//    }
 }
-

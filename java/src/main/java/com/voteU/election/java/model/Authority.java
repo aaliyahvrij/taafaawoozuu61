@@ -10,8 +10,10 @@ import java.util.Map;
 public class Authority {
     String id;
     String name;
+    int votes;
     Map<Integer, Party> authorityParties;
     Map<String, PollingStation> pollingStations;
+
     int constituencyId;
 
     public Authority(String id) {
@@ -20,6 +22,7 @@ public class Authority {
         this.authorityParties = new HashMap<>();
         this.pollingStations = new HashMap<>();
         this.constituencyId = 0;
+        this.votes = 0;
     }
 
     @Override

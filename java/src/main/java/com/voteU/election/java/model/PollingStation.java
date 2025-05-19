@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Setter
@@ -14,6 +13,7 @@ public class PollingStation {
     private String id;
     private String name;
     private String zipCode;
+    private int votes;
     private Map<Integer, Party> parties;
     private String authorityId;
 
@@ -21,6 +21,7 @@ public class PollingStation {
         this.id = id;
         this.name = name;
         this.zipCode = zipCode;
+        this.votes = 0;
         this.parties = new HashMap<>();
         this.authorityId = "";
     }

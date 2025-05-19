@@ -1,4 +1,5 @@
     package com.voteU.election.java.controller;
+    import com.voteU.election.java.dto.Compact;
     import com.voteU.election.java.model.Authority;
     import com.voteU.election.java.model.Election;
     import com.voteU.election.java.model.Party;
@@ -38,12 +39,14 @@
             return electionService.getElection(electionId);
         }
 
+        @GetMapping("{electionId}/compact")
+        public Compact getCompactElection(@PathVariable String electionId) {
+            return electionService.getCompactElection(electionId);
+        }
+
         @GetMapping("/{electionId}/parties")
         public Map<Integer, Party> getAllPartiesByElection(@PathVariable String electionId){
             return electionService.getAllPartiesByElection(electionId);
         }
-        @GetMapping("/{electionId}/authorities")
-        public Map<String, Authority> getAllAuthoritiesByElection(@PathVariable String electionId) {
-            return authorityService.getAllAuthoritiesByElection(electionId);
-        }
+
     }
