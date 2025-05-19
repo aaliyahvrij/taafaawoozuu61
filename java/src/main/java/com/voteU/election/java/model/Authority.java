@@ -12,12 +12,15 @@ public class Authority {
     String name;
     int votes;
     Map<Integer, Party> authorityParties;
+    Map<String, PollingStation> pollingStations;
+
     int constituencyId;
 
     public Authority(String id) {
         this.id = id;
         this.name = "";
         this.authorityParties = new HashMap<>();
+        this.pollingStations = new HashMap<>();
         this.constituencyId = 0;
         this.votes = 0;
     }

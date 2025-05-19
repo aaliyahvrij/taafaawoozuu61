@@ -11,7 +11,7 @@ public class Candidate {
     private String lastName;
     private String gender;
     private String localityName;
-    private int affId;
+    private int partyId;
     private int votes;
 
     public Candidate() {
@@ -21,7 +21,7 @@ public class Candidate {
         this.lastName = "";
         this.gender = "";
         this.localityName = "";
-        this.affId = 0;
+        this.partyId = 0;
         this.votes = 0;
     }
 }
