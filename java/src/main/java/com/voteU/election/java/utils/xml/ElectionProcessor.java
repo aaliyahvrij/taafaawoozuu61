@@ -446,10 +446,8 @@ public class ElectionProcessor<E> {
                     parser.findAndAcceptEndTag(CANDIDATE);
                     if (parser.findBeginTag(VALID_VOTES)) {
                         int candiVotes = Integer.parseInt(parser.getElementText());
-                        Candidate candidate = new Candidate();
-                        candidate.setId(candId);
+                        Candidate candidate = new Candidate(candId, candiVotes);
                         candidate.setAffId(affId);
-                        candidate.setVotes(candiVotes);
                         repUnitAffiliations.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {

@@ -15,6 +15,7 @@ import java.util.*;
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> elections = new HashMap<>();
+    Map<String, Affiliation> affiMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),  // Flevoland
             Map.entry(2, 3),  // Friesland
@@ -112,8 +113,6 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle candidate-specific data
         if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(ElectionProcessor.CANDIDATE_ID);
-            String firstName = nationMap.get(ElectionProcessor.FIRST_NAME);
-            String lastName = nationMap.get(ElectionProcessor.LAST_NAME);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
                 System.err.println("Missing CANDIDATE_ID in nationMap: " + nationMap);
@@ -132,9 +131,8 @@ public class ElectionTransformer implements Transformer<Election> {
             }
             // Check if the candidate has already been registered, and added to their respective affiliation
             if (!affiliation.hasCandiShortCode(candId)) {
-                Candidate candidate = new Candidate(Integer.parseInt(candId), firstName, lastName);
-                candidate.shortCode = candId;
-                candidate.setVotes(candiVotes);
+                Candidate candidate = new Candidate(Integer.parseInt(candId), candiVotes);
+                candidate.setShortCode(candId);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -243,12 +241,9 @@ public class ElectionTransformer implements Transformer<Election> {
         if (authorityMap.containsKey("CandiVotes") && affiliation != null) {
             try {
                 int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
-                String firstName = prcsAuthorityMap.get(ElectionProcessor.FIRST_NAME);
-                String lastName = prcsAuthorityMap.get(ElectionProcessor.LAST_NAME);
                 int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
                 if (!affiliation.hasCandId(candId)) {
-                    Candidate candidate = new Candidate(candId, firstName, lastName);
-                    candidate.setVotes(candiVotes);
+                    Candidate candidate = new Candidate(candId, candiVotes);
                     affiliation.addCandidate(candidate);
                 }
             } catch (NumberFormatException | NullPointerException ignored) {
