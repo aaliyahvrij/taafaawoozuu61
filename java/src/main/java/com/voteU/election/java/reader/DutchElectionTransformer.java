@@ -398,6 +398,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                     for (Authority authority : authorities.values()) {
                         Map<Integer, Party> partyMap = authority.getAuthorityParties();
                         populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, partyMap);
+                        Map<String, PollingStation> pollingStations = authority.getPollingStations();
                     }
                 }
             }
