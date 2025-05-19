@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 public class Candidate {
     private int id;
-    private String shortCode;
     private String firstName;
     private String lastName;
     private String gender;
@@ -16,7 +15,6 @@ public class Candidate {
 
     public Candidate() {
         this.id = 0;
-        this.shortCode = "";
         this.firstName = "";
         this.lastName = "";
         this.gender = "";
