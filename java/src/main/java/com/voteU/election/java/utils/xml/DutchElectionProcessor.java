@@ -393,8 +393,8 @@ public class DutchElectionProcessor<E> {
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
                             candiVotesMap.put(CANDIDATE_ID, String.valueOf(candId));
-                            candiVotesMap.put("CandiVotes", String.valueOf(candiVotes));
                             candiVotesMap.put(AFFILIATION_ID, String.valueOf(affId));
+                            candiVotesMap.put("CandiVotes", String.valueOf(candiVotes));
                             candiVotesMap.put("Source", "AUTHORITY");
                             registeredCandiAffiliations.add(candiAffiKey);
                             transformer.registerAuthority(candiVotesMap);
@@ -464,13 +464,11 @@ public class DutchElectionProcessor<E> {
                         int candId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
-                            repUnitMap.put(CANDIDATE_ID, String.valueOf(candId));
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
                             int candiVotes = Integer.parseInt(parser.getElementText());
-                            repUnitMap.put("CandiRepUnitVotes", String.valueOf(candiVotes));
                             Candidate candidate = new Candidate();
                             candidate.setId(candId);
                             candidate.setAffId(affId);
@@ -486,7 +484,7 @@ public class DutchElectionProcessor<E> {
                 }
                 selectionIndex = selectionIndex + 1;
                 parser.findAndAcceptEndTag(SELECTION);
-                if (selectionIndex == 2) break;
+                if (selectionIndex == 3) break;
             }
             repUnitMap.put("RepUnitVotes", String.valueOf(repUnitVotes));
             transformer.registerRepUnit(repUnitMap, repUnitAffiliations);

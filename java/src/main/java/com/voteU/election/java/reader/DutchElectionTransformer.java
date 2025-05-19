@@ -62,9 +62,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
         finally {
+            System.out.println(" 'affiliation'");
             affiliation = affiMap.get(affId);
         }
-        // Handle affiliation data
+        // Handle affiliation-specific data
         if (!nationMap.containsKey(DutchElectionProcessor.CANDIDATE_ID)) {
             // Safely get the affiliation name
             String affiName = nationMap.get(DutchElectionProcessor.AFFILIATION_NAME);
@@ -92,8 +93,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 affiMap.put(affId, affiliation);
             }
         }
-        // Handle candidate data
-        if (nationMap.containsKey("CandiVotes")) {
+        // Handle candidate-specific data
+        else if (nationMap.containsKey("CandiVotes")) {
             String candId = nationMap.get(DutchElectionProcessor.CANDIDATE_ID);
             String candiVotesStr = nationMap.get("CandiVotes");
             if (candId == null) {
