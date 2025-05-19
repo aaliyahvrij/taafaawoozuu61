@@ -691,6 +691,15 @@ public class DutchElectionProcessor<E> {
     }
 
 
+    /**
+     * Processes the reporting unit data by parsing the XML and extracting relevant information
+     * such as reporting unit identifier, name, zip code, affiliations, candidates, and their vote counts.
+     * The processed data is subsequently transformed and registered as polling station data.
+     *
+     * @param contestData A map containing contest-specific data to be augmented with reporting unit data.
+     * @param parser      An XMLParser instance used to read and navigate the XML structure for processing reporting unit details.
+     * @throws XMLStreamException If an error occurs while parsing the XML.
+     */
     private void processReportingUnit(Map<String, String> contestData, XMLParser parser) throws XMLStreamException {
         while (parser.findBeginTag(REPORTING_UNIT_VOTES)) {
             String reportingUnitId = null;

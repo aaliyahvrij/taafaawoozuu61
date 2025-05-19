@@ -6,6 +6,13 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a polling station within an election environment.
+ * A polling station belongs to a specific authority and contains details
+ * about its unique identifier, name, voting information, and associated parties.
+ *
+ * This class also facilitates the management of votes for its associated parties.
+ */
 @Setter
 @Getter
 public class PollingStation {

@@ -157,6 +157,23 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
 
+    /**
+     * Registers a constituency with associated parties and candidates based on the provided data.
+     * The method retrieves and validates the required election and contest information, initializes or updates
+     * constituency and parties, and associates candidates with their respective parties.
+     *
+     * @param constituencyData a map containing details about the constituency. Expected keys:
+     *                         - ELECTION_IDENTIFIER: the identifier of the election.
+     *                         - CONTEST_IDENTIFIER: the identifier of the contest/constituency.
+     *                         - CONTEST_NAME: the name of the constituency or contest.
+     * @param affiliationVotes a map where each key represents the party/affiliation identifier and the
+     *                         value represents total votes for that party in the constituency.
+     * @param candidateVotes a nested map where the key represents the party/affiliation identifier,
+     *                       and the value is another map where each key represents the candidate identifier
+     *                       associated with the party, and the value is the number of votes received by each candidate.
+     * @param affiliationNames a map with party/affiliation identifiers as keys and their corresponding
+     *                         party names as values.
+     */
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
         // Step 1: Extract required info
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
@@ -304,6 +321,24 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
+    /**
+     * Registers a polling station with associated parties and candidates based on the provided reporting unit data.
+     * The method validates and processes the data, associates it with the relevant election and constituency,
+     * and ensures that the hierarchy of authority, polling station, parties, and candidates is correctly established.
+     *
+     * @param reportingUnitData a map containing details about the reporting unit, including:
+     *                          - ELECTION_IDENTIFIER: the identifier of the election.
+     *                          - CONTEST_IDENTIFIER: the identifier of the contest/constituency.
+     *                          - AUTHORITY_IDENTIFIER: the identifier of the authority within the constituency.
+     *                          - REPORTING_UNIT_IDENTIFIER: the identifier of the polling station.
+     *                          - AFFILIATION_IDENTIFIER: the identifier of the party/affiliation associated with the polling station.
+     *                          - REGISTERED_NAME: the name of the party/affiliation (optional, default is "UNKNOWN").
+     *                          - REPORTING_UNIT_NAME: the name of the polling station.
+     *                          - ZIPCODE: the zipcode of the polling station.
+     *                          - AffiliationVotes: (optional) the number of votes for the affiliation at the polling station.
+     *                          - CANDIDATE_IDENTIFIER: (optional) the identifier of a candidate.
+     *                          - CandidateVotes: (optional) the number of votes for the candidate.
+     */
     @Override
     public void registerPollingStation(Map<String, String> reportingUnitData) {
         String electionId = reportingUnitData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
