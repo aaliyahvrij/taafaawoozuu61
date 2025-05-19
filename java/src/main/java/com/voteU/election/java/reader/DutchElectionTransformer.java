@@ -41,7 +41,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNationalLevelTotalVotes(Map<String, String> nationMap) {
+    public void registerNationalLevel_TotalVotes(Map<String, String> nationMap) {
         String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
         System.out.println("electionId in nationMap: " + electionId);
         Election election = elections.get(electionId);
@@ -125,10 +125,10 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
-    @Override
+    /*@Override
     public void registerConstituency(Map<String, String> constiMap) {
         // Handle constituency data if needed
-    }
+    }*/
 
     @Override
     public void registerAuthority(Map<String, String> prcsAuthorityMap) {

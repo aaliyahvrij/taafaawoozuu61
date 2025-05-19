@@ -149,7 +149,7 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionMap, parser);
-            processNationalLevelTotalVotes(electionMap, parser);
+            processNationalLevel_TotalVotes(electionMap, parser);
         }
         for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(constiFile));
@@ -168,7 +168,6 @@ public class DutchElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(candiFile));
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElection(electionMap, parser);
-            processConstituency(electionMap, parser);
         }
     }
 
@@ -211,39 +210,7 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processConstiOrAuthorityLevel_TotalVotes(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
-        if (parser.findBeginTag(CONTEST)) {
-            Map<String, String> constiMap = new HashMap<>(electionMap);
-            if (parser.findBeginTag(CONTEST_ID)) {
-                int constId = parser.getIntegerAttributeValue(null, ID, 0);
-                constiMap.put(CONTEST_ID, String.valueOf(constId));
-                if (parser.findBeginTag(CONTEST_NAME)) {
-                    String constiName = parser.getElementText();
-                    constiMap.put(CONTEST_NAME, constiName);
-                    parser.findAndAcceptEndTag(CONTEST_NAME);
-                }
-                parser.findAndAcceptEndTag(CONTEST_ID);
-            }
-            if (parser.findBeginTag(TOTAL_VOTES)) {
-                switch (fileType) {
-                    case "constituency":
-                        processConstituency(constiMap, parser);
-                        break;
-                    case "authority":
-                        processAuthority(constiMap, parser);
-                        break;
-                }
-                parser.findAndAcceptEndTag(TOTAL_VOTES);
-            }
-            while (parser.nextBeginTag(REP_UNIT_VOTES)) {
-                processRepUnit(constiMap, parser);
-                parser.findAndAcceptEndTag(REP_UNIT_VOTES);
-            }
-            parser.findAndAcceptEndTag(CONTEST);
-        }
-    }
-
-    private void processNationalLevelTotalVotes(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processNationalLevel_TotalVotes(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VOTES)) {
             int affId = 0;
             Set<Integer> registeredAffIds = new HashSet<>();
@@ -275,7 +242,7 @@ public class DutchElectionProcessor<E> {
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             registeredAffIds.add(affId);
-                            transformer.registerNationalLevelTotalVotes(nationalLevel_affiMap);
+                            transformer.registerNationalLevel_TotalVotes(nationalLevel_affiMap);
                             break;
                         case CANDIDATE:
                             String candId = null;
@@ -297,7 +264,7 @@ public class DutchElectionProcessor<E> {
                                 nationalLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
                                 nationalLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
                                 nationalLevel_candiMap.put("Source", "TOTAL");
-                                transformer.registerNationalLevelTotalVotes(nationalLevel_candiMap);
+                                transformer.registerNationalLevel_TotalVotes(nationalLevel_candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
                                 LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
@@ -313,7 +280,7 @@ public class DutchElectionProcessor<E> {
         }
     }
 
-    private void processConstituency(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+    private void processConstiOrAuthorityLevel_TotalVotes(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONTEST_ID)) {
@@ -322,16 +289,30 @@ public class DutchElectionProcessor<E> {
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     String constiName = parser.getElementText();
                     constiMap.put(CONTEST_NAME, constiName);
+                    //transformer.registerConstituency(constiMap);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
-            transformer.registerConstituency(constiMap);
-            if (parser.findBeginTag(AFFILIATION)) {
-                while (parser.getLocalName().equals(AFFILIATION)) {
-                    processAffiliation(constiMap, parser);
-                    parser.findAndAcceptEndTag(AFFILIATION);
+            if (parser.findBeginTag(TOTAL_VOTES)) {
+                switch (fileType) {
+                    case "constituency":
+                        if (parser.findBeginTag(AFFILIATION)) {
+                            while (parser.getLocalName().equals(AFFILIATION)) {
+                                processAffiliation(constiMap, parser);
+                                parser.findAndAcceptEndTag(AFFILIATION);
+                            }
+                        }
+                        break;
+                    case "authority":
+                        processAuthority(constiMap, parser);
+                        break;
                 }
+                parser.findAndAcceptEndTag(TOTAL_VOTES);
+            }
+            while (parser.nextBeginTag(REP_UNIT_VOTES)) {
+                processRepUnit(constiMap, parser);
+                parser.findAndAcceptEndTag(REP_UNIT_VOTES);
             }
             parser.findAndAcceptEndTag(CONTEST);
             if (!parser.findAndAcceptEndTag(CONTEST)) {

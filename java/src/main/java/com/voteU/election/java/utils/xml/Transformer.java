@@ -39,7 +39,7 @@ public interface Transformer<E> {
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
      *                   candidate and the number of votes.
      */
-    void registerNationalLevelTotalVotes(Map<String, String> nationMap);
+    void registerNationalLevel_TotalVotes(Map<String, String> nationMap);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the
@@ -49,9 +49,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
      * </ul>
      *
-     * @param constiMap a {@code Map} containing information about the election and the contest.
+     * //@param constiMap a {@code Map} containing information about the election and the contest.
      */
-    void registerConstituency(Map<String, String> constiMap);
+    //void registerConstituency(Map<String, String> constiMap);
 
     void registerAuthority(Map<String, String> authorityMap);
 
