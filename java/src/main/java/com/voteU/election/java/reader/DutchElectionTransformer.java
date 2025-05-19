@@ -41,49 +41,56 @@ public class DutchElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNation(Map<String, String> nationMap) {
+    public void registerNationalLevelTotalVotes(Map<String, String> nationMap) {
         boolean isTotalVotes = "TOTAL".equals(nationMap.get("Source"));
+        String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
+        Election election = elections.get(electionId);
+        Map<Integer, Affiliation> affiMap = election.getAffiliations();
+        Affiliation affiliation;
         // Safely get the affiliation id
         String affIdStr = nationMap.get(DutchElectionProcessor.AFFILIATION_ID);
+        System.out.println("affIdStr in nationMap: " + affIdStr);
         if (affIdStr == null) {
             System.err.println("Missing AFFILIATION_ID in nationMap: " + nationMap);
             return;
         }
-        int affId;
+        int affId = 0;
         try {
             affId = Integer.parseInt(affIdStr);
         } catch (NumberFormatException e) {
             System.err.println("Invalid AFFILIATION_ID '" + affIdStr + "' in nationMap: " + nationMap);
             return;
         }
-        // Safely get the affiliation name
-        String affiName = nationMap.get(DutchElectionProcessor.AFFILIATION_NAME);
-        if (affiName == null) {
-            System.err.println("Missing AFFILIATION_NAME in nationMap: " + nationMap);
-            return;
+        finally {
+            affiliation = affiMap.get(affId);
         }
-        // Check if the affiliation already exists
-        String electionId = nationMap.get(DutchElectionProcessor.ELECTION_ID);
-        Election election = elections.get(electionId);
-        Map<Integer, Affiliation> affiMap = election.getAffiliations();
-        Affiliation affiliation = affiMap.get(affId);
-        // Register the affiliation votes data within the TotalVotes tag if it is not already registered
-        if (isTotalVotes && affiliation == null) {
-            String affiVotesStr = nationMap.get(DutchElectionProcessor.VALID_VOTES);
-            if (affiVotesStr == null) {
-                System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationMap: " + nationMap);
+        // Handle affiliation data
+        if (!nationMap.containsKey(DutchElectionProcessor.CANDIDATE_ID)) {
+            // Safely get the affiliation name
+            String affiName = nationMap.get(DutchElectionProcessor.AFFILIATION_NAME);
+            if (affiName == null) {
+                System.out.println("AFFILIATION_NAME in nationMap: " + affiName);
+                System.err.println("Missing AFFILIATION_NAME in nationMap: " + nationMap);
                 return;
             }
-            int affiVotes;
-            try {
-                affiVotes = Integer.parseInt(affiVotesStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationMap: " + nationMap);
-                return;
+            // Register the affiliation votes data within the TotalVotes tag if it is not already registered
+            if (isTotalVotes && affiliation == null) {
+                String affiVotesStr = nationMap.get(DutchElectionProcessor.VALID_VOTES);
+                if (affiVotesStr == null) {
+                    System.err.println("Missing VALID_VOTES for affiliation " + affiName + " in nationMap: " + nationMap);
+                    return;
+                }
+                int affiVotes;
+                try {
+                    affiVotes = Integer.parseInt(affiVotesStr);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid VALID_VOTES value '" + affiVotesStr + "' in nationMap: " + nationMap);
+                    return;
+                }
+                // Create and register the new affiliation
+                affiliation = new Affiliation(affId, affiName, affiVotes);
+                affiMap.put(affId, affiliation);
             }
-            // Create and register the new affiliation
-            affiliation = new Affiliation(affId, affiName, affiVotes);
-            affiMap.put(affId, affiliation);
         }
         // Handle candidate data
         if (nationMap.containsKey("CandiVotes")) {
@@ -104,7 +111,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 System.err.println("Invalid CandiVotes value '" + candiVotesStr + "' in nationMap: " + nationMap);
                 return;
             }
-            // Check if the candidate already exists and is added to the affiliation
+            // Check if the candidate has already been registered, and added to their respective affiliation
             if (isTotalVotes && !affiliation.hasCandiShortCode(candId)) {
                 Candidate candidate = new Candidate();
                 candidate.shortCode = candId;
@@ -112,9 +119,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 affiliation.addCandidate(candidate);
             }
         }
-        affiMap.put(affId, affiliation);
-        // Ensure only the number of registered affiliations is logged, not each time for each affiliation
-        // This logging happens once at the end, after all votes are processed.
     }
 
     @Override
@@ -136,7 +140,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             return;
         }
         if (constIdStr == null) {
-            System.err.println("Missing CONTEST_ID in authorityMap: " + prcsAuthorityMap);
+            System.err.println("Missing CONSTITUENCY_ID in authorityMap: " + prcsAuthorityMap);
             return;
         }
         if (authorityId == null) {
