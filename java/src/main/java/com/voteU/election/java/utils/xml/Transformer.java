@@ -37,7 +37,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
-     *                   candidate and the number of votes.
+     *                  candidate and the number of votes.
      */
     void registerNationalLevel_TotalVotes(Map<String, String> nationMap);
 
@@ -68,7 +68,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param candiMap a {@code Map} containing information about the election, contest, affiliation and the
-     *                  candidate.
+     *                 candidate.
      */
     void registerCandidate(Map<String, String> candiMap);
 

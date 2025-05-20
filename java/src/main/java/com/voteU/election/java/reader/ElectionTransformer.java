@@ -17,19 +17,18 @@ public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> elections = new HashMap<>();
     Map<String, Affiliation> affiMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
-            Map.entry(5, 2),  // Flevoland
-            Map.entry(2, 3),  // Friesland
-            Map.entry(7, 4),  // Gelderland
-            Map.entry(6, 4), Map.entry(1, 5),  // Groningen
-            Map.entry(19, 6),  // Limburg
-            Map.entry(18, 7),  // Noord-Brabant
-            Map.entry(17, 7), Map.entry(10, 8),  // Noord-Holland
-            Map.entry(9, 8), Map.entry(11, 8), Map.entry(4, 9),  // Overijssel
-            Map.entry(8, 10), // Utrecht
-            Map.entry(16, 11), // Zeeland
+            Map.entry(5, 2),    // Flevoland
+            Map.entry(2, 3),    // Friesland
+            Map.entry(7, 4),    // Gelderland
+            Map.entry(6, 4), Map.entry(1, 5),                             // Groningen
+            Map.entry(19, 6),   // Limburg
+            Map.entry(18, 7),   // Noord-Brabant
+            Map.entry(17, 7), Map.entry(10, 8),                           // Noord-Holland
+            Map.entry(9, 8), Map.entry(11, 8), Map.entry(4, 9),     // Overijssel
+            Map.entry(8, 10),   // Utrecht
+            Map.entry(16, 11),  // Zeeland
             Map.entry(14, 12),  // Zuid-Holland
             Map.entry(15, 12), Map.entry(13, 12), Map.entry(12, 12));
-
 
     @Override
     public void registerElection(Map<String, String> electionMap) {
