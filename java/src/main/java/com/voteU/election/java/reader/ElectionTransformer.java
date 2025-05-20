@@ -265,6 +265,7 @@ public class ElectionTransformer implements Transformer<Election> {
         }
         if (repUnitName == null) {
             System.err.println("Missing RepUnitName in repUnitMap: " + prcsRepUnitMap);
+            return;
         }
         if (repUnitVotesStr == null) {
             System.err.println("Missing RepUnitVotes in repUnitMap: " + prcsRepUnitMap);
@@ -292,27 +293,57 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
         String constIdStr = candiMap.get(ElectionProcessor.CONTEST_ID);
         String affIdStr = candiMap.get(ElectionProcessor.AFFILIATION_ID);
-        if (candIdStr != null && lastName != null && electionId != null && constIdStr != null && affIdStr != null) {
-            int candId = Integer.parseInt(candIdStr);
-            int constId = Integer.parseInt(constIdStr);
-            int affId = Integer.parseInt(affIdStr);
-            Election election = elections.get(electionId);
-            if (election != null) {
-                Map<Integer, Constituency> constituencies = election.getConstituencies();
-                Constituency constituency = constituencies.get(constId);
-                if (constituency != null) {
-                    // Update or insert a candidate in a constituency-level affiliation
-                    Map<Integer, Affiliation> affiliations = constituency.getAffiliations();
-                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
-                    // Update or insert a candidate in each authority-level affiliation
-                    Map<String, Authority> authorities = constituency.getAuthorities();
-                    for (Authority authority : authorities.values()) {
-                        Map<Integer, Affiliation> affiMap = authority.getAffiliations();
-                        populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
-                        Map<String, RepUnit> repUnits = authority.getRepUnits();
-                        for (RepUnit repUnit : repUnits.values()) {
-                            populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
-                        }
+        if (candIdStr == null) {
+            System.err.println("Missing CANDIDATE_ID in candiMap: " + candiMap);
+            return;
+        }
+        if (firstName == null) {
+            System.err.println("Missing FIRST_NAME in candiMap: " + candiMap);
+            return;
+        }
+        if (lastName == null) {
+            System.err.println("Missing LAST_NAME in candiMap: " + candiMap);
+            return;
+        }
+        if (gender == null) {
+            System.err.println("Missing GENDER in candiMap: " + candiMap);
+            return;
+        }
+        if (localityName == null) {
+            System.err.println("Missing LOCALITY_NAME in candiMap: " + candiMap);
+            return;
+        }
+        if (electionId == null) {
+            System.err.println("Missing ELECTION_ID in candiMap: " + candiMap);
+            return;
+        }
+        if (constIdStr == null) {
+            System.err.println("Missing CONSTITUENCY_ID in candiMap: " + candiMap);
+            return;
+        }
+        if (affIdStr == null) {
+            System.err.println("Missing AFFILIATION_ID in candiMap: " + candiMap);
+            return;
+        }
+        int candId = Integer.parseInt(candIdStr);
+        int constId = Integer.parseInt(constIdStr);
+        int affId = Integer.parseInt(affIdStr);
+        Election election = elections.get(electionId);
+        if (election != null) {
+            Map<Integer, Constituency> constituencies = election.getConstituencies();
+            Constituency constituency = constituencies.get(constId);
+            if (constituency != null) {
+                // Update or insert a candidate in a constituency-level affiliation
+                Map<Integer, Affiliation> affiliations = constituency.getAffiliations();
+                populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiliations);
+                // Update or insert a candidate in each authority-level affiliation
+                Map<String, Authority> authorities = constituency.getAuthorities();
+                for (Authority authority : authorities.values()) {
+                    Map<Integer, Affiliation> affiMap = authority.getAffiliations();
+                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
+                    Map<String, RepUnit> repUnits = authority.getRepUnits();
+                    for (RepUnit repUnit : repUnits.values()) {
+                        populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
                     }
                 }
             }

@@ -297,15 +297,10 @@ public class ElectionProcessor<E> {
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
                     case "constituency":
-                        if (parser.findBeginTag(AFFILIATION)) {
-                            while (parser.getLocalName().equals(AFFILIATION)) {
-                                processAffiliation(constiMap, parser);
-                                parser.findAndAcceptEndTag(AFFILIATION);
-                            }
-                        }
+                        processConstiLevel_ConstiData(constiMap, parser);
                         break;
                     case "authority":
-                        processAuthority(constiMap, parser);
+                        processAuthorityLevel_ConstiData(constiMap, parser);
                         break;
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
@@ -323,7 +318,16 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processAuthority(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processConstiLevel_ConstiData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+        if (parser.findBeginTag(AFFILIATION)) {
+            while (parser.getLocalName().equals(AFFILIATION)) {
+                processAffiliation(constiMap, parser);
+                parser.findAndAcceptEndTag(AFFILIATION);
+            }
+        }
+    }
+
+    private void processAuthorityLevel_ConstiData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
             Set<String> registeredCandiAffiliations = new HashSet<>();
