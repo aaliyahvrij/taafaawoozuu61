@@ -14,12 +14,17 @@ public class Candidate {
     private int affId;
     public int votes;
 
-    public Candidate(int id, int votes) {
+    public Candidate(int id, int votes) {                           // telling files
         this.id = id;
         this.votes = votes;
     }
 
-    public Candidate(int id, String firstName, String lastName) {
+    public Candidate(String shortCode, int votes) {                 // totaaltelling files
+        this.shortCode = shortCode;
+        this.votes = votes;
+    }
+
+    public Candidate(int id, String firstName, String lastName) {   // kandidatenlijst files
         this.id = id;
         this.shortCode = "";
         this.firstName = firstName;

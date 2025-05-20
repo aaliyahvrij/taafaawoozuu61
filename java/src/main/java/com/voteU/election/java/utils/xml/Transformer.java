@@ -39,7 +39,7 @@ public interface Transformer<E> {
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
      *                  candidate and the number of votes.
      */
-    void registerNationalLevel_TotalVotes(Map<String, String> nationMap);
+    void registerNationalLevelData(Map<String, String> nationMap);
 
     /**
      * Called once per file with information about the contest. The {@code contestData} can hold the

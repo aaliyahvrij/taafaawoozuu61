@@ -149,7 +149,7 @@ public class ElectionProcessor<E> {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
             processElection(electionMap, parser);
-            processNationalLevel_TotalVotes(electionMap, parser);
+            processNationalLevelData(electionMap, parser);
         }
         for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(constiFile));
@@ -211,11 +211,11 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processNationalLevel_TotalVotes(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processNationalLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VOTES)) {
             int affId = 0;
             Set<Integer> registeredAffIds = new HashSet<>();
-            Set<String> registeredCandIds = new HashSet<>();
+            Set<String> registeredCandiShortCodes = new HashSet<>();
             if (parser.findBeginTag(SELECTION)) {
                 while (parser.getLocalName().equals(SELECTION)) {
                     parser.nextTag();
@@ -243,14 +243,14 @@ public class ElectionProcessor<E> {
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             registeredAffIds.add(affId);
-                            transformer.registerNationalLevel_TotalVotes(nationalLevel_affiMap);
+                            transformer.registerNationalLevelData(nationalLevel_affiMap);
                             break;
                         case CANDIDATE:
-                            String candId = null;
+                            String candiShortCode = null;
                             if (parser.findBeginTag(CANDIDATE_ID)) {
-                                candId = parser.getAttributeValue(null, SHORT_CODE);
-                                // If this candidate has already been registered, skip it
-                                if (registeredCandIds.contains(candId)) {
+                                candiShortCode = parser.getAttributeValue(null, SHORT_CODE);
+                                // If this candidate has already been registered, skip him/her
+                                if (registeredCandiShortCodes.contains(candiShortCode)) {
                                     parser.findAndAcceptEndTag(CANDIDATE_ID);
                                     continue;
                                 }
@@ -260,11 +260,11 @@ public class ElectionProcessor<E> {
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int candiVotes = Integer.parseInt(parser.getElementText());
                                 Map<String, String> nationalLevel_candiMap = new HashMap<>(constiMap);
-                                nationalLevel_candiMap.put(CANDIDATE_ID, candId);
-                                registeredCandIds.add(candId);
+                                nationalLevel_candiMap.put(SHORT_CODE, candiShortCode);
+                                registeredCandiShortCodes.add(candiShortCode);
                                 nationalLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
                                 nationalLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
-                                transformer.registerNationalLevel_TotalVotes(nationalLevel_candiMap);
+                                transformer.registerNationalLevelData(nationalLevel_candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
                                 LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));

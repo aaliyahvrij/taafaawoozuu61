@@ -22,9 +22,9 @@ public class Affiliation {
         candidates.add(candidate);
     }
 
-    public boolean hasCandiShortCode(String candId) {
+    public boolean hasCandiShortCode(String candiShortCode) {
         for (Candidate candidate : this.candidates) {
-            if (candidate.getShortCode().equals(candId)) {
+            if (candidate.getShortCode().equals(candiShortCode)) {
                 return true;
             }
         }
