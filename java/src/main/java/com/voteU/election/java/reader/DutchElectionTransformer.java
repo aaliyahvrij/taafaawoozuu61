@@ -7,9 +7,7 @@
     
     import java.util.*;
     
-    /**
-     * A Transformer that processes election data and organizes it into Election objects.
-     */
+
     @Getter
         public class DutchElectionTransformer implements Transformer<Election> {
             private final Map<String, Election> elections = new HashMap<>();
@@ -381,36 +379,48 @@
             }
         }
 
+        /**
+         * Registers and links constituencies to provinces for a given election.
+         * The method retrieves the election identified by the specified election ID
+         * and associates its constituencies with corresponding provinces based on predefined mappings.
+         * It updates the election's province data with the linked constituencies.
+         *
+         * @param electionId the unique identifier of the election for which constituencies are to be registered and linked to provinces
+         */
         public void registerProvinceConstituencies(String electionId) {
+            // Get the election object for the given electionId
             Election election = elections.get(electionId);
             if (election == null) {
-                System.err.println("[registerProvinceConstituencies] ❌ No election found for ID: '" + electionId + "'.");
+                System.err.println("[registerProvinceConstituencies]  No election found for ID: '" + electionId + "'.");
                 return;
             }
-
+            // Get all constituencies for this election
             Map<Integer, Constituency> constituencyMap = election.getConstituencies();
             if (constituencyMap == null || constituencyMap.isEmpty()) {
-                System.out.println("[registerProvinceConstituencies] ⚠️ No constituencies found for election: " + electionId);
+                System.out.println("[registerProvinceConstituencies] ⚠ No constituencies found for election: " + electionId);
                 return;
             }
 
-            // Maak een nieuwe lijst voor de provinces, zodat we zeker een verse kopie hebben
+            // Create 12 provinces with their IDs and names
             List<Province> updatedProvinces = new ArrayList<>();
             for (int i = 1; i <= 12; i++) {
+                // Get province name by ID (e.g., 1 → "Drenthe")
                 Province province = new Province(i, getProvinceName(i));
                 updatedProvinces.add(province);
             }
 
+            // Go through the map that links constituency ID → province ID
             for (Map.Entry<Integer, Integer> entry : DISTRICT_TO_PROVINCE_ID.entrySet()) {
-                int constituencyId = entry.getKey();
-                int provinceId = entry.getValue();
+                int constituencyId = entry.getKey(); // the constituency (district)
+                int provinceId = entry.getValue();  // the province it belongs to
 
+                // Get the constituency object
                 Constituency constituency = constituencyMap.get(constituencyId);
                 if (constituency == null) {
-                    System.out.println("[registerProvinceConstituencies] ⚠️ Constituency not found for ID: " + constituencyId);
+                    System.out.println("[registerProvinceConstituencies]  Constituency not found for ID: " + constituencyId);
                     continue;
                 }
-
+               // Find the matching province by its ID
                 Province matchedProvince = updatedProvinces.stream()
                         .filter(p -> p.getId() == provinceId)
                         .findFirst()
@@ -418,16 +428,22 @@
 
                 if (matchedProvince != null) {
                     matchedProvince.getConstituencies().add(constituency);
-                    System.out.println("[registerProvinceConstituencies] ✅ Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
+                    System.out.println("[registerProvinceConstituencies] Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
                 } else {
-                    System.err.println("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
+                    System.err.println("[registerProvinceConstituencies] Province not found for ID: " + provinceId);
                 }
             }
-
-            // Zet de nieuwe, gekoppelde provinces in de election
             election.setProvinces(updatedProvinces);
         }
 
+        /**
+         * Retrieves the name of a province based on its identifier.
+         *
+         * @param id The identifier of the province. Valid values are integers between 1 and 12, inclusive.
+         * @return The name of the province corresponding to the provided identifier.
+         *         If the identifier is outside the valid range, "Onbekend" (Unknown) is returned.
+         */
+        // Returns the name of the province by its ID
         private String getProvinceName(int id) {
             return switch (id) {
                 case 1 -> "Drenthe";
@@ -442,7 +458,7 @@
                 case 10 -> "Utrecht";
                 case 11 -> "Zeeland";
                 case 12 -> "Zuid-Holland";
-                default -> "Onbekend";
+                default -> "Onbekend";//unknown id
             };
         }
 

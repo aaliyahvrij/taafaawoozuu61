@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * Service class responsible for managing operations related to provinces within the election system.
+ * Provides functionality for retrieving province data, constituencies within a province,
+ * and aggregate voting information for parties within a province.
+ */
 @Service
 public class ProvinceService {
 
@@ -80,6 +85,4 @@ public class ProvinceService {
 
         return getTotalVotesPerParty(province);
     }
-
-
 }
