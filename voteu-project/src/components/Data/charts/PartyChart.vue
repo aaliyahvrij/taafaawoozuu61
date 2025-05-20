@@ -3,34 +3,53 @@
 import {partyData} from "@/chartData/partyChartConfig.ts";
 import {onMounted} from "vue";
 import { Chart, registerables, type ChartConfiguration } from 'chart.js';
+import { ElectionService } from '@/services/ElectionService.ts'
 
 // Register necessary chart.js components
 Chart.register(...registerables);
 
-/**\
- * Chart configuration
- */
-const partyConfig: ChartConfiguration<'pie', number[], string> = {
-  type: 'pie',
-  data: partyData
-}
+const props = defineProps<{
+  electionId: string
+}>();
 
-/**
- * Initialize chart.js
- */
+onMounted(async () => {
+  const partyChartId = document.getElementById("partyChart") as HTMLCanvasElement;
 
-onMounted(() => {
-  const partyChartId = document.getElementById('partyChart') as HTMLCanvasElement;
   if (partyChartId) {
-    new Chart(partyChartId, partyConfig); // Initialize chart with the config
+    const data = await ElectionService.getNationalPartyVotes(props.electionId);
+    if (!data) return;
+
+    const labels = Object.values(data).map(p => p.name);
+    const votes = Object.values(data).map(p => p.votes);
+    const backgroundColors = labels.map(name => generateColorFromName(name));
+
+    partyData.labels = labels;
+    partyData.datasets[0].data = votes;
+    partyData.datasets[0].backgroundColor = backgroundColors;
+
+    const partyConfig: ChartConfiguration<'pie', number[], string> = {
+      type: 'pie',
+      data: partyData,
+    };
+
+    new Chart(partyChartId, partyConfig);
   }
 });
+
+function generateColorFromName(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 60%)`;
+}
 
 </script>
 
 <template>
   <div>
-    <canvas id="partyChart" width="400" height="400"></canvas>
+    <canvas id="partyChart" width="200" height="200"></canvas>
   </div>
 </template>
 
