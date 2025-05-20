@@ -1,5 +1,6 @@
 package com.voteU.election.java.controller;
-import com.voteU.election.java.dto.Compact;
+import com.voteU.election.java.CompactDTO.CompactConstituency;
+import com.voteU.election.java.CompactDTO.CompactElection;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.services.ConstituencyService;
@@ -22,7 +23,7 @@ public class ConstituencyController {
     }
 
     @GetMapping("/compact")
-    public Map<Integer, Compact> getConstituenciesByYearCompact(@PathVariable String year){
+    public Map<Integer, CompactConstituency> getConstituenciesByYearCompact(@PathVariable String year){
         return constituencyService.getConstituenciesByYearCompact(year);
     }
 

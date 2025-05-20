@@ -6,7 +6,7 @@ export class ProvinceService {
   static async getProvincesByElection(electionId: string): Promise<Record<number, Province> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces`,
+        `http://localhost:8080/api/election/TK${electionId}/provinces/compact`,
         {
           method: 'GET',
           headers: {

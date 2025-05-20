@@ -1,5 +1,5 @@
     package com.voteU.election.java.controller;
-    import com.voteU.election.java.dto.Compact;
+    import com.voteU.election.java.CompactDTO.CompactElection;
     import com.voteU.election.java.model.Election;
     import com.voteU.election.java.model.Party;
     import com.voteU.election.java.services.ElectionService;
@@ -52,7 +52,7 @@
         }
 
         @GetMapping("{electionId}/compact")
-        public Compact getCompactElection(@PathVariable String electionId) {
+        public CompactElection getCompactElection(@PathVariable String electionId) {
             return electionService.getCompactElection(electionId);
         }
 

@@ -1,6 +1,6 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.dto.Compact;
+import com.voteU.election.java.CompactDTO.CompactElection;
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class ElectionService {
         return electionsByElectionId.get(electionId);
     }
 
-    public Compact getCompactElection(String electionId){
+    public CompactElection getCompactElection(String electionId){
         Election election = getElection(electionId);
         String id = election.getId();
         String name = election.getName();
@@ -53,7 +53,7 @@ public class ElectionService {
         Map<Integer, Party> parties = election.getParties();
         int size = parties.size();
 
-        return new Compact(id, name, votes, size);
+        return new CompactElection(id, name, votes, size);
     }
 
     public Map<Integer, Party> getAllPartiesByElection(String electionId) {

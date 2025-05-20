@@ -1,5 +1,6 @@
 package com.voteU.election.java.services;
 
+import com.voteU.election.java.CompactDTO.CompactProvince;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -21,6 +22,17 @@ public class ProvinceService {
         Election election = electionService.getElection(year);
         if (election == null) return new ArrayList<>();
         return election.getProvinces();
+    }
+
+    public List<CompactProvince> getCompactProvinces(String year) {
+        Election election = electionService.getElection(year);
+        if (election == null) return new ArrayList<>();
+        List<Province> provinceMap = election.getProvinces();
+        List<CompactProvince> compactProvinces = new ArrayList<>();
+        for (Province province : provinceMap) {
+            compactProvinces.add(new CompactProvince(province.getId(), province.getName()));
+        }
+        return compactProvinces;
     }
 
     public List<Constituency> getConstituenciesByProvinceId(String year, int provinceId) {

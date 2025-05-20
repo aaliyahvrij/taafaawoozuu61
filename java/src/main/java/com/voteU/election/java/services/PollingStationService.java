@@ -1,6 +1,5 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.dto.Compact;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.PollingStation;
 import org.springframework.stereotype.Service;

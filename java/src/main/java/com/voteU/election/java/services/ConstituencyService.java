@@ -1,5 +1,6 @@
 package com.voteU.election.java.services;
-import com.voteU.election.java.dto.Compact;
+import com.voteU.election.java.CompactDTO.CompactConstituency;
+import com.voteU.election.java.CompactDTO.CompactElection;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -28,7 +29,7 @@ public class ConstituencyService {
         return constituencies;
     }
 
-    public Map<Integer, Compact> getConstituenciesByYearCompact(String year) {
+    public Map<Integer, CompactConstituency> getConstituenciesByYearCompact(String year) {
         Election election = electionService.getElection(year);
         if (election == null){
             return null;
@@ -38,10 +39,10 @@ public class ConstituencyService {
             System.out.println("No constituencies found for election year: " + year);
             return null;
         }
-        Map<Integer, Compact> compactConstituencyMap = new HashMap<>();
+        Map<Integer, CompactConstituency> compactConstituencyMap = new HashMap<>();
         for (Constituency constituency : constituencies.values()) {
-            Compact compactConstituency = new Compact(constituency.getId(),constituency.getName(),constituency.getVotes(),constituency.getParties().size());
-            compactConstituencyMap.put(constituency.getId(),compactConstituency);
+            CompactConstituency compactConstituency = new CompactConstituency(constituency.getId(), constituency.getName(), constituency.getVotes(), constituency.getParties().size());
+            compactConstituencyMap.put(compactConstituency.getId(), compactConstituency);
         }
         return compactConstituencyMap;
     }
