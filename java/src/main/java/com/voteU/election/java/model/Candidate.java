@@ -12,6 +12,7 @@ public class Candidate {
     private String localityName;
     private int partyId;
     private int votes;
+    private String electionId;
 
     public Candidate() {
         this.id = 0;
@@ -21,5 +22,6 @@ public class Candidate {
         this.localityName = "";
         this.partyId = 0;
         this.votes = 0;
+
     }
 }

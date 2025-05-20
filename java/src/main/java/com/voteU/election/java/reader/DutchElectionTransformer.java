@@ -8,7 +8,13 @@ import lombok.Getter;
 import java.util.*;
 
 /**
- * A Transformer that processes election data and organizes it into Election objects.
+ * The DutchElectionTransformer class is responsible for transforming and registering various election-related data
+ * into application-specific models. It performs operations such as associating candidates with parties,
+ * converting raw data into structured models, and building all necessary relationships between the entities such as
+ * elections, parties, constituencies, and candidates.
+ *
+ * This class also maintains an internal representation of elections data and handles mappings necessary for data processing.
+ * It extends multiple parent classes and overrides their methods to achieve functionality specific to Dutch elections.
  */
 @Getter
 public class DutchElectionTransformer implements Transformer<Election> {
@@ -95,6 +101,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Step 4: Get or create the constituency
         boolean isNew = !constituencyMap.containsKey(contestId);
         Constituency constituency = constituencyMap.computeIfAbsent(contestId, id -> new Constituency(id, contestName));
+        constituency.setElectionId(electionId);
 
         // Step 5: Create new party map for this constituency
         Map<Integer, Party> parties = new HashMap<>();
@@ -263,6 +270,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             Authority authority = new Authority(id);
             authority.setName(authorityName);
             authority.setConstituencyId(contestId);
+            authority.setElectionId(electionId);
             return authority;
         });
 
@@ -384,6 +392,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                     candidate.setId(candidateId);
                     candidate.setVotes(candidateVotes);
                     candidate.setPartyId(partyId);
+                    candidate.setElectionId(electionId);
                     party.addCandidate(candidate);
                 }
             } catch (NumberFormatException | NullPointerException ignored) {}
@@ -411,7 +420,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             if (election != null) {
                 Map<Integer, Party> electionParties = election.getParties();
-                populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, electionParties);
+                populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, electionParties, electionId);
 
                 Map<Integer, Constituency> constituencies = election.getConstituencies();
                 Constituency constituency = constituencies.get(contestId);
@@ -419,18 +428,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 if (constituency != null) {
                     // Update or insert candidate in Constituency-level Party
                     Map<Integer, Party> parties = constituency.getParties();
-                    populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, parties);
+                    populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, parties, electionId);
 
                     // Update or insert candidate in each Authority-level Party
                     Map<String, Authority> authorities = constituency.getAuthorities();
                     for (Authority authority : authorities.values()) {
                         Map<Integer, Party> partyMap = authority.getAuthorityParties();
-                        populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, partyMap);
+                        populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, partyMap, electionId);
 
                         Map<String, PollingStation> pollingStations = authority.getPollingStations();
                         for (PollingStation pollingStation : pollingStations.values()) {
                             Map<Integer, Party> pollingStationParties = pollingStation.getParties();
-                            populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, pollingStationParties);
+                            populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, pollingStationParties, electionId);
                         }
                     }
                 }
@@ -438,7 +447,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         }
     }
 
-    private void populateCandidate(String caFirstName, String caLastName, String localityName, String gender, int caId, int affId, Map<Integer, Party> parties) {
+    private void populateCandidate(String caFirstName, String caLastName, String localityName, String gender, int caId, int affId, Map<Integer, Party> parties, String electionId) {
         Party party = parties.get(affId);
 
         if (party != null) {
@@ -457,11 +466,17 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 existingCandidate.setLastName(caLastName);
                 existingCandidate.setGender(gender);
                 existingCandidate.setLocalityName(localityName);
+                existingCandidate.setElectionId(electionId);
             } else {
                 Candidate newCandidate = new Candidate();
                 newCandidate.setId(caId);
                 newCandidate.setFirstName(caFirstName);
                 newCandidate.setLastName(caLastName);
+                newCandidate.setGender(gender);
+                newCandidate.setLocalityName(localityName);
+                newCandidate.setPartyId(affId);
+                newCandidate.setElectionId(electionId);
+
                 party.addCandidate(newCandidate);
             }
         }
@@ -476,7 +491,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         Map<Integer, Constituency> constituencyMap = election.getConstituencies();
         if (constituencyMap == null || constituencyMap.isEmpty()) {
-            System.out.println("[registerProvinceConstituencies] ⚠️ No constituencies found for election: " + electionId);
             return;
         }
 
@@ -493,7 +507,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             Constituency constituency = constituencyMap.get(constituencyId);
             if (constituency == null) {
-                System.out.println("[registerProvinceConstituencies] ⚠️ Constituency not found for ID: " + constituencyId);
                 continue;
             }
 
@@ -504,7 +517,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             if (matchedProvince != null) {
                 matchedProvince.getConstituencies().add(constituency);
-                System.out.println("[registerProvinceConstituencies] ✅ Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
             } else {
                 System.err.println("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
             }

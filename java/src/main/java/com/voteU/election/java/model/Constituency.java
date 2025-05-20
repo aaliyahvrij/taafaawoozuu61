@@ -14,6 +14,7 @@ public class Constituency {
     private int votes;
     private Map<Integer, Party> parties;
     Map<String, Authority> authorities;
+    String electionId;
 
     public Constituency(int id, String name) {
         this.id = id;
@@ -21,6 +22,7 @@ public class Constituency {
         this.votes = 0;
         this.parties = new HashMap<>();
         this.authorities = new HashMap<>();
+        this.electionId = "";
     }
 
 
