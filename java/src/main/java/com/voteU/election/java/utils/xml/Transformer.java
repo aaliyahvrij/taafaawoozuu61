@@ -51,11 +51,11 @@ public interface Transformer<E> {
      *
      * @param constiMap a {@code Map} containing information about the election and the contest.
      */
-    void registerConstiOrAuthorityLevel_ConstiData(Map<String, String> constiMap, Map<Integer, String> affiNames, Map<Integer, Integer> affiVotes, Map<Integer, Map<Integer, Integer>> candiVotes);
+    void registerConstiLevelData(Map<String, String> constiMap, Map<String, String> affiNamesMap, Map<String, Integer> affiVotesMap, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
     void registerAuthority(Map<String, String> authorityMap);
 
-    void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitMap_affiliations);
+    void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap);
 
     /**
      * Called multiple times per file with information about a candidate.
