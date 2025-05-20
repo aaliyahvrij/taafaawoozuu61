@@ -11,6 +11,7 @@ import type { Party } from '@/interface/Party.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
 import type { Province } from '@/interface/Province.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
+import PartyChart from '@/components/Data/charts/PartyChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const constituencies = ref<Constituency[]>([])
@@ -261,6 +262,7 @@ function handleCandidateChange(candidate: Candidate): void {
   <div class="filtered-data">
     <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
       <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
+      <PartyChart :electionId="selectedElection" />
       <div
         class="party-row"
         v-for="party in displayedPartyVotes"
