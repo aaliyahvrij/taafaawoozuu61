@@ -255,7 +255,7 @@ public class ElectionProcessor<E> {
                                     try {
                                         Integer.parseInt(affiMapPair.getValue());
                                     } catch (NumberFormatException e) {
-                                        System.err.println("National level - Invalid VALID_VOTES value '" + affiMapPair.getValue() + "' in affiMap: " + affiMap);
+                                        System.err.println("National level - Invalid " + affiMapPair.getKey() + " value '" + affiMapPair.getValue() + "' in affiMap: " + affiMap);
                                         return;
                                     }
                                 }
@@ -288,7 +288,7 @@ public class ElectionProcessor<E> {
                                         try {
                                             Integer.parseInt(candiMapPair.getValue());
                                         } catch (NumberFormatException e) {
-                                            System.err.println("National level - Invalid CandiVotes value '" + candiMapPair.getValue() + "' in candiMap: " + candiMap);
+                                            System.err.println("National level - Invalid " + candiMapPair.getKey() + " value '" + candiMapPair.getValue() + "' in candiMap: " + candiMap);
                                             return;
                                         }
                                     }
@@ -574,7 +574,7 @@ public class ElectionProcessor<E> {
                 try {
                     Integer.parseInt(repUnitMapPair.getValue());
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid RepUnitVotes value '" + repUnitMapPair.getValue() + "' in repUnitMap: " + repUnitMap);
+                    System.err.println("Invalid " + repUnitMapPair.getKey() + " value '" + repUnitMapPair.getValue() + "' in repUnitMap: " + repUnitMap);
                     return;
                 }
             }
@@ -636,6 +636,16 @@ public class ElectionProcessor<E> {
             if (candiMapPair.getValue() == null) {
                 System.err.println("Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
                 return;
+            }
+            else {
+                if (candiMapPair.getKey().equals(CANDIDATE_ID)) {
+                    try {
+                        Integer.parseInt(candiMapPair.getValue());
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid " + candiMapPair.getKey() + " value '" + candiMapPair.getValue() + "' in candiMap: " + candiMap);
+                        return;
+                    }
+                }
             }
         }
         transformer.registerCandidate(candiMap);

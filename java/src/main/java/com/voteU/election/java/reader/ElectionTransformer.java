@@ -136,17 +136,14 @@ public class ElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerCandidate(Map<String, String> candiMap) {
-        String candIdStr = candiMap.get(ElectionProcessor.CANDIDATE_ID);
+        int candId = Integer.parseInt(candiMap.get(ElectionProcessor.CANDIDATE_ID));
         String firstName = candiMap.get(ElectionProcessor.FIRST_NAME);
         String lastName = candiMap.get(ElectionProcessor.LAST_NAME);
         String gender = candiMap.get(ElectionProcessor.GENDER);
         String localityName = candiMap.get(ElectionProcessor.LOCALITY_NAME);
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
-        String constIdStr = candiMap.get(ElectionProcessor.CONTEST_ID);
-        String affIdStr = candiMap.get(ElectionProcessor.AFFILIATION_ID);
-        int candId = Integer.parseInt(candIdStr);
-        int constId = Integer.parseInt(constIdStr);
-        int affId = Integer.parseInt(affIdStr);
+        int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONTEST_ID));
+        int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFILIATION_ID));
         Election election = elections.get(electionId);
         Map<Integer, Constituency> constituencies = election.getConstituencies();
         Constituency constituency = constituencies.get(constId);
