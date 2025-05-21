@@ -495,12 +495,6 @@ public class ElectionProcessor<E> {
             } else {
                 repUnitMap.put("RepUnitName", repUnitName);
             }
-            for (Map.Entry<String, String> repUnitMapPair : repUnitMap.entrySet()) {
-                if (repUnitMapPair.getValue() == null) {
-                    System.err.println("Missing " + repUnitMapPair.getKey() + " in repUnitMap: " + repUnitMap);
-                    return;
-                }
-            }
             parser.findAndAcceptEndTag(REP_UNIT_ID);
         }
         while (parser.getLocalName().equals(SELECTION)) {
@@ -550,6 +544,20 @@ public class ElectionProcessor<E> {
             if (selectionIndex == 3) break;
         }
         repUnitMap.put("RepUnitVotes", String.valueOf(repUnitVotes));
+        for (Map.Entry<String, String> repUnitMapPair : repUnitMap.entrySet()) {
+            if (repUnitMapPair.getValue() == null) {
+                System.err.println("Missing " + repUnitMapPair.getKey() + " in repUnitMap: " + repUnitMap);
+                return;
+            }
+            else if (Objects.equals(repUnitMapPair.getKey(), REP_UNIT_VOTES)) {
+                try {
+                    Integer.parseInt(repUnitMap.get("RepUnitVotes"));
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid RepUnitVotes value '" + repUnitMap.get("repUnitVotes") + "' in repUnitMap: " + repUnitMap);
+                    return;
+                }
+            }
+        }
         transformer.registerRepUnit(repUnitMap, repUnitAffiliationsMap);
     }
 

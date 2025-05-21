@@ -185,14 +185,7 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
-        String repUnitVotesStr = prcsRepUnitMap.get("RepUnitVotes");
-        int repUnitVotes;
-        try {
-            repUnitVotes = Integer.parseInt(repUnitVotesStr);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid RepUnitVotes value '" + repUnitVotesStr + "' in repUnitMap: " + prcsRepUnitMap);
-            return;
-        }
+        int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("RepUnitVotes"));
         // Create and register the new reporting unit
         RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliationsMap, repUnitVotes);
         repUnitMap.put(repUnitId, repUnit);
