@@ -95,15 +95,7 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<Integer, Affiliation> affiMap = authority.getAffiliations();
         Affiliation affiliation = affiMap.get(affId);
         if (affiliation == null) {
-            String affiVotesStr = prcsAuthorityMap.get(ElectionProcessor.VALID_VOTES);
-            if (affiVotesStr == null) {
-                return;
-            }
-            int affiVotes = 0;
-            try {
-                affiVotes = Integer.parseInt(affiVotesStr);
-            } catch (NumberFormatException ignored) {
-            }
+            int affiVotes = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.VALID_VOTES));
             affiliation = new Affiliation(affId, affiName, affiVotes);
             affiMap.put(affId, affiliation);
         }

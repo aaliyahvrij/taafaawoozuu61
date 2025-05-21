@@ -367,13 +367,12 @@ public class ElectionProcessor<E> {
             constiMap.put(CONTEST_ID, String.valueOf(constId));
             constiMap.put(CONTEST_NAME, constiName);
             while (parser.findBeginTag(TOTAL_VOTES)) {
-                System.out.println("found totalVotes");
                 int currentAffId = -1;
                 String currentAffiName;
                 while (parser.findBeginTag(SELECTION)) {
                     parser.nextTag();
                     if (parser.getLocalName().equals(AFFILIATION_ID)) {
-                        currentAffId = parser.getIntegerAttributeValue(null, ID, -1);
+                        currentAffId = parser.getIntegerAttributeValue(null, ID, 0);
                         if (parser.findBeginTag(AFFILIATION_NAME)) {
                             currentAffiName = parser.getElementText().trim();
                             affiNamesMap.put(AFFILIATION_NAME, currentAffiName);
@@ -398,11 +397,11 @@ public class ElectionProcessor<E> {
                     } else if (parser.getLocalName().equals(CANDIDATE)) {
                         int candId = -1;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
-                            candId = parser.getIntegerAttributeValue(null, ID, -1);
+                            candId = parser.getIntegerAttributeValue(null, ID, 0);
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
-                        String candiKey = currentAffId + "_" + candId;
-                        if (processedCandiAffiliations.contains(candiKey)) {
+                        String candiCompKey = currentAffId + "_" + candId;
+                        if (processedCandiAffiliations.contains(candiCompKey)) {
                             parser.findBeginTag(VALID_VOTES);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                             //continue;
@@ -413,7 +412,7 @@ public class ElectionProcessor<E> {
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             candiVotesMap.computeIfAbsent(currentAffId, k -> new HashMap<>()).put(candId, candiVotes);
-                            processedCandiAffiliations.add(candiKey);
+                            processedCandiAffiliations.add(candiCompKey);
                         }
                     }
                     parser.findAndAcceptEndTag(SELECTION);
@@ -450,19 +449,32 @@ public class ElectionProcessor<E> {
                             affiVotesMap.put(VALID_VOTES, String.valueOf(affiVotes));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
+                        for (Map.Entry<String, String> affiVotesMapPair : affiVotesMap.entrySet()) {
+                            if (affiVotesMapPair.getValue() == null) {
+                                System.err.println("Missing " + affiVotesMapPair.getKey() + " in affiVotesMap: " + affiVotesMap);
+                                return;
+                            }
+                            else if (affiVotesMapPair.getKey().equals(VALID_VOTES)) {
+                                try {
+                                    Integer.parseInt(affiVotesMapPair.getValue());
+                                } catch (NumberFormatException e) {
+                                    System.err.println("Invalid " + affiVotesMapPair.getKey() + " value '" + affiVotesMapPair.getValue() + "' in affiVotesMap: " + affiVotesMap);
+                                    return;
+                                }
+                            }
+                        }
                         transformer.registerAuthority(affiVotesMap);
                         break;
                     case CANDIDATE:
                         Map<String, String> candiVotesMap = new HashMap<>(constiMap);
                         int candId = 0;
                         if (parser.findBeginTag(CANDIDATE_ID)) {
-                            //System.out.println("processAuthority - Found a candidate identifier.");
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
-                        // Form a composite key from candId and affId
-                        String candiAffiKey = candId + "_" + affId;
-                        if (registeredCandiAffiliations.contains(candiAffiKey)) {
+                        // Form a composite key - a true unique identifier for the candidate
+                        String candiCompKey = candId + "_" + affId;
+                        if (registeredCandiAffiliations.contains(candiCompKey)) {
                             parser.findAndAcceptEndTag(CANDIDATE);
                             continue;
                         }
@@ -474,7 +486,7 @@ public class ElectionProcessor<E> {
                             candiVotesMap.put("CandiVotes", String.valueOf(candiVotes));
                             for (Map.Entry<String, String> candiVotesMapPair : candiVotesMap.entrySet()) {
                                 if (candiVotesMapPair.getValue() == null) {
-                                    System.err.println("Missing " + candiVotesMapPair.getKey() + " in authorityMap: " + candiVotesMap);
+                                    System.err.println("Missing " + candiVotesMapPair.getKey() + " in candiVotesMap: " + candiVotesMap);
                                     return;
                                 }
                                 else if (candiVotesMapPair.getKey().equals(CANDIDATE_ID) || candiVotesMapPair.getKey().equals("CandidateVotes")) {
@@ -486,7 +498,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            registeredCandiAffiliations.add(candiAffiKey);
+                            registeredCandiAffiliations.add(candiCompKey);
                             transformer.registerAuthority(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
