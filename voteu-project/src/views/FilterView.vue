@@ -16,6 +16,7 @@ import type { Province } from '@/interface/Province.ts'
 import type {PollingStation} from '@/interface/PollingStation.ts'
 
 import PartyChart from '@/components/Data/charts/PartyChart.vue'
+import BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -80,6 +81,17 @@ function clearSelectedElection(): void {
   selectedPollingStation.value = null
   pollingStations.value = []
 }
+
+function clearSelectedProvince(): void {
+  selectedProvince.value = null
+  constituencies.value = []
+  selectedConstituency.value = null
+  authorities.value = []
+  selectedAuthority.value = null
+  pollingStations.value = []
+  selectedPollingStation.value = null
+}
+
 
 function clearSelectedConstituency(): void {
   selectedConstituency.value = null
@@ -259,7 +271,7 @@ function handleCandidateChange(candidate: Candidate): void {
       </select>
       <div class="tag" v-if="selectedProvince">
         {{ selectedProvince.name }}
-        <svg @click="selectedProvince = null" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+        <svg @click="clearSelectedProvince()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
         </svg>
       </div>
@@ -337,7 +349,7 @@ function handleCandidateChange(candidate: Candidate): void {
   <div class="filtered-data">
     <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
       <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
-      <PartyChart :electionId="selectedElection" />
+      <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />w
       <div
         class="party-row"
         v-for="party in displayedPartyVotes"
