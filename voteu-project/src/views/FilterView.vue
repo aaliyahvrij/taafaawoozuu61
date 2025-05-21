@@ -16,7 +16,7 @@ import type { Province } from '@/interface/Province.ts'
 import type {PollingStation} from '@/interface/PollingStation.ts'
 
 import PartyChart from '@/components/Data/charts/PartyChart.vue'
-import BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
+//mport BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -234,11 +234,10 @@ function handleCandidateChange(candidate: Candidate): void {
 
 <template>
   <div class="filter-bar">
-    <label>Select election: </label>
     <div class="election-filter">
       <select v-model="selectedElection" @change="getProvincesByElection(selectedElection)">
 
-        <option value="" disabled>Select an election</option>
+        <option value=null disabled>Select an election</option>
         <option value="2021">2021</option>
         <option value="2023">2023</option>
       </select>
@@ -264,7 +263,7 @@ function handleCandidateChange(candidate: Candidate): void {
     <!-- Province Filter -->
     <div class="province-filter">
       <select v-if="provinces.length > 0" v-model="selectedProvince" @change="getConstituenciesByProvinceId(selectedElection, selectedProvince?.id.toString())">
-        <option value="" disabled>Select a province</option>
+        <option value=null disabled>Select a province</option>
         <option v-for="province in provinces" :key="province.id" :value="province">
           {{ province.name }}
         </option>
@@ -279,7 +278,7 @@ function handleCandidateChange(candidate: Candidate): void {
 
     <div class="constituency-filter">
       <select v-if="constituencies.length > 0" v-model="selectedConstituency" @change="getAuthoritiesByConstituency(selectedElection, selectedConstituency?.id.toString())">
-        <option value="" disabled>Select a constituency</option>
+        <option value=null disabled>Select a constituency</option>
         <option v-for="constituency in constituencies" :key="constituency.id" :value="constituency">
           {{ constituency.name }}
         </option>
@@ -295,7 +294,7 @@ function handleCandidateChange(candidate: Candidate): void {
 
     <div class="authority-filter">
       <select v-if="authorities.length > 0" v-model="selectedAuthority" @change="getPollingStationsByAuthorityId(selectedElection, selectedConstituency?.id.toString(), selectedAuthority?.id.toString())">
-        <option value="" disabled>Select a municipality</option>
+        <option value=null disabled>Select a municipality</option>
         <option v-for="authority in authorities" :key="authority.id" :value="authority">
           {{ authority.name }}
         </option>
@@ -319,9 +318,9 @@ function handleCandidateChange(candidate: Candidate): void {
 
     <div class="polling-station-filter">
       <select v-if="pollingStations.length > 0" v-model="selectedPollingStation">
-        <option value="" disabled>Select a polling station</option>
+        <option value=null disabled>Select a polling station</option>
         <option v-for="pollingStation in pollingStations" :key="pollingStation.id" :value="pollingStation">
-          {{ pollingStation.name }}
+          {{pollingStation.zipCode }} {{ pollingStation.name }}
         </option>
       </select>
       <div class="tag" v-if="selectedPollingStation">
@@ -349,7 +348,7 @@ function handleCandidateChange(candidate: Candidate): void {
   <div class="filtered-data">
     <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
       <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
-      <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />w
+      <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />
       <div
         class="party-row"
         v-for="party in displayedPartyVotes"
