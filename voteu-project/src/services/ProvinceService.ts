@@ -28,7 +28,7 @@ export class ProvinceService {
   static async getConstituenciesByProvinceId(electionId: string, provinceId: string): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/constituencies`,
+        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {

@@ -38,7 +38,8 @@ public class DutchElectionTransformer implements Transformer<Election> {
             Map.entry(14, 12),  // Zuid-Holland
             Map.entry(15, 12),
             Map.entry(13, 12),
-            Map.entry(12, 12)
+            Map.entry(12, 12),
+            Map.entry(20, 13) // Bonaire, Caribisch Nederland
     );
 
 
@@ -499,7 +500,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         // Maak een nieuwe lijst voor de provinces, zodat we zeker een verse kopie hebben
         List<Province> updatedProvinces = new ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 13; i++) {
             Province province = new Province(i, getProvinceName(i));
             updatedProvinces.add(province);
         }
@@ -543,6 +544,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             case 10 -> "Utrecht";
             case 11 -> "Zeeland";
             case 12 -> "Zuid-Holland";
+            case 13 -> "Caribisch-Nederland";
             default -> "Onbekend";
         };
     }

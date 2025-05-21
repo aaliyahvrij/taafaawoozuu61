@@ -1,5 +1,6 @@
 package com.voteU.election.java.controller;
 
+import com.voteU.election.java.CompactDTO.CompactAuthority;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Party;
@@ -37,6 +38,15 @@ public class AuthorityController {
     public Map<String, Authority> getAuthoritiesByConstituencyId(@PathVariable String year, @PathVariable Integer constituencyId) {
         try {
             return authorityService.getAuthoritiesByConstituencyId(year, constituencyId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch authorities", e);
+        }
+    }
+
+    @GetMapping("/compact")
+    public Map<String, Authority> getAuthoritiesByConstituencyIdCompact(@PathVariable String year, @PathVariable Integer constituencyId) {
+        try {
+            return authorityService.getAuthoritiesByConstituencyIdCompact(year, constituencyId);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch authorities", e);
         }

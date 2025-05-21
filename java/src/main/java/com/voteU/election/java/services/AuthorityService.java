@@ -1,8 +1,10 @@
 package com.voteU.election.java.services;
 
+import com.voteU.election.java.CompactDTO.CompactAuthority;
 import com.voteU.election.java.model.*;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +46,23 @@ public class AuthorityService {
         }
         return constituency.getAuthorities();
     }
+
+    public Map<String, Authority> getAuthoritiesByConstituencyIdCompact(String electionId, int constituencyId) {
+        Election election = electionService.getElection(electionId);
+        Constituency constituency = election.getConstituencies().get(constituencyId);
+
+        Map<String, Authority> authorities = constituency.getAuthorities();
+        Map<String, Authority> compactAuthorities = new HashMap<>();
+
+        for (Authority authority : authorities.values()) {
+            compactAuthorities.put(authority.getId(), new Authority(authority.getId(), authority.getName()));
+        }
+
+        return compactAuthorities;
+    }
+
+
+
 
     /**
      * Retrieves the authority with the specified ID from the given election ID and constituency ID.

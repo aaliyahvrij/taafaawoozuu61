@@ -1,5 +1,6 @@
 package com.voteU.election.java.controller;
 
+import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
@@ -32,6 +33,11 @@ public class ProvinceController {
     @GetMapping("/{provinceId}/constituencies")
     public List<Constituency> getConstituenciesByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
         return provinceService.getConstituenciesByProvinceId(year, provinceId);
+    }
+
+    @GetMapping("/{provinceId}/constituencies/compact")
+    public List<CompactConstituency> getCompactConstituenciesByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
+        return provinceService.getCompactConstituenciesByProvinceId(year, provinceId);
     }
 
     @GetMapping("/{provinceId}/parties")

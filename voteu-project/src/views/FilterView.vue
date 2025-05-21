@@ -11,6 +11,7 @@ import type { Party } from '@/interface/Party.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
 import type { Province } from '@/interface/Province.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
+import PartyChart from '@/components/Data/charts/PartyChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const constituencies = ref<Constituency[]>([])
@@ -151,6 +152,7 @@ async function getAuthoritiesByConstituency(electionId: string | null, constitue
     if (electionId && constituencyId) {
       console.log('Fetching authorities for election:', electionId, 'constituency:', constituencyId)
       const response = await AuthorityService.getAuthoritiesByConstituencyId(electionId, constituencyId)
+      console.log(response)
       authorities.value = Array.isArray(response) ? response : Object.values(response || {})
     }
   } catch (error) {
@@ -261,6 +263,7 @@ function handleCandidateChange(candidate: Candidate): void {
   <div class="filtered-data">
     <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
       <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
+      <PartyChart :electionId="selectedElection" />
       <div
         class="party-row"
         v-for="party in displayedPartyVotes"
@@ -294,8 +297,8 @@ function handleCandidateChange(candidate: Candidate): void {
       <h1 v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h1>
       <h1 v-if="selectedCandidate.firstName && selectedCandidate.lastName">
         {{ selectedCandidate.firstName }} {{ selectedCandidate.lastName }}
-        <h4>Gender: {{ selectedCandidate.gender }}</h4>
-        <h4>Locality: {{ selectedCandidate.locality }}</h4>
+        Gender: {{ selectedCandidate.gender }}
+        Locality: {{ selectedCandidate.localityName }}
       </h1>
       <h1>Votes: {{ selectedCandidate.votes.toLocaleString() }}</h1>
       <button @click="selectedCandidate = null">Back</button>

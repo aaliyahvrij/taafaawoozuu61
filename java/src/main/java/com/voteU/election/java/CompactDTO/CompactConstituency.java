@@ -12,7 +12,7 @@ public class CompactConstituency {
     String electionId;
     int provinceId;
 
-    public CompactConstituency(int id, String name, int votes, String electionId, int provinceId){
+    public CompactConstituency(int id, String name){
         this.id = id;
         this.name = name;
         this.votes = votes;

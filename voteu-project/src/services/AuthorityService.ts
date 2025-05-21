@@ -5,7 +5,7 @@ export class AuthorityService {
   static async getAuthoritiesByConstituencyId(electionId: string, constituencyId: string): Promise<Record<string, Authority> | null> {
     try {
       const response = await fetch
-      (`http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities`, {
+      (`http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities/compact`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

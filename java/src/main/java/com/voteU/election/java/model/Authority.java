@@ -73,6 +73,13 @@ public class Authority {
         this.votes = 0;
     }
 
+    public Authority(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
+
     /**
      * Returns a string representation of the Authority object. The string includes
      * the ID, name, and the string representation of its associated authority parties.
