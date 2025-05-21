@@ -227,34 +227,45 @@ public class ElectionProcessor<E> {
                     parser.nextTag();
                     switch (parser.getLocalName()) {
                         case AFFILIATION_ID:
-                            Map<String, String> nationalLevel_affiMap = new HashMap<>(constiMap);
+                            Map<String, String> affiMap = new HashMap<>(constiMap);
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
-                            // Avoid processing the same affiliation multiple times
                             if (registeredAffIds.contains(affId)) {
                                 parser.findAndAcceptEndTag(AFFILIATION_ID);
                                 continue;
                             }
-                            nationalLevel_affiMap.put(AFFILIATION_ID, String.valueOf(affId));
+                            affiMap.put(AFFILIATION_ID, String.valueOf(affId));
                             if (parser.findBeginTag(AFFILIATION_NAME)) {
                                 String affiName = parser.getElementText();
                                 System.out.println("nationMap - Found an affiliation name: " + affiName);
-                                nationalLevel_affiMap.put(AFFILIATION_NAME, affiName);
+                                affiMap.put(AFFILIATION_NAME, affiName);
                                 parser.findAndAcceptEndTag(AFFILIATION_NAME);
                             }
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int affiVotes = Integer.parseInt(parser.getElementText());
-                                nationalLevel_affiMap.put(VALID_VOTES, String.valueOf(affiVotes));
+                                affiMap.put(VALID_VOTES, String.valueOf(affiVotes));
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             registeredAffIds.add(affId);
-                            transformer.registerNationalLevelData(nationalLevel_affiMap);
+                            for (Map.Entry<String, String> affiMapPair : affiMap.entrySet()) {
+                                if (affiMapPair.getValue() == null) {
+                                    System.err.println("National level - Missing " + affiMapPair.getKey() + " in affiMap: " + affiMap);
+                                    return;
+                                } else if (affiMapPair.getKey().equals(AFFILIATION_ID) || affiMapPair.getKey().equals(VALID_VOTES)) {
+                                    try {
+                                        Integer.parseInt(affiMapPair.getValue());
+                                    } catch (NumberFormatException e) {
+                                        System.err.println("National level - Invalid VALID_VOTES value '" + affiMapPair.getValue() + "' in affiMap: " + affiMap);
+                                        return;
+                                    }
+                                }
+                            }
+                            transformer.registerNationalLevelData(affiMap);
                             break;
                         case CANDIDATE:
                             String candiShortCode = null;
                             if (parser.findBeginTag(CANDIDATE_ID)) {
                                 candiShortCode = parser.getAttributeValue(null, SHORT_CODE);
-                                // If this candidate has already been registered, skip him/her
                                 if (registeredCandiShortCodes.contains(candiShortCode)) {
                                     parser.findAndAcceptEndTag(CANDIDATE_ID);
                                     continue;
@@ -264,12 +275,25 @@ public class ElectionProcessor<E> {
                             parser.findAndAcceptEndTag(CANDIDATE);
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 int candiVotes = Integer.parseInt(parser.getElementText());
-                                Map<String, String> nationalLevel_candiMap = new HashMap<>(constiMap);
-                                nationalLevel_candiMap.put(SHORT_CODE, candiShortCode);
+                                Map<String, String> candiMap = new HashMap<>(constiMap);
+                                candiMap.put(SHORT_CODE, candiShortCode);
                                 registeredCandiShortCodes.add(candiShortCode);
-                                nationalLevel_candiMap.put("CandiVotes", String.valueOf(candiVotes));
-                                nationalLevel_candiMap.put(AFFILIATION_ID, String.valueOf(affId));
-                                transformer.registerNationalLevelData(nationalLevel_candiMap);
+                                candiMap.put(AFFILIATION_ID, String.valueOf(affId));
+                                candiMap.put("CandiVotes", String.valueOf(candiVotes));
+                                for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
+                                    if (candiMapPair.getValue() == null) {
+                                        System.err.println("National level - Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
+                                        return;
+                                    } else if (candiMapPair.getKey().equals(AFFILIATION_ID) || candiMapPair.getKey().equals(VALID_VOTES)) {
+                                        try {
+                                            Integer.parseInt(candiMapPair.getValue());
+                                        } catch (NumberFormatException e) {
+                                            System.err.println("National level - Invalid CandiVotes value '" + candiMapPair.getValue() + "' in candiMap: " + candiMap);
+                                            return;
+                                        }
+                                    }
+                                }
+                                transformer.registerNationalLevelData(candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
                                 LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candiShortCode, affId));
@@ -410,7 +434,6 @@ public class ElectionProcessor<E> {
                     case AFFILIATION_ID:
                         Map<String, String> affiVotesMap = new HashMap<>(constiMap);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        // Avoid processing the same affiliation multiple times
                         if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
                             parser.findAndAcceptEndTag(AFFILIATION_ID);
                             continue;
@@ -439,7 +462,6 @@ public class ElectionProcessor<E> {
                         }
                         // Form a composite key from candId and affId
                         String candiAffiKey = candId + "_" + affId;
-                        // If this candidate has already been registered, skip it
                         if (registeredCandiAffiliations.contains(candiAffiKey)) {
                             parser.findAndAcceptEndTag(CANDIDATE);
                             continue;
@@ -548,12 +570,11 @@ public class ElectionProcessor<E> {
             if (repUnitMapPair.getValue() == null) {
                 System.err.println("Missing " + repUnitMapPair.getKey() + " in repUnitMap: " + repUnitMap);
                 return;
-            }
-            else if (Objects.equals(repUnitMapPair.getKey(), REP_UNIT_VOTES)) {
+            } else if (Objects.equals(repUnitMapPair.getKey(), REP_UNIT_VOTES)) {
                 try {
-                    Integer.parseInt(repUnitMap.get("RepUnitVotes"));
+                    Integer.parseInt(repUnitMapPair.getValue());
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid RepUnitVotes value '" + repUnitMap.get("repUnitVotes") + "' in repUnitMap: " + repUnitMap);
+                    System.err.println("Invalid RepUnitVotes value '" + repUnitMapPair.getValue() + "' in repUnitMap: " + repUnitMap);
                     return;
                 }
             }
