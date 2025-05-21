@@ -51,7 +51,6 @@ public class ElectionTransformer implements Transformer<Election> {
         Affiliation affiliation;
         int affId = Integer.parseInt(nationMap.get(ElectionProcessor.AFFILIATION_ID));
         affiliation = affiMap.get(affId);
-        System.out.println("affiliation object: " + affiliation);
 
         // Handle affiliation-specific data
         if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
@@ -65,7 +64,6 @@ public class ElectionTransformer implements Transformer<Election> {
         else {
             String candiShortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
             int candiVotes = Integer.parseInt(nationMap.get("CandiVotes"));
-            // Check if the candidate has already been registered, and added to their respective affiliation
             if (!affiliation.hasCandiShortCode(candiShortCode)) {
                 Candidate candidate = new Candidate(candiShortCode, candiVotes);
                 affiliation.addCandidate(candidate);
@@ -110,14 +108,11 @@ public class ElectionTransformer implements Transformer<Election> {
             affiMap.put(affId, affiliation);
         }
         if (authorityMap.containsKey("CandiVotes")) {
-            try {
-                int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
-                int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
-                if (!affiliation.hasCandId(candId)) {
-                    Candidate candidate = new Candidate(candId, candiVotes);
-                    affiliation.addCandidate(candidate);
-                }
-            } catch (NumberFormatException | NullPointerException ignored) {
+            int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
+            int candiVotes = Integer.parseInt(prcsAuthorityMap.get("CandiVotes"));
+            if (!affiliation.hasCandId(candId)) {
+                Candidate candidate = new Candidate(candId, candiVotes);
+                affiliation.addCandidate(candidate);
             }
         }
     }

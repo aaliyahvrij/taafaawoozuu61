@@ -477,6 +477,14 @@ public class ElectionProcessor<E> {
                                     System.err.println("Missing " + candiVotesMapPair.getKey() + " in authorityMap: " + candiVotesMap);
                                     return;
                                 }
+                                else if (candiVotesMapPair.getKey().equals(CANDIDATE_ID) || candiVotesMapPair.getKey().equals("CandidateVotes")) {
+                                    try {
+                                        Integer.parseInt(candiVotesMapPair.getValue());
+                                    } catch (NumberFormatException e) {
+                                        System.err.println("Invalid " + candiVotesMapPair.getKey() + " value '" + candiVotesMapPair.getValue() + "' in candiVotesMap: " + candiVotesMap);
+                                        return;
+                                    }
+                                }
                             }
                             registeredCandiAffiliations.add(candiAffiKey);
                             transformer.registerAuthority(candiVotesMap);
