@@ -27,6 +27,7 @@ public class PollingStation {
         this.authorityId = "";
     }
 
+
     @Override
     public String toString() {
         return "PollingStation{" +
