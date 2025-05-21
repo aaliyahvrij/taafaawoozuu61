@@ -55,7 +55,7 @@ public class ProvinceService {
 
         for (var constituency : province.getConstituencies()) {
             for (var authority : constituency.getAuthorities().values()) {
-                for (var party : authority.getAuthorityParties().values()) {
+                for (var party : authority.getParties().values()) {
                     totalVotesPerParty.compute(party.getId(), (id, existingParty) -> {
                         if (existingParty == null) {
                             Party newParty = new Party(party.getId(), party.getName());

@@ -41,7 +41,7 @@ public class ConstituencyService {
         }
         Map<Integer, CompactConstituency> compactConstituencyMap = new HashMap<>();
         for (Constituency constituency : constituencies.values()) {
-            CompactConstituency compactConstituency = new CompactConstituency(constituency.getId(), constituency.getName(), constituency.getVotes(), constituency.getParties().size());
+            CompactConstituency compactConstituency = new CompactConstituency(constituency.getId(), constituency.getName(), constituency.getVotes(), constituency.getElectionId(), constituency.getProvinceId());
             compactConstituencyMap.put(compactConstituency.getId(), compactConstituency);
         }
         return compactConstituencyMap;

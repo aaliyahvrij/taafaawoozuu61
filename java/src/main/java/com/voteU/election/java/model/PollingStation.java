@@ -14,8 +14,9 @@ public class PollingStation {
     private String name;
     private String zipCode;
     private int votes;
-    private Map<Integer, Party> parties;
+    private String electionId;
     private String authorityId;
+    private Map<Integer, Party> parties;
 
     public PollingStation(String id, String name, String zipCode) {
         this.id = id;

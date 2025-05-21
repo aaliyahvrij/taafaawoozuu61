@@ -38,7 +38,7 @@ public class Authority {
      * This map provides a way to manage and access parties linked to a specific authority and their
      * associated data like votes, percentage, and candidates.
      */
-    Map<Integer, Party> authorityParties;
+    Map<Integer, Party> parties;
     /**
      * Represents a collection of polling stations associated with an authority.
      * Each polling station is identified by its unique ID (as a String) and mapped
@@ -66,7 +66,7 @@ public class Authority {
     public Authority(String id) {
         this.id = id;
         this.name = "";
-        this.authorityParties = new HashMap<>();
+        this.parties = new HashMap<>();
         this.pollingStations = new HashMap<>();
         this.constituencyId = 0;
         this.electionId = "";
@@ -82,6 +82,6 @@ public class Authority {
      */
     @Override
     public String toString() {
-        return "id " + this.id + " name " + this.name + " authorityData " + this.authorityParties.toString();
+        return "id " + this.id + " name " + this.name + " authorityData " + this.parties.toString();
     }
 }

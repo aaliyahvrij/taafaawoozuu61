@@ -98,10 +98,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
             System.out.println("[registerConstituency] ✅ Found existing constituencies map with size: " + constituencyMap.size());
         }
 
-        // Step 4: Get or create the constituency
-        boolean isNew = !constituencyMap.containsKey(contestId);
+
         Constituency constituency = constituencyMap.computeIfAbsent(contestId, id -> new Constituency(id, contestName));
         constituency.setElectionId(electionId);
+        // Step 4: Get or create the constituency
+        int provinceId = DISTRICT_TO_PROVINCE_ID.get(contestId);
+        constituency.setProvinceId(provinceId);
 
         // Step 5: Create new party map for this constituency
         Map<Integer, Party> parties = new HashMap<>();
@@ -275,7 +277,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         });
 
         // Register party votes under authority
-        Map<Integer, Party> partyMap = authorityInMap.getAuthorityParties();
+        Map<Integer, Party> partyMap = authorityInMap.getParties();
         Party party = partyMap.get(partyId);
 
         if (isTotalVotes && party == null) {
@@ -357,6 +359,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         PollingStation pollingStation = pollingStationMap.computeIfAbsent(pollingStationId, id -> {
             PollingStation ps = new PollingStation(pollingStationId,pollingStationName, zipcode);
             ps.setAuthorityId(authorityId);
+            ps.setElectionId(electionId);
             return ps;
         });
 
@@ -433,7 +436,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
                     // Update or insert candidate in each Authority-level Party
                     Map<String, Authority> authorities = constituency.getAuthorities();
                     for (Authority authority : authorities.values()) {
-                        Map<Integer, Party> partyMap = authority.getAuthorityParties();
+                        Map<Integer, Party> partyMap = authority.getParties();
                         populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, partyMap, electionId);
 
                         Map<String, PollingStation> pollingStations = authority.getPollingStations();

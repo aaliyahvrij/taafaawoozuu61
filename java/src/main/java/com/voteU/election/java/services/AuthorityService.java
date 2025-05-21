@@ -75,7 +75,7 @@ public class AuthorityService {
         if (authority == null) {
             return null;
         }
-        return authority.getAuthorityParties();
+        return authority.getParties();
     }
 
     /**
