@@ -49,12 +49,12 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<Integer, Affiliation> affiListMap = election.getAffiliations();
         System.out.println("The amount of affiliations in this election: " + affiListMap.size());
         Affiliation affiliation;
-        int affId = Integer.parseInt(nationMap.get(ElectionProcessor.AFFILIATION_ID));
+        int affId = Integer.parseInt(nationMap.get(ElectionProcessor.AFFI_ID));
         affiliation = affiListMap.get(affId);
 
         // Handle affiliation-specific data
         if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
-            String affiName = nationMap.get(ElectionProcessor.AFFILIATION_NAME);
+            String affiName = nationMap.get(ElectionProcessor.AFFI_NAME);
             int affiVotes = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
             affiliation = new Affiliation(affId, affiName, affiVotes);
             affiListMap.put(affId, affiliation);
@@ -81,8 +81,8 @@ public class ElectionTransformer implements Transformer<Election> {
         int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONTEST_ID));
         String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHORITY_ID);
         String authoName = prcsAuthoMap.get("AuthorityName");
-        int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFILIATION_ID));
-        String affiName = prcsAuthoMap.get(ElectionProcessor.AFFILIATION_NAME);
+        int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
+        String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListDataMap.get(electionId);
         Map<String, Authority> authoMap = election.getAuthorities();
@@ -100,7 +100,7 @@ public class ElectionTransformer implements Transformer<Election> {
             affiListMap.put(affId, affiliation);
         }
         if (authoMap.containsKey("CandiVotes")) {
-            int candId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CANDIDATE_ID));
+            int candId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CANDI_ID));
             int candiVotes = Integer.parseInt(prcsAuthoMap.get("CandiVotes"));
             if (!affiliation.hasCandId(candId)) {
                 Candidate candidate = new Candidate(candId, candiVotes);
@@ -123,14 +123,14 @@ public class ElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerCandidate(Map<String, String> candiMap) {
-        int candId = Integer.parseInt(candiMap.get(ElectionProcessor.CANDIDATE_ID));
+        int candId = Integer.parseInt(candiMap.get(ElectionProcessor.CANDI_ID));
         String firstName = candiMap.get(ElectionProcessor.FIRST_NAME);
         String lastName = candiMap.get(ElectionProcessor.LAST_NAME);
         String gender = candiMap.get(ElectionProcessor.GENDER);
         String localityName = candiMap.get(ElectionProcessor.LOCALITY_NAME);
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
         int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONTEST_ID));
-        int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFILIATION_ID));
+        int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFI_ID));
         Election election = electionListDataMap.get(electionId);
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();
         Constituency constituency = electionLevel_constiListMap.get(constId);

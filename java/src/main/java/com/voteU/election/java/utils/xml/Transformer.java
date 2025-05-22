@@ -60,7 +60,7 @@ public interface Transformer<E> {
     /**
      * Called multiple times per file with information about a candidate.
      * <ul>
-     *     <li>{@link ElectionProcessor#CANDIDATE_ID}</li>
+     *     <li>{@link ElectionProcessor#CANDI_ID}</li>
      *     <li>{@link ElectionProcessor#INITIALS}</li>
      *     <li>{@link ElectionProcessor#FIRST_NAME}</li>
      *     <li>{@link ElectionProcessor#LAST_NAME_PREFIX}</li>
