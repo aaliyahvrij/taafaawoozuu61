@@ -296,7 +296,7 @@ public class ElectionProcessor<E> {
                                 transformer.registerNationalLevelData(candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
-                                LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candiShortCode, affId));
+                                LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
                             }
                             break;
                         default:
@@ -354,18 +354,18 @@ public class ElectionProcessor<E> {
         Set<String> processedCandiAffiliations = new HashSet<>();
         Map<Integer, Map<Integer, Integer>> candiVotesMap = new HashMap<>();
         if (parser.findBeginTag(CONTEST)) {
-            int constId = 0;
-            String constiName = null;
+            int constId;
+            String constiName;
             if (parser.findBeginTag(CONTEST_ID)) {
                 constId = parser.getIntegerAttributeValue(null, ID, 0);
+                constiMap.put(CONTEST_ID, String.valueOf(constId));
                 if (parser.findBeginTag(CONTEST_NAME)) {
                     constiName = parser.getElementText().trim();
+                    constiMap.put(CONTEST_NAME, constiName);
                     parser.findAndAcceptEndTag(CONTEST_NAME);
                 }
                 parser.findAndAcceptEndTag(CONTEST_ID);
             }
-            constiMap.put(CONTEST_ID, String.valueOf(constId));
-            constiMap.put(CONTEST_NAME, constiName);
             while (parser.findBeginTag(TOTAL_VOTES)) {
                 int currentAffId = -1;
                 String currentAffiName;
@@ -453,8 +453,7 @@ public class ElectionProcessor<E> {
                             if (affiVotesMapPair.getValue() == null) {
                                 System.err.println("Missing " + affiVotesMapPair.getKey() + " in affiVotesMap: " + affiVotesMap);
                                 return;
-                            }
-                            else if (affiVotesMapPair.getKey().equals(VALID_VOTES)) {
+                            } else if (affiVotesMapPair.getKey().equals(VALID_VOTES)) {
                                 try {
                                     Integer.parseInt(affiVotesMapPair.getValue());
                                 } catch (NumberFormatException e) {
@@ -488,8 +487,7 @@ public class ElectionProcessor<E> {
                                 if (candiVotesMapPair.getValue() == null) {
                                     System.err.println("Missing " + candiVotesMapPair.getKey() + " in candiVotesMap: " + candiVotesMap);
                                     return;
-                                }
-                                else if (candiVotesMapPair.getKey().equals(CANDIDATE_ID) || candiVotesMapPair.getKey().equals("CandidateVotes")) {
+                                } else if (candiVotesMapPair.getKey().equals(CANDIDATE_ID) || candiVotesMapPair.getKey().equals("CandidateVotes")) {
                                     try {
                                         Integer.parseInt(candiVotesMapPair.getValue());
                                     } catch (NumberFormatException e) {
@@ -502,7 +500,7 @@ public class ElectionProcessor<E> {
                             transformer.registerAuthority(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
-                            LOG.warning("Missing %s tag, unable to register votes for candidate %s of affiliation %d.".formatted(VALID_VOTES, candId, affId));
+                            LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candId, affId));
                         }
                         break;
                     default:
@@ -556,7 +554,7 @@ public class ElectionProcessor<E> {
                         repUnitVotes = repUnitVotes + affiVotes;
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
-                        LOG.warning("Missing %s tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(VALID_VOTES, affId, repUnitName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(affId, repUnitName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVotes);
                     repUnitAffiliationsMap.put(affId, affiliation);
@@ -575,7 +573,7 @@ public class ElectionProcessor<E> {
                         repUnitAffiliationsMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
-                        LOG.warning("Missing %s tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(VALID_VOTES, candId, affId, repUnitName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(candId, affId, repUnitName));
                     }
                     break;
                 default:
@@ -656,8 +654,7 @@ public class ElectionProcessor<E> {
             if (candiMapPair.getValue() == null) {
                 System.err.println("Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
                 return;
-            }
-            else {
+            } else {
                 if (candiMapPair.getKey().equals(CANDIDATE_ID)) {
                     try {
                         Integer.parseInt(candiMapPair.getValue());
