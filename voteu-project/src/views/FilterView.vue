@@ -303,6 +303,12 @@ function handlePartyChange(party: Party): void {
 function handleCandidateChange(candidate: Candidate): void {
   selectedCandidate.value = candidate
 }
+function sortCandidateNames(candidates: Candidate[]): Candidate[] {
+  return PartyStyleService.sortCandidateNames(candidates)
+}
+function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
+  return PartyStyleService.sortCandidatesByVotes(candidates)
+}
 </script>
 
 <template>
@@ -477,42 +483,111 @@ function handleCandidateChange(candidate: Candidate): void {
         :style="{ backgroundColor: PartyStyleService.generateColorFromName(party.name) }"
       >
         <div class="party-name">{{ party.name }}</div>
-        <div class="party-votes">{{ party.votes.toLocaleString() }}</div>
+        <div class="party-votes">{{ party.votes.toLocaleString() }} votes</div>
         <div class="party-percentage">{{party.percentage.toFixed(2)}} %</div>
       </div>
     </div>
 
     <div v-if="selectedParty && selectedElection && !selectedCandidate">
-      <h1>{{ selectedParty.name }}</h1>
-      <button @click="selectedParty = null">Back</button>
+      <h1 class="party-title">{{ selectedParty.name }}</h1>
+      <h2 class="candidate-list-title">Candidates</h2>
+      <div class="buttons">
+        <button class="back-button" @click="selectedParty = null">Back</button>
+        <button class="back-button" @click="selectedParty.candidates =  sortCandidateNames(selectedParty.candidates)">sort by name</button>
+        <button class="back-button" @click="selectedParty.candidates =  sortCandidateVotes(selectedParty.candidates)">sort by votes</button>
+      </div>
       <div
         class="candidate"
         v-for="candidate in selectedParty.candidates"
         :key="candidate.id"
         @click="handleCandidateChange(candidate)"
       >
-        <p v-if="candidate.shortCode">
-          {{ candidate.shortCode }} : {{ candidate.votes.toLocaleString() }}
-        </p>
         <p v-if="candidate.firstName && candidate.lastName">
           {{ candidate.firstName }} {{ candidate.lastName }} :
-          {{ candidate.votes.toLocaleString() }}
+          {{ candidate.votes.toLocaleString() }} votes
         </p>
       </div>
     </div>
 
-    <div v-if="selectedCandidate && selectedElection">
-      <h1 v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h1>
-      <h1 v-if="selectedCandidate.firstName && selectedCandidate.lastName">
-        {{ selectedCandidate.firstName }} {{ selectedCandidate.lastName }} Gender:
-        {{ selectedCandidate.gender }} Locality: {{ selectedCandidate.localityName }}
-      </h1>
-      <h1>Votes: {{ selectedCandidate.votes.toLocaleString() }}</h1>
-      <button @click="selectedCandidate = null">Back</button>
+    <div v-if="selectedCandidate && selectedElection" class="candidate-details-card">
+      <h2 class="candidate-title" v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h2>
+      <h3 class="candidate-name" v-if="selectedCandidate.firstName && selectedCandidate.lastName">
+        {{ selectedCandidate.firstName }} {{ selectedCandidate.lastName }}
+      </h3>
+      <p class="candidate-info">
+        <strong>Gender:</strong> {{ selectedCandidate.gender }}
+        <svg  v-if="selectedCandidate.gender==='male'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#2854C5"><path d="M800-800v240h-80v-103L561-505q19 28 29 59.5t10 65.5q0 92-64 156t-156 64q-92 0-156-64t-64-156q0-92 64-156t156-64q33 0 65 9.5t59 29.5l159-159H560v-80h240ZM380-520q-58 0-99 41t-41 99q0 58 41 99t99 41q58 0 99-41t41-99q0-58-41-99t-99-41Z"/></svg>
+        <svg v-if="selectedCandidate.gender==='female'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#B87E9F"><path d="M800-800v240h-80v-103L561-505q19 28 29 59.5t10 65.5q0 92-64 156t-156 64q-92 0-156-64t-64-156q0-92 64-156t156-64q33 0 65 9.5t59 29.5l159-159H560v-80h240ZM380-520q-58 0-99 41t-41 99q0 58 41 99t99 41q58 0 99-41t41-99q0-58-41-99t-99-41Z"/></svg>
+        <br />
+        <strong>Locality:</strong> {{ selectedCandidate.localityName }}
+      </p>
+      <p class="candidate-votes">
+        Votes: <strong>{{ selectedCandidate.votes.toLocaleString() }}</strong>
+      </p>
+      <button class="back-button" @click="selectedCandidate = null">Back</button>
     </div>
   </div>
 </template>
 <style scoped>
+.candidate-list-title {
+  margin-left: 1rem;
+}
+.buttons button {
+  margin: 0.5rem;
+}
+.party-title {
+  font-size: 2.5rem;
+  text-align: center;
+
+}
+.candidate-details-card {
+  background: #f9fafb;
+
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin: 24px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.candidate-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.candidate-name {
+  font-size: 1.75rem;
+  color: #34495e;
+  margin-bottom: 16px;
+}
+
+.candidate-info {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.candidate-votes {
+  font-size: 1.25rem;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  background-color: #002970;
+  border: none;
+  color: white;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 
 
 .apply-button {
@@ -527,7 +602,7 @@ function handleCandidateChange(candidate: Candidate): void {
   cursor: pointer;
   font-size: 1rem;
 }
-.apply-button:hover {
+.apply-button:hover, .back-button:hover {
   background-color: #0053ba;
   color: white;
 }
@@ -540,10 +615,7 @@ function handleCandidateChange(candidate: Candidate): void {
   border-radius: 0.375rem;
 }
 
-.candidate {
-  border: 1px solid black;
-  height: 40px;
-}
+
 
 .candidate:hover {
   background-color: #efefef;
@@ -566,7 +638,7 @@ function handleCandidateChange(candidate: Candidate): void {
   color: #333;
 }
 
-.party-row {
+.party-row, .candidate {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
