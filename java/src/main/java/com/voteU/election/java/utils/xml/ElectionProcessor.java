@@ -76,7 +76,7 @@ public class ElectionProcessor<E> {
      when calling the methods of the transformer.
      */
     public static final String MANAGING_AUTHORITY = "ManagingAuthority";
-    public static final String AUTHORITY_ID = "AuthorityIdentifier";
+    public static final String AUTHO_ID = "AuthorityIdentifier";
 
     /*
      The tag names on the reporting unit level within the XML files, which are also used as keys in the maps
@@ -174,12 +174,12 @@ public class ElectionProcessor<E> {
 
     private void processElection(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(MANAGING_AUTHORITY)) {
-            if (parser.findBeginTag(AUTHORITY_ID)) {
+            if (parser.findBeginTag(AUTHO_ID)) {
                 String authoId = parser.getAttributeValue(null, "Id");
-                electionMap.put(AUTHORITY_ID, authoId);
+                electionMap.put(AUTHO_ID, authoId);
                 String authoName = parser.getElementText();
-                electionMap.put("AuthorityName", authoName);
-                parser.findAndAcceptEndTag(AUTHORITY_ID);
+                electionMap.put("AuthoName", authoName);
+                parser.findAndAcceptEndTag(AUTHO_ID);
             }
             parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
         }

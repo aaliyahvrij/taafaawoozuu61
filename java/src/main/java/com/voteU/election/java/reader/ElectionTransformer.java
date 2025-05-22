@@ -34,6 +34,7 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = electionMap.get(ElectionProcessor.ELECTION_ID);
         String electionName = electionMap.get(ElectionProcessor.ELECTION_NAME);
         String electionDate = electionMap.get(ElectionProcessor.ELECTION_DATE);
+
         // Get or create an Election object
         Election electionDataMap = electionListDataMap.get(electionId);
         if (electionDataMap == null) {
@@ -79,8 +80,8 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerAuthority(Map<String, String> prcsAuthoMap) {
         int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONTEST_ID));
-        String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHORITY_ID);
-        String authoName = prcsAuthoMap.get("AuthorityName");
+        String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHO_ID);
+        String authoName = prcsAuthoMap.get("AuthoName");
         int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
         String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
@@ -113,12 +114,12 @@ public class ElectionTransformer implements Transformer<Election> {
     public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap) {
         String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListDataMap.get(electionId);
-        Map<String, RepUnit> repUnitListMap = election.getRepUnits();
+        Map<String, RepUnit> electionLevel_repUnitListMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
         int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("RepUnitVotes"));
         RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliationsMap, repUnitVotes);
-        repUnitListMap.put(repUnitId, repUnit);
+        electionLevel_repUnitListMap.put(repUnitId, repUnit);
     }
 
     @Override
