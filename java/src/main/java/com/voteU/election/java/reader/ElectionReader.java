@@ -33,9 +33,9 @@ public class ElectionReader {
             String path = "/EML_bestanden_" + electionId;
             try {
                 processor.processResults(electionId, PathUtils.getResourcePath(path));
-                log.info("Processed Election " + electionId);
+                log.info("Processed Election {}", electionId);
             } catch (Exception e) {
-                System.out.println("Could not process Election " + electionId);
+                log.error("Could not process Election {}", electionId, e);
                 e.printStackTrace();
             }
         }
@@ -49,7 +49,7 @@ public class ElectionReader {
             processor.processResults(electionId, PathUtils.getResourcePath(path));
             log.info("Processed Election {}", electionId);
         } catch (Exception e) {
-            log.error("Could not process {}", electionId, e);
+            log.error("Could not process Election {}", electionId, e);
         }
         System.out.println("All files are processed.\n");
         return transformer.getElection(electionId);
