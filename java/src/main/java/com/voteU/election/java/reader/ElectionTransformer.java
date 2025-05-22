@@ -73,7 +73,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstiLevelData(Map<String, String> prcsConstiMap, Map<String, String> affiNamesMap, Map<String, Integer> affiVotesMap, Map<Integer, Map<Integer, Integer>> candiVotesMap) {
+    public void registerConstiLevelData(Map<String, String> prcsConstiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap) {
         // had to remove the code here due to confusion - will fix this later
     }
 

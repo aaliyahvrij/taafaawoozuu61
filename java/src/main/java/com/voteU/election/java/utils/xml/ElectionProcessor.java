@@ -348,8 +348,8 @@ public class ElectionProcessor<E> {
 
     private void processConstiLevelData(Map<String, String> receivedConstiMap, XMLParser parser) throws XMLStreamException {
         Map<String, String> constiMap = new HashMap<>(receivedConstiMap);
-        Map<String, String> affiNamesMap = new HashMap<>();
-        Map<String, Integer> affiVotesMap = new HashMap<>();
+        List<String> affiNamesList = new ArrayList<>();
+        List<Integer> affiVotesList = new ArrayList<>();
         Set<Integer> processedAffiliations = new HashSet<>();
         Set<String> processedCandiAffiliations = new HashSet<>();
         Map<Integer, Map<Integer, Integer>> candiVotesMap = new HashMap<>();
@@ -375,7 +375,7 @@ public class ElectionProcessor<E> {
                         currentAffId = parser.getIntegerAttributeValue(null, ID, 0);
                         if (parser.findBeginTag(AFFI_NAME)) {
                             currentAffiName = parser.getElementText().trim();
-                            affiNamesMap.put(AFFI_NAME, currentAffiName);
+                            affiNamesList.add(currentAffiName);
                             parser.findAndAcceptEndTag(AFFI_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFI_ID);
@@ -383,7 +383,7 @@ public class ElectionProcessor<E> {
                             int affiVotes;
                             if (parser.findBeginTag(VALID_VOTES)) {
                                 affiVotes = Integer.parseInt(parser.getElementText().trim());
-                                affiVotesMap.put(VALID_VOTES, affiVotes);
+                                affiVotesList.add(affiVotes);
                                 candiVotesMap.putIfAbsent(currentAffId, new HashMap<>());
                                 processedAffiliations.add(currentAffId);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
@@ -419,7 +419,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
-            transformer.registerConstiLevelData(constiMap, affiNamesMap, affiVotesMap, candiVotesMap);
+            transformer.registerConstiLevelData(constiMap, affiNamesList, affiVotesList, candiVotesMap);
         }
     }
 

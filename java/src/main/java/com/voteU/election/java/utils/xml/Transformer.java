@@ -51,7 +51,7 @@ public interface Transformer<E> {
      *
      * @param constiMap a {@code Map} containing information about the election and constituency.
      */
-    void registerConstiLevelData(Map<String, String> constiMap, Map<String, String> affiNamesMap, Map<String, Integer> affiVotesMap, Map<Integer, Map<Integer, Integer>> candiVotesMap);
+    void registerConstiLevelData(Map<String, String> constiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
     void registerAuthority(Map<String, String> authoMap);
 
