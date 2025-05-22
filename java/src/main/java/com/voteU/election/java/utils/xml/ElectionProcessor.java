@@ -514,7 +514,7 @@ public class ElectionProcessor<E> {
     private void processRepUnit(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         Map<String, String> repUnitMap = new HashMap<>(constiMap);
         String repUnitName = null;
-        Map<Integer, Affiliation> repUnitAffiliationsMap = new HashMap<>();
+        Map<Integer, Affiliation> repUnitLevel_affiListMap = new HashMap<>();
         int repUnitVotes = 0;
         Affiliation affiliation;
         int affId = 0;
@@ -557,7 +557,7 @@ public class ElectionProcessor<E> {
                         LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(affId, repUnitName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVotes);
-                    repUnitAffiliationsMap.put(affId, affiliation);
+                    repUnitLevel_affiListMap.put(affId, affiliation);
                     break;
                 case CANDIDATE:
                     int candId = 0;
@@ -570,7 +570,7 @@ public class ElectionProcessor<E> {
                         int candiVotes = Integer.parseInt(parser.getElementText());
                         Candidate candidate = new Candidate(candId, candiVotes);
                         candidate.setAffId(affId);
-                        repUnitAffiliationsMap.get(affId).addCandidate(candidate);
+                        repUnitLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(candId, affId, repUnitName));
@@ -597,7 +597,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        transformer.registerRepUnit(repUnitMap, repUnitAffiliationsMap);
+        transformer.registerRepUnit(repUnitMap, repUnitLevel_affiListMap);
     }
 
     private void processAffiliation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {

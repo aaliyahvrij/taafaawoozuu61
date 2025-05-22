@@ -55,7 +55,7 @@ public interface Transformer<E> {
 
     void registerAuthority(Map<String, String> authoMap);
 
-    void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap);
+    void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitLevel_affiListMap);
 
     /**
      * Called multiple times per file with information about a candidate.

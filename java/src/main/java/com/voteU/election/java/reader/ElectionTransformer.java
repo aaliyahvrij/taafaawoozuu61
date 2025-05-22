@@ -111,14 +111,14 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap) {
+    public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitLevel_affiListMap) {
         String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListDataMap.get(electionId);
         Map<String, RepUnit> electionLevel_repUnitListMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
         int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("RepUnitVotes"));
-        RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliationsMap, repUnitVotes);
+        RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitLevel_affiListMap, repUnitVotes);
         electionLevel_repUnitListMap.put(repUnitId, repUnit);
     }
 
@@ -129,9 +129,9 @@ public class ElectionTransformer implements Transformer<Election> {
         String lastName = candiMap.get(ElectionProcessor.LAST_NAME);
         String gender = candiMap.get(ElectionProcessor.GENDER);
         String localityName = candiMap.get(ElectionProcessor.LOCALITY_NAME);
-        String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
         int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONSTI_ID));
         int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFI_ID));
+        String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListDataMap.get(electionId);
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();
         Constituency constituency = electionLevel_constiListMap.get(constId);
@@ -158,8 +158,8 @@ public class ElectionTransformer implements Transformer<Election> {
 
     }
 
-    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Affiliation> affiliations) {
-        Affiliation affiliation = affiliations.get(affId);
+    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Affiliation> affiListMap) {
+        Affiliation affiliation = affiListMap.get(affId);
         if (affiliation != null) {
             List<Candidate> candidates = affiliation.getCandidates();
             Candidate existingCandidate = null;
