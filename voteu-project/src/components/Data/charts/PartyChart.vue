@@ -36,8 +36,13 @@ watchEffect(() => {
           data,
           backgroundColor: backgroundColors
         }]
+      },
+      options: {
+        responsive: true,
+        radius: '70%'
       }
     }
+
 
     if (chartInstance) {
       chartInstance.destroy()
