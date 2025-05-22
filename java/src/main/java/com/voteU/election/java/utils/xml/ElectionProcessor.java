@@ -471,7 +471,7 @@ public class ElectionProcessor<E> {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
                             parser.findAndAcceptEndTag(CANDIDATE_ID);
                         }
-                        // Form a composite key - a true unique identifier for the candidate
+                        // Form a composite key - a true unique identifier of the candidate
                         String candiCompKey = candId + "_" + affId;
                         if (registeredCandiAffiliations.contains(candiCompKey)) {
                             parser.findAndAcceptEndTag(CANDIDATE);

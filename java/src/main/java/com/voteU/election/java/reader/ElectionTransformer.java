@@ -13,7 +13,7 @@ import java.util.*;
 @Getter
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
-    private final Map<String, Election> elections = new HashMap<>();
+    private final Map<String, Election> pendingElectionListDataMap = new HashMap<>();
     Map<String, Affiliation> affiMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),    // Flevoland
@@ -35,17 +35,17 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionName = electionMap.get(ElectionProcessor.ELECTION_NAME);
         String electionDate = electionMap.get(ElectionProcessor.ELECTION_DATE);
         // Get or create an Election object
-        Election election = elections.get(electionId);
-        if (election == null) {
-            election = new Election(electionId, electionName, electionDate);
-            elections.put(electionId, election);
+        Election pendingElectionDataMap = pendingElectionListDataMap.get(electionId);
+        if (pendingElectionDataMap == null) {
+            pendingElectionDataMap = new Election(electionId, electionName, electionDate);
+            pendingElectionListDataMap.put(electionId, pendingElectionDataMap);
         }
     }
 
     @Override
     public void registerNationalLevelData(Map<String, String> nationMap) {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = elections.get(electionId);
+        Election election = pendingElectionListDataMap.get(electionId);
         Map<Integer, Affiliation> affiMap = election.getAffiliations();
         System.out.println("Amount of affiliations in this election: " + affiMap.size());
         Affiliation affiliation;
@@ -84,7 +84,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int affId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.AFFILIATION_ID));
         String affiName = prcsAuthorityMap.get(ElectionProcessor.AFFILIATION_NAME);
         String electionId = prcsAuthorityMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = elections.get(electionId);
+        Election election = pendingElectionListDataMap.get(electionId);
         Map<String, Authority> authorityMap = election.getAuthorities();
         Authority authority = authorityMap.computeIfAbsent(authorityId, id -> {
             Authority a = new Authority(id);
@@ -112,7 +112,7 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap) {
         String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = elections.get(electionId);
+        Election election = pendingElectionListDataMap.get(electionId);
         Map<String, RepUnit> repUnitMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
@@ -131,7 +131,7 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
         int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONTEST_ID));
         int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFILIATION_ID));
-        Election election = elections.get(electionId);
+        Election election = pendingElectionListDataMap.get(electionId);
         Map<Integer, Constituency> constituencies = election.getConstituencies();
         Constituency constituency = constituencies.get(constId);
         if (constituency != null) {
@@ -187,6 +187,6 @@ public class ElectionTransformer implements Transformer<Election> {
      * Get election data for a specific year.
      */
     public Election getElection(String year) {
-        return elections.get(year);
+        return pendingElectionListDataMap.get(year);
     }
 }
