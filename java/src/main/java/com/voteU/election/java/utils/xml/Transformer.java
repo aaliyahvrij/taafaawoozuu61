@@ -45,15 +45,15 @@ public interface Transformer<E> {
      * Called once per file with information about the contest. The {@code contestData} can hold the
      * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
      * <ul>
-     *     <li>{@link ElectionProcessor#CONTEST_ID}</li>
-     *     <li>{@link ElectionProcessor#CONTEST_NAME}</li>
+     *     <li>{@link ElectionProcessor#CONSTI_ID}</li>
+     *     <li>{@link ElectionProcessor#CONSTI_NAME}</li>
      * </ul>
      *
      * @param constiMap a {@code Map} containing information about the election and the contest.
      */
     void registerConstiLevelData(Map<String, String> constiMap, Map<String, String> affiNamesMap, Map<String, Integer> affiVotesMap, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
-    void registerAuthority(Map<String, String> authorityMap);
+    void registerAuthority(Map<String, String> authoMap);
 
     void registerRepUnit(Map<String, String> repUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap);
 

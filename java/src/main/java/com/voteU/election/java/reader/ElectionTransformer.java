@@ -79,7 +79,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerAuthority(Map<String, String> prcsAuthoMap) {
-        int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONTEST_ID));
+        int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONSTI_ID));
         String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHO_ID);
         String authoName = prcsAuthoMap.get("AuthoName");
         int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
@@ -130,7 +130,7 @@ public class ElectionTransformer implements Transformer<Election> {
         String gender = candiMap.get(ElectionProcessor.GENDER);
         String localityName = candiMap.get(ElectionProcessor.LOCALITY_NAME);
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
-        int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONTEST_ID));
+        int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONSTI_ID));
         int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFI_ID));
         Election election = electionListDataMap.get(electionId);
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();

@@ -67,9 +67,9 @@ public class ElectionProcessor<E> {
      The tag names on the contest level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String CONTEST = "Contest";
-    public static final String CONTEST_ID = "ContestIdentifier";
-    public static final String CONTEST_NAME = "ContestName";
+    public static final String CONSTITUENCY = "Contest";
+    public static final String CONSTI_ID = "ContestIdentifier";
+    public static final String CONSTI_NAME = "ContestName";
 
     /*
      The tag names on the authority level within the XML files, which are also used as keys in the maps
@@ -310,17 +310,17 @@ public class ElectionProcessor<E> {
     }
 
     private void processConstiOrAuthoLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
-        if (parser.findBeginTag(CONTEST)) {
+        if (parser.findBeginTag(CONSTITUENCY)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
-            if (parser.findBeginTag(CONTEST_ID)) {
+            if (parser.findBeginTag(CONSTI_ID)) {
                 int constId = parser.getIntegerAttributeValue(null, ID, 0);
-                constiMap.put(CONTEST_ID, String.valueOf(constId));
-                if (parser.findBeginTag(CONTEST_NAME)) {
+                constiMap.put(CONSTI_ID, String.valueOf(constId));
+                if (parser.findBeginTag(CONSTI_NAME)) {
                     String constiName = parser.getElementText();
-                    constiMap.put(CONTEST_NAME, constiName);
-                    parser.findAndAcceptEndTag(CONTEST_NAME);
+                    constiMap.put(CONSTI_NAME, constiName);
+                    parser.findAndAcceptEndTag(CONSTI_NAME);
                 }
-                parser.findAndAcceptEndTag(CONTEST_ID);
+                parser.findAndAcceptEndTag(CONSTI_ID);
             }
             if (parser.findBeginTag(TOTAL_VOTES)) {
                 switch (fileType) {
@@ -337,8 +337,8 @@ public class ElectionProcessor<E> {
                 processRepUnit(constiMap, parser);
                 parser.findAndAcceptEndTag(REP_UNIT_VOTES);
             }
-            parser.findAndAcceptEndTag(CONTEST);
-            if (!parser.findAndAcceptEndTag(CONTEST)) {
+            parser.findAndAcceptEndTag(CONSTITUENCY);
+            if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
                 LOG.warning("Cannot find </Contest> tag.");
             }
         } else {
@@ -353,18 +353,18 @@ public class ElectionProcessor<E> {
         Set<Integer> processedAffiliations = new HashSet<>();
         Set<String> processedCandiAffiliations = new HashSet<>();
         Map<Integer, Map<Integer, Integer>> candiVotesMap = new HashMap<>();
-        if (parser.findBeginTag(CONTEST)) {
+        if (parser.findBeginTag(CONSTITUENCY)) {
             int constId;
             String constiName;
-            if (parser.findBeginTag(CONTEST_ID)) {
+            if (parser.findBeginTag(CONSTI_ID)) {
                 constId = parser.getIntegerAttributeValue(null, ID, 0);
-                constiMap.put(CONTEST_ID, String.valueOf(constId));
-                if (parser.findBeginTag(CONTEST_NAME)) {
+                constiMap.put(CONSTI_ID, String.valueOf(constId));
+                if (parser.findBeginTag(CONSTI_NAME)) {
                     constiName = parser.getElementText().trim();
-                    constiMap.put(CONTEST_NAME, constiName);
-                    parser.findAndAcceptEndTag(CONTEST_NAME);
+                    constiMap.put(CONSTI_NAME, constiName);
+                    parser.findAndAcceptEndTag(CONSTI_NAME);
                 }
-                parser.findAndAcceptEndTag(CONTEST_ID);
+                parser.findAndAcceptEndTag(CONSTI_ID);
             }
             while (parser.findBeginTag(TOTAL_VOTES)) {
                 int currentAffId = -1;
@@ -669,19 +669,19 @@ public class ElectionProcessor<E> {
     }
 
     private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(CONTEST)) {
+        if (parser.findBeginTag(CONSTITUENCY)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
             int constId;
             String constiName;
-            if (parser.findBeginTag(CONTEST_ID)) {
+            if (parser.findBeginTag(CONSTI_ID)) {
                 constId = parser.getIntegerAttributeValue(null, ID, 0);
-                constiMap.put(CONTEST_ID, String.valueOf(constId));
-                if (parser.findBeginTag(CONTEST_NAME)) {
+                constiMap.put(CONSTI_ID, String.valueOf(constId));
+                if (parser.findBeginTag(CONSTI_NAME)) {
                     constiName = parser.getElementText();
-                    constiMap.put(CONTEST_NAME, constiName);
-                    parser.findAndAcceptEndTag(CONTEST_NAME);
+                    constiMap.put(CONSTI_NAME, constiName);
+                    parser.findAndAcceptEndTag(CONSTI_NAME);
                 }
-                parser.findAndAcceptEndTag(CONTEST_ID);
+                parser.findAndAcceptEndTag(CONSTI_ID);
             }
             transformer.registerCandiLevel_ConstiData(constiMap);
             if (parser.findBeginTag(AFFILIATION)) {
@@ -690,8 +690,8 @@ public class ElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFILIATION);
                 }
             }
-            parser.findAndAcceptEndTag(CONTEST);
-            if (!parser.findAndAcceptEndTag(CONTEST)) {
+            parser.findAndAcceptEndTag(CONSTITUENCY);
+            if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
                 LOG.warning("Cannot find </Contest> tag.");
             }
         } else {
