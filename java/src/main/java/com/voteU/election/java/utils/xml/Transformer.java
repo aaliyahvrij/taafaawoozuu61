@@ -16,7 +16,7 @@ import java.util.*;
  */
 public interface Transformer<E> {
     /**
-     * Called once per file with the information about the election. The parameter {@code electionData} (should) hold
+     * Called once per file with the information about the election. The parameter {@code electionMap} (should) hold
      * the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#ELECTION_ID}</li>
@@ -30,26 +30,26 @@ public interface Transformer<E> {
     void registerElection(Map<String, String> electionMap);
 
     /**
-     * Called multiple times per file with information about a candidate. The {@code nationData} can hold the
-     * same information as {@code candiData} in {@link #registerCandidate(Map)}, and the following information:
+     * Called multiple times per file with information about a candidate. The {@code nationMap} can hold the
+     * same information as {@code candiMap} in {@link #registerCandidate(Map)}, and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#VALID_VOTES}</li>
      * </ul>
      *
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
-     *                  candidate and the number of votes.
+     *                  candidate and vote count.
      */
     void registerNationalLevelData(Map<String, String> nationMap);
 
     /**
-     * Called once per file with information about the contest. The {@code contestData} can hold the
-     * same information as {@code electionData} in {@link #registerElection(Map)}, and the following information:
+     * Called once per file with information about the constituency. The {@code constiMap} can hold the
+     * same information as {@code electionMap} in {@link #registerElection(Map)}, and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#CONSTI_ID}</li>
      *     <li>{@link ElectionProcessor#CONSTI_NAME}</li>
      * </ul>
      *
-     * @param constiMap a {@code Map} containing information about the election and the contest.
+     * @param constiMap a {@code Map} containing information about the election and constituency.
      */
     void registerConstiLevelData(Map<String, String> constiMap, Map<String, String> affiNamesMap, Map<String, Integer> affiVotesMap, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
