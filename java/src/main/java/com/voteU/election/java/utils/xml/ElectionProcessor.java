@@ -156,13 +156,13 @@ public class ElectionProcessor<E> {
             System.out.println(folderName + constiFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElection(electionMap, parser);
-            processConstiOrAuthorityLevelData(electionMap, parser, "constituency");
+            processConstiOrAuthoLevelData(electionMap, parser, "constituency");
         }
-        for (Path authorityFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
-            System.out.println(folderName + authorityFile.toString());
-            XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
+        for (Path authoFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
+            System.out.println(folderName + authoFile.toString());
+            XMLParser parser = new XMLParser(new FileInputStream(authoFile.toString()));
             processElection(electionMap, parser);
-            processConstiOrAuthorityLevelData(electionMap, parser, "authority");
+            processConstiOrAuthoLevelData(electionMap, parser, "authority");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(candiFile));
@@ -175,10 +175,10 @@ public class ElectionProcessor<E> {
     private void processElection(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(MANAGING_AUTHORITY)) {
             if (parser.findBeginTag(AUTHORITY_ID)) {
-                String authorityId = parser.getAttributeValue(null, "Id");
-                electionMap.put(AUTHORITY_ID, authorityId);
-                String authorityName = parser.getElementText();
-                electionMap.put("AuthorityName", authorityName);
+                String authoId = parser.getAttributeValue(null, "Id");
+                electionMap.put(AUTHORITY_ID, authoId);
+                String authoName = parser.getElementText();
+                electionMap.put("AuthorityName", authoName);
                 parser.findAndAcceptEndTag(AUTHORITY_ID);
             }
             parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
@@ -309,7 +309,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processConstiOrAuthorityLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
+    private void processConstiOrAuthoLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONTEST)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONTEST_ID)) {
