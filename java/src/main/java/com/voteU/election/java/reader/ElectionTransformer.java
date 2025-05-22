@@ -14,7 +14,7 @@ import java.util.*;
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> pendingElectionListDataMap = new HashMap<>();
-    Map<String, Affiliation> affiMap = new HashMap<>();
+    //Map<Integer, Affiliation> affiListMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),    // Flevoland
             Map.entry(2, 3),    // Friesland
@@ -46,18 +46,18 @@ public class ElectionTransformer implements Transformer<Election> {
     public void registerNationalLevelData(Map<String, String> nationMap) {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = pendingElectionListDataMap.get(electionId);
-        Map<Integer, Affiliation> affiMap = election.getAffiliations();
-        System.out.println("Amount of affiliations in this election: " + affiMap.size());
+        Map<Integer, Affiliation> affiListMap = election.getAffiliations();
+        System.out.println("The amount of affiliations in this election: " + affiListMap.size());
         Affiliation affiliation;
         int affId = Integer.parseInt(nationMap.get(ElectionProcessor.AFFILIATION_ID));
-        affiliation = affiMap.get(affId);
+        affiliation = affiListMap.get(affId);
 
         // Handle affiliation-specific data
         if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
             String affiName = nationMap.get(ElectionProcessor.AFFILIATION_NAME);
             int affiVotes = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
             affiliation = new Affiliation(affId, affiName, affiVotes);
-            affiMap.put(affId, affiliation);
+            affiListMap.put(affId, affiliation);
         }
 
         // Handle candidate-specific data
@@ -92,12 +92,12 @@ public class ElectionTransformer implements Transformer<Election> {
             a.setConstId(constId);
             return a;
         });
-        Map<Integer, Affiliation> affiMap = authority.getAffiliations();
-        Affiliation affiliation = affiMap.get(affId);
+        Map<Integer, Affiliation> affiListMap = authority.getAffiliations();
+        Affiliation affiliation = affiListMap.get(affId);
         if (affiliation == null) {
             int affiVotes = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.VALID_VOTES));
             affiliation = new Affiliation(affId, affiName, affiVotes);
-            affiMap.put(affId, affiliation);
+            affiListMap.put(affId, affiliation);
         }
         if (authorityMap.containsKey("CandiVotes")) {
             int candId = Integer.parseInt(prcsAuthorityMap.get(ElectionProcessor.CANDIDATE_ID));
@@ -113,12 +113,12 @@ public class ElectionTransformer implements Transformer<Election> {
     public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitAffiliationsMap) {
         String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
         Election election = pendingElectionListDataMap.get(electionId);
-        Map<String, RepUnit> repUnitMap = election.getRepUnits();
+        Map<String, RepUnit> repUnitListMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("RepUnitName");
         int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("RepUnitVotes"));
         RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitAffiliationsMap, repUnitVotes);
-        repUnitMap.put(repUnitId, repUnit);
+        repUnitListMap.put(repUnitId, repUnit);
     }
 
     @Override
@@ -142,10 +142,10 @@ public class ElectionTransformer implements Transformer<Election> {
             // Update or insert a candidate in each authority-level affiliation
             Map<String, Authority> authorities = constituency.getAuthorities();
             for (Authority authority : authorities.values()) {
-                Map<Integer, Affiliation> affiMap = authority.getAffiliations();
-                populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiMap);
-                Map<String, RepUnit> repUnits = authority.getRepUnits();
-                for (RepUnit repUnit : repUnits.values()) {
+                Map<Integer, Affiliation> affiListMap = authority.getAffiliations();
+                populateCandidate(candId, firstName, lastName, gender, localityName, affId, affiListMap);
+                Map<String, RepUnit> repUnitListMap = authority.getRepUnits();
+                for (RepUnit repUnit : repUnitListMap.values()) {
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
                 }
             }
