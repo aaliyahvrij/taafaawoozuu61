@@ -393,7 +393,6 @@ public class ElectionProcessor<E> {
                             parser.findAndAcceptEndTag(VALID_VOTES);
                             continue;
                         }
-
                     } else if (parser.getLocalName().equals(CANDIDATE)) {
                         int candId = -1;
                         if (parser.findBeginTag(CANDI_ID)) {
