@@ -15,8 +15,12 @@ import type { Candidate } from '@/interface/Candidate.ts'
 import type { Province } from '@/interface/Province.ts'
 import type { PollingStation } from '@/interface/PollingStation.ts'
 
-import PartyChart from '@/components/Data/charts/PartyChart.vue'
-//mport BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
+import YearFilter from '@/components/filters/YearFilter.vue'
+import ProvinceFilter from '@/components/filters/ProvinceFilter.vue'
+import ConstituencyFilter from '@/components/filters/ConstituencyFilter.vue'
+import AuthorityFilter from '@/components/filters/AuthorityFilter.vue'
+import PollingStationFilter from '@/components/filters/PollingStationFilter.vue'
+import VoteListOverview from '@/components/filters/VoteListOverview.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -303,292 +307,84 @@ function handlePartyChange(party: Party): void {
 function handleCandidateChange(candidate: Candidate): void {
   selectedCandidate.value = candidate
 }
-function sortCandidateNames(candidates: Candidate[]): Candidate[] {
-  return PartyStyleService.sortCandidateNames(candidates)
+function sortByName() {
+  if (selectedParty.value)
+    selectedParty.value.candidates = PartyStyleService.sortCandidateNames(selectedParty.value.candidates)
 }
-function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
-  return PartyStyleService.sortCandidatesByVotes(candidates)
+function sortByVotes() {
+  if (selectedParty.value)
+    selectedParty.value.candidates = PartyStyleService.sortCandidatesByVotes(selectedParty.value.candidates)
 }
 </script>
 
 <template>
   <div class="filter-bar">
-    <div class="election-filter">
-      <select
-        class="dropdown"
-        v-model="selectedElection"
-        @change="getProvincesByElection(selectedElection)"
-      >
-        <option value="null" disabled>Select an election</option>
-        <option value="2021">2021</option>
-        <option value="2023">2023</option>
-      </select>
-      <div class="tag" v-if="selectedElection">
-        {{ selectedElection }}
-        <svg
-          @click="clearSelectedElection()"
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="#FFFFFF"
-        >
-          <path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          />
-        </svg>
-      </div>
+      <div class="filter-bar">
+        <!-- Election Filter -->
+        <YearFilter
+          v-model="selectedElection"
+          @changed="getProvincesByElection"
+          @cleared="clearSelectedElection"
+        />
     </div>
-
     <!-- Province Filter -->
-    <div class="province-filter">
-      <select
-        class="dropdown"
-        v-if="provinces.length > 0"
-        v-model="selectedProvince"
-        @change="getConstituenciesByProvinceId(selectedElection, selectedProvince?.id.toString())"
-      >
-        <option value="null" disabled>Select a province</option>
-        <option v-for="province in provinces" :key="province.id" :value="province">
-          {{ province.name }}
-        </option>
-      </select>
-      <div class="tag" v-if="selectedProvince">
-        {{ selectedProvince.name }}
-        <svg
-          @click="clearSelectedProvince()"
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="#FFFFFF"
-        >
-          <path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          />
-        </svg>
-      </div>
-    </div>
+    <ProvinceFilter
+      v-model="selectedProvince"
+      :options="provinces"
+      @changed="province => getConstituenciesByProvinceId(selectedElection, province?.id.toString())"
+      @cleared="clearSelectedProvince"
+    />
+    <!-- Constituency Filter -->
+    <ConstituencyFilter
+      v-model="selectedConstituency"
+      :options="constituencies"
+      @changed="constituency => getAuthoritiesByConstituency(selectedElection, constituency?.id.toString())"
+      @cleared="clearSelectedConstituency"
+    />
+    <!-- Authority Filter -->
+    <AuthorityFilter
+      v-model="selectedAuthority"
+      :options="authorities"
+      @changed="authority => getPollingStationsByAuthorityId(
+    selectedElection,
+    selectedConstituency?.id.toString(),
+    authority?.id.toString()
+  )"
+      @cleared="clearSelectedAuthority"
+    />
 
-    <div class="constituency-filter">
-      <select
-        class="dropdown"
-        v-if="constituencies.length > 0"
-        v-model="selectedConstituency"
-        @change="
-          getAuthoritiesByConstituency(selectedElection, selectedConstituency?.id.toString())
-        "
-      >
-        <option value="null" disabled>Select a constituency</option>
-        <option v-for="constituency in constituencies" :key="constituency.id" :value="constituency">
-          {{ constituency.name }}
-        </option>
-      </select>
-      <div class="tag" v-if="selectedConstituency">
-        {{ selectedConstituency.name }}
-        <svg
-          @click="clearSelectedConstituency()"
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="#FFFFFF"
-        >
-          <path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          />
-        </svg>
-      </div>
-    </div>
-
-    <div class="authority-filter">
-      <select
-        class="dropdown"
-        v-if="authorities.length > 0"
-        v-model="selectedAuthority"
-        @change="
-          getPollingStationsByAuthorityId(
-            selectedElection,
-            selectedConstituency?.id.toString(),
-            selectedAuthority?.id.toString(),
-          )
-        "
-      >
-        <option value="null" disabled>Select a municipality</option>
-        <option v-for="authority in authorities" :key="authority.id" :value="authority">
-          {{ authority.name }}
-        </option>
-      </select>
-      <div class="tag" v-if="selectedAuthority">
-        {{ selectedAuthority.name }}
-        <svg
-          @click="clearSelectedAuthority()"
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="#FFFFFF"
-        >
-          <path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          />
-        </svg>
-      </div>
-    </div>
-
-    <div class="polling-station-filter">
-      <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
-        <option value="null" disabled>Select a polling station</option>
-        <option
-          v-for="pollingStation in pollingStations"
-          :key="pollingStation.id"
-          :value="pollingStation"
-        >
-         {{ pollingStation.name }}
-        </option>
-      </select>
-      <div class="tag" v-if="selectedPollingStation">
-        {{ selectedPollingStation.name }}
-        <svg
-          @click="clearSelectedPollingStation()"
-          xmlns="http://www.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="#FFFFFF"
-        >
-          <path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          />
-        </svg>
-      </div>
-    </div>
+    <PollingStationFilter
+      v-model="selectedPollingStation"
+      :options="pollingStations"
+      @cleared="clearSelectedPollingStation"
+    />
 
     <div>
       <button v-if="selectedElection" class="apply-button" @click="handleApply()">Apply filters</button>
     </div>
   </div>
 
-  <div class="filtered-data">
-    <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
-      <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
-
-
-        <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />
-      <div
-        class="party-row"
-        v-for="party in displayedPartyVotes"
-        :key="party.id"
-        @click="handlePartyChange(party)"
-        :style="{ backgroundColor: PartyStyleService.generateColorFromName(party.name) }"
-      >
-        <div class="party-name">{{ party.name }}</div>
-        <div class="party-votes">{{ party.votes.toLocaleString() }} votes</div>
-        <div class="party-percentage">{{party.percentage.toFixed(2)}} %</div>
-      </div>
-    </div>
-
-    <div v-if="selectedParty && selectedElection && !selectedCandidate">
-      <h1 class="party-title">{{ selectedParty.name }}</h1>
-      <h2 class="candidate-list-title">Candidates</h2>
-      <div class="buttons">
-        <button class="back-button" @click="selectedParty = null">Back</button>
-        <button class="back-button" @click="selectedParty.candidates =  sortCandidateNames(selectedParty.candidates)">sort by name</button>
-        <button class="back-button" @click="selectedParty.candidates =  sortCandidateVotes(selectedParty.candidates)">sort by votes</button>
-      </div>
-      <div
-        class="candidate"
-        v-for="candidate in selectedParty.candidates"
-        :key="candidate.id"
-        @click="handleCandidateChange(candidate)"
-      >
-        <p v-if="candidate.firstName && candidate.lastName">
-          {{ candidate.firstName }} {{ candidate.lastName }} :
-          {{ candidate.votes.toLocaleString() }} votes
-        </p>
-      </div>
-    </div>
-
-    <div v-if="selectedCandidate && selectedElection" class="candidate-details-card">
-      <h2 class="candidate-title" v-if="selectedCandidate.shortCode">{{ selectedCandidate.shortCode }}</h2>
-      <h3 class="candidate-name" v-if="selectedCandidate.firstName && selectedCandidate.lastName">
-        {{ selectedCandidate.firstName }} {{ selectedCandidate.lastName }}
-      </h3>
-      <p class="candidate-info">
-        <strong>Gender:</strong> {{ selectedCandidate.gender }}
-        <svg  v-if="selectedCandidate.gender==='male'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#2854C5"><path d="M800-800v240h-80v-103L561-505q19 28 29 59.5t10 65.5q0 92-64 156t-156 64q-92 0-156-64t-64-156q0-92 64-156t156-64q33 0 65 9.5t59 29.5l159-159H560v-80h240ZM380-520q-58 0-99 41t-41 99q0 58 41 99t99 41q58 0 99-41t41-99q0-58-41-99t-99-41Z"/></svg>
-        <svg v-if="selectedCandidate.gender==='female'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#B87E9F"><path d="M800-800v240h-80v-103L561-505q19 28 29 59.5t10 65.5q0 92-64 156t-156 64q-92 0-156-64t-64-156q0-92 64-156t156-64q33 0 65 9.5t59 29.5l159-159H560v-80h240ZM380-520q-58 0-99 41t-41 99q0 58 41 99t99 41q58 0 99-41t41-99q0-58-41-99t-99-41Z"/></svg>
-        <br />
-        <strong>Locality:</strong> {{ selectedCandidate.localityName }}
-      </p>
-      <p class="candidate-votes">
-        Votes: <strong>{{ selectedCandidate.votes.toLocaleString() }}</strong>
-      </p>
-      <button class="back-button" @click="selectedCandidate = null">Back</button>
-    </div>
-  </div>
+  <VoteListOverview
+    :selectedElection="selectedElection"
+    :displayedPartyVotes="displayedPartyVotes"
+    :partyVotes="partyVotes"
+    :selectedParty="selectedParty"
+    :selectedCandidate="selectedCandidate"
+    :currentVoteLevel="currentVoteLevel"
+    @select-party="handlePartyChange"
+    @deselect-party="selectedParty = null"
+    @select-candidate="handleCandidateChange"
+    @deselect-candidate="selectedCandidate = null"
+    @sort-candidates-by-name="sortByName"
+    @sort-candidates-by-votes="sortByVotes"
+  />
 </template>
+
 <style scoped>
-.candidate-list-title {
-  margin-left: 1rem;
-}
+
 .buttons button {
   margin: 0.5rem;
 }
-.party-title {
-  font-size: 2.5rem;
-  text-align: center;
-
-}
-.candidate-details-card {
-  background: #f9fafb;
-
-  border-radius: 12px;
-  padding: 24px 32px;
-  margin: 24px auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  text-align: center;
-}
-
-.candidate-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 8px;
-}
-
-.candidate-name {
-  font-size: 1.75rem;
-  color: #34495e;
-  margin-bottom: 16px;
-}
-
-.candidate-info {
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-.candidate-votes {
-  font-size: 1.25rem;
-  color: #000000;
-  margin-bottom: 24px;
-}
-
-.back-button {
-  background-color: #002970;
-  border: none;
-  color: white;
-  padding: 10px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-
 
 .apply-button {
   background-color: #66817d;
@@ -596,39 +392,15 @@ function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
   text-shadow: 0 1px 1px rgb(0, 0, 0);
   padding: 0.5rem;
   margin: 0.5rem 0.5rem 0.5rem 0.8rem;
-
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 1rem;
 }
-.apply-button:hover, .back-button:hover {
+
+.apply-button:hover {
   background-color: #0053ba;
   color: white;
-}
-
-.dropdown {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-}
-
-
-
-.candidate:hover {
-  background-color: #efefef;
-}
-
-.party-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .party-list p {
@@ -638,63 +410,9 @@ function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
   color: #333;
 }
 
-.party-row, .candidate {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  justify-content: space-between; /* pushes name and votes apart */
-}
-
-.party-name {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #1f2937;
-  flex: 1;
-}
-
-.party-votes {
-  font-size: 1rem;
-  color: #000000;
-  font-weight: bold;
-  margin-left: 1rem;
-  text-align: right;
-  min-width: 100px;
-}
-.party-percentage {
-  font-size: 1rem;
-  color: #123c98;
-  font-weight: bold;
-  margin-left: 1rem;
-}
-
-
-.party-row:hover {
-  background-color: #e0f2fe;
-  border-color: #60a5fa;
-  transform: scale(1.02);
-}
-
-
-.filtered-data {
-  border: 1px solid black;
-}
-
 .filter-bar {
   display: flex;
   flex-direction: row;
-}
-
-.election-filter,
-.constituency-filter,
-.authority-filter {
-  min-width: 120px;
-  margin-right: 10px;
 }
 
 .election-filter select,
@@ -703,26 +421,8 @@ function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
   width: 100%;
 }
 
-.tag {
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* optional: space between text and icon */
-  background-color: #002970;
-  color: white;
-  text-align: center;
-  border-radius: 15px;
-  width: 100%;
-  margin: 0.5rem;
-}
-
 .tag svg {
   cursor: pointer;
-}
-
-.tag:hover {
-  background-color: #00379a;
 }
 
 .tag button:hover {
