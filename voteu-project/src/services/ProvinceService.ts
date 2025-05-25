@@ -1,9 +1,11 @@
 import type { Province } from '@/interface/Province'
 import type { Constituency } from '@/interface/Constituency.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export class ProvinceService {
-  static async getProvincesByElection(electionId: string): Promise<Record<number, Province> | null> {
+  static async getProvincesByElection(
+    electionId: string,
+  ): Promise<Record<number, Province> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/provinces/compact`,
@@ -25,7 +27,11 @@ export class ProvinceService {
     }
     return null
   }
-  static async getConstituenciesByProvinceId(electionId: string, provinceId: string): Promise<Constituency[] | null> {
+
+  static async getConstituenciesByProvinceId(
+    electionId: string,
+    provinceId: string,
+  ): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/constituencies/compact`,
@@ -48,7 +54,11 @@ export class ProvinceService {
 
     return null
   }
-  static async getProvincePartyVotes(electionId: string, provinceId: number): Promise<Party[] | null> {
+
+  static async getProvinceAffiVotes(
+    electionId: string,
+    provinceId: number,
+  ): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/parties`,
@@ -57,7 +67,7 @@ export class ProvinceService {
           headers: {
             'Content-Type': 'application/json',
           },
-        }
+        },
       )
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
@@ -69,4 +79,3 @@ export class ProvinceService {
     }
   }
 }
-

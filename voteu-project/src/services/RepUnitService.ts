@@ -1,9 +1,9 @@
 
-import type { Party } from '@/interface/Party.ts'
-import type { PollingStation } from '@/interface/PollingStation.ts'
+import type { Party } from '@/interface/Affiliation.ts'
+import type { RepUnit } from '@/interface/RepUnit.ts'
 
-export class PollingStationService {
-  static async getPollingStationsByAuthorityId(electionId: string, constituencyId: string , authorityId: string): Promise<Record<string, PollingStation> | null> {
+export class RepUnitService {
+  static async getRepUnitsByAuthorityId(electionId: string, constituencyId: string , authorityId: string): Promise<Record<string, RepUnit> | null> {
     try {
       const response = await fetch
       (`http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities/${authorityId}/pollingStations`, {
@@ -23,7 +23,7 @@ export class PollingStationService {
     return null
   }
 
-  static async getPollingStationVotesByAuthorityId(electionId: string, constituencyId: string, authorityId: string, pollingStationId: string): Promise<Record<number, Party> | null> {
+  static async getRepUnitVotesByAuthorityId(electionId: string, constituencyId: string, authorityId: string, pollingStationId: string): Promise<Record<number, Party> | null> {
     try {
       const response = await fetch
       (`http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities/${authorityId}/pollingStations/${pollingStationId}/parties`, {

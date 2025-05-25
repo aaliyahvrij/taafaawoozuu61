@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import ConstituencyService from "@/services/ConstituencyService";
+import ConstituencyService from "@/services/ConstiService.ts";
 
 const constituencies = ref([]);
 

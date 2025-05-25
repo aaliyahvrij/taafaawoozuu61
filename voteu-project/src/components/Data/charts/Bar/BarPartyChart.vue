@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watchEffect, ref } from 'vue'
 import { Chart, registerables, type ChartConfiguration } from 'chart.js'
-import type { Party } from '@/interface/Party.ts'
+import type { Party } from '@/interface/Affiliation.ts'
 
 Chart.register(...registerables)
 

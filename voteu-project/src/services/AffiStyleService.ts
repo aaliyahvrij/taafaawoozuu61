@@ -1,6 +1,6 @@
 import type { Candidate } from '@/interface/Candidate.ts'
 
-export class PartyStyleService {
+export class AffiStyleService {
   // utils/color.ts
   static generateColorFromName(name: string): string {
     let hash = 0
@@ -11,7 +11,7 @@ export class PartyStyleService {
     return `hsl(${hue}, 70%, 60%)`
   }
 
-  static sortCandidateNames(candidates: Candidate[]): Candidate[] {
+  static sortCandiNames(candidates: Candidate[]): Candidate[] {
     return candidates.slice().sort((a, b) => {
       const lastNameA = a.lastName.toLowerCase()
       const lastNameB = b.lastName.toLowerCase()

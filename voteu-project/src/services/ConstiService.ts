@@ -1,7 +1,7 @@
 import type { Constituency } from '@/interface/Constituency.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Party } from '@/interface/Affiliation.ts'
 
-export class ConstituencyServiceService {
+export class ConstiService {
   static async getConstituenciesByElection(electionId: string,): Promise<Record<number, Constituency> | null> {
     try {
       const response = await fetch(
@@ -24,7 +24,7 @@ export class ConstituencyServiceService {
     return null
   }
 
-  static async getConstituencyPartyVotes(electionId: string, constituencyId: string): Promise<Record<number, Party> | null> {
+  static async getConstiAffiVotes(electionId: string, constituencyId: string): Promise<Record<number, Party> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/parties`,

@@ -3,7 +3,7 @@
 //import ConstituencyService from "@/services/ConstituencyService";
 /*import type { ConstituencyFilter } from "@/services/ConstituencyService";  // Gebruik 'type' om de interface te importeren
 
-//const constituencies = ref<ConstituencyFilter[]>([]);
+//const constituencies = ref<ConstiFilter[]>([]);
 
 // Fetch constituencies
 const getConstituency = async () => {

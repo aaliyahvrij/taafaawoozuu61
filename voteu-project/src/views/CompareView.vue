@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
+import { ConstituencyServiceService } from '@/services/ConstiService.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
-import { PollingStationService } from '@/services/PollingStationService.ts'
+import { RepUnitService } from '@/services/RepUnitService.ts'
 
 import type { Constituency } from '@/interface/Constituency.ts'
 import type { Authority } from '@/interface/Authority.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Party } from '@/interface/Affiliation.ts'
 import type { Province } from '@/interface/Province.ts'
-import type { PollingStation } from '@/interface/PollingStation.ts'
+import type { RepUnit } from '@/interface/RepUnit.ts'
 
 
 // the first filter set
@@ -19,7 +19,7 @@ const selectedElection1 = ref<'2021' | '2023' | null>(null)
 const selectedProvince1 = ref<Province | null>(null)
 const selectedConstituency1 = ref<Constituency | null>(null)
 const selectedAuthority1 = ref<Authority | null>(null)
-const selectedPollingStation1 = ref<PollingStation | null>(null)
+const selectedPollingStation1 = ref<RepUnit | null>(null)
 
 const partyVotes1 = ref<Party[] | null>(null)
 const currentVoteLevel1 = ref<'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null>(null)
@@ -27,14 +27,14 @@ const currentVoteLevel1 = ref<'national' | 'province' | 'constituency' | 'munici
 const provinces1 = ref<Province[]>([])
 const constituencies1 = ref<Constituency[]>([])
 const authorities1 = ref<Authority[]>([])
-const pollingStations1 = ref<PollingStation[]>([])
+const pollingStations1 = ref<RepUnit[]>([])
 
 // the second filter set
 const selectedElection2 = ref<'2021' | '2023' | null>(null)
 const selectedProvince2 = ref<Province | null>(null)
 const selectedConstituency2 = ref<Constituency | null>(null)
 const selectedAuthority2 = ref<Authority | null>(null)
-const selectedPollingStation2 = ref<PollingStation | null>(null)
+const selectedPollingStation2 = ref<RepUnit | null>(null)
 
 const partyVotes2 = ref<Party[] | null>(null)
 const currentVoteLevel2 = ref<'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null>(null)
@@ -42,7 +42,7 @@ const currentVoteLevel2 = ref<'national' | 'province' | 'constituency' | 'munici
 const provinces2 = ref<Province[]>([])
 const constituencies2 = ref<Constituency[]>([])
 const authorities2 = ref<Authority[]>([])
-const pollingStations2 = ref<PollingStation[]>([])
+const pollingStations2 = ref<RepUnit[]>([])
 
 // --- Helper functies voor ophalen filters (herbruikbaar) ---
 async function getProvincesByElection(election: string | null, provincesRef: typeof provinces1, clearSelectedProvince: () => void) {
@@ -94,7 +94,7 @@ async function getPollingStationsByAuthorityId(election: string | null, constitu
     return
   }
   try {
-    const response = await PollingStationService.getPollingStationsByAuthorityId(election, constituencyId, authorityId)
+    const response = await RepUnitService.getPollingStationsByAuthorityId(election, constituencyId, authorityId)
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching polling stations:', error)
@@ -104,7 +104,7 @@ async function getPollingStationsByAuthorityId(election: string | null, constitu
 // --- Party votes ophalen (herbruikbaar) ---
 async function fetchPartyVotes(
   election: string | null,
-  pollingStation: PollingStation | null,
+  pollingStation: RepUnit | null,
   authority: Authority | null,
   constituency: Constituency | null,
   province: Province | null,
@@ -119,7 +119,7 @@ async function fetchPartyVotes(
 
   try {
     if (pollingStation && authority && constituency) {
-      const res = await PollingStationService.getPollingStationVotesByAuthorityId(
+      const res = await RepUnitService.getPollingStationVotesByAuthorityId(
         election,
         constituency.id.toString(),
         authority.id.toString(),
