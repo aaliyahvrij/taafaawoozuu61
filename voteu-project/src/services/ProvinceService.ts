@@ -55,7 +55,7 @@ export class ProvinceService {
     return null
   }
 
-  static async getProvinceAffiVotes(
+  static async getAffiVotes(
     electionId: string,
     provinceId: number,
   ): Promise<Affiliation[] | null> {

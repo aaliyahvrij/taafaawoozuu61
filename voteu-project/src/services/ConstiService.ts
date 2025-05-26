@@ -25,7 +25,7 @@ export class ConstiService {
     return null
   }
 
-  static async getConstiAffiVotes(
+  static async getAffiVotes(
     electionId: string,
     constId: string,
   ): Promise<Record<number, Affiliation> | null> {

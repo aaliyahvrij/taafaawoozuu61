@@ -119,7 +119,7 @@ async function getRepUnitsByAuthorityId(
   }
 }
 
-// --- Affiliation votes ophalen (herbruikbaar) ---
+// Affiliation votes ophalen (herbruikbaar)
 async function fetchPartyVotes(
   election: string | null,
   repUnit: RepUnit | null,
@@ -153,20 +153,20 @@ async function fetchPartyVotes(
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'authority'
     } else if (constituency) {
-      const res = await ConstiService.getConstiAffiVotes(election, constituency.id.toString())
+      const res = await ConstiService.getAffiVotes(election, constituency.id.toString())
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'constituency'
     } else if (province) {
-      const res = await ProvinceService.getProvinceAffiVotes(election, province.id)
+      const res = await ProvinceService.getAffiVotes(election, province.id)
       affiVotesRef.value = res
       currentVoteLevelRef.value = 'province'
     } else {
-      const res = await ElectionService.getNationalLevelAffiVotes(election)
+      const res = await ElectionService.getAffiVotes(election)
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'national'
     }
   } catch (error) {
-    console.error('Error fetching affiliation votes:', error)
+    console.error('Error fetching affiliation votes: ', error)
     affiVotesRef.value = null
     currentVoteLevelRef.value = null
   }

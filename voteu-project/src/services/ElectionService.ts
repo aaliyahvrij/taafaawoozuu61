@@ -20,7 +20,7 @@ export class ElectionService {
     return null
   }
 
-  static async getNationalLevelAffiVotes(
+  static async getAffiVotes(
     electionId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {

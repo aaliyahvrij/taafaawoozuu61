@@ -51,17 +51,17 @@ function handleApply(): void {
       selectedRepUnit.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConstituency.value && selectedAuthority.value) {
-    getAuthorityAffiVotes(
+    getAuthorityLevel_affiVotes(
       selectedElection.value,
       selectedConstituency.value.id.toString(),
       selectedAuthority.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConstituency.value && !selectedAuthority.value) {
-    getConstiAffiVotes(selectedElection.value, selectedConstituency.value.id.toString())
+    getConstiLevel_affiVotes(selectedElection.value, selectedConstituency.value.id.toString())
   } else if (selectedElection.value && selectedProvince.value && !selectedConstituency.value) {
-    getProvinceAffiVotes(selectedElection.value, selectedProvince.value.id)
+    getProvinceLevel_affiVotes(selectedElection.value, selectedProvince.value.id)
   } else if (selectedElection.value) {
-    getNationalAffiVotes(selectedElection.value)
+    getNationalLevel_affiVotes(selectedElection.value)
   } else {
     console.warn('Invalid selection state.')
   }
@@ -111,57 +111,48 @@ function clearSelectedRepUnit(): void {
   selectedRepUnit.value = null
 }
 
-async function getNationalAffiVotes(electionId: string): Promise<void> {
+async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
   try {
-    console.log('Fetching national affiliation votes for election:', electionId)
-    const response = await ElectionService.getNationalLevelAffiVotes(electionId)
+    const response = await ElectionService.getAffiVotes(electionId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'national'
+    console.log('Fetching national level affiliation votes for election ', electionId)
   } catch (error) {
-    console.error('Error fetching national affiliation votes:', error)
+    console.error('Error fetching national level affiliation votes: ', error)
   }
 }
 
-async function getProvinceAffiVotes(electionId: string, provinceId: number): Promise<void> {
+async function getProvinceLevel_affiVotes(electionId: string, provinceId: number): Promise<void> {
   try {
-    const response = await ProvinceService.getProvinceAffiVotes(electionId, provinceId)
+    const response = await ProvinceService.getAffiVotes(electionId, provinceId)
     affiVotes.value = response
     currentVoteLevel.value = 'province'
+    console.log('Fetching province level affiliation votes for election ', electionId)
   } catch (error) {
-    console.error('Error fetching province affiliation votes:', error)
+    console.error('Error fetching province level affiliation votes: ', error)
   }
 }
 
-async function getConstiAffiVotes(electionId: string, constId: string): Promise<void> {
+async function getConstiLevel_affiVotes(electionId: string, constId: string): Promise<void> {
   try {
-    console.log(
-      'Fetching constituency affiliation votes for election:',
-      electionId,
-      'constituency:',
-      constId,
-    )
-    const response = await ConstiService.getConstiAffiVotes(electionId, constId)
+    const response = await ConstiService.getAffiVotes(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'constituency'
+    console.log(
+      'Fetching constituency ' + constId + ' level affiliation votes for election ',
+      electionId,
+    )
   } catch (error) {
     console.error('Error fetching constituency affiliation votes:', error)
   }
 }
 
-async function getAuthorityAffiVotes(
+async function getAuthorityLevel_affiVotes(
   electionId: string,
   constId: string,
   authorityId: string,
 ): Promise<void> {
   try {
-    console.log(
-      'Fetching authority affiliation votes for election:',
-      electionId,
-      'constituency:',
-      constId,
-      'authority:',
-      authorityId,
-    )
     const response = await AuthorityService.getAuthorityVotesByConstId(
       electionId,
       constId,
@@ -169,8 +160,16 @@ async function getAuthorityAffiVotes(
     )
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'authority'
+    console.log(
+      'Fetching authority affiliation votes for election ',
+      electionId,
+      'constituency ',
+      constId,
+      'authority ',
+      authorityId,
+    )
   } catch (error) {
-    console.error('Error fetching authority affiliation votes:', error)
+    console.error('Error fetching authority level affiliation votes: ', error)
   }
 }
 
@@ -181,16 +180,6 @@ async function getRepUnitVotes(
   repUnitId: string,
 ): Promise<void> {
   try {
-    console.log(
-      'Fetching reporting unit votes for election:',
-      electionId,
-      'constituency:',
-      constId,
-      'authority:',
-      authorityId,
-      'reporting unit:',
-      repUnitId,
-    )
     const response = await RepUnitService.getRepUnitVotesByAuthorityId(
       electionId,
       constId,
@@ -200,22 +189,32 @@ async function getRepUnitVotes(
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiVotes.value)
     currentVoteLevel.value = 'repUnit'
+    console.log(
+      'Fetching reporting unit votes for election ',
+      electionId,
+      'constituency ',
+      constId,
+      'authority ',
+      authorityId,
+      'reporting unit ',
+      repUnitId,
+    )
   } catch (error) {
-    console.error('Error fetching reporting unit votes:', error)
+    console.error('Error fetching reporting unit votes: ', error)
   }
 }
 
 async function getProvincesByElection(election: string | null): Promise<void> {
   try {
     if (election) {
-      console.log('Fetching provinces for election:', election)
       const response = await ProvinceService.getProvincesByElection(election)
       provinces.value = Array.isArray(response) ? response : Object.values(response || {})
+      console.log('Fetching provinces for election ', election)
     } else {
       provinces.value = []
     }
   } catch (error) {
-    console.error('Error fetching provinces:', error)
+    console.error('Error fetching provinces: ', error)
   }
 }
 
@@ -225,30 +224,29 @@ async function getConstituenciesByProvinceId(
 ): Promise<void> {
   try {
     if (election && provinceId) {
-      console.log('Fetching constituencies for election:', election, 'province:', provinceId)
       const response = await ProvinceService.getConstituenciesByProvinceId(election, provinceId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
+      console.log('Fetching constituencies for election ', election, 'province ', provinceId)
     } else {
       constituencies.value = []
     }
   } catch (error) {
-    console.error('Error fetching constituencies by province:', error)
+    console.error('Error fetching constituencies by province: ', error)
   }
 }
 
-async function getAuthoritiesByConstituency(
+async function getAuthoritiesByConstId(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
   try {
     if (electionId && constId) {
-      console.log('Fetching authorities for election:', electionId, 'constituency:', constId)
       const response = await AuthorityService.getAuthoritiesByConstId(electionId, constId)
-      console.log(response)
       authorities.value = Array.isArray(response) ? response : Object.values(response || {})
+      console.log('Fetching authorities for election:', electionId, 'constituency:', constId)
     }
   } catch (error) {
-    console.error('Error fetching authorities:', error)
+    console.error('Error fetching authorities: ', error)
   }
 }
 
@@ -259,23 +257,23 @@ async function getRepUnitsByAuthorityId(
 ): Promise<void> {
   try {
     if (electionId && constId && authorityId) {
-      console.log(
-        'Fetching reporting units for election:',
-        electionId,
-        'constituency:',
-        constId,
-        'authority:',
-        authorityId,
-      )
       const response = await RepUnitService.getRepUnitsByAuthorityId(
         electionId,
         constId,
         authorityId,
       )
       repUnits.value = Array.isArray(response) ? response : Object.values(response || {})
+      console.log(
+        'Fetching reporting units for election ',
+        electionId,
+        'constituency ',
+        constId,
+        'authority ',
+        authorityId,
+      )
     }
   } catch (error) {
-    console.error('Error fetching reporting units:', error)
+    console.error('Error fetching reporting units: ', error)
   }
 }
 
@@ -358,7 +356,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         v-if="constituencies.length > 0"
         v-model="selectedConstituency"
         @change="
-          getAuthoritiesByConstituency(selectedElection, selectedConstituency?.id.toString())
+          getAuthoritiesByConstId(selectedElection, selectedConstituency?.id.toString())
         "
       >
         <option value="null" disabled>Select a constituency</option>
