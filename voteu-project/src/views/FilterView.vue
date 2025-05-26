@@ -16,7 +16,7 @@ import type { Province } from '@/interface/Province.ts'
 import type { RepUnit } from '@/interface/RepUnit.ts'
 
 import AffiChart from '@/components/Data/charts/AffiChart.vue'
-//mport BarAffiChart from '@/components/Data/charts/Bar/BarAffiChart.vue'
+//import BarAffiChart from '@/components/Data/charts/Bar/BarAffiChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -454,7 +454,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
     </div>
 
     <div>
-      <button v-if="selectedElection" class="apply-button" @click="handleApply()">
+      <button v-if="selectedElection" class="apply-btn" @click="handleApply()">
         Apply filters
       </button>
     </div>
@@ -482,15 +482,15 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
       <h1 class="affi-title">{{ selectedAffiliation.name }}</h1>
       <h2 class="candi-list-title">Candidates</h2>
       <div class="buttons">
-        <button class="back-button" @click="selectedAffiliation = null">Back</button>
+        <button class="back-btn" @click="selectedAffiliation = null">Back</button>
         <button
-          class="back-button"
+          class="back-btn"
           @click="selectedAffiliation.candidates = sortCandiNames(selectedAffiliation.candidates)"
         >
           sort by name
         </button>
         <button
-          class="back-button"
+          class="back-btn"
           @click="selectedAffiliation.candidates = sortCandiVotes(selectedAffiliation.candidates)"
         >
           sort by votes
@@ -548,36 +548,26 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
       <p class="candi-votes">
         Votes: <strong>{{ selectedCandidate.votes.toLocaleString() }}</strong>
       </p>
-      <button class="back-button" @click="selectedCandidate = null">Back</button>
+      <button class="back-btn" @click="selectedCandidate = null">Back</button>
     </div>
   </div>
 </template>
 <style scoped>
-.candi-list-title {
-  margin-left: 1rem;
-}
-
-.buttons button {
-  margin: 0.5rem;
-}
-
-.affi-title {
-  font-size: 2.5rem;
-  text-align: center;
-}
-
 .candi-details-card {
   background: #f9fafb;
-
   border-radius: 12px;
   padding: 24px 32px;
   margin: 24px auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tag,
+.affi-title,
+.candi-details-card {
   text-align: center;
 }
 
 .candi-title {
-  font-size: 2.5rem;
   font-weight: 700;
   color: #2c3e50;
   margin-bottom: 8px;
@@ -586,59 +576,64 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 .candi-name {
   font-size: 1.75rem;
   color: #34495e;
-  margin-bottom: 16px;
 }
 
 .candi-info {
-  font-size: 1.1rem;
   color: #555;
-  margin-bottom: 16px;
   line-height: 1.5;
+}
+
+.candi-name,
+.candi-info {
+  margin-bottom: 16px;
 }
 
 .candi-votes {
   font-size: 1.25rem;
-  color: #000000;
   margin-bottom: 24px;
 }
 
-.back-button {
+.back-btn {
   background-color: #002970;
-  border: none;
-  color: white;
   padding: 10px 24px;
-  font-size: 1rem;
   font-weight: 600;
   border-radius: 8px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.apply-button {
+.apply-btn {
   background-color: #66817d;
   color: #ffffff;
   text-shadow: 0 1px 1px rgb(0, 0, 0);
-  padding: 0.5rem;
   margin: 0.5rem 0.5rem 0.5rem 0.8rem;
-
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 1rem;
 }
 
-.apply-button:hover,
-.back-button:hover {
-  background-color: #0053ba;
+.back-btn,
+.apply-btn {
+  border: none;
+}
+
+.tag,
+.back-btn,
+.back-btn:hover,
+.apply-btn:hover {
   color: white;
 }
 
+.back-btn,
+.back-btn:hover,
+.apply-btn:hover {
+  background-color: #0053ba;
+}
+
 .dropdown {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem;
   border: 1px solid #d1d5db;
+}
+
+.apply-btn,
+.dropdown {
   border-radius: 0.375rem;
+  padding: 0.5rem;
 }
 
 .candidate:hover {
@@ -658,14 +653,11 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 .affi-list p {
   margin: 0;
   font-weight: 500;
-  font-size: 1.1rem;
   color: #333;
 }
 
 .affi-row,
 .candidate {
-  display: flex;
-  align-items: center;
   padding: 0.75rem 1rem;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
@@ -678,24 +670,50 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 
 .affi-name {
   font-weight: 600;
-  font-size: 1.1rem;
   color: #1f2937;
   flex: 1;
 }
 
-.affi-votes {
-  font-size: 1rem;
+.affi-votes,
+.candi-votes {
   color: #000000;
-  font-weight: bold;
-  margin-left: 1rem;
+}
+
+.affi-votes {
   text-align: right;
   min-width: 100px;
 }
 
 .affi-percentage {
-  font-size: 1rem;
   color: #123c98;
+}
+
+.affi-votes,
+.affi-percentage,
+.back-btn,
+.apply-btn {
+  font-size: 1rem;
+}
+
+.affi-list p,
+.affi-name,
+.candi-info {
+  font-size: 1.1rem;
+}
+
+.affi-title,
+.candi-title {
+  font-size: 2.5rem;
+}
+
+.affi-votes,
+.affi-percentage {
   font-weight: bold;
+}
+
+.affi-votes,
+.affi-percentage,
+.candi-list-title {
   margin-left: 1rem;
 }
 
@@ -709,11 +727,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
   border: 1px solid black;
 }
 
-.filter-bar {
-  display: flex;
-  flex-direction: row;
-}
-
 .election-filter,
 .consti-filter,
 .authority-filter {
@@ -721,6 +734,8 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
   margin-right: 10px;
 }
 
+.dropdown,
+.tag,
 .election-filter select,
 .consti-filter select,
 .authority-filter select {
@@ -729,27 +744,43 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 
 .tag {
   padding: 2px;
-  display: flex;
-  align-items: center;
   justify-content: center;
   gap: 10px; /* optional: space between text and icon */
   background-color: #002970;
-  color: white;
-  text-align: center;
   border-radius: 15px;
-  width: 100%;
+}
+
+.tag,
+.dropdown,
+.buttons button {
   margin: 0.5rem;
 }
 
-.tag svg {
+.tag,
+.affi-row,
+.candidate,
+.filter-bar {
+  display: flex;
+}
+
+.filter-bar {
+  flex-direction: row;
+}
+
+.tag,
+.affi-row,
+.candidate {
+  align-items: center;
+}
+
+.tag svg,
+.tag button:hover,
+.back-btn,
+.apply-btn {
   cursor: pointer;
 }
 
 .tag:hover {
   background-color: #00379a;
-}
-
-.tag button:hover {
-  cursor: pointer;
 }
 </style>
