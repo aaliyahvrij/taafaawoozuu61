@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
+import { ref } from 'vue'
 import { ConstiService } from '@/services/ConstiService.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
-
 import type { Constituency } from '@/interface/Constituency.ts'
 import type { Authority } from '@/interface/Authority.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
@@ -19,12 +17,10 @@ const selectedProvince1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedAuthority1 = ref<Authority | null>(null)
 const selectedRepUnit1 = ref<RepUnit | null>(null)
-
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
   'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
 >(null)
-
 const provinces1 = ref<Province[]>([])
 const constituencies1 = ref<Constituency[]>([])
 const authorities1 = ref<Authority[]>([])
@@ -36,7 +32,6 @@ const selectedProvince2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedAuthority2 = ref<Authority | null>(null)
 const selectedRepUnit2 = ref<RepUnit | null>(null)
-
 const affiVotes2 = ref<Affiliation[] | null>(null)
 const currentVoteLevel2 = ref<
   'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null

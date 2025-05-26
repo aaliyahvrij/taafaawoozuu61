@@ -3,11 +3,10 @@
  */
 import type { ChartData } from 'chart.js'
 
-
-export const partyData: ChartData<'pie', number[], string> = {
+export const affiData: ChartData<'pie', number[], string> = {
   labels: [], // string[]
   datasets: [{
-    label: 'All the parties currently in the election',
+    label: 'All the affiliations currently in the election',
     data: [], // number[]
     backgroundColor: [], // string[]
     hoverOffset: 4,
