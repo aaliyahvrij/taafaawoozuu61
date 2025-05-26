@@ -23,7 +23,6 @@ export class AffiStyleService {
       const firstNameB = b.firstName.toLowerCase()
       if (firstNameA < firstNameB) return -1
       if (firstNameA > firstNameB) return 1
-
       return 0
     })
   }

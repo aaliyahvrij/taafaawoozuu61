@@ -15,7 +15,6 @@ export class ConstiService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }
@@ -40,7 +39,6 @@ export class ConstiService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }

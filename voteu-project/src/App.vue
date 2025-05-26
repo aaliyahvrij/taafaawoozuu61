@@ -6,7 +6,6 @@ import Header from '@/components/Header.vue'
 <template>
   <div class="layout">
     <Header />
-
     <div class="content-area">
       <NavBarDesktop class="sidebar" />
       <main class="router-view-wrapper">
