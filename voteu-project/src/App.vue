@@ -17,19 +17,25 @@ import Header from '@/components/Header.vue'
 </template>
 
 <style scoped>
-.layout {
+.layout,
+.content-area {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
   overflow: hidden;
 }
 
-.content-area {
+.content-area,
+.router-view-wrapper {
   flex: 1;
-  display: flex;
+}
+
+.layout {
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content-area {
   flex-direction: row;
   height: calc(100vh - 200px); /* 200px height for the header */
-  overflow: hidden;
 }
 
 /* Default orders (desktop): Sidebar left, content right */
@@ -44,7 +50,6 @@ import Header from '@/components/Header.vue'
 
 .router-view-wrapper {
   order: 1;
-  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
 }

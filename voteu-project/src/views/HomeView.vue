@@ -1,15 +1,13 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <main>
-<h1>WELCOME TO VOTEU</h1>
+    <h1>Welcome To VoteU</h1>
   </main>
 </template>
 
 <style scoped>
-h1{
+h1 {
   color: #181818;
 }
 </style>

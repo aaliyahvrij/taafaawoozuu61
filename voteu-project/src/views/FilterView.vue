@@ -596,7 +596,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 .back-btn {
   background-color: #002970;
   padding: 10px 24px;
-  font-weight: 600;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
@@ -662,16 +661,20 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
-  transition: all 0.2s ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   justify-content: space-between; /* pushes name and votes apart */
+  transition: all 0.2s ease;
 }
 
 .affi-name {
-  font-weight: 600;
   color: #1f2937;
   flex: 1;
+}
+
+.affi-name,
+.back-btn {
+  font-weight: 600;
 }
 
 .affi-votes,
@@ -680,8 +683,8 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 }
 
 .affi-votes {
-  text-align: right;
   min-width: 100px;
+  text-align: right;
 }
 
 .affi-percentage {
