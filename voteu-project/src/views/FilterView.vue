@@ -16,7 +16,6 @@ import type { Province } from '@/interface/Province.ts'
 import type { PollingStation } from '@/interface/PollingStation.ts'
 
 import PartyChart from '@/components/Data/charts/PartyChart.vue'
-//mport BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -475,6 +474,7 @@ function sortCandidateVotes(candidates: Candidate[]): Candidate[] {
 
 
         <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />
+
       <div
         class="party-row"
         v-for="party in displayedPartyVotes"

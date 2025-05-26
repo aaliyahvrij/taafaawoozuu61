@@ -153,14 +153,18 @@ public class DutchElectionProcessor<E> {
         }
 
         List<Path> filesToScan = PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId));
+
+// Optional: sort the files if order matters
+
+
         int totalFiles = filesToScan.size();
         int totalSteps = totalFiles * 2; // since we loop over them twice
         int currentIndex = 0;
 
+// === First pass ===
         for (Path authorityFile : filesToScan) {
             double percentDone = ((currentIndex + 1) / (double) totalSteps) * 100;
             System.out.printf("[%.2f%%] Processing %s (first pass)%n", percentDone, authorityFile.getFileName());
-
 
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);
@@ -169,10 +173,22 @@ public class DutchElectionProcessor<E> {
             currentIndex++;
         }
 
+// === Second pass ===
+        String resumeFromFile = "Telling_TK2021_gemeente_Eemsdelta.eml.xml"; // change to the file you want to resume from
+        boolean startSecondPass = false;
+
         for (Path authorityFile : filesToScan) {
+            if (!startSecondPass) {
+                if (authorityFile.getFileName().toString().equals(resumeFromFile)) {
+                    startSecondPass = true;
+                } else {
+                    currentIndex++;
+                    continue;
+                }
+            }
+
             double percentDone = ((currentIndex + 1) / (double) totalSteps) * 100;
             System.out.printf("[%.2f%%] Processing %s (second pass)%n", percentDone, authorityFile.getFileName());
-
 
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
             processElection(electionData, parser);
@@ -180,6 +196,7 @@ public class DutchElectionProcessor<E> {
 
             currentIndex++;
         }
+
 
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
