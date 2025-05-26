@@ -161,7 +161,7 @@ async function fetchPartyVotes(
       affiVotesRef.value = res
       currentVoteLevelRef.value = 'province'
     } else {
-      const res = await ElectionService.getNationalAffiVotes(election)
+      const res = await ElectionService.getNationalLevelAffiVotes(election)
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'national'
     }
@@ -337,8 +337,7 @@ async function onAuthorityChange2() {
 }
 
 function onRepUnitChange2() {
-  affiVotes2.value = null
-  currentVoteLevel2.value = null
+  affiVotes2.value = currentVoteLevel2.value = null
 }
 
 // --- Functie om filter toe te passen (beide sets) ---
@@ -358,8 +357,7 @@ async function applyFilter() {
       currentVoteLevel1,
     )
   } else {
-    affiVotes1.value = null
-    currentVoteLevel1.value = null
+    affiVotes1.value = currentVoteLevel1.value = null
   }
   if (selectedElection2.value) {
     await fetchPartyVotes(
@@ -381,18 +379,15 @@ async function applyFilter() {
 <template>
   <div class="compare-view">
     <h2 style="text-align: center; margin-bottom: 1rem">Compare Election Results</h2>
-
     <div class="filters-wrapper">
       <!-- Filter Set 1 -->
       <div class="filter-set">
         <h3>Set 1</h3>
-
         <select v-model="selectedElection1" @change="onElectionChange1">
           <option value="null" disabled>Select election year</option>
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-
         <select
           v-if="provinces1.length > 0"
           v-model="selectedProvince1"
@@ -403,7 +398,6 @@ async function applyFilter() {
             {{ province.name }}
           </option>
         </select>
-
         <select
           v-if="constituencies1.length > 0"
           v-model="selectedConsti1"
@@ -418,7 +412,6 @@ async function applyFilter() {
             {{ constituency.name }}
           </option>
         </select>
-
         <select
           v-if="authorities1.length > 0"
           v-model="selectedAuthority1"
@@ -429,7 +422,6 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-
         <select v-if="repUnits1.length > 0" v-model="selectedRepUnit1" @change="onRepUnitChange1">
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in repUnits1" :key="ps.id" :value="ps">{{ ps.name }}</option>
@@ -439,13 +431,11 @@ async function applyFilter() {
       <!-- Filter Set 2 -->
       <div class="filter-set">
         <h3>Set 2</h3>
-
         <select v-model="selectedElection2" @change="onElectionChange2">
           <option value="null" disabled>Select election year</option>
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-
         <select
           v-if="provinces2.length > 0"
           v-model="selectedProvince2"
@@ -456,7 +446,6 @@ async function applyFilter() {
             {{ province.name }}
           </option>
         </select>
-
         <select
           v-if="constituencies2.length > 0"
           v-model="selectedConsti2"
@@ -471,7 +460,6 @@ async function applyFilter() {
             {{ constituency.name }}
           </option>
         </select>
-
         <select
           v-if="authorities2.length > 0"
           v-model="selectedAuthority2"
@@ -482,16 +470,13 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-
         <select v-if="repUnits2.length > 0" v-model="selectedRepUnit2" @change="onRepUnitChange2">
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in repUnits2" :key="ps.id" :value="ps">{{ ps.name }}</option>
         </select>
       </div>
     </div>
-
     <button @click="applyFilter" style="display: block; margin: 1rem auto">Compare</button>
-
     <div class="results-wrapper">
       <!-- Placeholder texts for results -->
       <div class="result-set">

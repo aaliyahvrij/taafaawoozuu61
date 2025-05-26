@@ -38,7 +38,6 @@ function handleApply(): void {
   selectedAffiliation.value = null
   affiVotes.value = null
   selectedCandidate.value = null
-
   if (
     selectedElection.value &&
     selectedConstituency.value &&
@@ -325,8 +324,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-
-    <!-- Province Filter -->
     <div class="province-filter">
       <select
         class="dropdown"
@@ -355,7 +352,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-
     <div class="consti-filter">
       <select
         class="dropdown"
@@ -386,7 +382,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-
     <div class="authority-filter">
       <select
         class="dropdown"
@@ -421,7 +416,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-
     <div class="rep-unit-filter">
       <select class="dropdown" v-if="repUnits.length > 0" v-model="selectedRepUnit">
         <option value="null" disabled>Select a polling station</option>
@@ -445,18 +439,15 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-
     <div>
       <button v-if="selectedElection" class="apply-btn" @click="handleApply()">
         Apply filters
       </button>
     </div>
   </div>
-
   <div class="filtered-data">
     <div class="affi-list" v-if="selectedElection && displayedAffiVotes && !selectedAffiliation">
       <p>{{ currentVoteLevel }} affiliation votes for Election {{ selectedElection }}</p>
-
       <AffiChart v-if="affiVotes" :affiVotes="displayedAffiVotes" />
       <div
         class="affi-row"
@@ -470,7 +461,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         <div class="affi-percentage">{{ affiliation.percentage.toFixed(2) }} %</div>
       </div>
     </div>
-
     <div v-if="selectedAffiliation && selectedElection && !selectedCandidate">
       <h1 class="affi-title">{{ selectedAffiliation.name }}</h1>
       <h2 class="candi-list-title">Candidates</h2>
@@ -501,7 +491,6 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         </p>
       </div>
     </div>
-
     <div v-if="selectedCandidate && selectedElection" class="candi-details-card">
       <h2 class="candi-title" v-if="selectedCandidate.shortCode">
         {{ selectedCandidate.shortCode }}
