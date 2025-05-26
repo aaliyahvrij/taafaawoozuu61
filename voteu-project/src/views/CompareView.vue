@@ -139,7 +139,6 @@ async function fetchPartyVotes(
     currentVoteLevelRef.value = null
     return
   }
-
   try {
     if (repUnit && authority && constituency) {
       const res = await RepUnitService.getRepUnitVotesByAuthorityId(
@@ -353,7 +352,6 @@ async function applyFilter() {
     alert('Select at least one election year to show results.')
     return
   }
-
   if (selectedElection1.value) {
     await fetchPartyVotes(
       selectedElection1.value,
@@ -368,7 +366,6 @@ async function applyFilter() {
     affiVotes1.value = null
     currentVoteLevel1.value = null
   }
-
   if (selectedElection2.value) {
     await fetchPartyVotes(
       selectedElection2.value,
@@ -515,7 +512,8 @@ async function applyFilter() {
 </template>
 
 <style scoped>
-.compare-view {
+.compare-view,
+.filter-set {
   padding: 1rem;
 }
 
@@ -525,15 +523,14 @@ async function applyFilter() {
 }
 
 .filter-set {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
   min-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .filter-set select {
-  display: block;
   width: 100%;
+  display: block;
   margin-bottom: 1rem;
 }
 </style>

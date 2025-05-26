@@ -8,7 +8,6 @@ Chart.register(...registerables)
 const props = defineProps<{
   affiVotes: Affiliation[] | null
 }>()
-
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart<'pie'> | null = null
 
@@ -23,31 +22,29 @@ function generateColorFromName(name: string): string {
 
 watchEffect(() => {
   if (props.affiVotes && canvasRef.value) {
-    const labels = props.affiVotes.map(p => p.name)
-    const data = props.affiVotes.map(p => p.votes)
+    const labels = props.affiVotes.map((p) => p.name)
+    const data = props.affiVotes.map((p) => p.votes)
     const backgroundColors = labels.map(generateColorFromName)
-
     const config: ChartConfiguration<'pie', number[], string> = {
       type: 'pie',
       data: {
         labels,
-        datasets: [{
-          label: 'Votes',
-          data,
-          backgroundColor: backgroundColors
-        }]
+        datasets: [
+          {
+            label: 'Votes',
+            data,
+            backgroundColor: backgroundColors,
+          },
+        ],
       },
       options: {
         responsive: true,
-        radius: '70%'
-      }
+        radius: '70%',
+      },
     }
-
-
     if (chartInstance) {
       chartInstance.destroy()
     }
-
     chartInstance = new Chart(canvasRef.value, config)
   }
 })
