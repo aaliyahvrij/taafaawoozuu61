@@ -204,10 +204,10 @@ async function getRepUnitVotes(
   }
 }
 
-async function getProvincesByElection(election: string | null): Promise<void> {
+async function getElectionLevel_provinces(election: string | null): Promise<void> {
   try {
     if (election) {
-      const response = await ProvinceService.getProvincesByElection(election)
+      const response = await ProvinceService.getElectionLevel_provinces(election)
       provinces.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching provinces for election ', election)
     } else {
@@ -218,13 +218,13 @@ async function getProvincesByElection(election: string | null): Promise<void> {
   }
 }
 
-async function getConstituenciesByProvinceId(
+async function getProvinceLevel_constituencies(
   election: string | null,
   provinceId: string | undefined,
 ): Promise<void> {
   try {
     if (election && provinceId) {
-      const response = await ProvinceService.getConstituenciesByProvinceId(election, provinceId)
+      const response = await ProvinceService.getProvinceLevel_constituencies(election, provinceId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching constituencies for election ', election, 'province ', provinceId)
     } else {
@@ -235,13 +235,13 @@ async function getConstituenciesByProvinceId(
   }
 }
 
-async function getAuthoritiesByConstId(
+async function getConstiLevel_authorities(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
   try {
     if (electionId && constId) {
-      const response = await AuthorityService.getAuthoritiesByConstId(electionId, constId)
+      const response = await AuthorityService.getConstiLevel_authorities(electionId, constId)
       authorities.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching authorities for election:', electionId, 'constituency:', constId)
     }
@@ -250,14 +250,14 @@ async function getAuthoritiesByConstId(
   }
 }
 
-async function getRepUnitsByAuthorityId(
+async function getAuthorityLevel_repUnits(
   electionId: string | null,
   constId: string | undefined,
   authorityId: string | undefined,
 ): Promise<void> {
   try {
     if (electionId && constId && authorityId) {
-      const response = await RepUnitService.getRepUnitsByAuthorityId(
+      const response = await RepUnitService.getAuthorityLevel_repUnits(
         electionId,
         constId,
         authorityId,
@@ -300,7 +300,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
       <select
         class="dropdown"
         v-model="selectedElection"
-        @change="getProvincesByElection(selectedElection)"
+        @change="getElectionLevel_provinces(selectedElection)"
       >
         <option value="null" disabled>Select an election</option>
         <option value="2021">2021</option>
@@ -327,7 +327,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="provinces.length > 0"
         v-model="selectedProvince"
-        @change="getConstituenciesByProvinceId(selectedElection, selectedProvince?.id.toString())"
+        @change="getProvinceLevel_constituencies(selectedElection, selectedProvince?.id.toString())"
       >
         <option value="null" disabled>Select a province</option>
         <option v-for="province in provinces" :key="province.id" :value="province">
@@ -356,7 +356,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         v-if="constituencies.length > 0"
         v-model="selectedConstituency"
         @change="
-          getAuthoritiesByConstId(selectedElection, selectedConstituency?.id.toString())
+          getConstiLevel_authorities(selectedElection, selectedConstituency?.id.toString())
         "
       >
         <option value="null" disabled>Select a constituency</option>
@@ -386,7 +386,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         v-if="authorities.length > 0"
         v-model="selectedAuthority"
         @change="
-          getRepUnitsByAuthorityId(
+          getAuthorityLevel_repUnits(
             selectedElection,
             selectedConstituency?.id.toString(),
             selectedAuthority?.id.toString(),

@@ -2,7 +2,7 @@ import type { Authority } from '@/interface/Authority.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export class AuthorityService {
-  static async getAuthoritiesByConstId(
+  static async getConstiLevel_authorities(
     electionId: string,
     constId: string,
   ): Promise<Record<string, Authority> | null> {

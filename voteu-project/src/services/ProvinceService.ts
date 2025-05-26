@@ -3,7 +3,7 @@ import type { Constituency } from '@/interface/Constituency.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export class ProvinceService {
-  static async getProvincesByElection(
+  static async getElectionLevel_provinces(
     electionId: string,
   ): Promise<Record<number, Province> | null> {
     try {
@@ -28,7 +28,7 @@ export class ProvinceService {
     return null
   }
 
-  static async getConstituenciesByProvinceId(
+  static async getProvinceLevel_constituencies(
     electionId: string,
     provinceId: string,
   ): Promise<Constituency[] | null> {

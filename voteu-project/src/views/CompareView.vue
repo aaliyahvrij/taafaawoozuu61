@@ -54,7 +54,7 @@ async function getProvincesByElection(
     return
   }
   try {
-    const response = await ProvinceService.getProvincesByElection(election)
+    const response = await ProvinceService.getElectionLevel_provinces(election)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching provinces:', error)
@@ -73,7 +73,7 @@ async function getConstituenciesByProvinceId(
     return
   }
   try {
-    const response = await ProvinceService.getConstituenciesByProvinceId(election, provinceId)
+    const response = await ProvinceService.getProvinceLevel_constituencies(election, provinceId)
     constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching constituencies:', error)
@@ -92,7 +92,7 @@ async function getAuthoritiesByConstituency(
     return
   }
   try {
-    const response = await AuthorityService.getAuthoritiesByConstId(election, constId)
+    const response = await AuthorityService.getConstiLevel_authorities(election, constId)
     authoritiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching authorities:', error)
@@ -112,7 +112,7 @@ async function getRepUnitsByAuthorityId(
     return
   }
   try {
-    const response = await RepUnitService.getRepUnitsByAuthorityId(election, constId, authorityId)
+    const response = await RepUnitService.getAuthorityLevel_repUnits(election, constId, authorityId)
     repUnitsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching rep units:', error)

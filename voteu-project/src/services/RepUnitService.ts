@@ -2,7 +2,7 @@ import type { Affiliation } from '@/interface/Affiliation.ts'
 import type { RepUnit } from '@/interface/RepUnit.ts'
 
 export class RepUnitService {
-  static async getRepUnitsByAuthorityId(
+  static async getAuthorityLevel_repUnits(
     electionId: string,
     constId: string,
     authorityId: string,
