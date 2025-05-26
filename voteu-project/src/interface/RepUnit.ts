@@ -4,6 +4,6 @@ export interface RepUnit {
   id: string
   name: string
   zipCode: string
-  affiliations: { [affId: number]: Affiliation } // Map of affiliations with affId as key
+  affiliations: { [affId: number]: Affiliation }
   authorityId: string
 }

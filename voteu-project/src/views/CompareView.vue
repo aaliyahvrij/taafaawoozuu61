@@ -22,7 +22,7 @@ const selectedRepUnit1 = ref<RepUnit | null>(null)
 
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
-  'national' | 'province' | 'constituency' | 'municipality' | 'repUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
 >(null)
 
 const provinces1 = ref<Province[]>([])
@@ -39,7 +39,7 @@ const selectedRepUnit2 = ref<RepUnit | null>(null)
 
 const affiVotes2 = ref<Affiliation[] | null>(null)
 const currentVoteLevel2 = ref<
-  'national' | 'province' | 'constituency' | 'municipality' | 'repUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
 >(null)
 
 const provinces2 = ref<Province[]>([])
@@ -156,7 +156,7 @@ async function fetchPartyVotes(
         authority.id.toString(),
       )
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'municipality'
+      currentVoteLevelRef.value = 'authority'
     } else if (constituency) {
       const res = await ConstiService.getConstiAffiVotes(election, constituency.id.toString())
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
@@ -171,7 +171,7 @@ async function fetchPartyVotes(
       currentVoteLevelRef.value = 'national'
     }
   } catch (error) {
-    console.error('Error fetching party votes:', error)
+    console.error('Error fetching affiliation votes:', error)
     affiVotesRef.value = null
     currentVoteLevelRef.value = null
   }
