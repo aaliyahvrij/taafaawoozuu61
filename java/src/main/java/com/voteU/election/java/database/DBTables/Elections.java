@@ -1,4 +1,4 @@
-package com.voteU.election.java.CompactDTO;
+package com.voteU.election.java.database.DBTables;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,9 +11,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "elections")
-public class CompactElection {
+public class Elections {
     @Id
-    String stringId;
+    @Column(name = "id")
+    String id;
 
     @Column(name = "name")
     String name;
@@ -25,14 +26,14 @@ public class CompactElection {
     String date;
     int partiesSize;
 
-    public CompactElection(String stringId, String name, int votes, int partiesSize){
-        this.stringId = stringId;
+    public Elections(String stringId, String name, int votes, int partiesSize){
+        this.id = stringId;
         this.name = name;
         this.votes = votes;
         this.partiesSize = partiesSize;
     }
 
-    public CompactElection() {
+    public Elections() {
 
     }
 }

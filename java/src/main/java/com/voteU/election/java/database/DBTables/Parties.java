@@ -1,11 +1,10 @@
-package com.voteU.election.java.CompactDTO;
+package com.voteU.election.java.database.DBTables;
 
-import com.voteU.election.java.CompactDTO.CompactElection;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "parties")
-public class PartyDTO {
+public class Parties {
 
     @Id
     private int id;
@@ -15,10 +14,10 @@ public class PartyDTO {
 
     @ManyToOne
     @JoinColumn(name = "election_id") // foreign key column in parties table
-    private CompactElection election;
+    private Elections election;
 
     // Constructors
-    public PartyDTO() {}
+    public Parties() {}
 
 
 }

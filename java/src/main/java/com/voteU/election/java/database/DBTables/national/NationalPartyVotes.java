@@ -1,6 +1,6 @@
-package com.voteU.election.java.PartyVotes;
+package com.voteU.election.java.database.DBTables.national;
 
-import com.voteU.election.java.PartyVotes.PartyVotes;
+import com.voteU.election.java.database.PartyVotes;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
