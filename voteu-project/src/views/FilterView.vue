@@ -285,11 +285,11 @@ function handleCandiChange(candidate: Candidate): void {
   selectedCandidate.value = candidate
 }
 
-function sortCandiNames(candidates: Candidate[]): Candidate[] {
-  return AffiStyleService.sortCandiNames(candidates)
+function sortCandidatesByName(candidates: Candidate[]): Candidate[] {
+  return AffiStyleService.sortCandidatesByName(candidates)
 }
 
-function sortCandiVotes(candidates: Candidate[]): Candidate[] {
+function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   return AffiStyleService.sortCandidatesByVotes(candidates)
 }
 </script>
@@ -466,13 +466,13 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
         <button class="back-btn" @click="selectedAffiliation = null">Back</button>
         <button
           class="back-btn"
-          @click="selectedAffiliation.candidates = sortCandiNames(selectedAffiliation.candidates)"
+          @click="selectedAffiliation.candidates = sortCandidatesByName(selectedAffiliation.candidates)"
         >
           sort by name
         </button>
         <button
           class="back-btn"
-          @click="selectedAffiliation.candidates = sortCandiVotes(selectedAffiliation.candidates)"
+          @click="selectedAffiliation.candidates = sortCandidatesByVotes(selectedAffiliation.candidates)"
         >
           sort by votes
         </button>

@@ -11,7 +11,7 @@ export class AffiStyleService {
     return `hsl(${hue}, 70%, 60%)`
   }
 
-  static sortCandiNames(candidates: Candidate[]): Candidate[] {
+  static sortCandidatesByName(candidates: Candidate[]): Candidate[] {
     return candidates.slice().sort((a, b) => {
       const lastNameA = a.lastName.toLowerCase()
       const lastNameB = b.lastName.toLowerCase()
