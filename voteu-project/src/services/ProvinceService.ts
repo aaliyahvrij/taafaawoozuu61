@@ -61,7 +61,7 @@ export class ProvinceService {
   ): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/parties`,
+        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/affiliations`,
         {
           method: 'GET',
           headers: {

@@ -190,13 +190,13 @@ async function getRepUnitVotes(
 ): Promise<void> {
   try {
     console.log(
-      'Fetching polling station votes for election:',
+      'Fetching reporting unit votes for election:',
       electionId,
       'constituency:',
       constId,
       'authority:',
       authorityId,
-      'polling station:',
+      'reporting unit:',
       repUnitId,
     )
     const response = await RepUnitService.getRepUnitVotesByAuthorityId(
@@ -209,7 +209,7 @@ async function getRepUnitVotes(
     console.log('votes', affiVotes.value)
     currentVoteLevel.value = 'RepUnit'
   } catch (error) {
-    console.error('Error fetching polling station votes:', error)
+    console.error('Error fetching reporting unit votes:', error)
   }
 }
 
@@ -268,7 +268,7 @@ async function getRepUnitsByAuthorityId(
   try {
     if (electionId && constId && authorityId) {
       console.log(
-        'Fetching polling stations for election:',
+        'Fetching reporting units for election:',
         electionId,
         'constituency:',
         constId,
@@ -283,7 +283,7 @@ async function getRepUnitsByAuthorityId(
       repUnits.value = Array.isArray(response) ? response : Object.values(response || {})
     }
   } catch (error) {
-    console.error('Error fetching polling stations:', error)
+    console.error('Error fetching reporting units:', error)
   }
 }
 
@@ -363,7 +363,7 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
       </div>
     </div>
 
-    <div class="constituency-filter">
+    <div class="consti-filter">
       <select
         class="dropdown"
         v-if="constituencies.length > 0"
@@ -715,14 +715,14 @@ function sortCandiVotes(candidates: Candidate[]): Candidate[] {
 }
 
 .election-filter,
-.constituency-filter,
+.consti-filter,
 .authority-filter {
   min-width: 120px;
   margin-right: 10px;
 }
 
 .election-filter select,
-.constituency-filter select,
+.consti-filter select,
 .authority-filter select {
   width: 100%;
 }

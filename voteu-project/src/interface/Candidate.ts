@@ -1,9 +1,9 @@
 export interface Candidate {
   id: number
+  shortCode: string
   firstName: string
   lastName: string
-  votes: number
-  shortCode: string
   gender: string
   localityName: string
+  votes: number
 }
