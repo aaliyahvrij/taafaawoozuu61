@@ -16,11 +16,9 @@ export class ProvinceService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }
-
       return await response.json()
     } catch (error) {
       console.error(error)
@@ -42,23 +40,17 @@ export class ProvinceService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }
-
       return await response.json()
     } catch (error) {
       console.error(error)
     }
-
     return null
   }
 
-  static async getAffiVotes(
-    electionId: string,
-    provinceId: number,
-  ): Promise<Affiliation[] | null> {
+  static async getAffiVotes(electionId: string, provinceId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/affiliations`,

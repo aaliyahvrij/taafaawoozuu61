@@ -2,7 +2,7 @@ import type { Constituency } from '@/interface/Constituency.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export class ConstiService {
-  static async getConstituenciesByElection(
+  static async getElectionLevel_constituencies(
     electionId: string,
   ): Promise<Record<number, Constituency> | null> {
     try {

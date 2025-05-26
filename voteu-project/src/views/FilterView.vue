@@ -243,7 +243,7 @@ async function getConstiLevel_authorities(
     if (electionId && constId) {
       const response = await AuthorityService.getConstiLevel_authorities(electionId, constId)
       authorities.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching authorities for election:', electionId, 'constituency:', constId)
+      console.log('Fetching authorities for election ', electionId, 'constituency ', constId)
     }
   } catch (error) {
     console.error('Error fetching authorities: ', error)

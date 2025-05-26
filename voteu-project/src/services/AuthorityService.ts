@@ -16,7 +16,6 @@ export class AuthorityService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }
@@ -42,7 +41,6 @@ export class AuthorityService {
           },
         },
       )
-
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)
       }
