@@ -21,14 +21,19 @@ export class ElectionService {
     return null
   }
 
-  static async getNationalAffiVotes(electionId: string): Promise<Record<number, Affiliation> | null> {
+  static async getNationalAffiVotes(
+    electionId: string,
+  ): Promise<Record<number, Affiliation> | null> {
     try {
-      const response = await fetch(`http://localhost:8080/api/election/TK${electionId}/affiliations`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `http://localhost:8080/api/election/TK${electionId}/affiliations`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error('HTTP error!: ' + response.status)

@@ -4,11 +4,11 @@ import type { Affiliation } from '@/interface/Affiliation.ts'
 export class AuthorityService {
   static async getAuthoritiesByConstId(
     electionId: string,
-    constituencyId: string,
+    constId: string,
   ): Promise<Record<string, Authority> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities/compact`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/compact`,
         {
           method: 'GET',
           headers: {
@@ -29,12 +29,12 @@ export class AuthorityService {
 
   static async getAuthorityVotesByConstId(
     electionId: string,
-    constituencyId: string,
+    constId: string,
     authorityId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/authorities/${authorityId}/parties`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/affiliations`,
         {
           method: 'GET',
           headers: {

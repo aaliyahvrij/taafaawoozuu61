@@ -2,7 +2,9 @@ import type { Constituency } from '@/interface/Constituency.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
 
 export class ConstiService {
-  static async getConstituenciesByElection(electionId: string,): Promise<Record<number, Constituency> | null> {
+  static async getConstituenciesByElection(
+    electionId: string,
+  ): Promise<Record<number, Constituency> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/constituencies/compact`,
@@ -24,7 +26,10 @@ export class ConstiService {
     return null
   }
 
-  static async getConstiAffiVotes(electionId: string, constId: string): Promise<Record<number, Affiliation> | null> {
+  static async getConstiAffiVotes(
+    electionId: string,
+    constId: string,
+  ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/affiliations`,

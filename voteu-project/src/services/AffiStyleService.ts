@@ -31,6 +31,4 @@ export class AffiStyleService {
   static sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
     return [...candidates].sort((a, b) => b.votes - a.votes) // descending order, highest votes first
   }
-
-
 }

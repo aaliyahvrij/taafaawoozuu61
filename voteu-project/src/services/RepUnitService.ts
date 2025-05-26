@@ -9,7 +9,7 @@ export class RepUnitService {
   ): Promise<Record<string, RepUnit> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/pollingStations`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/repUnits`,
         {
           method: 'GET',
           headers: {
