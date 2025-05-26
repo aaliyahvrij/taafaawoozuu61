@@ -1,7 +1,7 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.model.Candidate;
-import com.voteU.election.java.model.Affiliation;
+import com.voteU.election.java.models.Candidate;
+import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.utils.PathUtils;
 
 import javax.xml.stream.XMLStreamException;

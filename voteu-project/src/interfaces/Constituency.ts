@@ -1,5 +1,5 @@
-import type { Authority } from '@/interface/Authority.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
+import type { Authority } from '@/interfaces/Authority.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
 export interface Constituency {
   id: number

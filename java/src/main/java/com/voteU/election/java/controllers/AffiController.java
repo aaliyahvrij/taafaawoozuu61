@@ -1,4 +1,4 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controllers;
 
 import org.springframework.web.bind.annotation.*;
 

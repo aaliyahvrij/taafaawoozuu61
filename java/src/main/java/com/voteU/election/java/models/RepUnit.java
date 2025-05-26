@@ -1,4 +1,4 @@
-package com.voteU.election.java.model;
+package com.voteU.election.java.models;
 
 import lombok.Getter;
 

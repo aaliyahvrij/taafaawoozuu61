@@ -1,4 +1,4 @@
-import type { Affiliation } from '@/interface/Affiliation.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
 export interface RepUnit {
   id: string

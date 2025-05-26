@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type Ref, ref } from "vue";
 import { AuthorityService } from "@/services/AuthorityService.ts";
-import type { Authority } from "@/interface/Authority.ts";
+import type { Authority } from "@/interfaces/Authority.ts";
 
 // Refs for storing data
 const year: Ref<string> = ref('');

@@ -1,5 +1,5 @@
-import type { Affiliation } from '@/interface/Affiliation.ts'
-import type { RepUnit } from '@/interface/RepUnit.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { RepUnit } from '@/interfaces/RepUnit.ts'
 
 export class RepUnitService {
   static async getAuthorityLevel_repUnits(

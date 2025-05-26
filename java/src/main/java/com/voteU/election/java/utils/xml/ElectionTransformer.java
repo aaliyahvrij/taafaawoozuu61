@@ -1,6 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.model.*;
+import com.voteU.election.java.models.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

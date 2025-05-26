@@ -1,6 +1,6 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.model.RepUnit;
+import com.voteU.election.java.models.RepUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

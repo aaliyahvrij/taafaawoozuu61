@@ -1,5 +1,5 @@
-import type { Constituency } from '@/interface/Constituency.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
+import type { Constituency } from '@/interfaces/Constituency.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
 export class ConstiService {
   static async getElectionLevel_constituencies(

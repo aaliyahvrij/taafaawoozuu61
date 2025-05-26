@@ -1,4 +1,4 @@
-import type { Candidate } from '@/interface/Candidate.ts'
+import type { Candidate } from '@/interfaces/Candidate.ts'
 
 export interface Affiliation {
   id: number

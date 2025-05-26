@@ -1,6 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.model.Affiliation;
+import com.voteU.election.java.models.Affiliation;
 
 import java.util.*;
 

@@ -1,6 +1,6 @@
-import type { Province } from '@/interface/Province'
-import type { Constituency } from '@/interface/Constituency.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
+import type { Province } from '@/interfaces/Province'
+import type { Constituency } from '@/interfaces/Constituency.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
 export class ProvinceService {
   static async getElectionLevel_provinces(

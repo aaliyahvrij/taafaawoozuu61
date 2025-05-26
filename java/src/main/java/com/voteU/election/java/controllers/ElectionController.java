@@ -1,6 +1,6 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.model.*;
+import com.voteU.election.java.models.*;
 import com.voteU.election.java.services.ElectionService;
 import org.springframework.web.bind.annotation.*;
 

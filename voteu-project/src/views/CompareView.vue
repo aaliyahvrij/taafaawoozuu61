@@ -5,11 +5,11 @@ import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
-import type { Constituency } from '@/interface/Constituency.ts'
-import type { Authority } from '@/interface/Authority.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
-import type { Province } from '@/interface/Province.ts'
-import type { RepUnit } from '@/interface/RepUnit.ts'
+import type { Constituency } from '@/interfaces/Constituency.ts'
+import type { Authority } from '@/interfaces/Authority.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Province } from '@/interfaces/Province.ts'
+import type { RepUnit } from '@/interfaces/RepUnit.ts'
 
 // the first filter set
 const selectedElection1 = ref<'2021' | '2023' | null>(null)

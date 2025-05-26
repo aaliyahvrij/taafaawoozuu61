@@ -8,12 +8,12 @@ import { AuthorityService } from '@/services/AuthorityService.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
 import { AffiStyleService } from '@/services/AffiStyleService.ts'
 import AffiChart from '@/components/Data/charts/AffiChart.vue'
-import type { Province } from '@/interface/Province.ts'
-import type { Constituency } from '@/interface/Constituency.ts'
-import type { Authority } from '@/interface/Authority.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
-import type { RepUnit } from '@/interface/RepUnit.ts'
-import type { Candidate } from '@/interface/Candidate.ts'
+import type { Province } from '@/interfaces/Province.ts'
+import type { Constituency } from '@/interfaces/Constituency.ts'
+import type { Authority } from '@/interfaces/Authority.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { RepUnit } from '@/interfaces/RepUnit.ts'
+import type { Candidate } from '@/interfaces/Candidate.ts'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)

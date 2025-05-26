@@ -1,5 +1,5 @@
-import type { Election } from '@/interface/Election.ts'
-import type { Affiliation } from '@/interface/Affiliation.ts'
+import type { Election } from '@/interfaces/Election.ts'
+import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
 export class ElectionService {
   static async getElection(electionId: string): Promise<Election | null> {
