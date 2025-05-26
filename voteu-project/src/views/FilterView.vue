@@ -1,43 +1,36 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { ConstiService } from '@/services/ConstiService.ts'
-import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
+import { ConstiService } from '@/services/ConstiService.ts'
+import { AuthorityService } from '@/services/AuthorityService.ts'
 import { RepUnitService } from '@/services/RepUnitService.ts'
 import { AffiStyleService } from '@/services/AffiStyleService.ts'
-
+import AffiChart from '@/components/Data/charts/AffiChart.vue'
+import type { Province } from '@/interface/Province.ts'
 import type { Constituency } from '@/interface/Constituency.ts'
 import type { Authority } from '@/interface/Authority.ts'
 import type { Affiliation } from '@/interface/Affiliation.ts'
-import type { Candidate } from '@/interface/Candidate.ts'
-import type { Province } from '@/interface/Province.ts'
 import type { RepUnit } from '@/interface/RepUnit.ts'
-
-import AffiChart from '@/components/Data/charts/AffiChart.vue'
-//import BarAffiChart from '@/components/Data/charts/Bar/BarAffiChart.vue'
+import type { Candidate } from '@/interface/Candidate.ts'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
+const provinces = ref<Province[]>([])
 const selectedConstituency = ref<Constituency | null>(null)
+const constituencies = ref<Constituency[]>([])
 const selectedAuthority = ref<Authority | null>(null)
+const authorities = ref<Authority[]>([])
 const selectedRepUnit = ref<RepUnit | null>(null)
-
+const repUnits = ref<RepUnit[]>([])
 const selectedAffiliation = ref<Affiliation | null>(null)
 const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
-
-const provinces = ref<Province[]>([])
-const constituencies = ref<Constituency[]>([])
-const authorities = ref<Authority[]>([])
-const repUnits = ref<RepUnit[]>([])
-
 const hasApplied = ref(false)
 const currentVoteLevel = ref<
-  'National' | 'Constituency' | 'Municipality' | 'Province' | 'RepUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
 >(null)
-
 const displayedAffiVotes = computed(() => affiVotes.value)
 
 function handleApply(): void {
@@ -122,9 +115,9 @@ function clearSelectedRepUnit(): void {
 async function getNationalAffiVotes(electionId: string): Promise<void> {
   try {
     console.log('Fetching national affiliation votes for election:', electionId)
-    const response = await ElectionService.getNationalAffiVotes(electionId)
+    const response = await ElectionService.getNationalLevelAffiVotes(electionId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'National'
+    currentVoteLevel.value = 'national'
   } catch (error) {
     console.error('Error fetching national affiliation votes:', error)
   }
@@ -134,7 +127,7 @@ async function getProvinceAffiVotes(electionId: string, provinceId: number): Pro
   try {
     const response = await ProvinceService.getProvinceAffiVotes(electionId, provinceId)
     affiVotes.value = response
-    currentVoteLevel.value = 'Province'
+    currentVoteLevel.value = 'province'
   } catch (error) {
     console.error('Error fetching province affiliation votes:', error)
   }
@@ -150,7 +143,7 @@ async function getConstiAffiVotes(electionId: string, constId: string): Promise<
     )
     const response = await ConstiService.getConstiAffiVotes(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'Constituency'
+    currentVoteLevel.value = 'constituency'
   } catch (error) {
     console.error('Error fetching constituency affiliation votes:', error)
   }
@@ -176,7 +169,7 @@ async function getAuthorityAffiVotes(
       authorityId,
     )
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'Municipality'
+    currentVoteLevel.value = 'authority'
   } catch (error) {
     console.error('Error fetching authority affiliation votes:', error)
   }
@@ -207,7 +200,7 @@ async function getRepUnitVotes(
     )
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiVotes.value)
-    currentVoteLevel.value = 'RepUnit'
+    currentVoteLevel.value = 'repUnit'
   } catch (error) {
     console.error('Error fetching reporting unit votes:', error)
   }
