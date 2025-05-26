@@ -1,8 +1,7 @@
-package com.voteU.election.java.reader;
+package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.utils.PathUtils;
-import com.voteU.election.java.utils.xml.ElectionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

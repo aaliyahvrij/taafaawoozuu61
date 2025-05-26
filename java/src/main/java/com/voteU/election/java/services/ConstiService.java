@@ -1,7 +1,7 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.model.Constituency;
-import com.voteU.election.java.reader.ElectionReader;
+import com.voteU.election.java.utils.xml.ElectionReader;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

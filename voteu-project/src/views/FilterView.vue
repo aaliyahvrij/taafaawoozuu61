@@ -456,7 +456,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       >
         <div class="affi-name">{{ affiliation.name }}</div>
         <div class="affi-votes">{{ affiliation.votes.toLocaleString() }} votes</div>
-        <div class="affi-percentage">{{ affiliation.percentage.toFixed(2) }} %</div>
+        <div class="affi-percentage">{{ affiliation.percentage.toFixed(2) }}%</div>
       </div>
     </div>
     <div v-if="selectedAffiliation && selectedElection && !selectedCandidate">
