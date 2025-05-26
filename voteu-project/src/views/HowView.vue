@@ -2,7 +2,7 @@
 
 <template>
   <main>
-    <h1>How to use the filter component</h1>
+    <h1>How To Use The Filter Component</h1>
   </main>
 </template>
 
