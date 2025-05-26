@@ -27,7 +27,7 @@ export class RepUnitService {
     return null
   }
 
-  static async getRepUnitVotesByAuthorityId(
+  static async getAuthorityLevel_repUnitVotes(
     electionId: string,
     constId: string,
     authorityId: string,

@@ -43,7 +43,7 @@ const authorities2 = ref<Authority[]>([])
 const repUnits2 = ref<RepUnit[]>([])
 
 // --- Helper functies voor ophalen filters (herbruikbaar) ---
-async function getProvincesByElection(
+async function getElectionLevel_provinces(
   election: string | null,
   provincesRef: typeof provinces1,
   clearSelectedProvince: () => void,
@@ -61,7 +61,7 @@ async function getProvincesByElection(
   }
 }
 
-async function getConstituenciesByProvinceId(
+async function getProvinceLevel_constituencies(
   election: string | null,
   provinceId: string | undefined,
   constituenciesRef: typeof constituencies1,
@@ -80,7 +80,7 @@ async function getConstituenciesByProvinceId(
   }
 }
 
-async function getAuthoritiesByConstituency(
+async function getConstiLevel_authorities(
   election: string | null,
   constId: string | undefined,
   authoritiesRef: typeof authorities1,
@@ -99,7 +99,7 @@ async function getAuthoritiesByConstituency(
   }
 }
 
-async function getRepUnitsByAuthorityId(
+async function getAuthorityLevel_repUnits(
   election: string | null,
   constId: string | undefined,
   authorityId: string | undefined,
@@ -120,7 +120,7 @@ async function getRepUnitsByAuthorityId(
 }
 
 // Affiliation votes ophalen (herbruikbaar)
-async function fetchPartyVotes(
+async function fetchAffiVotes(
   election: string | null,
   repUnit: RepUnit | null,
   authority: Authority | null,
@@ -136,7 +136,7 @@ async function fetchPartyVotes(
   }
   try {
     if (repUnit && authority && constituency) {
-      const res = await RepUnitService.getRepUnitVotesByAuthorityId(
+      const res = await RepUnitService.getAuthorityLevel_repUnitVotes(
         election,
         constituency.id.toString(),
         authority.id.toString(),
@@ -145,7 +145,7 @@ async function fetchPartyVotes(
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'repUnit'
     } else if (authority && constituency) {
-      const res = await AuthorityService.getAuthorityVotesByConstId(
+      const res = await AuthorityService.getConstiLevel_authorityVotes(
         election,
         constituency.id.toString(),
         authority.id.toString(),
@@ -183,7 +183,7 @@ function clearProvinceAndBelow1() {
   selectedRepUnit1.value = null
 }
 
-function clearConstituencyAndBelow1() {
+function clearConstiAndBelow1() {
   selectedConsti1.value = null
   authorities1.value = []
   selectedAuthority1.value = null
@@ -211,7 +211,7 @@ function clearProvinceAndBelow2() {
   selectedRepUnit2.value = null
 }
 
-function clearConstituencyAndBelow2() {
+function clearConstiAndBelow2() {
   selectedConsti2.value = null
   authorities2.value = []
   selectedAuthority2.value = null
@@ -234,29 +234,29 @@ async function onElectionChange1() {
   clearProvinceAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
-  await getProvincesByElection(selectedElection1.value, provinces1, clearProvinceAndBelow1)
+  await getElectionLevel_provinces(selectedElection1.value, provinces1, clearProvinceAndBelow1)
 }
 
 async function onProvinceChange1() {
-  clearConstituencyAndBelow1()
+  clearConstiAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedProvince1.value) {
-    await getConstituenciesByProvinceId(
+    await getProvinceLevel_constituencies(
       selectedElection1.value,
       selectedProvince1.value.id.toString(),
       constituencies1,
-      clearConstituencyAndBelow1,
+      clearConstiAndBelow1,
     )
   }
 }
 
-async function onConstituencyChange1() {
+async function onConstiChange1() {
   clearAuthorityAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedConsti1.value) {
-    await getAuthoritiesByConstituency(
+    await getConstiLevel_authorities(
       selectedElection1.value,
       selectedConsti1.value.id.toString(),
       authorities1,
@@ -270,7 +270,7 @@ async function onAuthorityChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedAuthority1.value) {
-    await getRepUnitsByAuthorityId(
+    await getAuthorityLevel_repUnits(
       selectedElection1.value,
       selectedConsti1.value?.id.toString(),
       selectedAuthority1.value.id.toString(),
@@ -290,19 +290,19 @@ async function onElectionChange2() {
   clearProvinceAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
-  await getProvincesByElection(selectedElection2.value, provinces2, clearProvinceAndBelow2)
+  await getElectionLevel_provinces(selectedElection2.value, provinces2, clearProvinceAndBelow2)
 }
 
 async function onProvinceChange2() {
-  clearConstituencyAndBelow2()
+  clearConstiAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedProvince2.value) {
-    await getConstituenciesByProvinceId(
+    await getProvinceLevel_constituencies(
       selectedElection2.value,
       selectedProvince2.value.id.toString(),
       constituencies2,
-      clearConstituencyAndBelow2,
+      clearConstiAndBelow2,
     )
   }
 }
@@ -312,7 +312,7 @@ async function onConstiChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedConsti2.value) {
-    await getAuthoritiesByConstituency(
+    await getConstiLevel_authorities(
       selectedElection2.value,
       selectedConsti2.value.id.toString(),
       authorities2,
@@ -326,7 +326,7 @@ async function onAuthorityChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedAuthority2.value) {
-    await getRepUnitsByAuthorityId(
+    await getAuthorityLevel_repUnits(
       selectedElection2.value,
       selectedConsti2.value?.id.toString(),
       selectedAuthority2.value.id.toString(),
@@ -347,7 +347,7 @@ async function applyFilter() {
     return
   }
   if (selectedElection1.value) {
-    await fetchPartyVotes(
+    await fetchAffiVotes(
       selectedElection1.value,
       selectedRepUnit1.value,
       selectedAuthority1.value,
@@ -360,7 +360,7 @@ async function applyFilter() {
     affiVotes1.value = currentVoteLevel1.value = null
   }
   if (selectedElection2.value) {
-    await fetchPartyVotes(
+    await fetchAffiVotes(
       selectedElection2.value,
       selectedRepUnit2.value,
       selectedAuthority2.value,
@@ -401,7 +401,7 @@ async function applyFilter() {
         <select
           v-if="constituencies1.length > 0"
           v-model="selectedConsti1"
-          @change="onConstituencyChange1"
+          @change="onConstiChange1"
         >
           <option value="null" disabled>Select a constituency</option>
           <option

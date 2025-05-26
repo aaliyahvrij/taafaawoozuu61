@@ -27,7 +27,7 @@ export class AuthorityService {
     return null
   }
 
-  static async getAuthorityVotesByConstId(
+  static async getConstiLevel_authorityVotes(
     electionId: string,
     constId: string,
     authorityId: string,

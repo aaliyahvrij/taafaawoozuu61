@@ -153,7 +153,7 @@ async function getAuthorityLevel_affiVotes(
   authorityId: string,
 ): Promise<void> {
   try {
-    const response = await AuthorityService.getAuthorityVotesByConstId(
+    const response = await AuthorityService.getConstiLevel_authorityVotes(
       electionId,
       constId,
       authorityId,
@@ -180,7 +180,7 @@ async function getRepUnitVotes(
   repUnitId: string,
 ): Promise<void> {
   try {
-    const response = await RepUnitService.getRepUnitVotesByAuthorityId(
+    const response = await RepUnitService.getAuthorityLevel_repUnitVotes(
       electionId,
       constId,
       authorityId,
