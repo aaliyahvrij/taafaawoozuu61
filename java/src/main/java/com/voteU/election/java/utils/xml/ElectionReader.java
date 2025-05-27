@@ -39,7 +39,7 @@ public class ElectionReader {
             }
         }
         System.out.println("All files are processed.\n");
-        return transformer.getElectionListDataMap();
+        return transformer.getElectionListMap();
     }
 
     public Election getElection(String electionId) {
