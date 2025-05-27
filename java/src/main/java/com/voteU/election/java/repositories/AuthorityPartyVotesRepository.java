@@ -18,13 +18,13 @@ public interface AuthorityPartyVotesRepository extends JpaRepository<AuthorityPa
     List<AuthorityPartyVotes> findByAuthority_IdAndElection_IdAndParty_Id(String authorityId, String electionId, int partyId);
 
     @Query("""
-    SELECT new com.voteU.election.java.CompactDTO.PartyVotesDTO(party.id, party.name, apv.votes)
+    SELECT new com.voteU.election.java.database.responseDTO.PartyVotesDTO(party.id, party.name, apv.votes)
     FROM AuthorityPartyVotes apv
     JOIN apv.party party
     JOIN apv.authority authority
     JOIN apv.election election
     WHERE authority.id = :authorityId AND election.id = :electionId
 """)
-    List<PartyVotesDTO> findPartyVotesByAuthorityExplicit(@Param("authorityId") String authorityId,
+    List<PartyVotesDTO> findPartyVotesByAuthority(@Param("authorityId") String authorityId,
                                                           @Param("electionId") String electionId);
 }

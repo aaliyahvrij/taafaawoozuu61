@@ -16,7 +16,7 @@ public interface NationalPartyVotesRepository extends JpaRepository<NationalPart
     // Find votes for a specific party in an election
     List<NationalPartyVotes> findByElectionIdAndPartyId(String electionId, Long partyId);
 
-    @Query("SELECT new com.voteU.election.java.CompactDTO.PartyVotesDTO(p.id, p.name, v.votes) " +
+    @Query("SELECT new com.voteU.election.java.database.responseDTO.PartyVotesDTO(p.id, p.name, v.votes) " +
             "FROM NationalPartyVotes v JOIN v.party p " +
             "WHERE v.election.id = :electionId")
     List<PartyVotesDTO> findPartyVotesByElection(@Param("electionId") String electionId);

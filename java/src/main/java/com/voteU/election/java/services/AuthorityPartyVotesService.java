@@ -18,7 +18,7 @@ public class AuthorityPartyVotesService {
     }
 
 
-    public List<PartyVotesDTO> getPartyVoteSummaries(String authorityId, String electionId) {
+    public List<PartyVotesDTO> getPartyVotesByAuthority(String authorityId, String electionId) {
         return repository.findPartyVotesByAuthority(authorityId, electionId);
     }
 }

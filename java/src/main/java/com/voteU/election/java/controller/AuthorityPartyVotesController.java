@@ -21,8 +21,8 @@ public class AuthorityPartyVotesController {
 
     // 4. Get summarized party votes in a specific authority (DTO)
     @GetMapping("/summary/authority/{authorityId}/election/{electionId}")
-    public List<PartyVotesDTO> getPartyVotesSummary(@PathVariable String authorityId,
+    public List<PartyVotesDTO> getPartyVotesByAuthority(@PathVariable String authorityId,
                                                     @PathVariable String electionId) {
-        return service.getPartyVoteSummaries(authorityId, electionId);
+        return service.getPartyVotesByAuthority(authorityId, electionId);
     }
 }
