@@ -682,7 +682,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(CONSTI_ID);
             }
-            transformer.registerCandiLevel_ConstiData(constiMap);
+            transformer.registerCandiLevel_constiData(constiMap);
             if (parser.findBeginTag(AFFILIATION)) {
                 while (parser.getLocalName().equals(AFFILIATION)) {
                     processAffiliation(constiMap, parser);

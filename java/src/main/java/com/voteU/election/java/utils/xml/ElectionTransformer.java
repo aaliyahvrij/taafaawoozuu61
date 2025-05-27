@@ -13,7 +13,6 @@ import java.util.*;
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> electionListDataMap = new HashMap<>();
-    //Map<Integer, Affiliation> affiListMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),    // Flevoland
             Map.entry(2, 3),    // Friesland
@@ -153,7 +152,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerCandiLevel_ConstiData(Map<String, String> constiMap) {
+    public void registerCandiLevel_constiData(Map<String, String> constiMap) {
 
     }
 
@@ -177,7 +176,7 @@ public class ElectionTransformer implements Transformer<Election> {
                 Candidate newCandidate = new Candidate(candId, firstName, lastName);
                 newCandidate.setGender(gender);
                 newCandidate.setLocalityName(localityName);
-                newCandidate.setAffId(affId); // This may be missing in your original, depending on Candidate class
+                newCandidate.setAffId(affId); // This may be missing in your original, depending on the Candidate class
                 affiliation.addCandidate(newCandidate);
             }
         }
