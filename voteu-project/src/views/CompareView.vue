@@ -1,457 +1,252 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
-import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
-import { AuthorityService } from '@/services/AuthorityService.ts'
-import { ElectionService } from '@/services/ElectionService.ts'
-import { ProvinceService } from '@/services/ProvinceService.ts'
-import { PollingStationService } from '@/services/PollingStationService.ts'
-
+import { computed, type Ref, ref } from 'vue'
+import type { Province } from '@/interface/Province.ts'
 import type { Constituency } from '@/interface/Constituency.ts'
 import type { Authority } from '@/interface/Authority.ts'
-import type { Party } from '@/interface/Party.ts'
-import type { Province } from '@/interface/Province.ts'
 import type { PollingStation } from '@/interface/PollingStation.ts'
+import type { Party } from '@/interface/Party.ts'
+
+import { ElectionService } from '@/services/ElectionService.ts'
+import { ProvinceService } from '@/services/ProvinceService.ts'
+import { AuthorityService } from '@/services/AuthorityService.ts'
+import { PollingStationService } from '@/services/PollingStationService.ts'
+import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
+
+import RegionFilter from '@/components/filters/RegionFilter.vue'
+import BarChartCompare from '@/components/Data/charts/BarChartCompare.vue'
+
+const election1 = ref<string | null>(null)
+const province1 = ref<Province | null>(null)
+const constituency1 = ref<Constituency | null>(null)
+const authority1 = ref<Authority | null>(null)
+const pollingStation1 = ref<PollingStation | null>(null)
+
+const filterTags1 = computed(() => {
+  const tags = []
+  if (election1.value) tags.push({ key: 'election1', label: election1.value })
+  if (province1.value) tags.push({ key: 'province1', label: province1.value.name })
+  if (constituency1.value) tags.push({ key: 'constituency1', label: constituency1.value.name })
+  if (authority1.value) tags.push({ key: 'authority1', label: authority1.value.name })
+  if (pollingStation1.value) tags.push({ key: 'pollingStation1', label: pollingStation1.value.name })
+  return tags
+})
+
+function removeFilter(key: string) {
+  switch (key) {
+    case 'election1': election1.value = null; break
+    case 'province1': province1.value = null; break
+    case 'constituency1': constituency1.value = null; break
+    case 'authority1': authority1.value = null; break
+    case 'pollingStation1': pollingStation1.value = null; break
+  }
+}
 
 
-// the first filter set
-const selectedElection1 = ref<'2021' | '2023' | null>(null)
-const selectedProvince1 = ref<Province | null>(null)
-const selectedConstituency1 = ref<Constituency | null>(null)
-const selectedAuthority1 = ref<Authority | null>(null)
-const selectedPollingStation1 = ref<PollingStation | null>(null)
+const election2 = ref<string | null>(null)
+const province2 = ref<Province | null>(null)
+const constituency2 = ref<Constituency | null>(null)
+const authority2 = ref<Authority | null>(null)
+const pollingStation2 = ref<PollingStation | null>(null)
+
+const filterTags2 = computed(() => {
+  const tags = []
+  if (election2.value) tags.push({ key: 'election2', label: election2.value })
+  if (province2.value) tags.push({ key: 'province2', label: province2.value.name })
+  if (constituency2.value) tags.push({ key: 'constituency2', label: constituency2.value.name })
+  if (authority2.value) tags.push({ key: 'authority2', label: authority2.value.name })
+  if (pollingStation2.value) tags.push({ key: 'pollingStation2', label: pollingStation2.value.name })
+  return tags
+})
+
+function removeFilter2(key: string) {
+  switch (key) {
+    case 'election2': election2.value = null; break
+    case 'province2': province2.value = null; break
+    case 'constituency2': constituency2.value = null; break
+    case 'authority2': authority2.value = null; break
+    case 'pollingStation2': pollingStation2.value = null; break
+  }
+}
 
 const partyVotes1 = ref<Party[] | null>(null)
-const currentVoteLevel1 = ref<'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null>(null)
-
-const provinces1 = ref<Province[]>([])
-const constituencies1 = ref<Constituency[]>([])
-const authorities1 = ref<Authority[]>([])
-const pollingStations1 = ref<PollingStation[]>([])
-
-// the second filter set
-const selectedElection2 = ref<'2021' | '2023' | null>(null)
-const selectedProvince2 = ref<Province | null>(null)
-const selectedConstituency2 = ref<Constituency | null>(null)
-const selectedAuthority2 = ref<Authority | null>(null)
-const selectedPollingStation2 = ref<PollingStation | null>(null)
-
 const partyVotes2 = ref<Party[] | null>(null)
-const currentVoteLevel2 = ref<'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null>(null)
 
-const provinces2 = ref<Province[]>([])
-const constituencies2 = ref<Constituency[]>([])
-const authorities2 = ref<Authority[]>([])
-const pollingStations2 = ref<PollingStation[]>([])
 
-// --- Helper functies voor ophalen filters (herbruikbaar) ---
-async function getProvincesByElection(election: string | null, provincesRef: typeof provinces1, clearSelectedProvince: () => void) {
-  if (!election) {
-    provincesRef.value = []
-    clearSelectedProvince()
-    return
-  }
-  try {
-    const response = await ProvinceService.getProvincesByElection(election)
-    provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching provinces:', error)
-  }
-}
-
-async function getConstituenciesByProvinceId(election: string | null, provinceId: string | undefined, constituenciesRef: typeof constituencies1, clearSelectedConstituency: () => void) {
-  if (!election || !provinceId) {
-    constituenciesRef.value = []
-    clearSelectedConstituency()
-    return
-  }
-  try {
-    const response = await ProvinceService.getConstituenciesByProvinceId(election, provinceId)
-    constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching constituencies:', error)
-  }
-}
-
-async function getAuthoritiesByConstituency(election: string | null, constituencyId: string | undefined, authoritiesRef: typeof authorities1, clearSelectedAuthority: () => void) {
-  if (!election || !constituencyId) {
-    authoritiesRef.value = []
-    clearSelectedAuthority()
-    return
-  }
-  try {
-    const response = await AuthorityService.getAuthoritiesByConstituencyId(election, constituencyId)
-    authoritiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching authorities:', error)
-  }
-}
-
-async function getPollingStationsByAuthorityId(election: string | null, constituencyId: string | undefined, authorityId: string | undefined, pollingStationsRef: typeof pollingStations1, clearSelectedPollingStation: () => void) {
-  if (!election || !constituencyId || !authorityId) {
-    pollingStationsRef.value = []
-    clearSelectedPollingStation()
-    return
-  }
-  try {
-    const response = await PollingStationService.getPollingStationsByAuthorityId(election, constituencyId, authorityId)
-    pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching polling stations:', error)
-  }
-}
-
-// --- Party votes ophalen (herbruikbaar) ---
-async function fetchPartyVotes(
-  election: string | null,
-  pollingStation: PollingStation | null,
-  authority: Authority | null,
-  constituency: Constituency | null,
-  province: Province | null,
-  partyVotesRef: typeof partyVotes1,
-  currentVoteLevelRef: typeof currentVoteLevel1
-) {
-  if (!election) {
-    partyVotesRef.value = null
-    currentVoteLevelRef.value = null
-    return
-  }
+async function fetchVotes(election: string | null, ps: PollingStation | null, auth: Authority | null, con: Constituency | null, prov: Province | null, votesRef: Ref<Party[] | null>,): Promise<void> {
+  if (!election) return
 
   try {
-    if (pollingStation && authority && constituency) {
-      const res = await PollingStationService.getPollingStationVotesByAuthorityId(
-        election,
-        constituency.id.toString(),
-        authority.id.toString(),
-        pollingStation.id.toString()
-      )
-      partyVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'pollingStation'
+    let data: Record<number, Party> | Party[] | null
 
-    } else if (authority && constituency) {
-      const res = await AuthorityService.getAuthorityVotesByConstituencyId(
-        election,
-        constituency.id.toString(),
-        authority.id.toString()
-      )
-      partyVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'municipality'
-
-    } else if (constituency) {
-      const res = await ConstituencyServiceService.getConstituencyPartyVotes(
-        election,
-        constituency.id.toString()
-      )
-      partyVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'constituency'
-
-    } else if (province) {
-      const res = await ProvinceService.getProvincePartyVotes(election, province.id)
-      partyVotesRef.value = res
-      currentVoteLevelRef.value = 'province'
-
+    if (ps && auth && con) {
+      data = await PollingStationService.getPollingStationVotesByAuthorityId(election,con.id.toString(), auth.id, ps.id)
+    } else if (auth && con) {
+      data = await AuthorityService.getAuthorityVotesByConstituencyId(election, con.id.toString(), auth.id)
+    } else if (con) {
+      data = await ConstituencyServiceService.getConstituencyPartyVotes(election, con.id.toString())
+    } else if (prov) {
+      data = await ProvinceService.getProvincePartyVotes(election, prov.id)
     } else {
-      const res = await ElectionService.getNationalPartyVotes(election)
-      partyVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'national'
+      data = await ElectionService.getNationalPartyVotes(election)
     }
-  } catch (error) {
-    console.error('Error fetching party votes:', error)
-    partyVotesRef.value = null
-    currentVoteLevelRef.value = null
+
+    if (!data) {
+      votesRef.value = null
+      return
+    }
+
+    if (Array.isArray(data)) {
+      votesRef.value = data
+    } else {
+      votesRef.value = Object.values(data)
+    }
+  } catch (err) {
+    console.error('Error fetching votes:', err)
+    votesRef.value = null
   }
 }
 
-// --- Reset functies per filterset ---
-function clearProvinceAndBelow1() {
-  selectedProvince1.value = null
-  constituencies1.value = []
-  selectedConstituency1.value = null
-  authorities1.value = []
-  selectedAuthority1.value = null
-  pollingStations1.value = []
-  selectedPollingStation1.value = null
+function applyCompare() {
+  fetchVotes(election1.value, pollingStation1.value, authority1.value, constituency1.value, province1.value, partyVotes1)
+  fetchVotes(election2.value, pollingStation2.value, authority2.value, constituency2.value, province2.value, partyVotes2)
+
 }
-
-function clearConstituencyAndBelow1() {
-  selectedConstituency1.value = null
-  authorities1.value = []
-  selectedAuthority1.value = null
-  pollingStations1.value = []
-  selectedPollingStation1.value = null
-}
-
-function clearAuthorityAndBelow1() {
-  selectedAuthority1.value = null
-  pollingStations1.value = []
-  selectedPollingStation1.value = null
-}
-
-function clearPollingStation1() {
-  selectedPollingStation1.value = null
-}
-
-function clearProvinceAndBelow2() {
-  selectedProvince2.value = null
-  constituencies2.value = []
-  selectedConstituency2.value = null
-  authorities2.value = []
-  selectedAuthority2.value = null
-  pollingStations2.value = []
-  selectedPollingStation2.value = null
-}
-
-function clearConstituencyAndBelow2() {
-  selectedConstituency2.value = null
-  authorities2.value = []
-  selectedAuthority2.value = null
-  pollingStations2.value = []
-  selectedPollingStation2.value = null
-}
-
-function clearAuthorityAndBelow2() {
-  selectedAuthority2.value = null
-  pollingStations2.value = []
-  selectedPollingStation2.value = null
-}
-
-function clearPollingStation2() {
-  selectedPollingStation2.value = null
-}
-
-// --- Handlers eerste filter set ---
-async function onElectionChange1() {
-  clearProvinceAndBelow1()
-  partyVotes1.value = null
-  currentVoteLevel1.value = null
-  await getProvincesByElection(selectedElection1.value, provinces1, clearProvinceAndBelow1)
-}
-
-async function onProvinceChange1() {
-  clearConstituencyAndBelow1()
-  partyVotes1.value = null
-  currentVoteLevel1.value = null
-  if (selectedProvince1.value) {
-    await getConstituenciesByProvinceId(selectedElection1.value, selectedProvince1.value.id.toString(), constituencies1, clearConstituencyAndBelow1)
-  }
-}
-
-async function onConstituencyChange1() {
-  clearAuthorityAndBelow1()
-  partyVotes1.value = null
-  currentVoteLevel1.value = null
-  if (selectedConstituency1.value) {
-    await getAuthoritiesByConstituency(selectedElection1.value, selectedConstituency1.value.id.toString(), authorities1, clearAuthorityAndBelow1)
-  }
-}
-
-async function onAuthorityChange1() {
-  clearPollingStation1()
-  partyVotes1.value = null
-  currentVoteLevel1.value = null
-  if (selectedAuthority1.value) {
-    await getPollingStationsByAuthorityId(
-      selectedElection1.value,
-      selectedConstituency1.value?.id.toString(),
-      selectedAuthority1.value.id.toString(),
-      pollingStations1,
-      clearPollingStation1
-    )
-  }
-}
-
-function onPollingStationChange1() {
-  partyVotes1.value = null
-  currentVoteLevel1.value = null
-}
-
-// --- Handlers tweede filter set ---
-async function onElectionChange2() {
-  clearProvinceAndBelow2()
-  partyVotes2.value = null
-  currentVoteLevel2.value = null
-  await getProvincesByElection(selectedElection2.value, provinces2, clearProvinceAndBelow2)
-}
-
-async function onProvinceChange2() {
-  clearConstituencyAndBelow2()
-  partyVotes2.value = null
-  currentVoteLevel2.value = null
-  if (selectedProvince2.value) {
-    await getConstituenciesByProvinceId(selectedElection2.value, selectedProvince2.value.id.toString(), constituencies2, clearConstituencyAndBelow2)
-  }
-}
-
-async function onConstituencyChange2() {
-  clearAuthorityAndBelow2()
-  partyVotes2.value = null
-  currentVoteLevel2.value = null
-  if (selectedConstituency2.value) {
-    await getAuthoritiesByConstituency(selectedElection2.value, selectedConstituency2.value.id.toString(), authorities2, clearAuthorityAndBelow2)
-  }
-}
-
-async function onAuthorityChange2() {
-  clearPollingStation2()
-  partyVotes2.value = null
-  currentVoteLevel2.value = null
-  if (selectedAuthority2.value) {
-    await getPollingStationsByAuthorityId(
-      selectedElection2.value,
-      selectedConstituency2.value?.id.toString(),
-      selectedAuthority2.value.id.toString(),
-      pollingStations2,
-      clearPollingStation2
-    )
-  }
-}
-
-function onPollingStationChange2() {
-  partyVotes2.value = null
-  currentVoteLevel2.value = null
-}
-
-// --- Functie om filter toe te passen (beide sets) ---
-async function applyFilter() {
-  if (!selectedElection1.value && !selectedElection2.value) {
-    alert('Select at least one election year to show results.')
-    return
-  }
-
-  if (selectedElection1.value) {
-    await fetchPartyVotes(
-      selectedElection1.value,
-      selectedPollingStation1.value,
-      selectedAuthority1.value,
-      selectedConstituency1.value,
-      selectedProvince1.value,
-      partyVotes1,
-      currentVoteLevel1
-    )
-  } else {
-    partyVotes1.value = null
-    currentVoteLevel1.value = null
-  }
-
-  if (selectedElection2.value) {
-    await fetchPartyVotes(
-      selectedElection2.value,
-      selectedPollingStation2.value,
-      selectedAuthority2.value,
-      selectedConstituency2.value,
-      selectedProvince2.value,
-      partyVotes2,
-      currentVoteLevel2
-    )
-  } else {
-    partyVotes2.value = null
-    currentVoteLevel2.value = null
-  }
-}
-
 </script>
 
 <template>
   <div class="compare-view">
-    <h2 style="text-align: center; margin-bottom: 1rem;">Compare Election Results</h2>
+    <h2>Compare Election Results</h2>
 
     <div class="filters-wrapper">
-      <!-- Filter Set 1 -->
       <div class="filter-set">
-        <h3>Set 1</h3>
-
-        <select v-model="selectedElection1" @change="onElectionChange1">
-          <option value=null disabled>Select election year</option>
-          <option value="2021">2021</option>
-          <option value="2023">2023</option>
-        </select>
-
-        <select v-if="provinces1.length > 0" v-model="selectedProvince1" @change="onProvinceChange1">
-          <option value=null disabled>Select a province</option>
-          <option v-for="province in provinces1" :key="province.id" :value="province">{{ province.name }}</option>
-        </select>
-
-        <select v-if="constituencies1.length > 0" v-model="selectedConstituency1" @change="onConstituencyChange1">
-          <option value=null disabled>Select a constituency</option>
-          <option v-for="constituency in constituencies1" :key="constituency.id" :value="constituency">{{ constituency.name }}</option>
-        </select>
-
-        <select v-if="authorities1.length > 0" v-model="selectedAuthority1" @change="onAuthorityChange1">
-          <option value=null disabled>Select a municipality</option>
-          <option v-for="authority in authorities1" :key="authority.id" :value="authority">{{ authority.name }}</option>
-        </select>
-
-        <select v-if="pollingStations1.length > 0" v-model="selectedPollingStation1" @change="onPollingStationChange1">
-          <option value=null disabled>Select a polling station</option>
-          <option v-for="ps in pollingStations1" :key="ps.id" :value="ps">{{ ps.name }}</option>
-        </select>
+        <h3>Filter Set 1</h3>
+        <RegionFilter
+          :election="election1"
+          :province="province1"
+          :constituency="constituency1"
+          :authority="authority1"
+          :pollingStation="pollingStation1"
+          @update:election="election1 = $event"
+          @update:province="province1 = $event"
+          @update:constituency="constituency1 = $event"
+          @update:authority="authority1 = $event"
+          @update:pollingStation="pollingStation1 = $event"
+        />
+        <div class="filter-tags">
+          <span v-for="tag in filterTags1" :key="tag.key" class="tag">
+            {{ tag.label }}
+            <button @click="removeFilter(tag.key)">x</button>
+          </span>
+        </div>
       </div>
 
-      <!-- Filter Set 2 -->
       <div class="filter-set">
-        <h3>Set 2</h3>
-
-        <select v-model="selectedElection2" @change="onElectionChange2">
-          <option value=null disabled>Select election year</option>
-          <option value="2021">2021</option>
-          <option value="2023">2023</option>
-        </select>
-
-        <select v-if="provinces2.length > 0" v-model="selectedProvince2" @change="onProvinceChange2">
-          <option value=null disabled>Select a province</option>
-          <option v-for="province in provinces2" :key="province.id" :value="province">{{ province.name }}</option>
-        </select>
-
-        <select v-if="constituencies2.length > 0" v-model="selectedConstituency2" @change="onConstituencyChange2">
-          <option value=null disabled>Select a constituency</option>
-          <option v-for="constituency in constituencies2" :key="constituency.id" :value="constituency">{{ constituency.name }}</option>
-        </select>
-
-        <select v-if="authorities2.length > 0" v-model="selectedAuthority2" @change="onAuthorityChange2">
-          <option value=null disabled>Select a municipality</option>
-          <option v-for="authority in authorities2" :key="authority.id" :value="authority">{{ authority.name }}</option>
-        </select>
-
-        <select v-if="pollingStations2.length > 0" v-model="selectedPollingStation2" @change="onPollingStationChange2">
-          <option value=null disabled>Select a polling station</option>
-          <option v-for="ps in pollingStations2" :key="ps.id" :value="ps">{{ ps.name }}</option>
-        </select>
+        <h3>Filter Set 2</h3>
+        <RegionFilter
+          :election="election2"
+          :province="province2"
+          :constituency="constituency2"
+          :authority="authority2"
+          :pollingStation="pollingStation2"
+          @update:election="election2 = $event"
+          @update:province="province2 = $event"
+          @update:constituency="constituency2 = $event"
+          @update:authority="authority2 = $event"
+          @update:pollingStation="pollingStation2 = $event"
+        />
+        <div class="filter-tags">
+          <span v-for="tag in filterTags2" :key="tag.key" class="tag">
+            {{ tag.label }}
+            <button @click="removeFilter2(tag.key)">x</button>
+          </span>
+        </div>
       </div>
     </div>
 
-    <button @click="applyFilter" style="display: block; margin: 1rem auto;">Compare</button>
+    <button class="compare-button" @click="applyCompare">Compare</button>
 
-    <div class="results-wrapper">
-      <!-- Placeholder texts for results -->
-      <div class="result-set">
-        <p v-if="partyVotes1">Results for Set 1 (will be replaced by chart)</p>
-        <p v-else>No data for Set 1</p>
-      </div>
-      <div class="result-set">
-        <p v-if="partyVotes2">Results for Set 2 (will be replaced by chart)</p>
-        <p v-else>No data for Set 2</p>
-      </div>
-    </div>
+    <BarChartCompare :partyVotes1="partyVotes1" :partyVotes2="partyVotes2" />
   </div>
 </template>
 
 <style scoped>
 .compare-view {
   padding: 1rem;
+  background-color: white;
+  color: #002970;
+  font-family: sans-serif;
 }
+
+h2 {
+  color: #880D1E;
+  margin-bottom: 1rem;
+}
+
 .filters-wrapper {
   display: flex;
+  flex-direction: row;
   gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
+
 .filter-set {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
+  flex: 1;
   min-width: 300px;
+  background-color: #f9f9f9;
+  border: 2px solid #002970;
+  border-radius: 8px;
+  padding: 1rem;
 }
-.filter-set select {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
+
+.filter-set h3 {
+  color: #002970;
+  margin-bottom: 0.5rem;
+}
+
+.filter-tags {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #002970;
+  color: white;
+  border-radius: 20px;
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: #880D1E;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.compare-button {
+  background-color: #880D1E;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.compare-button:hover {
+  background-color: #aa1226;
+}
+
+.chart-container {
+  margin-top: 2rem;
 }
 </style>
