@@ -63,7 +63,7 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle candidate-specific data
         else {
             String candiShortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
-            int candiVotes = Integer.parseInt(nationMap.get("CandiVotes"));
+            int candiVotes = Integer.parseInt(nationMap.get("candiVotes"));
             if (!affiliation.hasCandiShortCode(candiShortCode)) {
                 Candidate candidate = new Candidate(candiShortCode, candiVotes);
                 affiliation.addCandidate(candidate);
@@ -80,7 +80,7 @@ public class ElectionTransformer implements Transformer<Election> {
     public void registerAuthority(Map<String, String> prcsAuthoMap) {
         int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONSTI_ID));
         String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHO_ID);
-        String authoName = prcsAuthoMap.get("AuthoName");
+        String authoName = prcsAuthoMap.get("authoName");
         int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
         String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
@@ -99,9 +99,9 @@ public class ElectionTransformer implements Transformer<Election> {
             affiliation = new Affiliation(affId, affiName, affiVotes);
             affiListMap.put(affId, affiliation);
         }
-        if (authoMap.containsKey("CandiVotes")) {
+        if (authoMap.containsKey("candiVotes")) {
             int candId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CANDI_ID));
-            int candiVotes = Integer.parseInt(prcsAuthoMap.get("CandiVotes"));
+            int candiVotes = Integer.parseInt(prcsAuthoMap.get("candiVotes"));
             if (!affiliation.hasCandId(candId)) {
                 Candidate candidate = new Candidate(candId, candiVotes);
                 affiliation.addCandidate(candidate);
@@ -115,8 +115,8 @@ public class ElectionTransformer implements Transformer<Election> {
         Election election = electionListDataMap.get(electionId);
         Map<String, RepUnit> electionLevel_repUnitListMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
-        String repUnitName = prcsRepUnitMap.get("RepUnitName");
-        int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("RepUnitVotes"));
+        String repUnitName = prcsRepUnitMap.get("repUnitName");
+        int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("repUnitVotes"));
         RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitLevel_affiListMap, repUnitVotes);
         electionLevel_repUnitListMap.put(repUnitId, repUnit);
     }

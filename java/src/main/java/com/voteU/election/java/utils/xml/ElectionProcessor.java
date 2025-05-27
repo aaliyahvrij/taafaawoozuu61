@@ -51,6 +51,7 @@ public class ElectionProcessor<E> {
     // Common attribute name that is use on multiple tags.
     public static final String ID = "Id";
     public static final String SHORT_CODE = "ShortCode";
+    public static final String VALID_VOTES = "ValidVotes";
 
     /*
      The tag names on the election level within the XML files, which are also used as keys in the maps
@@ -85,7 +86,6 @@ public class ElectionProcessor<E> {
     public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
     public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
-    public static final String VALID_VOTES = "ValidVotes";
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
     /*
@@ -178,7 +178,7 @@ public class ElectionProcessor<E> {
                 String authoId = parser.getAttributeValue(null, "Id");
                 electionMap.put(AUTHO_ID, authoId);
                 String authoName = parser.getElementText();
-                electionMap.put("AuthoName", authoName);
+                electionMap.put("authoName", authoName);
                 parser.findAndAcceptEndTag(AUTHO_ID);
             }
             parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
@@ -279,7 +279,7 @@ public class ElectionProcessor<E> {
                                 candiMap.put(SHORT_CODE, candiShortCode);
                                 registeredCandiShortCodes.add(candiShortCode);
                                 candiMap.put(AFFI_ID, String.valueOf(affId));
-                                candiMap.put("CandiVotes", String.valueOf(candiVotes));
+                                candiMap.put("candiVotes", String.valueOf(candiVotes));
                                 for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
                                     if (candiMapPair.getValue() == null) {
                                         System.err.println("National level - Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
@@ -481,7 +481,7 @@ public class ElectionProcessor<E> {
                             int candiVotes = Integer.parseInt(parser.getElementText());
                             candiVotesMap.put(CANDI_ID, String.valueOf(candId));
                             candiVotesMap.put(AFFI_ID, String.valueOf(affId));
-                            candiVotesMap.put("CandiVotes", String.valueOf(candiVotes));
+                            candiVotesMap.put("candiVotes", String.valueOf(candiVotes));
                             for (Map.Entry<String, String> candiVotesMapPair : candiVotesMap.entrySet()) {
                                 if (candiVotesMapPair.getValue() == null) {
                                     System.err.println("Missing " + candiVotesMapPair.getKey() + " in candiVotesMap: " + candiVotesMap);
@@ -529,10 +529,10 @@ public class ElectionProcessor<E> {
                     String zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
                     repUnitMap.put(ZIPCODE, zipCode);
                     repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
-                    repUnitMap.put("RepUnitName", repUnitName);
+                    repUnitMap.put("repUnitName", repUnitName);
                 }
             } else {
-                repUnitMap.put("RepUnitName", repUnitName);
+                repUnitMap.put("repUnitName", repUnitName);
             }
             parser.findAndAcceptEndTag(REP_UNIT_ID);
         }
@@ -582,7 +582,7 @@ public class ElectionProcessor<E> {
             parser.findAndAcceptEndTag(SELECTION);
             if (selectionIndex == 3) break;
         }
-        repUnitMap.put("RepUnitVotes", String.valueOf(repUnitVotes));
+        repUnitMap.put("repUnitVotes", String.valueOf(repUnitVotes));
         for (Map.Entry<String, String> repUnitMapPair : repUnitMap.entrySet()) {
             if (repUnitMapPair.getValue() == null) {
                 System.err.println("Missing " + repUnitMapPair.getKey() + " in repUnitMap: " + repUnitMap);
