@@ -12,7 +12,7 @@ import java.util.*;
 @Getter
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
-    private final Map<String, Election> electionListDataMap = new HashMap<>();
+    private final Map<String, Election> electionListMap = new HashMap<>();
     private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),    // Flevoland
             Map.entry(2, 3),    // Friesland
@@ -28,23 +28,23 @@ public class ElectionTransformer implements Transformer<Election> {
             Map.entry(15, 12), Map.entry(13, 12), Map.entry(12, 12));
 
     @Override
-    public void registerElection(Map<String, String> electionMap) {
-        String electionId = electionMap.get(ElectionProcessor.ELECTION_ID);
-        String electionName = electionMap.get(ElectionProcessor.ELECTION_NAME);
-        String electionDate = electionMap.get(ElectionProcessor.ELECTION_DATE);
+    public void registerElection(Map<String, String> prcsElectionMap) {
+        String electionId = prcsElectionMap.get(ElectionProcessor.ELECTION_ID);
+        String electionName = prcsElectionMap.get(ElectionProcessor.ELECTION_NAME);
+        String electionDate = prcsElectionMap.get(ElectionProcessor.ELECTION_DATE);
 
         // Get or create an Election object
-        Election electionDataMap = electionListDataMap.get(electionId);
-        if (electionDataMap == null) {
-            electionDataMap = new Election(electionId, electionName, electionDate);
-            electionListDataMap.put(electionId, electionDataMap);
+        Election electionMap = electionListMap.get(electionId);
+        if (electionMap == null) {
+            electionMap = new Election(electionId, electionName, electionDate);
+            electionListMap.put(electionId, electionMap);
         }
     }
 
     @Override
     public void registerNationalLevelData(Map<String, String> nationMap) {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListDataMap.get(electionId);
+        Election election = electionListMap.get(electionId);
         Map<Integer, Affiliation> affiListMap = election.getAffiliations();
         System.out.println("The amount of affiliations in this election: " + affiListMap.size());
         Affiliation affiliation;
@@ -83,7 +83,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
         String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListDataMap.get(electionId);
+        Election election = electionListMap.get(electionId);
         Map<String, Authority> authoMap = election.getAuthorities();
         Authority authority = authoMap.computeIfAbsent(authoId, id -> {
             Authority a = new Authority(id);
@@ -111,7 +111,7 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitLevel_affiListMap) {
         String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListDataMap.get(electionId);
+        Election election = electionListMap.get(electionId);
         Map<String, RepUnit> electionLevel_repUnitListMap = election.getRepUnits();
         String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
         String repUnitName = prcsRepUnitMap.get("repUnitName");
@@ -130,7 +130,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONSTI_ID));
         int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFI_ID));
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListDataMap.get(electionId);
+        Election election = electionListMap.get(electionId);
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();
         Constituency constituency = electionLevel_constiListMap.get(constId);
         if (constituency != null) {
@@ -186,6 +186,6 @@ public class ElectionTransformer implements Transformer<Election> {
      * Get election data for a specific year.
      */
     public Election getElection(String year) {
-        return electionListDataMap.get(year);
+        return electionListMap.get(year);
     }
 }
