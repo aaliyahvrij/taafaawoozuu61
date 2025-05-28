@@ -19,7 +19,7 @@ const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPollingStation1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
-  'national' | 'province' | 'constituency' | 'mnuicipality' | 'pollingStation' | null
+  'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null
 >(null)
 const provinces1 = ref<Province[]>([])
 const constituencies1 = ref<Constituency[]>([])
