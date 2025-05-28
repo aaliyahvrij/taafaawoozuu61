@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * <ol>
  *     <li>one file per 'kieskring' containing the 'kieslijsten'</li>
  *     <li>one file per 'kieskring' containing the total votes within that 'kieskring' per candidate</li>
- *     <li>one file per municipality containing per reporting unit, the votes per candidate</li>
+ *     <li>one file per municipality containing per polling station, the votes per candidate</li>
  * </ol>
  * <em>When processing the files only the first and third type of files are processed by this implementation at this
  * moment, but can be changed if needed!</em><br>
@@ -80,7 +80,7 @@ public class ElectionProcessor<E> {
     public static final String AUTHO_ID = "AuthorityIdentifier";
 
     /*
-     The tag names on the reporting unit level within the XML files, which are also used as keys in the maps
+     The tag names on the polling station level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
     public static final String POLLING_STATION_VOTES = "ReportingUnitVotes";
@@ -130,7 +130,7 @@ public class ElectionProcessor<E> {
     /**
      * Traverses all the folders within the specified folder and calls the appropriate methods of the transformer.
      * While processing the files, it will skip any file that has a different election-id than the one specified.
-     * Currently, it only processes the files containing the 'kieslijsten' and the votes per reporting unit.
+     * Currently, it only processes the files containing the 'kieslijsten' and the votes per polling station.
      * <pre>
      * NOTE: It assumes that there are <b>NO</b> whitespace characters between the tags other than within text values!
      * </pre>
@@ -553,7 +553,7 @@ public class ElectionProcessor<E> {
                         pollingStationVotes = pollingStationVotes + affiVotes;
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVotes);
                     pollingStationLevel_affiListMap.put(affId, affiliation);
