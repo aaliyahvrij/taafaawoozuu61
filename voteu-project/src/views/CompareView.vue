@@ -16,7 +16,7 @@ const selectedElection1 = ref<'2021' | '2023' | null>(null)
 const selectedProvince1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedAuthority1 = ref<Authority | null>(null)
-const selectedRepUnit1 = ref<PollingStation | null>(null)
+const selectedPollingStation1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
   'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
@@ -31,7 +31,7 @@ const selectedElection2 = ref<'2021' | '2023' | null>(null)
 const selectedProvince2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedAuthority2 = ref<Authority | null>(null)
-const selectedRepUnit2 = ref<PollingStation | null>(null)
+const selectedPollingStation2 = ref<PollingStation | null>(null)
 const affiVotes2 = ref<Affiliation[] | null>(null)
 const currentVoteLevel2 = ref<
   'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
@@ -104,11 +104,11 @@ async function getAuthorityLevel_pollingStations(
   constId: string | undefined,
   authorityId: string | undefined,
   pollingStationsRef: typeof pollingStations1,
-  clearSelectedRepUnit: () => void,
+  clearSelectedPollingStation: () => void,
 ) {
   if (!election || !constId || !authorityId) {
     pollingStationsRef.value = []
-    clearSelectedRepUnit()
+    clearSelectedPollingStation()
     return
   }
   try {
@@ -184,7 +184,7 @@ function clearProvinceAndBelow1() {
   authorities1.value = []
   selectedAuthority1.value = null
   pollingStations1.value = []
-  selectedRepUnit1.value = null
+  selectedPollingStation1.value = null
 }
 
 function clearConstiAndBelow1() {
@@ -192,17 +192,17 @@ function clearConstiAndBelow1() {
   authorities1.value = []
   selectedAuthority1.value = null
   pollingStations1.value = []
-  selectedRepUnit1.value = null
+  selectedPollingStation1.value = null
 }
 
 function clearAuthorityAndBelow1() {
   selectedAuthority1.value = null
   pollingStations1.value = []
-  selectedRepUnit1.value = null
+  selectedPollingStation1.value = null
 }
 
-function clearRepUnit1() {
-  selectedRepUnit1.value = null
+function clearPollingStation1() {
+  selectedPollingStation1.value = null
 }
 
 function clearProvinceAndBelow2() {
@@ -212,7 +212,7 @@ function clearProvinceAndBelow2() {
   authorities2.value = []
   selectedAuthority2.value = null
   pollingStations2.value = []
-  selectedRepUnit2.value = null
+  selectedPollingStation2.value = null
 }
 
 function clearConstiAndBelow2() {
@@ -220,17 +220,17 @@ function clearConstiAndBelow2() {
   authorities2.value = []
   selectedAuthority2.value = null
   pollingStations2.value = []
-  selectedRepUnit2.value = null
+  selectedPollingStation2.value = null
 }
 
 function clearAuthorityAndBelow2() {
   selectedAuthority2.value = null
   pollingStations2.value = []
-  selectedRepUnit2.value = null
+  selectedPollingStation2.value = null
 }
 
-function clearRepUnit2() {
-  selectedRepUnit2.value = null
+function clearPollingStation2() {
+  selectedPollingStation2.value = null
 }
 
 // --- Handlers eerste filter set ---
@@ -270,7 +270,7 @@ async function onConstiChange1() {
 }
 
 async function onAuthorityChange1() {
-  clearRepUnit1()
+  clearPollingStation1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedAuthority1.value) {
@@ -279,12 +279,12 @@ async function onAuthorityChange1() {
       selectedConsti1.value?.id.toString(),
       selectedAuthority1.value.id.toString(),
       pollingStations1,
-      clearRepUnit1,
+      clearPollingStation1,
     )
   }
 }
 
-function onRepUnitChange1() {
+function onPollingStationChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
 }
@@ -326,7 +326,7 @@ async function onConstiChange2() {
 }
 
 async function onAuthorityChange2() {
-  clearRepUnit2()
+  clearPollingStation2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedAuthority2.value) {
@@ -335,12 +335,12 @@ async function onAuthorityChange2() {
       selectedConsti2.value?.id.toString(),
       selectedAuthority2.value.id.toString(),
       pollingStations2,
-      clearRepUnit2,
+      clearPollingStation2,
     )
   }
 }
 
-function onRepUnitChange2() {
+function onPollingStationChange2() {
   affiVotes2.value = currentVoteLevel2.value = null
 }
 
@@ -353,7 +353,7 @@ async function applyFilter() {
   if (selectedElection1.value) {
     await fetchAffiVotes(
       selectedElection1.value,
-      selectedRepUnit1.value,
+      selectedPollingStation1.value,
       selectedAuthority1.value,
       selectedConsti1.value,
       selectedProvince1.value,
@@ -366,7 +366,7 @@ async function applyFilter() {
   if (selectedElection2.value) {
     await fetchAffiVotes(
       selectedElection2.value,
-      selectedRepUnit2.value,
+      selectedPollingStation2.value,
       selectedAuthority2.value,
       selectedConsti2.value,
       selectedProvince2.value,
@@ -428,8 +428,8 @@ async function applyFilter() {
         </select>
         <select
           v-if="pollingStations1.length > 0"
-          v-model="selectedRepUnit1"
-          @change="onRepUnitChange1"
+          v-model="selectedPollingStation1"
+          @change="onPollingStationChange1"
         >
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in pollingStations1" :key="ps.id" :value="ps">{{ ps.name }}</option>
@@ -480,8 +480,8 @@ async function applyFilter() {
         </select>
         <select
           v-if="pollingStations2.length > 0"
-          v-model="selectedRepUnit2"
-          @change="onRepUnitChange2"
+          v-model="selectedPollingStation2"
+          @change="onPollingStationChange2"
         >
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in pollingStations2" :key="ps.id" :value="ps">{{ ps.name }}</option>

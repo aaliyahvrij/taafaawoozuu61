@@ -143,9 +143,9 @@ public class ElectionTransformer implements Transformer<Election> {
             for (Authority authority : constiLevel_authoListMap.values()) {
                 Map<Integer, Affiliation> authoLevel_affiListMap = authority.getAffiliations();
                 populateCandidate(candId, firstName, lastName, gender, localityName, affId, authoLevel_affiListMap);
-                Map<String, PollingStation> repUnitListMap = authority.getPollingStations();
-                for (PollingStation repUnit : repUnitListMap.values()) {
-                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
+                Map<String, PollingStation> pollingStationListMap = authority.getPollingStations();
+                for (PollingStation pollingStation : pollingStationListMap.values()) {
+                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, pollingStation.getAffiliations());
                 }
             }
         }
