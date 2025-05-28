@@ -60,7 +60,7 @@ public class ElectionService {
     /**
      * Retrieves all affiliations by electionId (GET).
      */
-    public Map<Integer, Affiliation> getAllAffiliationsOfElection(String electionId) {
+    public Map<Integer, Affiliation> getElectionLevel_affiliations(String electionId) {
         Election election = getElection(electionId);
         if (election == null) {
             return null;
