@@ -73,17 +73,17 @@ public class ElectionProcessor<E> {
     public static final String CONSTI_NAME = "ContestName";
 
     /*
-     The tag names on the authority level within the XML files, which are also used as keys in the maps
+     The tag names on the municipality level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String MANAGING_AUTHORITY = "ManagingAuthority";
-    public static final String AUTHO_ID = "AuthorityIdentifier";
+    public static final String MUNICIPALITY = "ManagingAuthority";
+    public static final String MUNI_ID = "AuthorityIdentifier";
 
     /*
      The tag names on the polling station level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String POLLING_STATION_VOTES = "ReportingUnitVotes";
+    public static final String POLLING_STATION = "ReportingUnitVotes";
     public static final String POLLING_STATION_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
@@ -156,13 +156,13 @@ public class ElectionProcessor<E> {
             System.out.println(folderName + constiFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElection(electionMap, parser);
-            processConstiOrAuthoLevelData(electionMap, parser, "constituency");
+            processConstiOrMuniLevelData(electionMap, parser, "constituency");
         }
-        for (Path authoFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
-            System.out.println(folderName + authoFile.toString());
-            XMLParser parser = new XMLParser(new FileInputStream(authoFile.toString()));
+        for (Path muniFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
+            System.out.println(folderName + muniFile.toString());
+            XMLParser parser = new XMLParser(new FileInputStream(muniFile.toString()));
             processElection(electionMap, parser);
-            processConstiOrAuthoLevelData(electionMap, parser, "authority");
+            processConstiOrMuniLevelData(electionMap, parser, "municipality");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(candiFile));
@@ -173,15 +173,15 @@ public class ElectionProcessor<E> {
     }
 
     private void processElection(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(MANAGING_AUTHORITY)) {
-            if (parser.findBeginTag(AUTHO_ID)) {
-                String authoId = parser.getAttributeValue(null, "Id");
-                electionMap.put(AUTHO_ID, authoId);
-                String authoName = parser.getElementText();
-                electionMap.put("authoName", authoName);
-                parser.findAndAcceptEndTag(AUTHO_ID);
+        if (parser.findBeginTag(MUNICIPALITY)) {
+            if (parser.findBeginTag(MUNI_ID)) {
+                String munId = parser.getAttributeValue(null, "Id");
+                electionMap.put(MUNI_ID, munId);
+                String muniName = parser.getElementText();
+                electionMap.put("muniName", muniName);
+                parser.findAndAcceptEndTag(MUNI_ID);
             }
-            parser.findAndAcceptEndTag(MANAGING_AUTHORITY);
+            parser.findAndAcceptEndTag(MUNICIPALITY);
         }
         if (parser.findBeginTag(ELECTION_ID)) {
             String expectedElectionId = electionMap.get(ELECTION_ID);
@@ -309,7 +309,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processConstiOrAuthoLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
+    private void processConstiOrMuniLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONSTITUENCY)) {
             Map<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONSTI_ID)) {
@@ -327,15 +327,15 @@ public class ElectionProcessor<E> {
                     case "constituency":
                         processConstiLevelData(constiMap, parser);
                         break;
-                    case "authority":
-                        processAuthority(constiMap, parser);
+                    case "municipality":
+                        processMunicipality(constiMap, parser);
                         break;
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
-            while (parser.nextBeginTag(POLLING_STATION_VOTES)) {
+            while (parser.nextBeginTag(POLLING_STATION)) {
                 processPollingStation(constiMap, parser);
-                parser.findAndAcceptEndTag(POLLING_STATION_VOTES);
+                parser.findAndAcceptEndTag(POLLING_STATION);
             }
             parser.findAndAcceptEndTag(CONSTITUENCY);
             if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
@@ -422,7 +422,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processAuthority(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processMunicipality(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
             Set<String> registeredCandiAffiliations = new HashSet<>();
@@ -461,7 +461,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                         }
-                        transformer.registerAuthority(affiVotesMap);
+                        transformer.registerMunicipality(affiVotesMap);
                         break;
                     case CANDIDATE:
                         Map<String, String> candiVotesMap = new HashMap<>(constiMap);
@@ -496,7 +496,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                             registeredCandiAffiliations.add(candiCompKey);
-                            transformer.registerAuthority(candiVotesMap);
+                            transformer.registerMunicipality(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candId, affId));
@@ -587,7 +587,7 @@ public class ElectionProcessor<E> {
             if (pollingStationMapPair.getValue() == null) {
                 System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);
                 return;
-            } else if (Objects.equals(pollingStationMapPair.getKey(), POLLING_STATION_VOTES)) {
+            } else if (Objects.equals(pollingStationMapPair.getKey(), POLLING_STATION)) {
                 try {
                     Integer.parseInt(pollingStationMapPair.getValue());
                 } catch (NumberFormatException e) {

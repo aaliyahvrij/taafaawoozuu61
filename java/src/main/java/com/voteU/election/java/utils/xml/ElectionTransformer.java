@@ -76,20 +76,20 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerAuthority(Map<String, String> prcsAuthoMap) {
+    public void registerMunicipality(Map<String, String> prcsAuthoMap) {
         int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONSTI_ID));
-        String authoId = prcsAuthoMap.get(ElectionProcessor.AUTHO_ID);
-        String authoName = prcsAuthoMap.get("authoName");
+        String munId = prcsAuthoMap.get(ElectionProcessor.MUNI_ID);
+        String muniName = prcsAuthoMap.get("muniName");
         int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
         String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListMap.get(electionId);
-        Map<String, Authority> authoMap = election.getAuthorities();
-        Authority authority = authoMap.computeIfAbsent(authoId, id -> {
-            Authority a = new Authority(id);
-            a.setName(authoName);
-            a.setConstId(constId);
-            return a;
+        Map<String, Municipality> authoMap = election.getMunicipalities();
+        Municipality authority = authoMap.computeIfAbsent(munId, id -> {
+            Municipality m = new Municipality(id);
+            m.setName(muniName);
+            m.setConstId(constId);
+            return m;
         });
         Map<Integer, Affiliation> affiListMap = authority.getAffiliations();
         Affiliation affiliation = affiListMap.get(affId);
@@ -139,11 +139,11 @@ public class ElectionTransformer implements Transformer<Election> {
             populateCandidate(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListMap);
 
             // Update or insert a candidate in each authority-level affiliation
-            Map<String, Authority> constiLevel_authoListMap = constituency.getAuthorities();
-            for (Authority authority : constiLevel_authoListMap.values()) {
-                Map<Integer, Affiliation> authoLevel_affiListMap = authority.getAffiliations();
+            Map<String, Municipality> constiLevel_muniListMap = constituency.getMunicipalities();
+            for (Municipality municipality : constiLevel_muniListMap.values()) {
+                Map<Integer, Affiliation> authoLevel_affiListMap = municipality.getAffiliations();
                 populateCandidate(candId, firstName, lastName, gender, localityName, affId, authoLevel_affiListMap);
-                Map<String, PollingStation> pollingStationListMap = authority.getPollingStations();
+                Map<String, PollingStation> pollingStationListMap = municipality.getPollingStations();
                 for (PollingStation pollingStation : pollingStationListMap.values()) {
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, pollingStation.getAffiliations());
                 }

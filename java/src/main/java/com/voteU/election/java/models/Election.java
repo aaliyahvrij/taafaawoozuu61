@@ -12,7 +12,7 @@ public class Election {
     private final String date;
     private Map<Integer, Province> provinces;
     private Map<Integer, Constituency> constituencies;
-    private final Map<String, Authority> authorities;
+    private final Map<String, Municipality> municipalities;
     private final Map<String, PollingStation> pollingStations;
     private final Map<Integer, Affiliation> affiliations;
 
@@ -22,7 +22,7 @@ public class Election {
         this.date = date;
         this.provinces = new HashMap<>();
         this.constituencies = new HashMap<>();
-        this.authorities = new HashMap<>();
+        this.municipalities = new HashMap<>();
         this.pollingStations = new HashMap<>();
         this.affiliations = new HashMap<>();
     }

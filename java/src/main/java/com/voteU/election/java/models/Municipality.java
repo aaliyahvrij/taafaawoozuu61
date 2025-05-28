@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.*;
 
 @Getter
-public class Authority {
+public class Municipality {
     @Setter
     private String id;
     @Setter
@@ -15,7 +15,7 @@ public class Authority {
     private final Map<String, PollingStation> pollingStations;
     private final Map<Integer, Affiliation> affiliations;
 
-    public Authority(String id) {
+    public Municipality(String id) {
         this.id = id;
         this.name = "";
         this.constId = 0;

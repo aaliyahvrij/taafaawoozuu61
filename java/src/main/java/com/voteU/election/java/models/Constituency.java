@@ -10,12 +10,12 @@ public class Constituency {
     private int id;
     private String name;
     private Map<Integer, Affiliation> affiliations;
-    Map<String, Authority> authorities;
+    Map<String, Municipality> municipalities;
 
     public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
         this.affiliations = new HashMap<>();
-        this.authorities = new HashMap<>();
+        this.municipalities = new HashMap<>();
     }
 }

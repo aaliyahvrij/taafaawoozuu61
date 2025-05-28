@@ -69,7 +69,7 @@ public class ElectionService {
     }
 
     /**
-     * Retrieves all polling stations by election ID (GET).
+     * Retrieves all polling stations by electionId (GET).
      */
     public Map<String, PollingStation> getElectionLevel_pollingStations(String electionId) {
         Election election = getElection(electionId);
