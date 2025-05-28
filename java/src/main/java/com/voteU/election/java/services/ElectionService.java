@@ -69,13 +69,13 @@ public class ElectionService {
     }
 
     /**
-     * Retrieves all reporting units by election ID (GET).
+     * Retrieves all polling stations by election ID (GET).
      */
-    public Map<String, RepUnit> getAllRepUnitsOfElection(String electionId) {
+    public Map<String, PollingStation> getElectionLevel_pollingStations(String electionId) {
         Election election = getElection(electionId);
         if (election == null) {
             return null;
         }
-        return election.getRepUnits();
+        return election.getPollingStations();
     }
 }

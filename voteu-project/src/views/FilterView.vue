@@ -5,14 +5,14 @@ import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
 import { ConstiService } from '@/services/ConstiService.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
-import { RepUnitService } from '@/services/RepUnitService.ts'
+import { PollingStationService } from '@/services/PollingStationService.ts'
 import { AffiStyleService } from '@/services/AffiStyleService.ts'
 import AffiChart from '@/components/Data/charts/AffiChart.vue'
 import type { Province } from '@/interfaces/Province.ts'
 import type { Constituency } from '@/interfaces/Constituency.ts'
 import type { Authority } from '@/interfaces/Authority.ts'
 import type { Affiliation } from '@/interfaces/Affiliation.ts'
-import type { RepUnit } from '@/interfaces/RepUnit.ts'
+import type { PollingStation } from '@/interfaces/PollingStation.ts'
 import type { Candidate } from '@/interfaces/Candidate.ts'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
@@ -22,14 +22,14 @@ const selectedConstituency = ref<Constituency | null>(null)
 const constituencies = ref<Constituency[]>([])
 const selectedAuthority = ref<Authority | null>(null)
 const authorities = ref<Authority[]>([])
-const selectedRepUnit = ref<RepUnit | null>(null)
-const repUnits = ref<RepUnit[]>([])
+const selectedPollingStation = ref<PollingStation | null>(null)
+const pollingStations = ref<PollingStation[]>([])
 const selectedAffiliation = ref<Affiliation | null>(null)
 const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const currentVoteLevel = ref<
-  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
 >(null)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
@@ -42,13 +42,13 @@ function handleApply(): void {
     selectedElection.value &&
     selectedConstituency.value &&
     selectedAuthority.value &&
-    selectedRepUnit.value
+    selectedPollingStation.value
   ) {
-    getRepUnitVotes(
+    getPollingStationVotes(
       selectedElection.value,
       selectedConstituency.value.id.toString(),
       selectedAuthority.value.id.toString(),
-      selectedRepUnit.value.id.toString(),
+      selectedPollingStation.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConstituency.value && selectedAuthority.value) {
     getAuthorityLevel_affiVotes(
@@ -79,8 +79,8 @@ function clearSelectedElection(): void {
   selectedAuthority.value = null
   authorities.value = []
   currentVoteLevel.value = null
-  selectedRepUnit.value = null
-  repUnits.value = []
+  selectedPollingStation.value = null
+  pollingStations.value = []
 }
 
 function clearSelectedProvince(): void {
@@ -89,26 +89,26 @@ function clearSelectedProvince(): void {
   selectedConstituency.value = null
   authorities.value = []
   selectedAuthority.value = null
-  repUnits.value = []
-  selectedRepUnit.value = null
+  pollingStations.value = []
+  selectedPollingStation.value = null
 }
 
 function clearSelectedConstituency(): void {
   selectedConstituency.value = null
   selectedAuthority.value = null
   authorities.value = []
-  repUnits.value = []
-  selectedRepUnit.value = null
+  pollingStations.value = []
+  selectedPollingStation.value = null
 }
 
 function clearSelectedAuthority(): void {
   selectedAuthority.value = null
-  repUnits.value = []
-  selectedRepUnit.value = null
+  pollingStations.value = []
+  selectedPollingStation.value = null
 }
 
-function clearSelectedRepUnit(): void {
-  selectedRepUnit.value = null
+function clearSelectedPollingStation(): void {
+  selectedPollingStation.value = null
 }
 
 async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
@@ -173,34 +173,34 @@ async function getAuthorityLevel_affiVotes(
   }
 }
 
-async function getRepUnitVotes(
+async function getPollingStationVotes(
   electionId: string,
   constId: string,
   authorityId: string,
-  repUnitId: string,
+  pollingStationId: string,
 ): Promise<void> {
   try {
-    const response = await RepUnitService.getAuthorityLevel_repUnitVotes(
+    const response = await PollingStationService.getAuthorityLevel_pollingStationVotes(
       electionId,
       constId,
       authorityId,
-      repUnitId,
+      pollingStationId,
     )
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiVotes.value)
-    currentVoteLevel.value = 'repUnit'
+    currentVoteLevel.value = 'pollingStation'
     console.log(
-      'Fetching reporting unit votes for election ',
+      'Fetching polling station votes for election ',
       electionId,
       'constituency ',
       constId,
       'authority ',
       authorityId,
-      'reporting unit ',
-      repUnitId,
+      'polling station ',
+      pollingStationId,
     )
   } catch (error) {
-    console.error('Error fetching reporting unit votes: ', error)
+    console.error('Error fetching polling station votes: ', error)
   }
 }
 
@@ -250,21 +250,21 @@ async function getConstiLevel_authorities(
   }
 }
 
-async function getAuthorityLevel_repUnits(
+async function getAuthorityLevel_pollingStations(
   electionId: string | null,
   constId: string | undefined,
   authorityId: string | undefined,
 ): Promise<void> {
   try {
     if (electionId && constId && authorityId) {
-      const response = await RepUnitService.getAuthorityLevel_repUnits(
+      const response = await PollingStationService.getAuthorityLevel_pollingStations(
         electionId,
         constId,
         authorityId,
       )
-      repUnits.value = Array.isArray(response) ? response : Object.values(response || {})
+      pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log(
-        'Fetching reporting units for election ',
+        'Fetching polling stations for election ',
         electionId,
         'constituency ',
         constId,
@@ -273,7 +273,7 @@ async function getAuthorityLevel_repUnits(
       )
     }
   } catch (error) {
-    console.error('Error fetching reporting units: ', error)
+    console.error('Error fetching polling stations: ', error)
   }
 }
 
@@ -386,7 +386,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         v-if="authorities.length > 0"
         v-model="selectedAuthority"
         @change="
-          getAuthorityLevel_repUnits(
+          getAuthorityLevel_pollingStations(
             selectedElection,
             selectedConstituency?.id.toString(),
             selectedAuthority?.id.toString(),
@@ -415,16 +415,16 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       </div>
     </div>
     <div class="rep-unit-filter">
-      <select class="dropdown" v-if="repUnits.length > 0" v-model="selectedRepUnit">
+      <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
         <option value="null" disabled>Select a polling station</option>
-        <option v-for="repUnit in repUnits" :key="repUnit.id" :value="repUnit">
-          {{ repUnit.name }}
+        <option v-for="pollingStation in pollingStations" :key="pollingStation.id" :value="pollingStation">
+          {{ pollingStation.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedRepUnit">
-        {{ selectedRepUnit.name }}
+      <div class="tag" v-if="selectedPollingStation">
+        {{ selectedPollingStation.name }}
         <svg
-          @click="clearSelectedRepUnit()"
+          @click="clearSelectedPollingStation()"
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
           viewBox="0 -960 960 960"

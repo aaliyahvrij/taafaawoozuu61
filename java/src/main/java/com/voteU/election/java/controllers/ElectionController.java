@@ -40,8 +40,8 @@ public class ElectionController {
         return electionService.getAllAffiliationsOfElection(electionId);
     }
 
-    @GetMapping("/{electionId}/repunits")
-    public Map<String, RepUnit> getAllRepUnitsOfElection(@PathVariable String electionId) {
-        return electionService.getAllRepUnitsOfElection(electionId);
+    @GetMapping("/{electionId}/pollingstations")
+    public Map<String, PollingStation> getElectionLevel_pollingStations(@PathVariable String electionId) {
+        return electionService.getElectionLevel_pollingStations(electionId);
     }
 }

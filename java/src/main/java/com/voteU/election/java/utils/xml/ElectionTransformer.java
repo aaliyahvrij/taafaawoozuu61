@@ -109,15 +109,15 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerRepUnit(Map<String, String> prcsRepUnitMap, Map<Integer, Affiliation> repUnitLevel_affiListMap) {
-        String electionId = prcsRepUnitMap.get(ElectionProcessor.ELECTION_ID);
+    public void registerPollingStation(Map<String, String> prcsPollingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap) {
+        String electionId = prcsPollingStationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListMap.get(electionId);
-        Map<String, RepUnit> electionLevel_repUnitListMap = election.getRepUnits();
-        String repUnitId = prcsRepUnitMap.get(ElectionProcessor.REP_UNIT_ID);
-        String repUnitName = prcsRepUnitMap.get("repUnitName");
-        int repUnitVotes = Integer.parseInt(prcsRepUnitMap.get("repUnitVotes"));
-        RepUnit repUnit = new RepUnit(repUnitId, repUnitName, repUnitLevel_affiListMap, repUnitVotes);
-        electionLevel_repUnitListMap.put(repUnitId, repUnit);
+        Map<String, PollingStation> electionLevel_pollingStationListMap = election.getPollingStations();
+        String pollingStationId = prcsPollingStationMap.get(ElectionProcessor.POLLING_STATION_ID);
+        String pollingStationName = prcsPollingStationMap.get("pollingStationName");
+        int pollingStationVotes = Integer.parseInt(prcsPollingStationMap.get("pollingStationVotes"));
+        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationVotes);
+        electionLevel_pollingStationListMap.put(pollingStationId, pollingStation);
     }
 
     @Override
@@ -143,8 +143,8 @@ public class ElectionTransformer implements Transformer<Election> {
             for (Authority authority : constiLevel_authoListMap.values()) {
                 Map<Integer, Affiliation> authoLevel_affiListMap = authority.getAffiliations();
                 populateCandidate(candId, firstName, lastName, gender, localityName, affId, authoLevel_affiListMap);
-                Map<String, RepUnit> repUnitListMap = authority.getRepUnits();
-                for (RepUnit repUnit : repUnitListMap.values()) {
+                Map<String, PollingStation> repUnitListMap = authority.getPollingStations();
+                for (PollingStation repUnit : repUnitListMap.values()) {
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, repUnit.getAffiliations());
                 }
             }

@@ -4,43 +4,43 @@ import { ConstiService } from '@/services/ConstiService.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
-import { RepUnitService } from '@/services/RepUnitService.ts'
+import { PollingStationService } from '@/services/PollingStationService.ts'
 import type { Constituency } from '@/interfaces/Constituency.ts'
 import type { Authority } from '@/interfaces/Authority.ts'
 import type { Affiliation } from '@/interfaces/Affiliation.ts'
 import type { Province } from '@/interfaces/Province.ts'
-import type { RepUnit } from '@/interfaces/RepUnit.ts'
+import type { PollingStation } from '@/interfaces/PollingStation.ts'
 
 // the first filter set
 const selectedElection1 = ref<'2021' | '2023' | null>(null)
 const selectedProvince1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedAuthority1 = ref<Authority | null>(null)
-const selectedRepUnit1 = ref<RepUnit | null>(null)
+const selectedRepUnit1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
-  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
 >(null)
 const provinces1 = ref<Province[]>([])
 const constituencies1 = ref<Constituency[]>([])
 const authorities1 = ref<Authority[]>([])
-const repUnits1 = ref<RepUnit[]>([])
+const pollingStations1 = ref<PollingStation[]>([])
 
 // the second filter set
 const selectedElection2 = ref<'2021' | '2023' | null>(null)
 const selectedProvince2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedAuthority2 = ref<Authority | null>(null)
-const selectedRepUnit2 = ref<RepUnit | null>(null)
+const selectedRepUnit2 = ref<PollingStation | null>(null)
 const affiVotes2 = ref<Affiliation[] | null>(null)
 const currentVoteLevel2 = ref<
-  'national' | 'province' | 'constituency' | 'authority' | 'repUnit' | null
+  'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
 >(null)
 
 const provinces2 = ref<Province[]>([])
 const constituencies2 = ref<Constituency[]>([])
 const authorities2 = ref<Authority[]>([])
-const repUnits2 = ref<RepUnit[]>([])
+const pollingStations2 = ref<PollingStation[]>([])
 
 // --- Helper functies voor ophalen filters (herbruikbaar) ---
 async function getElectionLevel_provinces(
@@ -99,21 +99,21 @@ async function getConstiLevel_authorities(
   }
 }
 
-async function getAuthorityLevel_repUnits(
+async function getAuthorityLevel_pollingStations(
   election: string | null,
   constId: string | undefined,
   authorityId: string | undefined,
-  repUnitsRef: typeof repUnits1,
+  pollingStationsRef: typeof pollingStations1,
   clearSelectedRepUnit: () => void,
 ) {
   if (!election || !constId || !authorityId) {
-    repUnitsRef.value = []
+    pollingStationsRef.value = []
     clearSelectedRepUnit()
     return
   }
   try {
-    const response = await RepUnitService.getAuthorityLevel_repUnits(election, constId, authorityId)
-    repUnitsRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    const response = await PollingStationService.getAuthorityLevel_pollingStations(election, constId, authorityId)
+    pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching rep units:', error)
   }
@@ -122,7 +122,7 @@ async function getAuthorityLevel_repUnits(
 // Affiliation votes ophalen (herbruikbaar)
 async function fetchAffiVotes(
   election: string | null,
-  repUnit: RepUnit | null,
+  pollingStation: PollingStation | null,
   authority: Authority | null,
   constituency: Constituency | null,
   province: Province | null,
@@ -135,15 +135,15 @@ async function fetchAffiVotes(
     return
   }
   try {
-    if (repUnit && authority && constituency) {
-      const res = await RepUnitService.getAuthorityLevel_repUnitVotes(
+    if (pollingStation && authority && constituency) {
+      const res = await PollingStationService.getAuthorityLevel_pollingStationVotes(
         election,
         constituency.id.toString(),
         authority.id.toString(),
-        repUnit.id.toString(),
+        pollingStation.id.toString(),
       )
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'repUnit'
+      currentVoteLevelRef.value = 'pollingStation'
     } else if (authority && constituency) {
       const res = await AuthorityService.getConstiLevel_authorityVotes(
         election,
@@ -179,7 +179,7 @@ function clearProvinceAndBelow1() {
   selectedConsti1.value = null
   authorities1.value = []
   selectedAuthority1.value = null
-  repUnits1.value = []
+  pollingStations1.value = []
   selectedRepUnit1.value = null
 }
 
@@ -187,13 +187,13 @@ function clearConstiAndBelow1() {
   selectedConsti1.value = null
   authorities1.value = []
   selectedAuthority1.value = null
-  repUnits1.value = []
+  pollingStations1.value = []
   selectedRepUnit1.value = null
 }
 
 function clearAuthorityAndBelow1() {
   selectedAuthority1.value = null
-  repUnits1.value = []
+  pollingStations1.value = []
   selectedRepUnit1.value = null
 }
 
@@ -207,7 +207,7 @@ function clearProvinceAndBelow2() {
   selectedConsti2.value = null
   authorities2.value = []
   selectedAuthority2.value = null
-  repUnits2.value = []
+  pollingStations2.value = []
   selectedRepUnit2.value = null
 }
 
@@ -215,13 +215,13 @@ function clearConstiAndBelow2() {
   selectedConsti2.value = null
   authorities2.value = []
   selectedAuthority2.value = null
-  repUnits2.value = []
+  pollingStations2.value = []
   selectedRepUnit2.value = null
 }
 
 function clearAuthorityAndBelow2() {
   selectedAuthority2.value = null
-  repUnits2.value = []
+  pollingStations2.value = []
   selectedRepUnit2.value = null
 }
 
@@ -270,11 +270,11 @@ async function onAuthorityChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedAuthority1.value) {
-    await getAuthorityLevel_repUnits(
+    await getAuthorityLevel_pollingStations(
       selectedElection1.value,
       selectedConsti1.value?.id.toString(),
       selectedAuthority1.value.id.toString(),
-      repUnits1,
+      pollingStations1,
       clearRepUnit1,
     )
   }
@@ -326,11 +326,11 @@ async function onAuthorityChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedAuthority2.value) {
-    await getAuthorityLevel_repUnits(
+    await getAuthorityLevel_pollingStations(
       selectedElection2.value,
       selectedConsti2.value?.id.toString(),
       selectedAuthority2.value.id.toString(),
-      repUnits2,
+      pollingStations2,
       clearRepUnit2,
     )
   }
@@ -422,9 +422,9 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-        <select v-if="repUnits1.length > 0" v-model="selectedRepUnit1" @change="onRepUnitChange1">
+        <select v-if="pollingStations1.length > 0" v-model="selectedRepUnit1" @change="onRepUnitChange1">
           <option value="null" disabled>Select a polling station</option>
-          <option v-for="ps in repUnits1" :key="ps.id" :value="ps">{{ ps.name }}</option>
+          <option v-for="ps in pollingStations1" :key="ps.id" :value="ps">{{ ps.name }}</option>
         </select>
       </div>
 
@@ -470,9 +470,9 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-        <select v-if="repUnits2.length > 0" v-model="selectedRepUnit2" @change="onRepUnitChange2">
+        <select v-if="pollingStations2.length > 0" v-model="selectedRepUnit2" @change="onRepUnitChange2">
           <option value="null" disabled>Select a polling station</option>
-          <option v-for="ps in repUnits2" :key="ps.id" :value="ps">{{ ps.name }}</option>
+          <option v-for="ps in pollingStations2" :key="ps.id" :value="ps">{{ ps.name }}</option>
         </select>
       </div>
     </div>

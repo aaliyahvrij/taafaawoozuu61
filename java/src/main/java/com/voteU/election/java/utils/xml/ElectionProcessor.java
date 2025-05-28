@@ -83,8 +83,8 @@ public class ElectionProcessor<E> {
      The tag names on the reporting unit level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String REP_UNIT_VOTES = "ReportingUnitVotes";
-    public static final String REP_UNIT_ID = "ReportingUnitIdentifier";
+    public static final String POLLING_STATION_VOTES = "ReportingUnitVotes";
+    public static final String POLLING_STATION_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
     public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
@@ -333,9 +333,9 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
-            while (parser.nextBeginTag(REP_UNIT_VOTES)) {
-                processRepUnit(constiMap, parser);
-                parser.findAndAcceptEndTag(REP_UNIT_VOTES);
+            while (parser.nextBeginTag(POLLING_STATION_VOTES)) {
+                processPollingStation(constiMap, parser);
+                parser.findAndAcceptEndTag(POLLING_STATION_VOTES);
             }
             parser.findAndAcceptEndTag(CONSTITUENCY);
             if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
@@ -510,31 +510,31 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processRepUnit(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        Map<String, String> repUnitMap = new HashMap<>(constiMap);
-        String repUnitName = null;
-        Map<Integer, Affiliation> repUnitLevel_affiListMap = new HashMap<>();
-        int repUnitVotes = 0;
+    private void processPollingStation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+        Map<String, String> pollingStationMap = new HashMap<>(constiMap);
+        String pollingStationName = null;
+        Map<Integer, Affiliation> pollingStationLevel_affiListMap = new HashMap<>();
+        int pollingStationVotes = 0;
         Affiliation affiliation;
         int affId = 0;
         int selectionIndex = 0;
-        if (parser.findBeginTag(REP_UNIT_ID)) {
-            String repUnitId = parser.getAttributeValue(null, ID);
-            repUnitMap.put(REP_UNIT_ID, repUnitId);
-            repUnitName = parser.getElementText();
-            int postCodeIndex = repUnitName.indexOf("(postcode:");
+        if (parser.findBeginTag(POLLING_STATION_ID)) {
+            String pollingStationId = parser.getAttributeValue(null, ID);
+            pollingStationMap.put(POLLING_STATION_ID, pollingStationId);
+            pollingStationName = parser.getElementText();
+            int postCodeIndex = pollingStationName.indexOf("(postcode:");
             if (postCodeIndex >= 0) {
-                int postCodeEndIndex = repUnitName.indexOf(')', postCodeIndex);
+                int postCodeEndIndex = pollingStationName.indexOf(')', postCodeIndex);
                 if (postCodeEndIndex > postCodeIndex) {
-                    String zipCode = repUnitName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
-                    repUnitMap.put(ZIPCODE, zipCode);
-                    repUnitName = repUnitName.substring(0, postCodeIndex).trim() + repUnitName.substring(postCodeEndIndex + 1).trim();
-                    repUnitMap.put("repUnitName", repUnitName);
+                    String zipCode = pollingStationName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
+                    pollingStationMap.put(ZIPCODE, zipCode);
+                    pollingStationName = pollingStationName.substring(0, postCodeIndex).trim() + pollingStationName.substring(postCodeEndIndex + 1).trim();
+                    pollingStationMap.put("pollingStationName", pollingStationName);
                 }
             } else {
-                repUnitMap.put("repUnitName", repUnitName);
+                pollingStationMap.put("pollingStationName", pollingStationName);
             }
-            parser.findAndAcceptEndTag(REP_UNIT_ID);
+            parser.findAndAcceptEndTag(POLLING_STATION_ID);
         }
         while (parser.getLocalName().equals(SELECTION)) {
             parser.nextTag();
@@ -550,13 +550,13 @@ public class ElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFI_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
                         affiVotes = Integer.parseInt(parser.getElementText());
-                        repUnitVotes = repUnitVotes + affiVotes;
+                        pollingStationVotes = pollingStationVotes + affiVotes;
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(affId, repUnitName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within reporting unit %s.".formatted(affId, pollingStationName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVotes);
-                    repUnitLevel_affiListMap.put(affId, affiliation);
+                    pollingStationLevel_affiListMap.put(affId, affiliation);
                     break;
                 case CANDIDATE:
                     int candId = 0;
@@ -569,10 +569,10 @@ public class ElectionProcessor<E> {
                         int candiVotes = Integer.parseInt(parser.getElementText());
                         Candidate candidate = new Candidate(candId, candiVotes);
                         candidate.setAffId(affId);
-                        repUnitLevel_affiListMap.get(affId).addCandidate(candidate);
+                        pollingStationLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(candId, affId, repUnitName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(candId, affId, pollingStationName));
                     }
                     break;
                 default:
@@ -582,21 +582,21 @@ public class ElectionProcessor<E> {
             parser.findAndAcceptEndTag(SELECTION);
             if (selectionIndex == 3) break;
         }
-        repUnitMap.put("repUnitVotes", String.valueOf(repUnitVotes));
-        for (Map.Entry<String, String> repUnitMapPair : repUnitMap.entrySet()) {
-            if (repUnitMapPair.getValue() == null) {
-                System.err.println("Missing " + repUnitMapPair.getKey() + " in repUnitMap: " + repUnitMap);
+        pollingStationMap.put("pollingStationVotes", String.valueOf(pollingStationVotes));
+        for (Map.Entry<String, String> pollingStationMapPair : pollingStationMap.entrySet()) {
+            if (pollingStationMapPair.getValue() == null) {
+                System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);
                 return;
-            } else if (Objects.equals(repUnitMapPair.getKey(), REP_UNIT_VOTES)) {
+            } else if (Objects.equals(pollingStationMapPair.getKey(), POLLING_STATION_VOTES)) {
                 try {
-                    Integer.parseInt(repUnitMapPair.getValue());
+                    Integer.parseInt(pollingStationMapPair.getValue());
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid " + repUnitMapPair.getKey() + " value '" + repUnitMapPair.getValue() + "' in repUnitMap: " + repUnitMap);
+                    System.err.println("Invalid " + pollingStationMapPair.getKey() + " value '" + pollingStationMapPair.getValue() + "' in pollingStationMap: " + pollingStationMap);
                     return;
                 }
             }
         }
-        transformer.registerRepUnit(repUnitMap, repUnitLevel_affiListMap);
+        transformer.registerPollingStation(pollingStationMap, pollingStationLevel_affiListMap);
     }
 
     private void processAffiliation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
