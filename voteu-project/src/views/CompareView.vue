@@ -112,7 +112,11 @@ async function getAuthorityLevel_pollingStations(
     return
   }
   try {
-    const response = await PollingStationService.getAuthorityLevel_pollingStations(election, constId, authorityId)
+    const response = await PollingStationService.getAuthorityLevel_pollingStations(
+      election,
+      constId,
+      authorityId,
+    )
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching rep units:', error)
@@ -422,7 +426,11 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-        <select v-if="pollingStations1.length > 0" v-model="selectedRepUnit1" @change="onRepUnitChange1">
+        <select
+          v-if="pollingStations1.length > 0"
+          v-model="selectedRepUnit1"
+          @change="onRepUnitChange1"
+        >
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in pollingStations1" :key="ps.id" :value="ps">{{ ps.name }}</option>
         </select>
@@ -470,7 +478,11 @@ async function applyFilter() {
             {{ authority.name }}
           </option>
         </select>
-        <select v-if="pollingStations2.length > 0" v-model="selectedRepUnit2" @change="onRepUnitChange2">
+        <select
+          v-if="pollingStations2.length > 0"
+          v-model="selectedRepUnit2"
+          @change="onRepUnitChange2"
+        >
           <option value="null" disabled>Select a polling station</option>
           <option v-for="ps in pollingStations2" :key="ps.id" :value="ps">{{ ps.name }}</option>
         </select>

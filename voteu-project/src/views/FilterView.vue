@@ -355,9 +355,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="constituencies.length > 0"
         v-model="selectedConstituency"
-        @change="
-          getConstiLevel_authorities(selectedElection, selectedConstituency?.id.toString())
-        "
+        @change="getConstiLevel_authorities(selectedElection, selectedConstituency?.id.toString())"
       >
         <option value="null" disabled>Select a constituency</option>
         <option v-for="constituency in constituencies" :key="constituency.id" :value="constituency">
@@ -417,7 +415,11 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
     <div class="rep-unit-filter">
       <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
         <option value="null" disabled>Select a polling station</option>
-        <option v-for="pollingStation in pollingStations" :key="pollingStation.id" :value="pollingStation">
+        <option
+          v-for="pollingStation in pollingStations"
+          :key="pollingStation.id"
+          :value="pollingStation"
+        >
           {{ pollingStation.name }}
         </option>
       </select>
@@ -466,13 +468,17 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         <button class="back-btn" @click="selectedAffiliation = null">Back</button>
         <button
           class="back-btn"
-          @click="selectedAffiliation.candidates = sortCandidatesByName(selectedAffiliation.candidates)"
+          @click="
+            selectedAffiliation.candidates = sortCandidatesByName(selectedAffiliation.candidates)
+          "
         >
           sort by name
         </button>
         <button
           class="back-btn"
-          @click="selectedAffiliation.candidates = sortCandidatesByVotes(selectedAffiliation.candidates)"
+          @click="
+            selectedAffiliation.candidates = sortCandidatesByVotes(selectedAffiliation.candidates)
+          "
         >
           sort by votes
         </button>
