@@ -1,14 +1,14 @@
-import type { Authority } from '@/interfaces/Authority.ts'
+import type { Municipality } from '@/interfaces/Municipality.ts'
 import type { Affiliation } from '@/interfaces/Affiliation.ts'
 
-export class AuthorityService {
-  static async getConstiLevel_authorities(
+export class MuniService {
+  static async getConstiLevel_municipalities(
     electionId: string,
     constId: string,
-  ): Promise<Record<string, Authority> | null> {
+  ): Promise<Record<string, Municipality> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/compact`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/compact`,
         {
           method: 'GET',
           headers: {
@@ -26,14 +26,14 @@ export class AuthorityService {
     return null
   }
 
-  static async getConstiLevel_authorityVotes(
+  static async getConstiLevel_muniVotes(
     electionId: string,
     constId: string,
-    authorityId: string,
+    munId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/affiliations`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/affiliations`,
         {
           method: 'GET',
           headers: {

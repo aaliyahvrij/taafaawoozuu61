@@ -2,14 +2,14 @@ import type { Affiliation } from '@/interfaces/Affiliation.ts'
 import type { PollingStation } from '@/interfaces/PollingStation.ts'
 
 export class PollingStationService {
-  static async getAuthorityLevel_pollingStations(
+  static async getMuniLevel_pollingStations(
     electionId: string,
     constId: string,
-    authorityId: string,
+    munId: string,
   ): Promise<Record<string, PollingStation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/pollingStations`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations`,
         {
           method: 'GET',
           headers: {
@@ -27,15 +27,15 @@ export class PollingStationService {
     return null
   }
 
-  static async getAuthorityLevel_pollingStationVotes(
+  static async getMuniLevel_pollingStationVotes(
     electionId: string,
     constId: string,
-    authorityId: string,
+    munId: string,
     pollingStationId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/authorities/${authorityId}/pollingStations/${pollingStationId}/affiliations`,
+        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${pollingStationId}/affiliations`,
         {
           method: 'GET',
           headers: {

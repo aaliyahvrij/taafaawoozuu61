@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { type Ref, ref } from "vue";
-import { AuthorityService } from "@/services/AuthorityService.ts";
-import type { Authority } from "@/interfaces/Authority.ts";
+import { MuniService } from "@/services/MuniService.ts";
+import type { Municipality } from "@/interfaces/Municipality.ts";
 
 // Refs for storing data
 const year: Ref<string> = ref('');
-const authorities: Ref<Authority[] | null> = ref(null)
+const authorities: Ref<Municipality[] | null> = ref(null)
 const emit = defineEmits(['updateAuthorities']);
 
 // Fetch authority votes based on electionId
 async function fetchAuthorityVotes(electionId: string) {
-  const data = await AuthorityService.getAuthorityVotes(electionId);
+  const data = await MuniService.getAuthorityVotes(electionId);
   if (data) {
    authorities.value = Object.values(data)
     console.log(authorities.value)

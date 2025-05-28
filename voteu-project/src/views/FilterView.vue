@@ -4,13 +4,13 @@ import { ref, computed } from 'vue'
 import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
 import { ConstiService } from '@/services/ConstiService.ts'
-import { AuthorityService } from '@/services/AuthorityService.ts'
+import { MuniService } from '@/services/MuniService.ts'
 import { PollingStationService } from '@/services/PollingStationService.ts'
 import { AffiStyleService } from '@/services/AffiStyleService.ts'
 import AffiChart from '@/components/Data/charts/AffiChart.vue'
 import type { Province } from '@/interfaces/Province.ts'
 import type { Constituency } from '@/interfaces/Constituency.ts'
-import type { Authority } from '@/interfaces/Authority.ts'
+import type { Municipality } from '@/interfaces/Municipality.ts'
 import type { Affiliation } from '@/interfaces/Affiliation.ts'
 import type { PollingStation } from '@/interfaces/PollingStation.ts'
 import type { Candidate } from '@/interfaces/Candidate.ts'
@@ -20,8 +20,8 @@ const selectedProvince = ref<Province | null>(null)
 const provinces = ref<Province[]>([])
 const selectedConstituency = ref<Constituency | null>(null)
 const constituencies = ref<Constituency[]>([])
-const selectedAuthority = ref<Authority | null>(null)
-const authorities = ref<Authority[]>([])
+const selectedMunicipality = ref<Municipality | null>(null)
+const municipalities = ref<Municipality[]>([])
 const selectedPollingStation = ref<PollingStation | null>(null)
 const pollingStations = ref<PollingStation[]>([])
 const selectedAffiliation = ref<Affiliation | null>(null)
@@ -29,7 +29,7 @@ const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const currentVoteLevel = ref<
-  'national' | 'province' | 'constituency' | 'authority' | 'pollingStation' | null
+  'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null
 >(null)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
@@ -41,22 +41,22 @@ function handleApply(): void {
   if (
     selectedElection.value &&
     selectedConstituency.value &&
-    selectedAuthority.value &&
+    selectedMunicipality.value &&
     selectedPollingStation.value
   ) {
     getPollingStationVotes(
       selectedElection.value,
       selectedConstituency.value.id.toString(),
-      selectedAuthority.value.id.toString(),
+      selectedMunicipality.value.id.toString(),
       selectedPollingStation.value.id.toString(),
     )
-  } else if (selectedElection.value && selectedConstituency.value && selectedAuthority.value) {
-    getAuthorityLevel_affiVotes(
+  } else if (selectedElection.value && selectedConstituency.value && selectedMunicipality.value) {
+    getMuniLevel_affiVotes(
       selectedElection.value,
       selectedConstituency.value.id.toString(),
-      selectedAuthority.value.id.toString(),
+      selectedMunicipality.value.id.toString(),
     )
-  } else if (selectedElection.value && selectedConstituency.value && !selectedAuthority.value) {
+  } else if (selectedElection.value && selectedConstituency.value && !selectedMunicipality.value) {
     getConstiLevel_affiVotes(selectedElection.value, selectedConstituency.value.id.toString())
   } else if (selectedElection.value && selectedProvince.value && !selectedConstituency.value) {
     getProvinceLevel_affiVotes(selectedElection.value, selectedProvince.value.id)
@@ -76,8 +76,8 @@ function clearSelectedElection(): void {
   provinces.value = []
   selectedConstituency.value = null
   constituencies.value = []
-  selectedAuthority.value = null
-  authorities.value = []
+  selectedMunicipality.value = null
+  municipalities.value = []
   currentVoteLevel.value = null
   selectedPollingStation.value = null
   pollingStations.value = []
@@ -87,22 +87,22 @@ function clearSelectedProvince(): void {
   selectedProvince.value = null
   constituencies.value = []
   selectedConstituency.value = null
-  authorities.value = []
-  selectedAuthority.value = null
+  municipalities.value = []
+  selectedMunicipality.value = null
   pollingStations.value = []
   selectedPollingStation.value = null
 }
 
 function clearSelectedConstituency(): void {
   selectedConstituency.value = null
-  selectedAuthority.value = null
-  authorities.value = []
+  selectedMunicipality.value = null
+  municipalities.value = []
   pollingStations.value = []
   selectedPollingStation.value = null
 }
 
-function clearSelectedAuthority(): void {
-  selectedAuthority.value = null
+function clearSelectedMunicipality(): void {
+  selectedMunicipality.value = null
   pollingStations.value = []
   selectedPollingStation.value = null
 }
@@ -127,9 +127,9 @@ async function getProvinceLevel_affiVotes(electionId: string, provinceId: number
     const response = await ProvinceService.getAffiVotes(electionId, provinceId)
     affiVotes.value = response
     currentVoteLevel.value = 'province'
-    console.log('Fetching province level affiliation votes for election ', electionId)
+    console.log('Fetching province-level affiliation votes for election ', electionId)
   } catch (error) {
-    console.error('Error fetching province level affiliation votes: ', error)
+    console.error('Error fetching province-level affiliation votes: ', error)
   }
 }
 
@@ -147,43 +147,39 @@ async function getConstiLevel_affiVotes(electionId: string, constId: string): Pr
   }
 }
 
-async function getAuthorityLevel_affiVotes(
+async function getMuniLevel_affiVotes(
   electionId: string,
   constId: string,
-  authorityId: string,
+  munId: string,
 ): Promise<void> {
   try {
-    const response = await AuthorityService.getConstiLevel_authorityVotes(
-      electionId,
-      constId,
-      authorityId,
-    )
+    const response = await MuniService.getConstiLevel_muniVotes(electionId, constId, munId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'authority'
+    currentVoteLevel.value = 'municipality'
     console.log(
-      'Fetching authority affiliation votes for election ',
+      'Fetching municipality-level affiliation votes for election ',
       electionId,
       'constituency ',
       constId,
-      'authority ',
-      authorityId,
+      'municipality ',
+      munId,
     )
   } catch (error) {
-    console.error('Error fetching authority level affiliation votes: ', error)
+    console.error('Error fetching municipality-level affiliation votes: ', error)
   }
 }
 
 async function getPollingStationVotes(
   electionId: string,
   constId: string,
-  authorityId: string,
+  munId: string,
   pollingStationId: string,
 ): Promise<void> {
   try {
-    const response = await PollingStationService.getAuthorityLevel_pollingStationVotes(
+    const response = await PollingStationService.getMuniLevel_pollingStationVotes(
       electionId,
       constId,
-      authorityId,
+      munId,
       pollingStationId,
     )
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
@@ -194,8 +190,8 @@ async function getPollingStationVotes(
       electionId,
       'constituency ',
       constId,
-      'authority ',
-      authorityId,
+      'municipality ',
+      munId,
       'polling station ',
       pollingStationId,
     )
@@ -235,41 +231,46 @@ async function getProvinceLevel_constituencies(
   }
 }
 
-async function getConstiLevel_authorities(
+async function getConstiLevel_municipalities(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
   try {
     if (electionId && constId) {
-      const response = await AuthorityService.getConstiLevel_authorities(electionId, constId)
-      authorities.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching authorities for election ', electionId, 'constituency ', constId)
-    }
-  } catch (error) {
-    console.error('Error fetching authorities: ', error)
-  }
-}
-
-async function getAuthorityLevel_pollingStations(
-  electionId: string | null,
-  constId: string | undefined,
-  authorityId: string | undefined,
-): Promise<void> {
-  try {
-    if (electionId && constId && authorityId) {
-      const response = await PollingStationService.getAuthorityLevel_pollingStations(
-        electionId,
-        constId,
-        authorityId,
-      )
-      pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
+      const response = await MuniService.getConstiLevel_municipalities(electionId, constId)
+      municipalities.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log(
-        'Fetching polling stations for election ',
+        'Fetching constituency-level municipalities for election ',
         electionId,
         'constituency ',
         constId,
-        'authority ',
-        authorityId,
+      )
+    }
+  } catch (error) {
+    console.error('Error fetching consituency-level municipalities: ', error)
+  }
+}
+
+async function getMuniLevel_pollingStations(
+  electionId: string | null,
+  constId: string | undefined,
+  munId: string | undefined,
+): Promise<void> {
+  try {
+    if (electionId && constId && munId) {
+      const response = await PollingStationService.getMuniLevel_pollingStations(
+        electionId,
+        constId,
+        munId,
+      )
+      pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
+      console.log(
+        'Fetching municipality-level polling stations for election ',
+        electionId,
+        'constituency ',
+        constId,
+        'municipality ',
+        munId,
       )
     }
   } catch (error) {
@@ -355,11 +356,13 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="constituencies.length > 0"
         v-model="selectedConstituency"
-        @change="getConstiLevel_authorities(selectedElection, selectedConstituency?.id.toString())"
+        @change="
+          getConstiLevel_municipalities(selectedElection, selectedConstituency?.id.toString())
+        "
       >
         <option value="null" disabled>Select a constituency</option>
-        <option v-for="constituency in constituencies" :key="constituency.id" :value="constituency">
-          {{ constituency.name }}
+        <option v-for="consti in constituencies" :key="consti.id" :value="consti">
+          {{ consti.name }}
         </option>
       </select>
       <div class="tag" v-if="selectedConstituency">
@@ -378,28 +381,28 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="authority-filter">
+    <div class="muni-filter">
       <select
         class="dropdown"
-        v-if="authorities.length > 0"
-        v-model="selectedAuthority"
+        v-if="municipalities.length > 0"
+        v-model="selectedMunicipality"
         @change="
-          getAuthorityLevel_pollingStations(
+          getMuniLevel_pollingStations(
             selectedElection,
             selectedConstituency?.id.toString(),
-            selectedAuthority?.id.toString(),
+            selectedMunicipality?.id.toString(),
           )
         "
       >
         <option value="null" disabled>Select a municipality</option>
-        <option v-for="authority in authorities" :key="authority.id" :value="authority">
-          {{ authority.name }}
+        <option v-for="muni in municipalities" :key="muni.id" :value="muni">
+          {{ muni.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedAuthority">
-        {{ selectedAuthority.name }}
+      <div class="tag" v-if="selectedMunicipality">
+        {{ selectedMunicipality.name }}
         <svg
-          @click="clearSelectedAuthority()"
+          @click="clearSelectedMunicipality()"
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
           viewBox="0 -960 960 960"
@@ -451,14 +454,14 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       <AffiChart v-if="affiVotes" :affiVotes="displayedAffiVotes" />
       <div
         class="affi-row"
-        v-for="affiliation in displayedAffiVotes"
-        :key="affiliation.id"
-        @click="handleAffiChange(affiliation)"
-        :style="{ backgroundColor: AffiStyleService.generateColorFromName(affiliation.name) }"
+        v-for="affi in displayedAffiVotes"
+        :key="affi.id"
+        @click="handleAffiChange(affi)"
+        :style="{ backgroundColor: AffiStyleService.generateColorFromName(affi.name) }"
       >
-        <div class="affi-name">{{ affiliation.name }}</div>
-        <div class="affi-votes">{{ affiliation.votes.toLocaleString() }} votes</div>
-        <div class="affi-percentage">{{ affiliation.percentage.toFixed(2) }}%</div>
+        <div class="affi-name">{{ affi.name }}</div>
+        <div class="affi-votes">{{ affi.votes.toLocaleString() }} votes</div>
+        <div class="affi-percentage">{{ affi.percentage.toFixed(2) }}%</div>
       </div>
     </div>
     <div v-if="selectedAffiliation && selectedElection && !selectedCandidate">
@@ -485,13 +488,13 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       </div>
       <div
         class="candidate"
-        v-for="candidate in selectedAffiliation.candidates"
-        :key="candidate.id"
-        @click="handleCandiChange(candidate)"
+        v-for="candi in selectedAffiliation.candidates"
+        :key="candi.id"
+        @click="handleCandiChange(candi)"
       >
-        <p v-if="candidate.firstName && candidate.lastName">
-          {{ candidate.firstName }} {{ candidate.lastName }} :
-          {{ candidate.votes.toLocaleString() }} votes
+        <p v-if="candi.firstName && candi.lastName">
+          {{ candi.firstName }} {{ candi.lastName }} :
+          {{ candi.votes.toLocaleString() }} votes
         </p>
       </div>
     </div>
@@ -718,7 +721,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
 
 .election-filter,
 .consti-filter,
-.authority-filter {
+.muni-filter {
   min-width: 120px;
   margin-right: 10px;
 }
@@ -727,7 +730,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
 .tag,
 .election-filter select,
 .consti-filter select,
-.authority-filter select {
+.muni-filter select {
   width: 100%;
 }
 
