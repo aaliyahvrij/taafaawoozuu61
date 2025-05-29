@@ -398,8 +398,8 @@ async function applyFilter() {
           @change="onProvinceChange1"
         >
           <option value="null" disabled>Select a province</option>
-          <option v-for="province in provinces1" :key="province.id" :value="province">
-            {{ province.name }}
+          <option v-for="provi in provinces1" :key="provi.id" :value="provi">
+            {{ provi.name }}
           </option>
         </select>
         <select
@@ -448,8 +448,8 @@ async function applyFilter() {
           @change="onProvinceChange2"
         >
           <option value="null" disabled>Select a province</option>
-          <option v-for="province in provinces2" :key="province.id" :value="province">
-            {{ province.name }}
+          <option v-for="provi in provinces2" :key="provi.id" :value="provi">
+            {{ provi.name }}
           </option>
         </select>
         <select

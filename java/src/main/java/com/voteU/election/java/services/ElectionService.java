@@ -51,7 +51,7 @@ public class ElectionService {
     }
 
     /**
-     * Retrieves all the data of a specific election ID (GET).
+     * Retrieves all the data of a specific election (GET).
      */
     public Election getElection(String electionId) {
         return electionListMap.get(electionId);
