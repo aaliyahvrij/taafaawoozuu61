@@ -11,7 +11,7 @@ import java.util.*;
 @Service
 public class ElectionService {
     private final ElectionReader electionReader;
-    private static final Map<String, Election> storedElections = new HashMap<>();
+    private static final Map<String, Election> electionListMap = new HashMap<>();
 
     public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -29,7 +29,7 @@ public class ElectionService {
             log.warn("No election data found during readElections().");
             return false;
         }
-        storedElections.putAll(elections);
+        electionListMap.putAll(elections);
         return true;
     }
 
@@ -40,21 +40,21 @@ public class ElectionService {
      * @return true if found, false otherwise
      */
     public boolean readElection(String electionId) {
-        return storedElections.containsKey(electionId);
+        return electionListMap.containsKey(electionId);
     }
 
     /**
-     * Retrieves all stored elections (GET).
+     * Retrieves all the data of all the elections (GET).
      */
     public Map<String, Election> getAll() {
-        return storedElections;
+        return electionListMap;
     }
 
     /**
-     * Retrieves a specific election by ID (GET).
+     * Retrieves all the data of a specific election ID (GET).
      */
     public Election getElection(String electionId) {
-        return storedElections.get(electionId);
+        return electionListMap.get(electionId);
     }
 
     /**
