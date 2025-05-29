@@ -59,7 +59,7 @@ function handleApply(): void {
   } else if (selectedElection.value && selectedConstituency.value && !selectedMunicipality.value) {
     getConstiLevel_affiVotes(selectedElection.value, selectedConstituency.value.id.toString())
   } else if (selectedElection.value && selectedProvince.value && !selectedConstituency.value) {
-    getProvinceLevel_affiVotes(selectedElection.value, selectedProvince.value.id)
+    getProviLevel_affiVotes(selectedElection.value, selectedProvince.value.id)
   } else if (selectedElection.value) {
     getNationalLevel_affiVotes(selectedElection.value)
   } else {
@@ -122,9 +122,9 @@ async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
   }
 }
 
-async function getProvinceLevel_affiVotes(electionId: string, provinceId: number): Promise<void> {
+async function getProviLevel_affiVotes(electionId: string, provId: number): Promise<void> {
   try {
-    const response = await ProviService.getAffiVotes(electionId, provinceId)
+    const response = await ProviService.getAffiVotes(electionId, provId)
     affiVotes.value = response
     currentVoteLevel.value = 'province'
     console.log('Fetching province-level affiliation votes for election ', electionId)
@@ -214,15 +214,15 @@ async function getElectionLevel_provinces(election: string | null): Promise<void
   }
 }
 
-async function getProvinceLevel_constituencies(
+async function getProviLevel_constituencies(
   election: string | null,
-  provinceId: string | undefined,
+  provId: string | undefined,
 ): Promise<void> {
   try {
-    if (election && provinceId) {
-      const response = await ProviService.getProvinceLevel_constituencies(election, provinceId)
+    if (election && provId) {
+      const response = await ProviService.getProviLevel_constituencies(election, provId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching constituencies for election ', election, 'province ', provinceId)
+      console.log('Fetching constituencies for election ', election, 'province ', provId)
     } else {
       constituencies.value = []
     }
@@ -323,16 +323,16 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="province-filter">
+    <div class="provi-filter">
       <select
         class="dropdown"
         v-if="provinces.length > 0"
         v-model="selectedProvince"
-        @change="getProvinceLevel_constituencies(selectedElection, selectedProvince?.id.toString())"
+        @change="getProviLevel_constituencies(selectedElection, selectedProvince?.id.toString())"
       >
         <option value="null" disabled>Select a province</option>
-        <option v-for="province in provinces" :key="province.id" :value="province">
-          {{ province.name }}
+        <option v-for="provi in provinces" :key="provi.id" :value="provi">
+          {{ provi.name }}
         </option>
       </select>
       <div class="tag" v-if="selectedProvince">
@@ -415,7 +415,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="rep-unit-filter">
+    <div class="polling-station-filter">
       <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
         <option value="null" disabled>Select a polling station</option>
         <option
