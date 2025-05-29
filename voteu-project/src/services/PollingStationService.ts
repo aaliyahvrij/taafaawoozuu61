@@ -1,5 +1,4 @@
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
-import type { PollingStation } from '@/interfaces/PollingStation.ts'
+import type { Affiliation, PollingStation } from '@/interfaces'
 
 export class PollingStationService {
   static async getMuniLevel_pollingStations(
@@ -18,7 +17,7 @@ export class PollingStationService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {
@@ -44,7 +43,7 @@ export class PollingStationService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {

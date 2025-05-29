@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 
 import { ElectionService } from '@/services/ElectionService.ts'
-import { ProvinceService } from '@/services/ProvinceService.ts'
+import { ProviService } from '@/services/ProviService.ts'
 import { ConstiService } from '@/services/ConstiService.ts'
 import { MuniService } from '@/services/MuniService.ts'
 import { PollingStationService } from '@/services/PollingStationService.ts'
@@ -124,7 +124,7 @@ async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
 
 async function getProvinceLevel_affiVotes(electionId: string, provinceId: number): Promise<void> {
   try {
-    const response = await ProvinceService.getAffiVotes(electionId, provinceId)
+    const response = await ProviService.getAffiVotes(electionId, provinceId)
     affiVotes.value = response
     currentVoteLevel.value = 'province'
     console.log('Fetching province-level affiliation votes for election ', electionId)
@@ -203,7 +203,7 @@ async function getPollingStationVotes(
 async function getElectionLevel_provinces(election: string | null): Promise<void> {
   try {
     if (election) {
-      const response = await ProvinceService.getElectionLevel_provinces(election)
+      const response = await ProviService.getElectionLevel_provinces(election)
       provinces.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching provinces for election ', election)
     } else {
@@ -220,7 +220,7 @@ async function getProvinceLevel_constituencies(
 ): Promise<void> {
   try {
     if (election && provinceId) {
-      const response = await ProvinceService.getProvinceLevel_constituencies(election, provinceId)
+      const response = await ProviService.getProvinceLevel_constituencies(election, provinceId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching constituencies for election ', election, 'province ', provinceId)
     } else {

@@ -1,8 +1,6 @@
-import type { Province } from '@/interfaces/Province'
-import type { Constituency } from '@/interfaces/Constituency.ts'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Province, Constituency, Affiliation } from '@/interfaces'
 
-export class ProvinceService {
+export class ProviService {
   static async getElectionLevel_provinces(
     electionId: string,
   ): Promise<Record<number, Province> | null> {
@@ -17,7 +15,7 @@ export class ProvinceService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {
@@ -26,13 +24,13 @@ export class ProvinceService {
     return null
   }
 
-  static async getProvinceLevel_constituencies(
+  static async getProviLevel_constituencies(
     electionId: string,
-    provinceId: string,
+    provId: string,
   ): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/constituencies/compact`,
+        `http://localhost:8080/api/election/TK${electionId}/provinces/${provId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {
@@ -41,7 +39,7 @@ export class ProvinceService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {
@@ -50,10 +48,10 @@ export class ProvinceService {
     return null
   }
 
-  static async getAffiVotes(electionId: string, provinceId: number): Promise<Affiliation[] | null> {
+  static async getAffiVotes(electionId: string, provId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/affiliations`,
+        `http://localhost:8080/api/election/TK${electionId}/provinces/${provId}/affiliations`,
         {
           method: 'GET',
           headers: {
@@ -62,7 +60,7 @@ export class ProvinceService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {

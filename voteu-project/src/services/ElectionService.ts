@@ -1,5 +1,4 @@
-import type { Election } from '@/interfaces/Election.ts'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Election, Affiliation } from '@/interfaces'
 
 export class ElectionService {
   static async getElection(electionId: string): Promise<Election | null> {
@@ -11,7 +10,7 @@ export class ElectionService {
         },
       })
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {
@@ -20,9 +19,7 @@ export class ElectionService {
     return null
   }
 
-  static async getAffiVotes(
-    electionId: string,
-  ): Promise<Record<number, Affiliation> | null> {
+  static async getAffiVotes(electionId: string): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/affiliations`,
@@ -34,7 +31,7 @@ export class ElectionService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {

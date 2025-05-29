@@ -1,5 +1,4 @@
-import type { Municipality } from '@/interfaces/Municipality.ts'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Municipality, Affiliation } from '@/interfaces'
 
 export class MuniService {
   static async getConstiLevel_municipalities(
@@ -17,7 +16,7 @@ export class MuniService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {
@@ -42,7 +41,7 @@ export class MuniService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
     } catch (error) {

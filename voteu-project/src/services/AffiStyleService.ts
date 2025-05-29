@@ -1,4 +1,4 @@
-import type { Candidate } from '@/interfaces/Candidate.ts'
+import type { Candidate } from '@/interfaces'
 
 export class AffiStyleService {
   // utils/color.ts

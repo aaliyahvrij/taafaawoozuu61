@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { ConstiService } from '@/services/ConstiService.ts'
 import { MuniService } from '@/services/MuniService.ts'
 import { ElectionService } from '@/services/ElectionService.ts'
-import { ProvinceService } from '@/services/ProvinceService.ts'
+import { ProviService } from '@/services/ProviService.ts'
 import { PollingStationService } from '@/services/PollingStationService.ts'
 import type { Constituency } from '@/interfaces/Constituency.ts'
 import type { Municipality } from '@/interfaces/Municipality.ts'
@@ -13,7 +13,7 @@ import type { PollingStation } from '@/interfaces/PollingStation.ts'
 
 // the first filter set
 const selectedElection1 = ref<'2021' | '2023' | null>(null)
-const selectedProvince1 = ref<Province | null>(null)
+const selectedProvi1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPollingStation1 = ref<PollingStation | null>(null)
@@ -28,7 +28,7 @@ const pollingStations1 = ref<PollingStation[]>([])
 
 // the second filter set
 const selectedElection2 = ref<'2021' | '2023' | null>(null)
-const selectedProvince2 = ref<Province | null>(null)
+const selectedProvi2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPollingStation2 = ref<PollingStation | null>(null)
@@ -54,29 +54,29 @@ async function getElectionLevel_provinces(
     return
   }
   try {
-    const response = await ProvinceService.getElectionLevel_provinces(election)
+    const response = await ProviService.getElectionLevel_provinces(election)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
     console.error('Error fetching election-level provinces: ', error)
   }
 }
 
-async function getProvinceLevel_constituencies(
+async function getProviLevel_constituencies(
   election: string | null,
-  provinceId: string | undefined,
+  provId: string | undefined,
   constituenciesRef: typeof constituencies1,
   clearSelectedConstituency: () => void,
 ) {
-  if (!election || !provinceId) {
+  if (!election || !provId) {
     constituenciesRef.value = []
     clearSelectedConstituency()
     return
   }
   try {
-    const response = await ProvinceService.getProvinceLevel_constituencies(election, provinceId)
+    const response = await ProviService.getProviLevel_constituencies(election, provId)
     constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
-    console.error('Error fetching province-level constituencies: ', error)
+    console.error('Error fetching provincial level constituencies: ', error)
   }
 }
 
@@ -119,7 +119,7 @@ async function getMuniLevel_pollingStations(
     )
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
-    console.error('Error fetching rep units:', error)
+    console.error('Error fetching polling stations: ', error)
   }
 }
 
@@ -161,7 +161,7 @@ async function fetchAffiVotes(
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'constituency'
     } else if (province) {
-      const res = await ProvinceService.getAffiVotes(election, province.id)
+      const res = await ProviService.getAffiVotes(election, province.id)
       affiVotesRef.value = res
       currentVoteLevelRef.value = 'province'
     } else {
@@ -177,8 +177,8 @@ async function fetchAffiVotes(
 }
 
 // --- Reset functies per filterset ---
-function clearProvinceAndBelow1() {
-  selectedProvince1.value = null
+function clearProviAndBelow1() {
+  selectedProvi1.value = null
   constituencies1.value = []
   selectedConsti1.value = null
   municipalities1.value = []
@@ -205,8 +205,8 @@ function clearPollingStation1() {
   selectedPollingStation1.value = null
 }
 
-function clearProvinceAndBelow2() {
-  selectedProvince2.value = null
+function clearProviAndBelow2() {
+  selectedProvi2.value = null
   constituencies2.value = []
   selectedConsti2.value = null
   municipalities2.value = []
@@ -235,20 +235,20 @@ function clearPollingStation2() {
 
 // --- Handlers eerste filter set ---
 async function onElectionChange1() {
-  clearProvinceAndBelow1()
+  clearProviAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
-  await getElectionLevel_provinces(selectedElection1.value, provinces1, clearProvinceAndBelow1)
+  await getElectionLevel_provinces(selectedElection1.value, provinces1, clearProviAndBelow1)
 }
 
 async function onProvinceChange1() {
   clearConstiAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
-  if (selectedProvince1.value) {
-    await getProvinceLevel_constituencies(
+  if (selectedProvi1.value) {
+    await getProviLevel_constituencies(
       selectedElection1.value,
-      selectedProvince1.value.id.toString(),
+      selectedProvi1.value.id.toString(),
       constituencies1,
       clearConstiAndBelow1,
     )
@@ -291,20 +291,20 @@ function onPollingStationChange1() {
 
 // --- Handlers tweede filter set ---
 async function onElectionChange2() {
-  clearProvinceAndBelow2()
+  clearProviAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
-  await getElectionLevel_provinces(selectedElection2.value, provinces2, clearProvinceAndBelow2)
+  await getElectionLevel_provinces(selectedElection2.value, provinces2, clearProviAndBelow2)
 }
 
 async function onProvinceChange2() {
   clearConstiAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
-  if (selectedProvince2.value) {
-    await getProvinceLevel_constituencies(
+  if (selectedProvi2.value) {
+    await getProviLevel_constituencies(
       selectedElection2.value,
-      selectedProvince2.value.id.toString(),
+      selectedProvi2.value.id.toString(),
       constituencies2,
       clearConstiAndBelow2,
     )
@@ -356,7 +356,7 @@ async function applyFilter() {
       selectedPollingStation1.value,
       selectedMuni1.value,
       selectedConsti1.value,
-      selectedProvince1.value,
+      selectedProvi1.value,
       affiVotes1,
       currentVoteLevel1,
     )
@@ -369,7 +369,7 @@ async function applyFilter() {
       selectedPollingStation2.value,
       selectedMuni2.value,
       selectedConsti2.value,
-      selectedProvince2.value,
+      selectedProvi2.value,
       affiVotes2,
       currentVoteLevel2,
     )
@@ -394,7 +394,7 @@ async function applyFilter() {
         </select>
         <select
           v-if="provinces1.length > 0"
-          v-model="selectedProvince1"
+          v-model="selectedProvi1"
           @change="onProvinceChange1"
         >
           <option value="null" disabled>Select a province</option>
@@ -444,7 +444,7 @@ async function applyFilter() {
         </select>
         <select
           v-if="provinces2.length > 0"
-          v-model="selectedProvince2"
+          v-model="selectedProvi2"
           @change="onProvinceChange2"
         >
           <option value="null" disabled>Select a province</option>
