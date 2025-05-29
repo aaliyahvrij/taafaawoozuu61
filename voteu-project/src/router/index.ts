@@ -5,6 +5,7 @@ import HowView from "@/views/HowView.vue";
 import ForumView from "@/views/ForumView.vue";
 import FilterView from "@/views/FilterView.vue";
 import CompareView from "@/views/CompareView.vue";
+import AuthView from '@/views/AuthView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path:'/compare',
       name:'compare',
       component: CompareView,
+    },
+    {
+      path:'/auth',
+      name:'auth',
+      component: AuthView,
     },
   ],
 })
