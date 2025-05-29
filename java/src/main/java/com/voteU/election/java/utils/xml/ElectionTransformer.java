@@ -76,7 +76,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerMunicipality(Map<String, String> prcsAuthoMap) {
+    public void registerMuniLevelData(Map<String, String> prcsAuthoMap) {
         int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONSTI_ID));
         String munId = prcsAuthoMap.get(ElectionProcessor.MUNI_ID);
         String muniName = prcsAuthoMap.get("muniName");

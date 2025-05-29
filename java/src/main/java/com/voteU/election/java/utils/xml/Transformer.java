@@ -53,7 +53,7 @@ public interface Transformer<E> {
      */
     void registerConstiLevelData(Map<String, String> constiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
-    void registerMunicipality(Map<String, String> muniMap);
+    void registerMuniLevelData(Map<String, String> muniMap);
 
     void registerPollingStation(Map<String, String> polingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap);
 

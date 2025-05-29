@@ -328,7 +328,7 @@ public class ElectionProcessor<E> {
                         processConstiLevelData(constiMap, parser);
                         break;
                     case "municipality":
-                        processMunicipality(constiMap, parser);
+                        processMuniLevelData(constiMap, parser);
                         break;
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
@@ -422,7 +422,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processMunicipality(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processMuniLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
             Set<String> registeredCandiAffiliations = new HashSet<>();
@@ -461,7 +461,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                         }
-                        transformer.registerMunicipality(affiVotesMap);
+                        transformer.registerMuniLevelData(affiVotesMap);
                         break;
                     case CANDIDATE:
                         Map<String, String> candiVotesMap = new HashMap<>(constiMap);
@@ -496,7 +496,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                             registeredCandiAffiliations.add(candiCompKey);
-                            transformer.registerMunicipality(candiVotesMap);
+                            transformer.registerMuniLevelData(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candId, affId));
