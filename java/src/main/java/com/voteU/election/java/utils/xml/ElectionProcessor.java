@@ -242,8 +242,8 @@ public class ElectionProcessor<E> {
                             }
                             parser.findAndAcceptEndTag(AFFI_ID);
                             if (parser.findBeginTag(VALID_VOTES)) {
-                                int affiValidVoteCount = Integer.parseInt(parser.getElementText());
-                                affiMap.put(VALID_VOTES, String.valueOf(affiValidVoteCount));
+                                int affiVVCount = Integer.parseInt(parser.getElementText());
+                                affiMap.put(VALID_VOTES, String.valueOf(affiVVCount));
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
                             registeredAffIds.add(affId);
@@ -274,12 +274,12 @@ public class ElectionProcessor<E> {
                             }
                             parser.findAndAcceptEndTag(CANDIDATE);
                             if (parser.findBeginTag(VALID_VOTES)) {
-                                int candiValidVoteCount = Integer.parseInt(parser.getElementText());
+                                int candiVVCount = Integer.parseInt(parser.getElementText());
                                 Map<String, String> candiMap = new HashMap<>(constiMap);
                                 candiMap.put(SHORT_CODE, candiShortCode);
                                 registeredCandiShortCodes.add(candiShortCode);
                                 candiMap.put(AFFI_ID, String.valueOf(affId));
-                                candiMap.put("candiValidVoteCount", String.valueOf(candiValidVoteCount));
+                                candiMap.put("candiVVCount", String.valueOf(candiVVCount));
                                 for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
                                     if (candiMapPair.getValue() == null) {
                                         System.err.println("National level - Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
@@ -380,10 +380,10 @@ public class ElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(AFFI_ID);
                         if (!processedAffiliations.contains(currentAffId)) {
-                            int affiValidVoteCount;
+                            int affiVVCount;
                             if (parser.findBeginTag(VALID_VOTES)) {
-                                affiValidVoteCount = Integer.parseInt(parser.getElementText().trim());
-                                affiVotesList.add(affiValidVoteCount);
+                                affiVVCount = Integer.parseInt(parser.getElementText().trim());
+                                affiVotesList.add(affiVVCount);
                                 candiVotesMap.putIfAbsent(currentAffId, new HashMap<>());
                                 processedAffiliations.add(currentAffId);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
@@ -405,12 +405,12 @@ public class ElectionProcessor<E> {
                             parser.findAndAcceptEndTag(VALID_VOTES);
                             //continue;
                         } else {
-                            int candiValidVoteCount = 0;
+                            int candiVVCount = 0;
                             if (parser.findBeginTag(VALID_VOTES)) {
-                                candiValidVoteCount = Integer.parseInt(parser.getElementText().trim());
+                                candiVVCount = Integer.parseInt(parser.getElementText().trim());
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             }
-                            candiVotesMap.computeIfAbsent(currentAffId, k -> new HashMap<>()).put(candId, candiValidVoteCount);
+                            candiVotesMap.computeIfAbsent(currentAffId, k -> new HashMap<>()).put(candId, candiVVCount);
                             processedCandiAffiliations.add(candiCompKey);
                         }
                     }
@@ -444,8 +444,8 @@ public class ElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(AFFI_ID);
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int affiValidVoteCount = Integer.parseInt(parser.getElementText());
-                            affiVotesMap.put(VALID_VOTES, String.valueOf(affiValidVoteCount));
+                            int affiVVCount = Integer.parseInt(parser.getElementText());
+                            affiVotesMap.put(VALID_VOTES, String.valueOf(affiVVCount));
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         }
                         for (Map.Entry<String, String> affiVotesMapPair : affiVotesMap.entrySet()) {
@@ -478,10 +478,10 @@ public class ElectionProcessor<E> {
                         }
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VALID_VOTES)) {
-                            int candiValidVoteCount = Integer.parseInt(parser.getElementText());
+                            int candiVVCount = Integer.parseInt(parser.getElementText());
                             candiVotesMap.put(CANDI_ID, String.valueOf(candId));
                             candiVotesMap.put(AFFI_ID, String.valueOf(affId));
-                            candiVotesMap.put("candiValidVoteCount", String.valueOf(candiValidVoteCount));
+                            candiVotesMap.put("candiVVCount", String.valueOf(candiVVCount));
                             for (Map.Entry<String, String> candiVotesMapPair : candiVotesMap.entrySet()) {
                                 if (candiVotesMapPair.getValue() == null) {
                                     System.err.println("Missing " + candiVotesMapPair.getKey() + " in candiVotesMap: " + candiVotesMap);
@@ -542,20 +542,20 @@ public class ElectionProcessor<E> {
                 case AFFI_ID:
                     affId = parser.getIntegerAttributeValue(null, ID, 0);
                     String affiName = "";
-                    int affiValidVoteCount = 0;
+                    int affiVVCount = 0;
                     if (parser.findBeginTag(AFFI_NAME)) {
                         affiName = parser.getElementText();
                         parser.findAndAcceptEndTag(AFFI_NAME);
                     }
                     parser.findAndAcceptEndTag(AFFI_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
-                        affiValidVoteCount = Integer.parseInt(parser.getElementText());
-                        pollingStationVotes = pollingStationVotes + affiValidVoteCount;
+                        affiVVCount = Integer.parseInt(parser.getElementText());
+                        pollingStationVotes = pollingStationVotes + affiVVCount;
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
                     }
-                    affiliation = new Affiliation(affId, affiName, affiValidVoteCount);
+                    affiliation = new Affiliation(affId, affiName, affiVVCount);
                     pollingStationLevel_affiListMap.put(affId, affiliation);
                     break;
                 case CANDIDATE:
@@ -566,8 +566,8 @@ public class ElectionProcessor<E> {
                     }
                     parser.findAndAcceptEndTag(CANDIDATE);
                     if (parser.findBeginTag(VALID_VOTES)) {
-                        int candiValidVoteCount = Integer.parseInt(parser.getElementText());
-                        Candidate candidate = new Candidate(candId, candiValidVoteCount);
+                        int candiVVCount = Integer.parseInt(parser.getElementText());
+                        Candidate candidate = new Candidate(candId, candiVVCount);
                         candidate.setAffId(affId);
                         pollingStationLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VALID_VOTES);

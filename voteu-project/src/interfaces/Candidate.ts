@@ -5,5 +5,5 @@ export interface Candidate {
   lastName: string
   gender: string
   localityName: string
-  validVoteCount: number
+  vvCount: number
 }

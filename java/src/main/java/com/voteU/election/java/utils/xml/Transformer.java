@@ -67,8 +67,8 @@ public interface Transformer<E> {
      *     <li>{@link ElectionProcessor#LAST_NAME}</li>
      * </ul>
      *
-     * @param candiMap a {@code Map} containing information about the election, contest, affiliation and the
-     *                 candidate.
+     * @param candiMap a {@code Map} containing information about the election, constituency,
+     *                 affiliation and the candidate.
      */
     void registerCandiLevelData(Map<String, String> candiMap);
 

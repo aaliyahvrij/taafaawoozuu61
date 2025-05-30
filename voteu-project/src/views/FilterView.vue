@@ -465,7 +465,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         :style="{ backgroundColor: AffiStyleService.generateColorFromName(affi.name) }"
       >
         <div class="affi-name">{{ affi.name }}</div>
-        <div class="affi-valid-vote-count">{{ affi.validVoteCount.toLocaleString() }} votes</div>
+        <div class="affi-vv-count">{{ affi.vvCount.toLocaleString() }} votes</div>
         <div class="affi-percentage">{{ affi.percentage.toFixed(2) }}%</div>
       </div>
     </div>
@@ -499,7 +499,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       >
         <p v-if="candi.firstName && candi.lastName">
           {{ candi.firstName }} {{ candi.lastName }} :
-          {{ candi.validVoteCount.toLocaleString() }} votes
+          {{ candi.vvCount.toLocaleString() }} votes
         </p>
       </div>
     </div>
@@ -539,8 +539,8 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         <br />
         <strong>Locality:</strong> {{ selectedCandidate.localityName }}
       </p>
-      <p class="candi-valid-vote-count">
-        Votes: <strong>{{ selectedCandidate.validVoteCount.toLocaleString() }}</strong>
+      <p class="candi-vv-count">
+        Votes: <strong>{{ selectedCandidate.vvCount.toLocaleString() }}</strong>
       </p>
       <button class="back-btn" @click="selectedCandidate = null">Back</button>
     </div>
@@ -582,7 +582,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   margin-bottom: 16px;
 }
 
-.candi-valid-vote-count {
+.candi-vv-count {
   font-size: 1.25rem;
   margin-bottom: 24px;
 }
@@ -671,12 +671,12 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   font-weight: 600;
 }
 
-.affi-valid-vote-count,
-.candi-valid-vote-count {
+.affi-vv-count,
+.candi-vv-count {
   color: #000000;
 }
 
-.affi-valid-vote-count {
+.affi-vv-count {
   min-width: 100px;
   text-align: right;
 }
@@ -685,7 +685,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   color: #123c98;
 }
 
-.affi-valid-vote-count,
+.affi-vv-count,
 .affi-percentage,
 .back-btn,
 .apply-btn {
@@ -703,12 +703,12 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   font-size: 2.5rem;
 }
 
-.affi-valid-vote-count,
+.affi-vv-count,
 .affi-percentage {
   font-weight: bold;
 }
 
-.affi-valid-vote-count,
+.affi-vv-count,
 .affi-percentage,
 .candi-list-title {
   margin-left: 1rem;

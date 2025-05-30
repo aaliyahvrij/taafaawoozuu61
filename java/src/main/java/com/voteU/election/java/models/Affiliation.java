@@ -9,13 +9,13 @@ public class Affiliation {
     int id;
     String name;
     List<Candidate> candidates;
-    int votes;
+    int vvCount;
 
-    public Affiliation(int id, String name, int votes) {
+    public Affiliation(int id, String name, int vvCount) {
         this.id = id;
         this.name = name;
         this.candidates = new ArrayList<>();
-        this.votes = votes;
+        this.vvCount = vvCount;
     }
 
     public void addCandidate(Candidate candidate) {

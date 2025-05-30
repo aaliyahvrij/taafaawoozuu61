@@ -54,17 +54,17 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle affiliation-specific data
         if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
             String affiName = nationMap.get(ElectionProcessor.AFFI_NAME);
-            int affiValidVoteCount = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
-            affiliation = new Affiliation(affId, affiName, affiValidVoteCount);
+            int affiVVCount = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
+            affiliation = new Affiliation(affId, affiName, affiVVCount);
             affiListMap.put(affId, affiliation);
         }
 
         // Handle candidate-specific data
         else {
             String candiShortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
-            int candiValidVoteCount = Integer.parseInt(nationMap.get("candiValidVoteCount"));
+            int candiVVCount = Integer.parseInt(nationMap.get("candiVVCount"));
             if (!affiliation.hasCandiShortCode(candiShortCode)) {
-                Candidate candidate = new Candidate(candiShortCode, candiValidVoteCount);
+                Candidate candidate = new Candidate(candiShortCode, candiVVCount);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -94,15 +94,15 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<Integer, Affiliation> affiListMap = municipality.getAffiliations();
         Affiliation affiliation = affiListMap.get(affId);
         if (affiliation == null) {
-            int affiValidVoteCount = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.VALID_VOTES));
-            affiliation = new Affiliation(affId, affiName, affiValidVoteCount);
+            int affiVVCount = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.VALID_VOTES));
+            affiliation = new Affiliation(affId, affiName, affiVVCount);
             affiListMap.put(affId, affiliation);
         }
-        if (muniMap.containsKey("candiValidVoteCount")) {
+        if (muniMap.containsKey("candiVVCount")) {
             int candId = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.CANDI_ID));
-            int candiValidVoteCount = Integer.parseInt(prcsMuniMap.get("candiValidVoteCount"));
+            int candiVVCount = Integer.parseInt(prcsMuniMap.get("candiVVCount"));
             if (!affiliation.hasCandId(candId)) {
-                Candidate candidate = new Candidate(candId, candiValidVoteCount);
+                Candidate candidate = new Candidate(candId, candiVVCount);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -115,8 +115,8 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<String, PollingStation> electionLevel_pollingStationListMap = election.getPollingStations();
         String pollingStationId = prcsPollingStationMap.get(ElectionProcessor.POLLING_STATION_ID);
         String pollingStationName = prcsPollingStationMap.get("pollingStationName");
-        int pollingStationValidVoteCount = Integer.parseInt(prcsPollingStationMap.get("pollingStationValidVoteCount"));
-        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationValidVoteCount);
+        int pollingStationVVCount = Integer.parseInt(prcsPollingStationMap.get("pollingStationVVCount"));
+        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationVVCount);
         electionLevel_pollingStationListMap.put(pollingStationId, pollingStation);
     }
 

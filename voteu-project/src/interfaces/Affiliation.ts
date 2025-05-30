@@ -4,6 +4,6 @@ export interface Affiliation {
   id: number
   name: string
   candidates: Candidate[] // Adjust type if candidates have data
-  validVoteCount: number
+  vvCount: number
   percentage: number
 }

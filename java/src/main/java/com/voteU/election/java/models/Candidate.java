@@ -12,16 +12,16 @@ public class Candidate {
     private String gender;
     private String localityName;
     private int affId;
-    public int votes;
+    public int vvCount;
 
-    public Candidate(int id, int votes) {                           // telling files
+    public Candidate(int id, int vvCount) {                           // telling files
         this.id = id;
-        this.votes = votes;
+        this.vvCount = vvCount;
     }
 
-    public Candidate(String shortCode, int votes) {                 // totaaltelling files
+    public Candidate(String shortCode, int vvCount) {                 // totaaltelling files
         this.shortCode = shortCode;
-        this.votes = votes;
+        this.vvCount = vvCount;
     }
 
     public Candidate(int id, String firstName, String lastName) {   // kandidatenlijst files
@@ -32,6 +32,6 @@ public class Candidate {
         this.gender = "";
         this.localityName = "";
         this.affId = 0;
-        this.votes = 0;
+        this.vvCount = 0;
     }
 }

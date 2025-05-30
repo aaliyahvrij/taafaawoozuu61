@@ -9,12 +9,12 @@ public class PollingStation {
     String id;
     String name;
     Map<Integer, Affiliation> affiliations;
-    int votes;
+    int vvCount;
 
-    public PollingStation(String id, String name, Map<Integer, Affiliation> affiliations, int votes) {
+    public PollingStation(String id, String name, Map<Integer, Affiliation> affiliations, int vvCount) {
         this.id = id;
         this.name = name;
         this.affiliations = affiliations;
-        this.votes = votes;
+        this.vvCount = vvCount;
     }
 }
