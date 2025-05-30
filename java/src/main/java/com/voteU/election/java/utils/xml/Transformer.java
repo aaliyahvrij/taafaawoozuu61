@@ -8,7 +8,7 @@ import java.util.*;
  * A {@link Transformer} transforms the election information which is contained in a {@link Map},
  * Map&lt;String, String>, into the models as used by the application. As part of this transformation, it is also
  * responsible for making all the necessary relationships between the different classes and instances.<br>
- * For example, when {@link #registerCandidate(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
+ * For example, when {@link #registerCandiLevelData(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
  * After all the data has been transformed, it should be able to return an instance of a class that encapsulates all
  * the data in the application-specific data classes.
  *
@@ -31,7 +31,7 @@ public interface Transformer<E> {
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold the
-     * same information as {@code candiMap} in {@link #registerCandidate(Map)}, and the following information:
+     * same information as {@code candiMap} in {@link #registerCandiLevelData(Map)}, and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#VALID_VOTES}</li>
      * </ul>
