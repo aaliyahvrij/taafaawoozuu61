@@ -1,4 +1,4 @@
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Affiliation } from '@/interfaces'
 
 export interface Municipality {
   id: string

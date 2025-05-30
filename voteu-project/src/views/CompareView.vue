@@ -94,8 +94,8 @@ async function getConstiLevel_municipalities(
   try {
     const response = await MuniService.getConstiLevel_municipalities(election, constId)
     municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching constituential level municipalities: ', error)
+  } catch (err) {
+    console.error('Error fetching constituential level municipalities: ', err)
   }
 }
 
@@ -118,8 +118,8 @@ async function getMuniLevel_pollingStations(
       munId,
     )
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching municipal level polling stations: ', error)
+  } catch (err) {
+    console.error('Error fetching municipal level polling stations: ', err)
   }
 }
 
@@ -149,7 +149,7 @@ async function fetchAffiVotes(
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'pollingStation'
     } else if (municipality && constituency) {
-      const res = await MuniService.getConstiLevel_muniVotes(
+      const res = await MuniService.getMuniLevel_affiData(
         election,
         constituency.id.toString(),
         municipality.id.toString(),
@@ -157,7 +157,7 @@ async function fetchAffiVotes(
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'municipal'
     } else if (constituency) {
-      const res = await ConstiService.getAffiVotes(election, constituency.id.toString())
+      const res = await ConstiService.getConstiLevel_affiData(election, constituency.id.toString())
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'constituencial'
     } else if (province) {
@@ -165,7 +165,7 @@ async function fetchAffiVotes(
       affiVotesRef.value = res
       currentVoteLevelRef.value = 'provincial'
     } else {
-      const res = await ElectionService.getAffiVotes(election)
+      const res = await ElectionService.getElectoralLevel_affiData(election)
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
       currentVoteLevelRef.value = 'national'
     }

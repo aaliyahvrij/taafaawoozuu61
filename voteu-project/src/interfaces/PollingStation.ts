@@ -1,9 +1,9 @@
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Affiliation } from '@/interfaces'
 
 export interface PollingStation {
   id: string
   name: string
   zipCode: string
   affiliations: { [affId: number]: Affiliation }
-  authorityId: string
+  munId: string
 }

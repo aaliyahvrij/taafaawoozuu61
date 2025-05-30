@@ -54,17 +54,17 @@ public class ElectionTransformer implements Transformer<Election> {
         // Handle affiliation-specific data
         if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
             String affiName = nationMap.get(ElectionProcessor.AFFI_NAME);
-            int affiVotes = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
-            affiliation = new Affiliation(affId, affiName, affiVotes);
+            int affiValidVoteCount = Integer.parseInt(nationMap.get(ElectionProcessor.VALID_VOTES));
+            affiliation = new Affiliation(affId, affiName, affiValidVoteCount);
             affiListMap.put(affId, affiliation);
         }
 
         // Handle candidate-specific data
         else {
             String candiShortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
-            int candiVotes = Integer.parseInt(nationMap.get("candiVotes"));
+            int candiValidVoteCount = Integer.parseInt(nationMap.get("candiValidVoteCount"));
             if (!affiliation.hasCandiShortCode(candiShortCode)) {
-                Candidate candidate = new Candidate(candiShortCode, candiVotes);
+                Candidate candidate = new Candidate(candiShortCode, candiValidVoteCount);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -76,33 +76,33 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerMuniLevelData(Map<String, String> prcsAuthoMap) {
-        int constId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CONSTI_ID));
-        String munId = prcsAuthoMap.get(ElectionProcessor.MUNI_ID);
-        String muniName = prcsAuthoMap.get("muniName");
-        int affId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.AFFI_ID));
-        String affiName = prcsAuthoMap.get(ElectionProcessor.AFFI_NAME);
-        String electionId = prcsAuthoMap.get(ElectionProcessor.ELECTION_ID);
+    public void registerMuniLevelData(Map<String, String> prcsMuniMap) {
+        int constId = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.CONSTI_ID));
+        String munId = prcsMuniMap.get(ElectionProcessor.MUNI_ID);
+        String muniName = prcsMuniMap.get("muniName");
+        int affId = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.AFFI_ID));
+        String affiName = prcsMuniMap.get(ElectionProcessor.AFFI_NAME);
+        String electionId = prcsMuniMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListMap.get(electionId);
-        Map<String, Municipality> authoMap = election.getMunicipalities();
-        Municipality authority = authoMap.computeIfAbsent(munId, id -> {
+        Map<String, Municipality> muniMap = election.getMunicipalities();
+        Municipality municipality = muniMap.computeIfAbsent(munId, id -> {
             Municipality m = new Municipality(id);
             m.setName(muniName);
             m.setConstId(constId);
             return m;
         });
-        Map<Integer, Affiliation> affiListMap = authority.getAffiliations();
+        Map<Integer, Affiliation> affiListMap = municipality.getAffiliations();
         Affiliation affiliation = affiListMap.get(affId);
         if (affiliation == null) {
-            int affiVotes = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.VALID_VOTES));
-            affiliation = new Affiliation(affId, affiName, affiVotes);
+            int affiValidVoteCount = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.VALID_VOTES));
+            affiliation = new Affiliation(affId, affiName, affiValidVoteCount);
             affiListMap.put(affId, affiliation);
         }
-        if (authoMap.containsKey("candiVotes")) {
-            int candId = Integer.parseInt(prcsAuthoMap.get(ElectionProcessor.CANDI_ID));
-            int candiVotes = Integer.parseInt(prcsAuthoMap.get("candiVotes"));
+        if (muniMap.containsKey("candiValidVoteCount")) {
+            int candId = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.CANDI_ID));
+            int candiValidVoteCount = Integer.parseInt(prcsMuniMap.get("candiValidVoteCount"));
             if (!affiliation.hasCandId(candId)) {
-                Candidate candidate = new Candidate(candId, candiVotes);
+                Candidate candidate = new Candidate(candId, candiValidVoteCount);
                 affiliation.addCandidate(candidate);
             }
         }
@@ -115,8 +115,8 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<String, PollingStation> electionLevel_pollingStationListMap = election.getPollingStations();
         String pollingStationId = prcsPollingStationMap.get(ElectionProcessor.POLLING_STATION_ID);
         String pollingStationName = prcsPollingStationMap.get("pollingStationName");
-        int pollingStationVotes = Integer.parseInt(prcsPollingStationMap.get("pollingStationVotes"));
-        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationVotes);
+        int pollingStationValidVoteCount = Integer.parseInt(prcsPollingStationMap.get("pollingStationValidVoteCount"));
+        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationValidVoteCount);
         electionLevel_pollingStationListMap.put(pollingStationId, pollingStation);
     }
 
@@ -134,15 +134,15 @@ public class ElectionTransformer implements Transformer<Election> {
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();
         Constituency constituency = electionLevel_constiListMap.get(constId);
         if (constituency != null) {
-            // Update or insert a candidate in a constituency-level affiliation
+            // Update or insert a candidate in a constituencial level affiliation
             Map<Integer, Affiliation> constiLevel_affiListMap = constituency.getAffiliations();
             populateCandidate(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListMap);
 
-            // Update or insert a candidate in each authority-level affiliation
+            // Update or insert a candidate in each municipal level affiliation
             Map<String, Municipality> constiLevel_muniListMap = constituency.getMunicipalities();
             for (Municipality municipality : constiLevel_muniListMap.values()) {
-                Map<Integer, Affiliation> authoLevel_affiListMap = municipality.getAffiliations();
-                populateCandidate(candId, firstName, lastName, gender, localityName, affId, authoLevel_affiListMap);
+                Map<Integer, Affiliation> muniLevel_affiListMap = municipality.getAffiliations();
+                populateCandidate(candId, firstName, lastName, gender, localityName, affId, muniLevel_affiListMap);
                 Map<String, PollingStation> pollingStationListMap = municipality.getPollingStations();
                 for (PollingStation pollingStation : pollingStationListMap.values()) {
                     populateCandidate(candId, firstName, lastName, gender, localityName, affId, pollingStation.getAffiliations());

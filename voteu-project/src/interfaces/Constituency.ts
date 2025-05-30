@@ -7,5 +7,5 @@ export interface Constituency {
   provinceId: number
   authorities: { [key: string]: Municipality } // map of authorities belonging to this constituency with authorityId as key
   affiliations: { [key: number]: Affiliation } // map of party votes at constituency level
-  votes: number
+  validVoteCount: number
 }

@@ -20,8 +20,8 @@ export class PollingStationService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }
@@ -46,8 +46,8 @@ export class PollingStationService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }

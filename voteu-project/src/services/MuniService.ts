@@ -19,13 +19,13 @@ export class MuniService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }
 
-  static async getConstiLevel_muniVotes(
+  static async getMuniLevel_affiData(
     electionId: string,
     constId: string,
     munId: string,
@@ -44,8 +44,8 @@ export class MuniService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }

@@ -1,7 +1,7 @@
 import type { Constituency, Affiliation } from '@/interfaces'
 
 export class ConstiService {
-  static async getElectionLevel_constituencies(
+  static async getElectoralLevel_constituencies(
     electionId: string,
   ): Promise<Record<number, Constituency> | null> {
     try {
@@ -15,16 +15,16 @@ export class ConstiService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }
 
-  static async getAffiVotes(
+  static async getConstiLevel_affiData(
     electionId: string,
     constId: string,
   ): Promise<Record<number, Affiliation> | null> {
@@ -39,11 +39,11 @@ export class ConstiService {
         },
       )
       if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+        throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }

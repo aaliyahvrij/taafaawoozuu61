@@ -142,8 +142,8 @@ async function getProviLevel_constituencies(
     } else {
       constituencies.value = []
     }
-  } catch (error) {
-    console.error('Error fetching provincial level constituencies: ', error)
+  } catch (err) {
+    console.error('Error fetching provincial level constituencies: ', err)
   }
 }
 
@@ -162,8 +162,8 @@ async function getConstiLevel_municipalities(
         constId,
       )
     }
-  } catch (error) {
-    console.error('Error fetching consituencial level municipalities: ', error)
+  } catch (err) {
+    console.error('Error fetching consituencial level municipalities: ', err)
   }
 }
 
@@ -189,8 +189,8 @@ async function getMuniLevel_pollingStations(
         munId,
       )
     }
-  } catch (error) {
-    console.error('Error fetching municipal level polling stations: ', error)
+  } catch (err) {
+    console.error('Error fetching municipal level polling stations: ', err)
   }
 }
 
@@ -220,19 +220,19 @@ async function getMuniLevel_PollingStationVotes(
       'polling station ',
       pollingStationId,
     )
-  } catch (error) {
-    console.error('Error fetching municipal level polling station votes: ', error)
+  } catch (err) {
+    console.error('Error fetching municipal level polling station votes: ', err)
   }
 }
 
 async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
   try {
-    const response = await ElectionService.getAffiVotes(electionId)
+    const response = await ElectionService.getElectoralLevel_affiData(electionId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'national'
     console.log('Fetching national level affiliation votes for election ', electionId)
-  } catch (error) {
-    console.error('Error fetching national level affiliation votes: ', error)
+  } catch (err) {
+    console.error('Error fetching national level affiliation votes: ', err)
   }
 }
 
@@ -242,22 +242,22 @@ async function getProviLevel_affiVotes(electionId: string, provId: number): Prom
     affiVotes.value = response
     currentVoteLevel.value = 'provincial'
     console.log('Fetching provincial level affiliation votes for election ', electionId)
-  } catch (error) {
-    console.error('Error fetching provincial level affiliation votes: ', error)
+  } catch (err) {
+    console.error('Error fetching provincial level affiliation votes: ', err)
   }
 }
 
 async function getConstiLevel_affiVotes(electionId: string, constId: string): Promise<void> {
   try {
-    const response = await ConstiService.getAffiVotes(electionId, constId)
+    const response = await ConstiService.getConstiLevel_affiData(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'constituencial'
     console.log(
       'Fetching constituency ' + constId + ' level affiliation votes for election ',
       electionId,
     )
-  } catch (error) {
-    console.error('Error fetching constituencial level affiliation votes:', error)
+  } catch (err) {
+    console.error('Error fetching constituencial level affiliation votes: ', err)
   }
 }
 
@@ -267,7 +267,7 @@ async function getMuniLevel_affiVotes(
   munId: string,
 ): Promise<void> {
   try {
-    const response = await MuniService.getConstiLevel_muniVotes(electionId, constId, munId)
+    const response = await MuniService.getMuniLevel_affiData(electionId, constId, munId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'municipal'
     console.log(
@@ -278,8 +278,8 @@ async function getMuniLevel_affiVotes(
       'municipality ',
       munId,
     )
-  } catch (error) {
-    console.error('Error fetching municipal level affiliation votes: ', error)
+  } catch (err) {
+    console.error('Error fetching municipal level affiliation votes: ', err)
   }
 }
 
@@ -465,7 +465,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         :style="{ backgroundColor: AffiStyleService.generateColorFromName(affi.name) }"
       >
         <div class="affi-name">{{ affi.name }}</div>
-        <div class="affi-votes">{{ affi.votes.toLocaleString() }} votes</div>
+        <div class="affi-valid-vote-count">{{ affi.validVoteCount.toLocaleString() }} votes</div>
         <div class="affi-percentage">{{ affi.percentage.toFixed(2) }}%</div>
       </div>
     </div>
@@ -498,7 +498,8 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         @click="handleCandiChange(candi)"
       >
         <p v-if="candi.firstName && candi.lastName">
-          {{ candi.firstName }} {{ candi.lastName }} : {{ candi.votes.toLocaleString() }} votes
+          {{ candi.firstName }} {{ candi.lastName }} :
+          {{ candi.validVoteCount.toLocaleString() }} votes
         </p>
       </div>
     </div>
@@ -538,8 +539,8 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         <br />
         <strong>Locality:</strong> {{ selectedCandidate.localityName }}
       </p>
-      <p class="candi-votes">
-        Votes: <strong>{{ selectedCandidate.votes.toLocaleString() }}</strong>
+      <p class="candi-valid-vote-count">
+        Votes: <strong>{{ selectedCandidate.validVoteCount.toLocaleString() }}</strong>
       </p>
       <button class="back-btn" @click="selectedCandidate = null">Back</button>
     </div>
@@ -581,7 +582,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   margin-bottom: 16px;
 }
 
-.candi-votes {
+.candi-valid-vote-count {
   font-size: 1.25rem;
   margin-bottom: 24px;
 }
@@ -656,7 +657,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   border-radius: 0.375rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  justify-content: space-between; /* pushes name and votes apart */
+  justify-content: space-between; /* pushes name and valid vote count apart */
   transition: all 0.2s ease;
 }
 
@@ -670,12 +671,12 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   font-weight: 600;
 }
 
-.affi-votes,
-.candi-votes {
+.affi-valid-vote-count,
+.candi-valid-vote-count {
   color: #000000;
 }
 
-.affi-votes {
+.affi-valid-vote-count {
   min-width: 100px;
   text-align: right;
 }
@@ -684,7 +685,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   color: #123c98;
 }
 
-.affi-votes,
+.affi-valid-vote-count,
 .affi-percentage,
 .back-btn,
 .apply-btn {
@@ -702,12 +703,12 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
   font-size: 2.5rem;
 }
 
-.affi-votes,
+.affi-valid-vote-count,
 .affi-percentage {
   font-weight: bold;
 }
 
-.affi-votes,
+.affi-valid-vote-count,
 .affi-percentage,
 .candi-list-title {
   margin-left: 1rem;

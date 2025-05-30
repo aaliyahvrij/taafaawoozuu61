@@ -1,7 +1,7 @@
 import type { Election, Affiliation } from '@/interfaces'
 
 export class ElectionService {
-  static async getElection(electionId: string): Promise<Election | null> {
+  static async getElectoralLevelData(electionId: string): Promise<Election | null> {
     try {
       const response = await fetch(`http://localhost:8080/api/election/TK${electionId}`, {
         method: 'GET',
@@ -13,13 +13,13 @@ export class ElectionService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }
 
-  static async getAffiVotes(electionId: string): Promise<Record<number, Affiliation> | null> {
+  static async getElectoralLevel_affiData(electionId: string): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/affiliations`,
@@ -34,8 +34,8 @@ export class ElectionService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
     return null
   }

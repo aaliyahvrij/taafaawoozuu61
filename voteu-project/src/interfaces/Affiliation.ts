@@ -1,9 +1,9 @@
-import type { Candidate } from '@/interfaces/Candidate.ts'
+import type { Candidate } from '@/interfaces'
 
 export interface Affiliation {
   id: number
   name: string
   candidates: Candidate[] // Adjust type if candidates have data
-  votes: number
+  validVoteCount: number
   percentage: number
 }
