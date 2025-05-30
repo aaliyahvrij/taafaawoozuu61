@@ -109,7 +109,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerPollingStation(Map<String, String> prcsPollingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap) {
+    public void registerPollingStationLevelData(Map<String, String> prcsPollingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap) {
         String electionId = prcsPollingStationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = electionListMap.get(electionId);
         Map<String, PollingStation> electionLevel_pollingStationListMap = election.getPollingStations();
@@ -121,7 +121,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerCandidate(Map<String, String> candiMap) {
+    public void registerCandiLevelData(Map<String, String> candiMap) {
         int candId = Integer.parseInt(candiMap.get(ElectionProcessor.CANDI_ID));
         String firstName = candiMap.get(ElectionProcessor.FIRST_NAME);
         String lastName = candiMap.get(ElectionProcessor.LAST_NAME);

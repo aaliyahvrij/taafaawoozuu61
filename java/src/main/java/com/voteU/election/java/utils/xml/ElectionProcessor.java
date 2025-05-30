@@ -334,7 +334,7 @@ public class ElectionProcessor<E> {
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
             while (parser.nextBeginTag(POLLING_STATION)) {
-                processPollingStation(constiMap, parser);
+                processPollingStationLevelData(constiMap, parser);
                 parser.findAndAcceptEndTag(POLLING_STATION);
             }
             parser.findAndAcceptEndTag(CONSTITUENCY);
@@ -510,7 +510,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processPollingStation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processPollingStationLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         Map<String, String> pollingStationMap = new HashMap<>(constiMap);
         String pollingStationName = null;
         Map<Integer, Affiliation> pollingStationLevel_affiListMap = new HashMap<>();
@@ -596,10 +596,10 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        transformer.registerPollingStation(pollingStationMap, pollingStationLevel_affiListMap);
+        transformer.registerPollingStationLevelData(pollingStationMap, pollingStationLevel_affiListMap);
     }
 
-    private void processAffiliation(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processAffiLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         Map<String, String> affiMap = new HashMap<>(constiMap);
         if (parser.findBeginTag(AFFI_ID)) {
             int affId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -613,13 +613,13 @@ public class ElectionProcessor<E> {
         }
         if (parser.findBeginTag(CANDIDATE)) {
             while (parser.getLocalName().equals(CANDIDATE)) {
-                processCandidate(affiMap, parser);
+                processCandiLevelData(affiMap, parser);
                 parser.findAndAcceptEndTag(CANDIDATE);
             }
         }
     }
 
-    private void processCandidate(Map<String, String> affiMap, XMLParser parser) throws XMLStreamException {
+    private void processCandiLevelData(Map<String, String> affiMap, XMLParser parser) throws XMLStreamException {
         Map<String, String> candiMap = new HashMap<>(affiMap);
         if (parser.findBeginTag(CANDI_ID)) {
             int candId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -664,7 +664,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        transformer.registerCandidate(candiMap);
+        transformer.registerCandiLevelData(candiMap);
     }
 
     private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
@@ -685,7 +685,7 @@ public class ElectionProcessor<E> {
             transformer.registerCandiLevel_constiData(constiMap);
             if (parser.findBeginTag(AFFILIATION)) {
                 while (parser.getLocalName().equals(AFFILIATION)) {
-                    processAffiliation(constiMap, parser);
+                    processAffiLevelData(constiMap, parser);
                     parser.findAndAcceptEndTag(AFFILIATION);
                 }
             }

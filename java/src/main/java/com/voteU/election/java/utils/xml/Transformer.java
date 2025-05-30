@@ -55,7 +55,7 @@ public interface Transformer<E> {
 
     void registerMuniLevelData(Map<String, String> muniMap);
 
-    void registerPollingStation(Map<String, String> polingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap);
+    void registerPollingStationLevelData(Map<String, String> polingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap);
 
     /**
      * Called multiple times per file with information about a candidate.
@@ -70,7 +70,7 @@ public interface Transformer<E> {
      * @param candiMap a {@code Map} containing information about the election, contest, affiliation and the
      *                 candidate.
      */
-    void registerCandidate(Map<String, String> candiMap);
+    void registerCandiLevelData(Map<String, String> candiMap);
 
     void registerCandiLevel_constiData(Map<String, String> constiMap);
 }
