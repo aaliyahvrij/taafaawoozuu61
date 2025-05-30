@@ -127,9 +127,9 @@ async function getProviLevel_affiVotes(electionId: string, provId: number): Prom
     const response = await ProviService.getAffiVotes(electionId, provId)
     affiVotes.value = response
     currentVoteLevel.value = 'province'
-    console.log('Fetching province-level affiliation votes for election ', electionId)
+    console.log('Fetching provincial level affiliation votes for election ', electionId)
   } catch (error) {
-    console.error('Error fetching province-level affiliation votes: ', error)
+    console.error('Error fetching provincial level affiliation votes: ', error)
   }
 }
 
@@ -157,7 +157,7 @@ async function getMuniLevel_affiVotes(
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'municipality'
     console.log(
-      'Fetching municipality-level affiliation votes for election ',
+      'Fetching municipal level affiliation votes for election ',
       electionId,
       'constituency ',
       constId,
@@ -165,7 +165,7 @@ async function getMuniLevel_affiVotes(
       munId,
     )
   } catch (error) {
-    console.error('Error fetching municipality-level affiliation votes: ', error)
+    console.error('Error fetching municipal level affiliation votes: ', error)
   }
 }
 
@@ -265,7 +265,7 @@ async function getMuniLevel_pollingStations(
       )
       pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log(
-        'Fetching municipality-level polling stations for election ',
+        'Fetching municipal level polling stations for election ',
         electionId,
         'constituency ',
         constId,
