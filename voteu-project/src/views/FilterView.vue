@@ -29,7 +29,7 @@ const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const currentVoteLevel = ref<
-  'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null
+  'national' | 'provincial' | 'constituencial' | 'municipal' | 'pollingStation' | null
 >(null)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
@@ -44,7 +44,7 @@ function handleApply(): void {
     selectedMunicipality.value &&
     selectedPollingStation.value
   ) {
-    getPollingStationVotes(
+    getMuniLevel_PollingStationVotes(
       selectedElection.value,
       selectedConstituency.value.id.toString(),
       selectedMunicipality.value.id.toString(),
@@ -111,95 +111,6 @@ function clearSelectedPollingStation(): void {
   selectedPollingStation.value = null
 }
 
-async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
-  try {
-    const response = await ElectionService.getAffiVotes(electionId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'national'
-    console.log('Fetching national level affiliation votes for election ', electionId)
-  } catch (error) {
-    console.error('Error fetching national level affiliation votes: ', error)
-  }
-}
-
-async function getProviLevel_affiVotes(electionId: string, provId: number): Promise<void> {
-  try {
-    const response = await ProviService.getAffiVotes(electionId, provId)
-    affiVotes.value = response
-    currentVoteLevel.value = 'province'
-    console.log('Fetching provincial level affiliation votes for election ', electionId)
-  } catch (error) {
-    console.error('Error fetching provincial level affiliation votes: ', error)
-  }
-}
-
-async function getConstiLevel_affiVotes(electionId: string, constId: string): Promise<void> {
-  try {
-    const response = await ConstiService.getAffiVotes(electionId, constId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'constituency'
-    console.log(
-      'Fetching constituency ' + constId + ' level affiliation votes for election ',
-      electionId,
-    )
-  } catch (error) {
-    console.error('Error fetching constituency affiliation votes:', error)
-  }
-}
-
-async function getMuniLevel_affiVotes(
-  electionId: string,
-  constId: string,
-  munId: string,
-): Promise<void> {
-  try {
-    const response = await MuniService.getConstiLevel_muniVotes(electionId, constId, munId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'municipality'
-    console.log(
-      'Fetching municipal level affiliation votes for election ',
-      electionId,
-      'constituency ',
-      constId,
-      'municipality ',
-      munId,
-    )
-  } catch (error) {
-    console.error('Error fetching municipal level affiliation votes: ', error)
-  }
-}
-
-async function getPollingStationVotes(
-  electionId: string,
-  constId: string,
-  munId: string,
-  pollingStationId: string,
-): Promise<void> {
-  try {
-    const response = await PollingStationService.getMuniLevel_pollingStationVotes(
-      electionId,
-      constId,
-      munId,
-      pollingStationId,
-    )
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('votes', affiVotes.value)
-    currentVoteLevel.value = 'pollingStation'
-    console.log(
-      'Fetching polling station votes for election ',
-      electionId,
-      'constituency ',
-      constId,
-      'municipality ',
-      munId,
-      'polling station ',
-      pollingStationId,
-    )
-  } catch (error) {
-    console.error('Error fetching polling station votes: ', error)
-  }
-}
-
 async function getElectoralLevel_provinces(election: string | null): Promise<void> {
   try {
     if (election) {
@@ -222,12 +133,17 @@ async function getProviLevel_constituencies(
     if (election && provId) {
       const response = await ProviService.getProviLevel_constituencies(election, provId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching provincial level constituencies for election ', election, 'province ', provId)
+      console.log(
+        'Fetching provincial level constituencies for election ',
+        election,
+        'province ',
+        provId,
+      )
     } else {
       constituencies.value = []
     }
   } catch (error) {
-    console.error('Error fetching constituencies by province: ', error)
+    console.error('Error fetching provincial level constituencies: ', error)
   }
 }
 
@@ -240,14 +156,14 @@ async function getConstiLevel_municipalities(
       const response = await MuniService.getConstiLevel_municipalities(electionId, constId)
       municipalities.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log(
-        'Fetching constituency-level municipalities for election ',
+        'Fetching constituencial level municipalities for election ',
         electionId,
         'constituency ',
         constId,
       )
     }
   } catch (error) {
-    console.error('Error fetching consituency-level municipalities: ', error)
+    console.error('Error fetching consituencial level municipalities: ', error)
   }
 }
 
@@ -274,7 +190,96 @@ async function getMuniLevel_pollingStations(
       )
     }
   } catch (error) {
-    console.error('Error fetching polling stations: ', error)
+    console.error('Error fetching municipal level polling stations: ', error)
+  }
+}
+
+async function getMuniLevel_PollingStationVotes(
+  electionId: string,
+  constId: string,
+  munId: string,
+  pollingStationId: string,
+): Promise<void> {
+  try {
+    const response = await PollingStationService.getMuniLevel_pollingStationVotes(
+      electionId,
+      constId,
+      munId,
+      pollingStationId,
+    )
+    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('votes', affiVotes.value)
+    currentVoteLevel.value = 'pollingStation'
+    console.log(
+      'Fetching municipal level polling station votes for election ',
+      electionId,
+      'constituency ',
+      constId,
+      'municipality ',
+      munId,
+      'polling station ',
+      pollingStationId,
+    )
+  } catch (error) {
+    console.error('Error fetching municipal level polling station votes: ', error)
+  }
+}
+
+async function getNationalLevel_affiVotes(electionId: string): Promise<void> {
+  try {
+    const response = await ElectionService.getAffiVotes(electionId)
+    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'national'
+    console.log('Fetching national level affiliation votes for election ', electionId)
+  } catch (error) {
+    console.error('Error fetching national level affiliation votes: ', error)
+  }
+}
+
+async function getProviLevel_affiVotes(electionId: string, provId: number): Promise<void> {
+  try {
+    const response = await ProviService.getAffiVotes(electionId, provId)
+    affiVotes.value = response
+    currentVoteLevel.value = 'provincial'
+    console.log('Fetching provincial level affiliation votes for election ', electionId)
+  } catch (error) {
+    console.error('Error fetching provincial level affiliation votes: ', error)
+  }
+}
+
+async function getConstiLevel_affiVotes(electionId: string, constId: string): Promise<void> {
+  try {
+    const response = await ConstiService.getAffiVotes(electionId, constId)
+    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'constituencial'
+    console.log(
+      'Fetching constituency ' + constId + ' level affiliation votes for election ',
+      electionId,
+    )
+  } catch (error) {
+    console.error('Error fetching constituencial level affiliation votes:', error)
+  }
+}
+
+async function getMuniLevel_affiVotes(
+  electionId: string,
+  constId: string,
+  munId: string,
+): Promise<void> {
+  try {
+    const response = await MuniService.getConstiLevel_muniVotes(electionId, constId, munId)
+    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    currentVoteLevel.value = 'municipal'
+    console.log(
+      'Fetching municipal level affiliation votes for election ',
+      electionId,
+      'constituency ',
+      constId,
+      'municipality ',
+      munId,
+    )
+  } catch (error) {
+    console.error('Error fetching municipal level affiliation votes: ', error)
   }
 }
 

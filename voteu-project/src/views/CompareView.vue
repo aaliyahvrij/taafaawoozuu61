@@ -19,7 +19,7 @@ const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPollingStation1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const currentVoteLevel1 = ref<
-  'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null
+  'national' | 'provincial' | 'constituencial' | 'municipal' | 'pollingStation' | null
 >(null)
 const provinces1 = ref<Province[]>([])
 const constituencies1 = ref<Constituency[]>([])
@@ -34,7 +34,7 @@ const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPollingStation2 = ref<PollingStation | null>(null)
 const affiVotes2 = ref<Affiliation[] | null>(null)
 const currentVoteLevel2 = ref<
-  'national' | 'province' | 'constituency' | 'municipality' | 'pollingStation' | null
+  'national' | 'provincial' | 'constituencial' | 'municipal' | 'pollingStation' | null
 >(null)
 
 const provinces2 = ref<Province[]>([])
@@ -119,7 +119,7 @@ async function getMuniLevel_pollingStations(
     )
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
-    console.error('Error fetching polling stations: ', error)
+    console.error('Error fetching municipal level polling stations: ', error)
   }
 }
 
@@ -155,15 +155,15 @@ async function fetchAffiVotes(
         municipality.id.toString(),
       )
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'municipality'
+      currentVoteLevelRef.value = 'municipal'
     } else if (constituency) {
       const res = await ConstiService.getAffiVotes(election, constituency.id.toString())
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
-      currentVoteLevelRef.value = 'constituency'
+      currentVoteLevelRef.value = 'constituencial'
     } else if (province) {
       const res = await ProviService.getAffiVotes(election, province.id)
       affiVotesRef.value = res
-      currentVoteLevelRef.value = 'province'
+      currentVoteLevelRef.value = 'provincial'
     } else {
       const res = await ElectionService.getAffiVotes(election)
       affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
