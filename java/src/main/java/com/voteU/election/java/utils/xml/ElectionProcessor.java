@@ -148,31 +148,31 @@ public class ElectionProcessor<E> {
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
             XMLParser parser = new XMLParser(new FileInputStream(totalVotesFile.toString()));
-            processElection(electionMap, parser);
+            processElectoralLevelData(electionMap, parser);
             processNationalLevelData(electionMap, parser);
         }
         for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(constiFile));
             System.out.println(folderName + constiFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
-            processElection(electionMap, parser);
+            processElectoralLevelData(electionMap, parser);
             processConstiOrMuniLevelData(electionMap, parser, "constituency");
         }
         for (Path muniFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
             System.out.println(folderName + muniFile.toString());
             XMLParser parser = new XMLParser(new FileInputStream(muniFile.toString()));
-            processElection(electionMap, parser);
+            processElectoralLevelData(electionMap, parser);
             processConstiOrMuniLevelData(electionMap, parser, "municipality");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(candiFile));
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
-            processElection(electionMap, parser);
+            processElectoralLevelData(electionMap, parser);
             processCandiLevel_ConstiData(electionMap, parser);
         }
     }
 
-    private void processElection(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+    private void processElectoralLevelData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(MUNICIPALITY)) {
             if (parser.findBeginTag(MUNI_ID)) {
                 String munId = parser.getAttributeValue(null, "Id");
@@ -208,7 +208,7 @@ public class ElectionProcessor<E> {
                         return;
                     }
                 }
-                transformer.registerElection(electionMap);
+                transformer.registerElectoralLevelData(electionMap);
                 parser.findAndAcceptEndTag(ELECTION_ID);
             } else {
                 LOG.warning("The %s %s does not match the expected identifier %s".formatted(ELECTION_ID, electionId, expectedElectionId));

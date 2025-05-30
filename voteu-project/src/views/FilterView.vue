@@ -200,17 +200,17 @@ async function getPollingStationVotes(
   }
 }
 
-async function getElectionLevel_provinces(election: string | null): Promise<void> {
+async function getElectoralLevel_provinces(election: string | null): Promise<void> {
   try {
     if (election) {
-      const response = await ProviService.getElectionLevel_provinces(election)
+      const response = await ProviService.getElectoralLevel_provinces(election)
       provinces.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching provinces for election ', election)
+      console.log('Fetching electoral level provinces for election ', election)
     } else {
       provinces.value = []
     }
   } catch (error) {
-    console.error('Error fetching provinces: ', error)
+    console.error('Error fetching electoral level provinces: ', error)
   }
 }
 
@@ -222,7 +222,7 @@ async function getProviLevel_constituencies(
     if (election && provId) {
       const response = await ProviService.getProviLevel_constituencies(election, provId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching constituencies for election ', election, 'province ', provId)
+      console.log('Fetching provincial level constituencies for election ', election, 'province ', provId)
     } else {
       constituencies.value = []
     }
@@ -301,7 +301,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
       <select
         class="dropdown"
         v-model="selectedElection"
-        @change="getElectionLevel_provinces(selectedElection)"
+        @change="getElectoralLevel_provinces(selectedElection)"
       >
         <option value="null" disabled>Select an election</option>
         <option value="2021">2021</option>

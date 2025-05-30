@@ -28,7 +28,7 @@ public class ElectionTransformer implements Transformer<Election> {
             Map.entry(15, 12), Map.entry(13, 12), Map.entry(12, 12));
 
     @Override
-    public void registerElection(Map<String, String> prcsElectionMap) {
+    public void registerElectoralLevelData(Map<String, String> prcsElectionMap) {
         String electionId = prcsElectionMap.get(ElectionProcessor.ELECTION_ID);
         String electionName = prcsElectionMap.get(ElectionProcessor.ELECTION_NAME);
         String electionDate = prcsElectionMap.get(ElectionProcessor.ELECTION_DATE);

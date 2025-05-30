@@ -43,7 +43,7 @@ const municipalities2 = ref<Municipality[]>([])
 const pollingStations2 = ref<PollingStation[]>([])
 
 // --- Helper functies voor ophalen filters (herbruikbaar) ---
-async function getElectionLevel_provinces(
+async function getElectoralLevel_provinces(
   election: string | null,
   provincesRef: typeof provinces1,
   clearSelectedProvince: () => void,
@@ -54,10 +54,10 @@ async function getElectionLevel_provinces(
     return
   }
   try {
-    const response = await ProviService.getElectionLevel_provinces(election)
+    const response = await ProviService.getElectoralLevel_provinces(election)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
-    console.error('Error fetching election-level provinces: ', error)
+    console.error('Error fetching electoral level provinces: ', error)
   }
 }
 
@@ -95,7 +95,7 @@ async function getConstiLevel_municipalities(
     const response = await MuniService.getConstiLevel_municipalities(election, constId)
     municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (error) {
-    console.error('Error fetching constituency-level municipalities: ', error)
+    console.error('Error fetching constituential level municipalities: ', error)
   }
 }
 
@@ -238,7 +238,7 @@ async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
-  await getElectionLevel_provinces(selectedElection1.value, provinces1, clearProviAndBelow1)
+  await getElectoralLevel_provinces(selectedElection1.value, provinces1, clearProviAndBelow1)
 }
 
 async function onProvinceChange1() {
@@ -294,7 +294,7 @@ async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
-  await getElectionLevel_provinces(selectedElection2.value, provinces2, clearProviAndBelow2)
+  await getElectoralLevel_provinces(selectedElection2.value, provinces2, clearProviAndBelow2)
 }
 
 async function onProvinceChange2() {
