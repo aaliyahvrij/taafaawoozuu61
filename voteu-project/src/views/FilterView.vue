@@ -493,8 +493,7 @@ function sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
         @click="handleCandiChange(candi)"
       >
         <p v-if="candi.firstName && candi.lastName">
-          {{ candi.firstName }} {{ candi.lastName }} :
-          {{ candi.votes.toLocaleString() }} votes
+          {{ candi.firstName }} {{ candi.lastName }} : {{ candi.votes.toLocaleString() }} votes
         </p>
       </div>
     </div>

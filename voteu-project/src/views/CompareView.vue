@@ -392,11 +392,7 @@ async function applyFilter() {
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-        <select
-          v-if="provinces1.length > 0"
-          v-model="selectedProvi1"
-          @change="onProvinceChange1"
-        >
+        <select v-if="provinces1.length > 0" v-model="selectedProvi1" @change="onProvinceChange1">
           <option value="null" disabled>Select a province</option>
           <option v-for="provi in provinces1" :key="provi.id" :value="provi">
             {{ provi.name }}
@@ -442,11 +438,7 @@ async function applyFilter() {
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-        <select
-          v-if="provinces2.length > 0"
-          v-model="selectedProvi2"
-          @change="onProvinceChange2"
-        >
+        <select v-if="provinces2.length > 0" v-model="selectedProvi2" @change="onProvinceChange2">
           <option value="null" disabled>Select a province</option>
           <option v-for="provi in provinces2" :key="provi.id" :value="provi">
             {{ provi.name }}
