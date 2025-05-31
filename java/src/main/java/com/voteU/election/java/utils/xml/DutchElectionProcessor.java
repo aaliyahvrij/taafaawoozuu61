@@ -154,7 +154,6 @@ public class DutchElectionProcessor<E> {
 
         List<Path> filesToScan = PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId));
 
-// Optional: sort the files if order matters
 
 
         int totalFiles = filesToScan.size();
@@ -174,19 +173,8 @@ public class DutchElectionProcessor<E> {
         }
 
 // === Second pass ===
-        String resumeFromFile = "Telling_TK2021_gemeente_Eemsdelta.eml.xml"; // change to the file you want to resume from
-        boolean startSecondPass = false;
-
+        // === Second pass ===
         for (Path authorityFile : filesToScan) {
-            if (!startSecondPass) {
-                if (authorityFile.getFileName().toString().equals(resumeFromFile)) {
-                    startSecondPass = true;
-                } else {
-                    currentIndex++;
-                    continue;
-                }
-            }
-
             double percentDone = ((currentIndex + 1) / (double) totalSteps) * 100;
             System.out.printf("[%.2f%%] Processing %s (second pass)%n", percentDone, authorityFile.getFileName());
 

@@ -6,6 +6,8 @@ import com.voteU.election.java.services.ElectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/elections")
 public class ElectionDataController {
@@ -27,5 +29,16 @@ public class ElectionDataController {
         }
         electionDataInserter.insertElection(election);
         return "Election saved successfully!";
+    }
+
+    @PostMapping("/{electionId}/pscavotes")
+    public String savePsCaVotes(@PathVariable String electionId) throws IOException {
+        Election election = electionService.getElection(electionId);
+        if (election == null){
+            return "Election not found with ID: " + electionId;
+        }
+        String filepath = "C:\\temp\\pollingstation_votes.csv";
+        electionDataInserter.exportPollingStationCandidateVotesToCSV(election, filepath);
+        return "Polling station candidate votes saved successfully!";
     }
 }
