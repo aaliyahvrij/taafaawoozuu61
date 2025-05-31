@@ -183,9 +183,9 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     /**
-     * Get election data for a specific year.
+     * Get all the data of a specific election.
      */
-    public Election getElection(String year) {
+    public Election getElectoralLevelDataOf(String year) {
         return electionListMap.get(year);
     }
 }

@@ -24,7 +24,7 @@ public class ElectionService {
      * @return true if elections were loaded successfully, false otherwise
      */
     public boolean readElections() {
-        Map<String, Election> elections = electionReader.getAll();
+        Map<String, Election> elections = electionReader.getAllElectoralLevelData();
         if (elections == null || elections.isEmpty()) {
             log.warn("No election data found during readElections().");
             return false;

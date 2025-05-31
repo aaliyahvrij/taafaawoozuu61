@@ -22,11 +22,11 @@ public class ElectionReader {
     }
 
     /**
-     * Reads and processes election results for multiple years.
+     * Reads and processes all the data of all the elections.
      *
      * @return A map containing election results, organized by election year.
      */
-    public Map<String, Election> getAll() {
+    public Map<String, Election> getAllElectoralLevelData() {
         String[] electionIds = {"TK2021", "TK2023"};
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
@@ -42,7 +42,7 @@ public class ElectionReader {
         return transformer.getElectionListMap();
     }
 
-    public Election getElection(String electionId) {
+    public Election getElectoralLevelDataOf(String electionId) {
         String path = "/EML_bestanden_" + electionId;
         try {
             processor.processResults(electionId, PathUtils.getResourcePath(path));
@@ -51,6 +51,6 @@ public class ElectionReader {
             log.error("Could not process Election {}", electionId, e);
         }
         System.out.println("All files are processed.\n");
-        return transformer.getElection(electionId);
+        return transformer.getElectoralLevelDataOf(electionId);
     }
 }
