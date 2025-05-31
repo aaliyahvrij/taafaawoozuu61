@@ -1,7 +1,7 @@
 import type { Province, Constituency, Affiliation } from '@/interfaces'
 
 export class ProviService {
-  static async getElectoralLevel_provinces(
+  static async getElectoralLevel_provincesOf(
     electionId: string,
   ): Promise<Record<number, Province> | null> {
     try {
@@ -24,7 +24,7 @@ export class ProviService {
     return null
   }
 
-  static async getProviLevel_constituencies(
+  static async getProviLevel_constituenciesOf(
     electionId: string,
     provId: string,
   ): Promise<Constituency[] | null> {
@@ -48,7 +48,7 @@ export class ProviService {
     return null
   }
 
-  static async getAffiVotes(electionId: string, provId: number): Promise<Affiliation[] | null> {
+  static async getProviLevel_affiliationsOf(electionId: string, provId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/provinces/${provId}/affiliations`,

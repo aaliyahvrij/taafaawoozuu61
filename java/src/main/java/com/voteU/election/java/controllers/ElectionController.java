@@ -26,22 +26,22 @@ public class ElectionController {
     }
 
     @GetMapping
-    public Map<String, Election> getAllElections() {
+    public Map<String, Election> getAllElectoralLevelData() {
         return electionService.getAll();
     }
 
     @GetMapping("/{electionId}")
     public Election getElection(@PathVariable String electionId) {
-        return electionService.getElection(electionId);
+        return electionService.getElectoralLevelDataOf(electionId);
     }
 
     @GetMapping("/{electionId}/affiliations")
-    public Map<Integer, Affiliation> getElectionLevel_affiliations(@PathVariable String electionId) {
-        return electionService.getElectionLevel_affiliations(electionId);
+    public Map<Integer, Affiliation> getElectoralLevel_affiliationsOf(@PathVariable String electionId) {
+        return electionService.getElectoralLevel_affiliationsOf(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
-    public Map<String, PollingStation> getElectionLevel_pollingStations(@PathVariable String electionId) {
-        return electionService.getElectionLevel_pollingStations(electionId);
+    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
+        return electionService.getElectoralLevel_pollingStationsOf(electionId);
     }
 }

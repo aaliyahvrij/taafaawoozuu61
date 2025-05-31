@@ -16,7 +16,7 @@ public class PollingStationController {
     }
 
     @GetMapping
-    public Map<String, PollingStation> getELectionLevel_pollingStations(@PathVariable String electionId) {
-        return pollingStationService.getElectionLevel_pollingStations(electionId);
+    public Map<String, PollingStation> getELectoralLevel_pollingStationsOf(@PathVariable String electionId) {
+        return pollingStationService.getElectoralLevel_pollingStationsOf(electionId);
     }
 }

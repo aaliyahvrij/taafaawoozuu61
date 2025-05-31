@@ -44,24 +44,24 @@ public class ElectionService {
     }
 
     /**
-     * Retrieves all the data of all the elections (GET).
+     * Retrieves all the data of all the elections.
      */
     public Map<String, Election> getAll() {
         return electionListMap;
     }
 
     /**
-     * Retrieves all the data of a specific election (GET).
+     * Retrieves all the data of a specific election.
      */
-    public Election getElection(String electionId) {
+    public Election getElectoralLevelDataOf(String electionId) {
         return electionListMap.get(electionId);
     }
 
     /**
-     * Retrieves all affiliations by electionId (GET).
+     * Retrieves all the affiliation data of a specific election.
      */
-    public Map<Integer, Affiliation> getElectionLevel_affiliations(String electionId) {
-        Election election = getElection(electionId);
+    public Map<Integer, Affiliation> getElectoralLevel_affiliationsOf(String electionId) {
+        Election election = getElectoralLevelDataOf(electionId);
         if (election == null) {
             return null;
         }
@@ -69,10 +69,10 @@ public class ElectionService {
     }
 
     /**
-     * Retrieves all polling stations by electionId (GET).
+     * Retrieves all the polling station data of a specific election.
      */
-    public Map<String, PollingStation> getElectionLevel_pollingStations(String electionId) {
-        Election election = getElection(electionId);
+    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
+        Election election = getElectoralLevelDataOf(electionId);
         if (election == null) {
             return null;
         }

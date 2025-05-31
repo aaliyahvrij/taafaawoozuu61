@@ -27,7 +27,7 @@ export class AffiStyleService {
     })
   }
 
-  static sortCandidatesByVotes(candidates: Candidate[]): Candidate[] {
-    return [...candidates].sort((a, b) => b.validVoteCount - a.validVoteCount) // descending order, highest votes first
+  static sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
+    return [...candidates].sort((a, b) => b.vvCount - a.vvCount) // descending order, highest votes first
   }
 }

@@ -43,77 +43,77 @@ const municipalities2 = ref<Municipality[]>([])
 const pollingStations2 = ref<PollingStation[]>([])
 
 // --- Helper functies voor ophalen filters (herbruikbaar) ---
-async function getElectoralLevel_provinces(
-  election: string | null,
+async function getElectoralLevel_provincesOf(
+  electionId: string | null,
   provincesRef: typeof provinces1,
   clearSelectedProvince: () => void,
 ) {
-  if (!election) {
+  if (!electionId) {
     provincesRef.value = []
     clearSelectedProvince()
     return
   }
   try {
-    const response = await ProviService.getElectoralLevel_provinces(election)
+    const response = await ProviService.getElectoralLevel_provincesOf(electionId)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching electoral level provinces: ', error)
+  } catch (err) {
+    console.error('Error fetching electoral level provinces: ', err)
   }
 }
 
-async function getProviLevel_constituencies(
-  election: string | null,
+async function getProviLevel_constituenciesOf(
+  electionId: string | null,
   provId: string | undefined,
   constituenciesRef: typeof constituencies1,
   clearSelectedConstituency: () => void,
 ) {
-  if (!election || !provId) {
+  if (!electionId || !provId) {
     constituenciesRef.value = []
     clearSelectedConstituency()
     return
   }
   try {
-    const response = await ProviService.getProviLevel_constituencies(election, provId)
+    const response = await ProviService.getProviLevel_constituenciesOf(electionId, provId)
     constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-  } catch (error) {
-    console.error('Error fetching provincial level constituencies: ', error)
+  } catch (err) {
+    console.error('Error fetching provincial level constituencies: ', err)
   }
 }
 
-async function getConstiLevel_municipalities(
-  election: string | null,
+async function getConstiLevel_municipalitiesOf(
+  electionId: string | null,
   constId: string | undefined,
   municipalitiesRef: typeof municipalities1,
   clearSelectedMunicipality: () => void,
 ) {
-  if (!election || !constId) {
+  if (!electionId || !constId) {
     municipalitiesRef.value = []
     clearSelectedMunicipality()
     return
   }
   try {
-    const response = await MuniService.getConstiLevel_municipalities(election, constId)
+    const response = await MuniService.getConstiLevel_municipalitiesOf(electionId, constId)
     municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
   } catch (err) {
     console.error('Error fetching constituential level municipalities: ', err)
   }
 }
 
-async function getMuniLevel_pollingStations(
-  election: string | null,
+async function getMuniLevel_pollingStationsOf(
+  electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
   pollingStationsRef: typeof pollingStations1,
   clearSelectedPollingStation: () => void,
 ) {
-  if (!election || !constId || !munId) {
+  if (!electionId || !constId || !munId) {
     pollingStationsRef.value = []
     clearSelectedPollingStation()
     return
   }
   try {
-    const response = await PollingStationService.getMuniLevel_pollingStations(
-      election,
+    const response = await PollingStationService.getMuniLevel_pollingStationsOf(
+      electionId,
       constId,
       munId,
     )
@@ -125,7 +125,7 @@ async function getMuniLevel_pollingStations(
 
 // Affiliation votes ophalen (herbruikbaar)
 async function fetchAffiVotes(
-  election: string | null,
+  electionId: string | null,
   pollingStation: PollingStation | null,
   municipality: Municipality | null,
   constituency: Constituency | null,
@@ -133,44 +133,44 @@ async function fetchAffiVotes(
   affiVotesRef: typeof affiVotes1,
   currentVoteLevelRef: typeof currentVoteLevel1,
 ) {
-  if (!election) {
+  if (!electionId) {
     affiVotesRef.value = null
     currentVoteLevelRef.value = null
     return
   }
   try {
     if (pollingStation && municipality && constituency) {
-      const res = await PollingStationService.getMuniLevel_pollingStationVotes(
-        election,
+      const response = await PollingStationService.getMuniLevel_affiliationsOf(
+        electionId,
         constituency.id.toString(),
         municipality.id.toString(),
         pollingStation.id.toString(),
       )
-      affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
+      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'pollingStation'
     } else if (municipality && constituency) {
-      const res = await MuniService.getMuniLevel_affiData(
-        election,
+      const response = await MuniService.getMuniLevel_affiliationsOf(
+        electionId,
         constituency.id.toString(),
         municipality.id.toString(),
       )
-      affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
+      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'municipal'
     } else if (constituency) {
-      const res = await ConstiService.getConstiLevel_affiData(election, constituency.id.toString())
-      affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
+      const response = await ConstiService.getConstiLevel_affiliationsOf(electionId, constituency.id.toString())
+      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'constituencial'
     } else if (province) {
-      const res = await ProviService.getAffiVotes(election, province.id)
-      affiVotesRef.value = res
+      const response = await ProviService.getProviLevel_affiliationsOf(electionId, province.id)
+      affiVotesRef.value = response
       currentVoteLevelRef.value = 'provincial'
     } else {
-      const res = await ElectionService.getElectoralLevel_affiData(election)
-      affiVotesRef.value = Array.isArray(res) ? res : Object.values(res || {})
+      const response = await ElectionService.getElectoralLevel_affiliationsOf(electionId)
+      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'national'
     }
-  } catch (error) {
-    console.error('Error fetching affiliation votes: ', error)
+  } catch (err) {
+    console.error('Error fetching affiliation votes: ', err)
     affiVotesRef.value = null
     currentVoteLevelRef.value = null
   }
@@ -238,7 +238,7 @@ async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
   currentVoteLevel1.value = null
-  await getElectoralLevel_provinces(selectedElection1.value, provinces1, clearProviAndBelow1)
+  await getElectoralLevel_provincesOf(selectedElection1.value, provinces1, clearProviAndBelow1)
 }
 
 async function onProvinceChange1() {
@@ -246,7 +246,7 @@ async function onProvinceChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedProvi1.value) {
-    await getProviLevel_constituencies(
+    await getProviLevel_constituenciesOf(
       selectedElection1.value,
       selectedProvi1.value.id.toString(),
       constituencies1,
@@ -260,7 +260,7 @@ async function onConstiChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedConsti1.value) {
-    await getConstiLevel_municipalities(
+    await getConstiLevel_municipalitiesOf(
       selectedElection1.value,
       selectedConsti1.value.id.toString(),
       municipalities1,
@@ -274,7 +274,7 @@ async function onMuniChange1() {
   affiVotes1.value = null
   currentVoteLevel1.value = null
   if (selectedMuni1.value) {
-    await getMuniLevel_pollingStations(
+    await getMuniLevel_pollingStationsOf(
       selectedElection1.value,
       selectedConsti1.value?.id.toString(),
       selectedMuni1.value.id.toString(),
@@ -294,7 +294,7 @@ async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null
   currentVoteLevel2.value = null
-  await getElectoralLevel_provinces(selectedElection2.value, provinces2, clearProviAndBelow2)
+  await getElectoralLevel_provincesOf(selectedElection2.value, provinces2, clearProviAndBelow2)
 }
 
 async function onProvinceChange2() {
@@ -302,7 +302,7 @@ async function onProvinceChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedProvi2.value) {
-    await getProviLevel_constituencies(
+    await getProviLevel_constituenciesOf(
       selectedElection2.value,
       selectedProvi2.value.id.toString(),
       constituencies2,
@@ -316,7 +316,7 @@ async function onConstiChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedConsti2.value) {
-    await getConstiLevel_municipalities(
+    await getConstiLevel_municipalitiesOf(
       selectedElection2.value,
       selectedConsti2.value.id.toString(),
       municipalities2,
@@ -330,7 +330,7 @@ async function onMuniChange2() {
   affiVotes2.value = null
   currentVoteLevel2.value = null
   if (selectedMuni2.value) {
-    await getMuniLevel_pollingStations(
+    await getMuniLevel_pollingStationsOf(
       selectedElection2.value,
       selectedConsti2.value?.id.toString(),
       selectedMuni2.value.id.toString(),

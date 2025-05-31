@@ -1,7 +1,7 @@
 import type { Affiliation, PollingStation } from '@/interfaces'
 
 export class PollingStationService {
-  static async getMuniLevel_pollingStations(
+  static async getMuniLevel_pollingStationsOf(
     electionId: string,
     constId: string,
     munId: string,
@@ -26,7 +26,7 @@ export class PollingStationService {
     return null
   }
 
-  static async getMuniLevel_pollingStationVotes(
+  static async getMuniLevel_affiliationsOf(
     electionId: string,
     constId: string,
     munId: string,
