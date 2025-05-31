@@ -17,31 +17,31 @@ public class ElectionController {
 
     @PostMapping
     public boolean readResults() {
-        return electionService.readElections();
+        return this.electionService.readElections();
     }
 
     @PostMapping("/{electionId}")
     public boolean readResultsYear(@PathVariable String electionId) {
-        return electionService.readElection(electionId);
+        return this.electionService.readElection(electionId);
     }
 
     @GetMapping
     public Map<String, Election> getAllElectoralLevelData() {
-        return electionService.getAllElectoralLevelData();
+        return this.electionService.getAllElectoralLevelData();
     }
 
     @GetMapping("/{electionId}")
     public Election getElectoralLevelDataOf(@PathVariable String electionId) {
-        return electionService.getElectoralLevelDataOf(electionId);
+        return this.electionService.getElectoralLevelDataOf(electionId);
     }
 
     @GetMapping("/{electionId}/affiliations")
     public Map<Integer, Affiliation> getElectoralLevel_affiliationsOf(@PathVariable String electionId) {
-        return electionService.getElectoralLevel_affiliationsOf(electionId);
+        return this.electionService.getElectoralLevel_affiliationsOf(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
     public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
-        return electionService.getElectoralLevel_pollingStationsOf(electionId);
+        return this.electionService.getElectoralLevel_pollingStationsOf(electionId);
     }
 }

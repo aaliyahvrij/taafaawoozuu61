@@ -19,7 +19,7 @@ public class PollingStationService {
      * Retrieves all the polling station data of a specific election.
      */
     public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
-        System.out.println("The amount of polling stations: " + electionService.getElectoralLevelDataOf(electionId).getPollingStations().size());
-        return electionService.getElectoralLevelDataOf(electionId).getPollingStations();
+        System.out.println("The amount of polling stations: " + this.electionService.getElectoralLevelDataOf(electionId).getPollingStations().size());
+        return this.electionService.getElectoralLevelDataOf(electionId).getPollingStations();
     }
 }
