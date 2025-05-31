@@ -46,7 +46,7 @@ public class ElectionService {
     /**
      * Retrieves all the data of all the elections.
      */
-    public Map<String, Election> getAll() {
+    public Map<String, Election> getAllElectoralLevelData() {
         return electionListMap;
     }
 

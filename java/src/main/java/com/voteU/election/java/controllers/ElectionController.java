@@ -27,11 +27,11 @@ public class ElectionController {
 
     @GetMapping
     public Map<String, Election> getAllElectoralLevelData() {
-        return electionService.getAll();
+        return electionService.getAllElectoralLevelData();
     }
 
     @GetMapping("/{electionId}")
-    public Election getElection(@PathVariable String electionId) {
+    public Election getElectoralLevelDataOf(@PathVariable String electionId) {
         return electionService.getElectoralLevelDataOf(electionId);
     }
 
