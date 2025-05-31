@@ -514,7 +514,7 @@ public class ElectionProcessor<E> {
         Map<String, String> pollingStationMap = new HashMap<>(constiMap);
         String pollingStationName = null;
         Map<Integer, Affiliation> pollingStationLevel_affiListMap = new HashMap<>();
-        int pollingStationVotes = 0;
+        int pollingStationVVCount = 0;
         Affiliation affiliation;
         int affId = 0;
         int selectionIndex = 0;
@@ -550,7 +550,7 @@ public class ElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFI_ID);
                     if (parser.findBeginTag(VALID_VOTES)) {
                         affiVVCount = Integer.parseInt(parser.getElementText());
-                        pollingStationVotes = pollingStationVotes + affiVVCount;
+                        pollingStationVVCount = pollingStationVVCount + affiVVCount;
                         parser.findAndAcceptEndTag(VALID_VOTES);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag, unable to register votes for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
@@ -582,7 +582,7 @@ public class ElectionProcessor<E> {
             parser.findAndAcceptEndTag(SELECTION);
             if (selectionIndex == 3) break;
         }
-        pollingStationMap.put("pollingStationVotes", String.valueOf(pollingStationVotes));
+        pollingStationMap.put("pollingStationVVCount", String.valueOf(pollingStationVVCount));
         for (Map.Entry<String, String> pollingStationMapPair : pollingStationMap.entrySet()) {
             if (pollingStationMapPair.getValue() == null) {
                 System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);

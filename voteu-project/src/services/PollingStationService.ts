@@ -26,7 +26,7 @@ export class PollingStationService {
     return null
   }
 
-  static async getMuniLevel_affiliationsOf(
+  static async getPollingStationLevel_affiliationsOf(
     electionId: string,
     constId: string,
     munId: string,

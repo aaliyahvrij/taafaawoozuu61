@@ -19,7 +19,9 @@ export class ElectionService {
     return null
   }
 
-  static async getElectoralLevel_affiliationsOf(electionId: string): Promise<Record<number, Affiliation> | null> {
+  static async getElectoralLevel_affiliationsOf(
+    electionId: string,
+  ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/TK${electionId}/affiliations`,

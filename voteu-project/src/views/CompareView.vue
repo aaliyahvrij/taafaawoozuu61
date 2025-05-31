@@ -140,7 +140,7 @@ async function fetchAffiVotes(
   }
   try {
     if (pollingStation && municipality && constituency) {
-      const response = await PollingStationService.getMuniLevel_affiliationsOf(
+      const response = await PollingStationService.getPollingStationLevel_affiliationsOf(
         electionId,
         constituency.id.toString(),
         municipality.id.toString(),
@@ -157,7 +157,10 @@ async function fetchAffiVotes(
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'municipal'
     } else if (constituency) {
-      const response = await ConstiService.getConstiLevel_affiliationsOf(electionId, constituency.id.toString())
+      const response = await ConstiService.getConstiLevel_affiliationsOf(
+        electionId,
+        constituency.id.toString(),
+      )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       currentVoteLevelRef.value = 'constituencial'
     } else if (province) {
