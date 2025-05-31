@@ -34,17 +34,17 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionDate = prcsElectionMap.get(ElectionProcessor.ELECTION_DATE);
 
         // Get or create an Election object
-        Election electionMap = electionListMap.get(electionId);
+        Election electionMap = this.electionListMap.get(electionId);
         if (electionMap == null) {
             electionMap = new Election(electionId, electionName, electionDate);
-            electionListMap.put(electionId, electionMap);
+            this.electionListMap.put(electionId, electionMap);
         }
     }
 
     @Override
     public void registerNationalLevelData(Map<String, String> nationMap) {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListMap.get(electionId);
+        Election election = this.electionListMap.get(electionId);
         Map<Integer, Affiliation> affiListMap = election.getAffiliations();
         System.out.println("The amount of affiliations in this election: " + affiListMap.size());
         Affiliation affiliation;
@@ -83,7 +83,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int affId = Integer.parseInt(prcsMuniMap.get(ElectionProcessor.AFFI_ID));
         String affiName = prcsMuniMap.get(ElectionProcessor.AFFI_NAME);
         String electionId = prcsMuniMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListMap.get(electionId);
+        Election election = this.electionListMap.get(electionId);
         Map<String, Municipality> muniMap = election.getMunicipalities();
         Municipality municipality = muniMap.computeIfAbsent(munId, id -> {
             Municipality m = new Municipality(id);
@@ -111,7 +111,7 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerPollingStationLevelData(Map<String, String> prcsPollingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap) {
         String electionId = prcsPollingStationMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListMap.get(electionId);
+        Election election = this.electionListMap.get(electionId);
         Map<String, PollingStation> electionLevel_pollingStationListMap = election.getPollingStations();
         String pollingStationId = prcsPollingStationMap.get(ElectionProcessor.POLLING_STATION_ID);
         String pollingStationName = prcsPollingStationMap.get("pollingStationName");
@@ -130,7 +130,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int constId = Integer.parseInt(candiMap.get(ElectionProcessor.CONSTI_ID));
         int affId = Integer.parseInt(candiMap.get(ElectionProcessor.AFFI_ID));
         String electionId = candiMap.get(ElectionProcessor.ELECTION_ID);
-        Election election = electionListMap.get(electionId);
+        Election election = this.electionListMap.get(electionId);
         Map<Integer, Constituency> electionLevel_constiListMap = election.getConstituencies();
         Constituency constituency = electionLevel_constiListMap.get(constId);
         if (constituency != null) {
@@ -183,9 +183,9 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     /**
-     * Get all the data of a specific election.
+     * Retrieves all the data of a specific election.
      */
     public Election getElectoralLevelDataOf(String year) {
-        return electionListMap.get(year);
+        return this.electionListMap.get(year);
     }
 }

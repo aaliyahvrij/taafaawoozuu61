@@ -31,7 +31,7 @@ public class ElectionReader {
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
             try {
-                processor.processResults(electionId, PathUtils.getResourcePath(path));
+                this.processor.processResults(electionId, PathUtils.getResourcePath(path));
                 log.info("Processed Election {}", electionId);
             } catch (Exception e) {
                 log.error("Could not process Election {}", electionId, e);
@@ -39,18 +39,18 @@ public class ElectionReader {
             }
         }
         System.out.println("All files are processed.\n");
-        return transformer.getElectionListMap();
+        return this.transformer.getElectionListMap();
     }
 
     public Election getElectoralLevelDataOf(String electionId) {
         String path = "/EML_bestanden_" + electionId;
         try {
-            processor.processResults(electionId, PathUtils.getResourcePath(path));
+            this.processor.processResults(electionId, PathUtils.getResourcePath(path));
             log.info("Processed Election {}", electionId);
         } catch (Exception e) {
             log.error("Could not process Election {}", electionId, e);
         }
         System.out.println("All files are processed.\n");
-        return transformer.getElectoralLevelDataOf(electionId);
+        return this.transformer.getElectoralLevelDataOf(electionId);
     }
 }
