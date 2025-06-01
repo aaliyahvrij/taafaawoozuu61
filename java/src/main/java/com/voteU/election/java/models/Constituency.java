@@ -9,13 +9,13 @@ import java.util.*;
 public class Constituency {
     private int id;
     private String name;
-    private Map<Integer, Affiliation> affiliations;
     Map<String, Municipality> municipalities;
+    private Map<Integer, Affiliation> affiliations;
 
     public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
-        this.affiliations = new HashMap<>();
         this.municipalities = new HashMap<>();
+        this.affiliations = new HashMap<>();
     }
 }
