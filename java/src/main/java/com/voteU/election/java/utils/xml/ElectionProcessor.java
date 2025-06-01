@@ -208,7 +208,7 @@ public class ElectionProcessor<E> {
                         return;
                     }
                 }
-                transformer.registerElectoralLevelData(electionMap);
+                this.transformer.registerElectoralLevelData(electionMap);
                 parser.findAndAcceptEndTag(ELECTION_ID);
             } else {
                 LOG.warning("The %s %s does not match the expected identifier %s".formatted(ELECTION_ID, electionId, expectedElectionId));
@@ -260,7 +260,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            transformer.registerNationalLevelData(affiMap);
+                            this.transformer.registerNationalLevelData(affiMap);
                             break;
                         case CANDIDATE:
                             String candiShortCode = null;
@@ -293,7 +293,7 @@ public class ElectionProcessor<E> {
                                         }
                                     }
                                 }
-                                transformer.registerNationalLevelData(candiMap);
+                                this.transformer.registerNationalLevelData(candiMap);
                                 parser.findAndAcceptEndTag(VALID_VOTES);
                             } else {
                                 LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
@@ -418,7 +418,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VOTES);
             }
-            transformer.registerConstiLevelData(constiMap, affiNamesList, affiVotesList, candiVotesMap);
+            this.transformer.registerConstiLevelData(constiMap, affiNamesList, affiVotesList, candiVotesMap);
         }
     }
 
@@ -461,7 +461,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                         }
-                        transformer.registerMuniLevelData(affiVotesMap);
+                        this.transformer.registerMuniLevelData(affiVotesMap);
                         break;
                     case CANDIDATE:
                         Map<String, String> candiVotesMap = new HashMap<>(constiMap);
@@ -496,7 +496,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                             registeredCandiAffiliations.add(candiCompKey);
-                            transformer.registerMuniLevelData(candiVotesMap);
+                            this.transformer.registerMuniLevelData(candiVotesMap);
                             parser.findAndAcceptEndTag(VALID_VOTES);
                         } else {
                             LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candId, affId));
@@ -596,7 +596,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        transformer.registerPollingStationLevelData(pollingStationMap, pollingStationLevel_affiListMap);
+        this.transformer.registerPollingStationLevelData(pollingStationMap, pollingStationLevel_affiListMap);
     }
 
     private void processAffiLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
@@ -664,7 +664,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        transformer.registerCandiLevelData(candiMap);
+        this.transformer.registerCandiLevelData(candiMap);
     }
 
     private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
@@ -682,7 +682,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(CONSTI_ID);
             }
-            transformer.registerCandiLevel_constiData(constiMap);
+            this.transformer.registerCandiLevel_constiData(constiMap);
             if (parser.findBeginTag(AFFILIATION)) {
                 while (parser.getLocalName().equals(AFFILIATION)) {
                     processAffiLevelData(constiMap, parser);
