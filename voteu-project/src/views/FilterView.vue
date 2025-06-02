@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { ElectionService } from '@/services/ElectionService.ts'
-import { ProviService } from '@/services/ProviService.ts'
-import { ConstiService } from '@/services/ConstiService.ts'
-import { MuniService } from '@/services/MuniService.ts'
-import { PollingStationService } from '@/services/PollingStationService.ts'
-import { AffiStyleService } from '@/services/AffiStyleService.ts'
+import {
+  AffiStyleService,
+  ElectionService,
+  ConstiService,
+  MuniService,
+  PollingStationService,
+  ProviService,
+} from '@/services'
 import AffiChart from '@/components/Data/charts/AffiChart.vue'
-import type { Province } from '@/interfaces/Province.ts'
-import type { Constituency } from '@/interfaces/Constituency.ts'
-import type { Municipality } from '@/interfaces/Municipality.ts'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
-import type { PollingStation } from '@/interfaces/PollingStation.ts'
-import type { Candidate } from '@/interfaces/Candidate.ts'
+import type {
+  Affiliation,
+  Candidate,
+  Constituency,
+  Municipality,
+  PollingStation,
+  Province,
+} from '@/interfaces'
 
 const selectedElection = ref<'2021' | '2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)

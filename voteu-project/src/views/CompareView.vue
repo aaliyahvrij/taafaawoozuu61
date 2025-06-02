@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConstiService } from '@/services/ConstiService.ts'
-import { MuniService } from '@/services/MuniService.ts'
-import { ElectionService } from '@/services/ElectionService.ts'
-import { ProviService } from '@/services/ProviService.ts'
-import { PollingStationService } from '@/services/PollingStationService.ts'
-import type { Constituency } from '@/interfaces/Constituency.ts'
-import type { Municipality } from '@/interfaces/Municipality.ts'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
-import type { Province } from '@/interfaces/Province.ts'
-import type { PollingStation } from '@/interfaces/PollingStation.ts'
+import {
+  ConstiService,
+  ElectionService,
+  MuniService,
+  PollingStationService,
+  ProviService,
+} from '@/services'
+import type {
+  Affiliation,
+  Constituency,
+  Municipality,
+  PollingStation,
+  Province,
+} from '@/interfaces'
 
 // the first filter set
 const selectedElection1 = ref<'2021' | '2023' | null>(null)

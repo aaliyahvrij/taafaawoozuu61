@@ -13,7 +13,7 @@ import java.util.*;
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> electionListMap = new HashMap<>();
-    private static final Map<Integer, Integer> DISTRICT_TO_PROVINCE_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
+    private static final Map<Integer, Integer> DISTRICT_TO_PROVI_ID = Map.ofEntries(Map.entry(3, 1),  // Drenthe
             Map.entry(5, 2),    // Flevoland
             Map.entry(2, 3),    // Friesland
             Map.entry(7, 4),    // Gelderland

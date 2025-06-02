@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { watchEffect, ref } from 'vue'
 import { Chart, registerables, type ChartConfiguration } from 'chart.js'
-import type { Party } from '@/interfaces/Affiliation.ts'
+import type { Affiliation } from '@/interfaces'
 
 Chart.register(...registerables)
 
 const props = defineProps<{
-  partyVotes: Party[] | null
+  affiVotes: Affiliation[] | null
 }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -22,24 +22,26 @@ function generateColorFromName(name: string): string {
 }
 
 watchEffect(() => {
-  if (!canvasRef.value) return
-
-  if (props.partyVotes && props.partyVotes.length > 0) {
-    const labels = props.partyVotes.map(p => p.name)
-    const data = props.partyVotes.map(p => p.votes)
+  if (!canvasRef.value) {
+    return
+  }
+  if (props.affiVotes && props.affiVotes.length > 0) {
+    const labels = props.affiVotes.map((affi) => affi.name)
+    const data = props.affiVotes.map((affi) => affi.vvCount)
     const backgroundColors = labels.map(generateColorFromName)
-
     const config: ChartConfiguration<'bar', number[], string> = {
       type: 'bar',
       data: {
         labels,
-        datasets: [{
-          label: 'Votes',
-          data,
-          backgroundColor: backgroundColors,
-          borderColor: backgroundColors.map(c => c.replace('60%', '40%')),
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Valid Vote Count',
+            data,
+            backgroundColor: backgroundColors,
+            borderColor: backgroundColors.map((c) => c.replace('60%', '40%')),
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -47,18 +49,16 @@ watchEffect(() => {
           y: {
             beginAtZero: true,
             ticks: {
-              stepSize: 1
-            }
-          }
+              stepSize: 1,
+            },
+          },
         },
-        animation: { duration: 500 }
-      }
+        animation: { duration: 500 },
+      },
     }
-
     if (chartInstance) {
       chartInstance.destroy()
     }
-
     chartInstance = new Chart(canvasRef.value, config)
   } else {
     if (chartInstance) {
