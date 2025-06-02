@@ -1,23 +1,40 @@
 package com.voteU.election.java.database.DBTables;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "parties")
+@Getter
+@Setter
 public class Parties {
 
-    @Id
-    private int id;
+    @EmbeddedId
+    private PartyId id;
 
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "election_id") // foreign key column in parties table
-    private Elections election;
+    @Embeddable
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    public static class PartyId implements Serializable {
+        @Column(name = "id")
+        private Integer partyId;
 
-    // Constructors
-    public Parties() {}
+        @Column(name = "election_id")
+        private String electionId;
 
+        public PartyId() {}
 
+        public PartyId(Integer partyId, String electionId) {
+            this.partyId = partyId;
+            this.electionId = electionId;
+        }
+    }
 }
