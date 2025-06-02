@@ -10,6 +10,9 @@
         <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
       </ul>
     </nav>
+    <div class="login-link"><RouterLink to="/login"><button class="login-button">Login</button></RouterLink>
+    </div>
+
   </aside>
 </template>
 
@@ -45,6 +48,20 @@
 .sidenav a:hover {
   color: #1976d2;  /* Hover color */
   background-color: #e0e0e0; /* Optional: highlight background on hover */
+}
+.login-button {
+  background-color: #002b80;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.login-button:hover {
+  background-color: #0040ff;
 }
 </style>
 <script setup lang="ts">
