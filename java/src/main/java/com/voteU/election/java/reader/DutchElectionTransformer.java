@@ -1,6 +1,9 @@
 package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.*;
+import com.voteU.election.java.presentation.BubbleSort;
+import com.voteU.election.java.presentation.InsertionSort;
+import com.voteU.election.java.presentation.MergeSort;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 import lombok.Getter;
@@ -184,18 +187,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Step 2: Retrieve election
         Election election = elections.get(electionId);
         if (election == null) {
-            System.err.println("[registerConstituency] ❌ No election found for ID: '" + electionId + "'. Aborting.");
+//            System.err.println("[registerConstituency] ❌ No election found for ID: '" + electionId + "'. Aborting.");
             return;
         }
 
         // Step 3: Get or create constituency map
         Map<Integer, Constituency> constituencyMap = election.getConstituencies();
         if (constituencyMap == null) {
-            System.out.println("[registerConstituency] ⚠️ Constituencies map was null. Initializing new map.");
+//            System.out.println("[registerConstituency] ⚠️ Constituencies map was null. Initializing new map.");
             constituencyMap = new HashMap<>();
             election.setConstituencies(constituencyMap);
         } else {
-            System.out.println("[registerConstituency] ✅ Found existing constituencies map with size: " + constituencyMap.size());
+//            System.out.println("[registerConstituency] ✅ Found existing constituencies map with size: " + constituencyMap.size());
         }
 
         // Step 4: Get or create the constituency
@@ -235,11 +238,17 @@ public class DutchElectionTransformer implements Transformer<Election> {
             int totalConstituencyVotes = parties.values().stream().mapToInt(Party::getVotes).sum();
             constituency.setVotes(totalConstituencyVotes);
 
+            List<Party> partyList = new ArrayList<>(parties.values());
+            MergeSort.sort(partyList);
+
+
         }
 
         // Step 6: Set the parties to the constituency and store it back
         constituency.setParties(parties);
         constituencyMap.put(contestId, constituency);
+
+
     }
 
 
@@ -525,7 +534,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             Constituency constituency = constituencyMap.get(constituencyId);
             if (constituency == null) {
-                System.out.println("[registerProvinceConstituencies] ⚠️ Constituency not found for ID: " + constituencyId);
+//                System.out.println("[registerProvinceConstituencies] ⚠️ Constituency not found for ID: " + constituencyId);
                 continue;
             }
 
@@ -536,7 +545,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
             if (matchedProvince != null) {
                 matchedProvince.getConstituencies().add(constituency);
-                System.out.println("[registerProvinceConstituencies] ✅ Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
+//                System.out.println("[registerProvinceConstituencies] ✅ Linked constituency " + constituencyId + " to province " + matchedProvince.getName());
             } else {
                 System.err.println("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
             }
