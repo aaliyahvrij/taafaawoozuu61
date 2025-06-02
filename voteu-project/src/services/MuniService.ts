@@ -7,7 +7,7 @@ export class MuniService {
   ): Promise<Record<string, Municipality> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/compact`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/compact`,
         {
           method: 'GET',
           headers: {
@@ -32,7 +32,7 @@ export class MuniService {
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/affiliations`,
         {
           method: 'GET',
           headers: {

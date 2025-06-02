@@ -19,7 +19,7 @@ import type {
   Province,
 } from '@/interfaces'
 
-const selectedElection = ref<'2021' | '2023' | null>(null)
+const selectedElection = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
 const provinces = ref<Province[]>([])
 const selectedConstituency = ref<Constituency | null>(null)
@@ -91,24 +91,24 @@ function clearSelectedProvince(): void {
   selectedProvince.value = null
   constituencies.value = []
   selectedConstituency.value = null
-  municipalities.value = []
   selectedMunicipality.value = null
-  pollingStations.value = []
+  municipalities.value = []
   selectedPollingStation.value = null
+  pollingStations.value = []
 }
 
 function clearSelectedConstituency(): void {
   selectedConstituency.value = null
   selectedMunicipality.value = null
   municipalities.value = []
-  pollingStations.value = []
   selectedPollingStation.value = null
+  pollingStations.value = []
 }
 
 function clearSelectedMunicipality(): void {
   selectedMunicipality.value = null
-  pollingStations.value = []
   selectedPollingStation.value = null
+  pollingStations.value = []
 }
 
 function clearSelectedPollingStation(): void {

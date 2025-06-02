@@ -46,14 +46,14 @@
 }
 
 .sidenav .link-item {
-  width: 100%; /* Ensure the div spans the full width */
+  width: 100%;
   display: block; /* Make each <li> behave like a block element */
-  margin-bottom: 10px; /* Optional: space between links */
+  margin-bottom: 10px;
 }
 
 .sidenav a {
   display: block; /* Makes the <RouterLink> fill the container */
-  text-decoration: none; /* No underline */
+  text-decoration: none;
   color: #333; /* Default link color */
   padding: 10px; /* Add padding for better click area */
   width: 100%;
@@ -62,7 +62,7 @@
 
 .sidenav a:hover {
   color: #1976d2;
-  background-color: #e0e0e0; /* Optional: highlight background on hover */
+  background-color: #e0e0e0;
 }
 </style>
 <script setup lang="ts"></script>

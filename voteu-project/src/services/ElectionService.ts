@@ -3,7 +3,7 @@ import type { Election, Affiliation } from '@/interfaces'
 export class ElectionService {
   static async getElectoralLevelDataOf(electionId: string): Promise<Election | null> {
     try {
-      const response = await fetch(`http://localhost:8080/api/election/TK${electionId}`, {
+      const response = await fetch(`http://localhost:8080/api/election/${electionId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export class ElectionService {
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/affiliations`,
         {
           method: 'GET',
           headers: {

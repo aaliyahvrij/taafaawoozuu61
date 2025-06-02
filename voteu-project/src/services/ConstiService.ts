@@ -6,7 +6,7 @@ export class ConstiService {
   ): Promise<Record<number, Constituency> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {
@@ -30,7 +30,7 @@ export class ConstiService {
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/affiliations`,
         {
           method: 'GET',
           headers: {

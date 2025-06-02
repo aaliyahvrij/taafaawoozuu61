@@ -16,7 +16,7 @@ import type {
 } from '@/interfaces'
 
 // the first filter set
-const selectedElection1 = ref<'2021' | '2023' | null>(null)
+const selectedElection1 = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvi1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
@@ -31,7 +31,7 @@ const municipalities1 = ref<Municipality[]>([])
 const pollingStations1 = ref<PollingStation[]>([])
 
 // the second filter set
-const selectedElection2 = ref<'2021' | '2023' | null>(null)
+const selectedElection2 = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvi2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
@@ -262,7 +262,7 @@ function clearPollingStation2() {
   selectedPollingStation2.value = null
 }
 
-// --- Handlers eerste filter set ---
+// Handles first filter set
 async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
@@ -318,7 +318,7 @@ function onPollingStationChange1() {
   currentVoteLevel1.value = null
 }
 
-// --- Handlers tweede filter set ---
+// Handles second filter set
 async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null

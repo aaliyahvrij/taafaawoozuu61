@@ -176,7 +176,7 @@ public class ElectionTransformer implements Transformer<Election> {
                 Candidate newCandidate = new Candidate(candId, firstName, lastName);
                 newCandidate.setGender(gender);
                 newCandidate.setLocalityName(localityName);
-                newCandidate.setAffId(affId); // This may be missing in your original, depending on the Candidate class
+                newCandidate.setAffId(affId); // This may be missing in your original
                 affiliation.addCandidate(newCandidate);
             }
         }

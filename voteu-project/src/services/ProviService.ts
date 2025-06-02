@@ -6,7 +6,7 @@ export class ProviService {
   ): Promise<Record<number, Province> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/compact`,
+        `http://localhost:8080/api/election/${electionId}/provinces/compact`,
         {
           method: 'GET',
           headers: {
@@ -30,7 +30,7 @@ export class ProviService {
   ): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provId}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionId}/provinces/${provId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {
@@ -51,7 +51,7 @@ export class ProviService {
   static async getProviLevel_affiliationsOf(electionId: string, provId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/provinces/${provId}/affiliations`,
         {
           method: 'GET',
           headers: {

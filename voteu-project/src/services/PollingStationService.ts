@@ -8,7 +8,7 @@ export class PollingStationService {
   ): Promise<Record<string, PollingStation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations`,
         {
           method: 'GET',
           headers: {
@@ -34,7 +34,7 @@ export class PollingStationService {
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${pollingStationId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${pollingStationId}/affiliations`,
         {
           method: 'GET',
           headers: {
