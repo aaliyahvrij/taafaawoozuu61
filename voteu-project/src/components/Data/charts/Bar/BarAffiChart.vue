@@ -26,8 +26,8 @@ watchEffect(() => {
     return
   }
   if (props.affiVotes && props.affiVotes.length > 0) {
-    const labels = props.affiVotes.map(affi => affi.name)
-    const data = props.affiVotes.map(affi => affi.vvCount)
+    const labels = props.affiVotes.map((affi) => affi.name)
+    const data = props.affiVotes.map((affi) => affi.vvCount)
     const backgroundColors = labels.map(generateColorFromName)
     const config: ChartConfiguration<'bar', number[], string> = {
       type: 'bar',

@@ -144,32 +144,29 @@ async function getProviLevel_constituenciesOf(
   electionId: string | null,
   provId: string | undefined,
 ): Promise<void> {
+  const proviPath = electionId + ' > provi ' + provId
   try {
     if (electionId && provId) {
       const response = await ProviService.getProviLevel_constituenciesOf(electionId, provId)
       constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log(
-        'Fetching provincial level constituencies of election ',
-        electionId,
-        'province ',
-        provId,
-      )
+      console.log('Fetching constituencies of ', proviPath)
     } else {
       constituencies.value = []
     }
   } catch (err) {
-    console.error('Error fetching provincial level constituencies: ', err)
+    console.error('Error fetching constituencies of ', proviPath, ': ', err)
   }
 }
 
 async function getProviLevel_affiliationsOf(electionId: string, provId: number): Promise<void> {
+  const proviPath = electionId + ' > provi ' + provId
   try {
     const response = await ProviService.getProviLevel_affiliationsOf(electionId, provId)
     affiVotes.value = response
     currentVoteLevel.value = 'provincial'
-    console.log('Fetching provincial level affiliations of election ', electionId)
+    console.log('Fetching affiliations of ', proviPath)
   } catch (err) {
-    console.error('Error fetching provincial level affiliations: ', err)
+    console.error('Error fetching affiliations of ', proviPath, ': ', err)
   }
 }
 
@@ -177,38 +174,36 @@ async function getConstiLevel_municipalitiesOf(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
+  const constiPath = electionId + ' > consti ' + constId
   try {
     if (electionId && constId) {
       const response = await MuniService.getConstiLevel_municipalitiesOf(electionId, constId)
       municipalities.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log(
-        'Fetching constituencial level municipalities of election ',
-        electionId,
-        'constituency ',
-        constId,
-      )
+      console.log('Fetching municipalities of ', constiPath)
     }
   } catch (err) {
-    console.error('Error fetching consituencial level municipalities: ', err)
+    console.error('Error fetching municipalities of', constiPath, ': ', err)
   }
 }
 
 async function getConstiLevel_affiliationsOf(electionId: string, constId: string): Promise<void> {
+  const constiPath = electionId + ' > consti ' + constId
   try {
     const response = await ConstiService.getConstiLevel_affiliationsOf(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'constituencial'
-    console.log('Fetching constituency ' + constId + ' level affiliations of election ', electionId)
+    console.log('Fetching affiliations of ', constiPath)
   } catch (err) {
-    console.error('Error fetching constituencial level affiliations: ', err)
+    console.error('Error fetching affiliations of ', constiPath, ': ', err)
   }
 }
 
-async function getMuniLevel_pollingStations(
+async function getMuniLevel_pollingStationsOf(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
 ): Promise<void> {
+  const muniPath = electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
       const response = await PollingStationService.getMuniLevel_pollingStationsOf(
@@ -217,17 +212,10 @@ async function getMuniLevel_pollingStations(
         munId,
       )
       pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log(
-        'Fetching municipal level polling stations of election ',
-        electionId,
-        'constituency ',
-        constId,
-        'municipality ',
-        munId,
-      )
+      console.log('Fetching polling stations of ', muniPath)
     }
   } catch (err) {
-    console.error('Error fetching municipal level polling stations: ', err)
+    console.error('Error fetching polling stations of ', muniPath, ': ', err)
   }
 }
 
@@ -236,20 +224,14 @@ async function getMuniLevel_affiliationsOf(
   constId: string,
   munId: string,
 ): Promise<void> {
+  const muniPath = electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     const response = await MuniService.getMuniLevel_affiliationsOf(electionId, constId, munId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     currentVoteLevel.value = 'municipal'
-    console.log(
-      'Fetching municipal level affiliations of election ',
-      electionId,
-      'constituency ',
-      constId,
-      'municipality ',
-      munId,
-    )
+    console.log('Fetching affiliations of ', muniPath)
   } catch (err) {
-    console.error('Error fetching municipal level affiliations: ', err)
+    console.error('Error fetching affiliations of ', muniPath, ': ', err)
   }
 }
 
@@ -259,6 +241,14 @@ async function getPollingStationLevel_affiliationsOf(
   munId: string,
   pollingStationId: string,
 ): Promise<void> {
+  const pollingStationPath =
+    electionId +
+    ' > consti ' +
+    constId +
+    ' > muni ' +
+    munId +
+    ' > polling station ' +
+    pollingStationId
   try {
     const response = await PollingStationService.getPollingStationLevel_affiliationsOf(
       electionId,
@@ -269,18 +259,9 @@ async function getPollingStationLevel_affiliationsOf(
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiVotes.value)
     currentVoteLevel.value = 'pollingStation'
-    console.log(
-      'Fetching polling station level affiliations of election ',
-      electionId,
-      'constituency ',
-      constId,
-      'municipality ',
-      munId,
-      'polling station ',
-      pollingStationId,
-    )
+    console.log('Fetching affiliations of ', pollingStationPath)
   } catch (err) {
-    console.error('Error fetching polling station level affiliations: ', err)
+    console.error('Error fetching affiliations of ', pollingStationPath, ': ', err)
   }
 }
 
@@ -393,7 +374,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
         v-if="municipalities.length > 0"
         v-model="selectedMunicipality"
         @change="
-          getMuniLevel_pollingStations(
+          getMuniLevel_pollingStationsOf(
             selectedElection,
             selectedConstituency?.id.toString(),
             selectedMunicipality?.id.toString(),

@@ -60,6 +60,7 @@ async function getElectoralLevel_provincesOf(
   try {
     const response = await ProviService.getElectoralLevel_provincesOf(electionId)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    // console.log fetching line
   } catch (err) {
     console.error('Error fetching electoral level provinces: ', err)
   }
@@ -79,6 +80,7 @@ async function getProviLevel_constituenciesOf(
   try {
     const response = await ProviService.getProviLevel_constituenciesOf(electionId, provId)
     constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    // console.log fetching line
   } catch (err) {
     console.error('Error fetching provincial level constituencies: ', err)
   }
@@ -98,6 +100,7 @@ async function getConstiLevel_municipalitiesOf(
   try {
     const response = await MuniService.getConstiLevel_municipalitiesOf(electionId, constId)
     municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    // console.log fetching line
   } catch (err) {
     console.error('Error fetching constituential level municipalities: ', err)
   }
@@ -122,6 +125,7 @@ async function getMuniLevel_pollingStationsOf(
       munId,
     )
     pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    // console.log fetching line
   } catch (err) {
     console.error('Error fetching municipal level polling stations: ', err)
   }

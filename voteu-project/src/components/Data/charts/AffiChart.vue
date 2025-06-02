@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watchEffect, ref } from 'vue'
 import { Chart, registerables, type ChartConfiguration } from 'chart.js'
-import type { Affiliation } from '@/interfaces/Affiliation.ts'
+import type { Affiliation } from '@/interfaces'
 
 Chart.register(...registerables)
 
@@ -22,8 +22,8 @@ function generateColorFromName(name: string): string {
 
 watchEffect(() => {
   if (props.affiVotes && canvasRef.value) {
-    const labels = props.affiVotes.map((p) => p.name)
-    const data = props.affiVotes.map((p) => p.votes)
+    const labels = props.affiVotes.map((affi) => affi.name)
+    const data = props.affiVotes.map((affi) => affi.vvCount)
     const backgroundColors = labels.map(generateColorFromName)
     const config: ChartConfiguration<'pie', number[], string> = {
       type: 'pie',
@@ -31,7 +31,7 @@ watchEffect(() => {
         labels,
         datasets: [
           {
-            label: 'Votes',
+            label: 'Valid Vote Count',
             data,
             backgroundColor: backgroundColors,
           },
