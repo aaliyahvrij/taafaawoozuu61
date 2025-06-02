@@ -533,7 +533,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   border-radius: 12px;
   padding: 24px 32px;
   margin: 24px auto;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .tag,
@@ -621,11 +621,11 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   padding: 1rem;
   background-color: #f9fafb;
   border-radius: 0.5rem;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .affi-list p {
-  margin: 0px;
+  margin: 0;
   font-weight: 500;
   color: #333;
 }
@@ -636,7 +636,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   justify-content: space-between; /* pushes name and valid vote count apart */
   transition: all 0.2s ease;
