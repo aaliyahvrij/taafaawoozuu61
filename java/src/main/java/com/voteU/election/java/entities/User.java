@@ -1,11 +1,10 @@
 package com.voteU.election.java.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "user")
@@ -13,15 +12,35 @@ import lombok.Setter;
 @Setter
 public class User {
 
-    @GeneratedValue
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @Column(name = "username", nullable = false, length = 45)
     private String username;
+
+    @Column(name = "email", nullable = false, length = 45)
     private String email;
-    private String first_name;
-    private String last_name;
+
+    @Column(name = "first_name", nullable = false, length = 45)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 45)
+    private String lastName;
+
+    @Lob
+    @Column(name = "gender", nullable = false)
+    private String gender;
+
+    @Column(name = "country", nullable = false, length = 2)
+    private String country;
+
+    @Column(name = "password", nullable = false, length = 45)
     private String password;
-    private String timestamp;
+
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
     public User() {
     }
