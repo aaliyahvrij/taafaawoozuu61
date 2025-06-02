@@ -1,40 +1,30 @@
-    package com.voteU.election.java.database.DBTables;
+package com.voteU.election.java.database.DBTables;
 
-    import jakarta.persistence.Column;
-    import jakarta.persistence.Entity;
-    import jakarta.persistence.Id;
-    import jakarta.persistence.Table;
-    import lombok.Getter;
-    import lombok.Setter;
-    import jakarta.persistence.Transient;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "elections")
+public class Elections {
 
-    @Getter
-    @Setter
-    @Entity
-    @Table(name = "elections")
-    public class Elections {
-        @Id
-        @Column(name = "id")
-        String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Auto-increment primary key
 
-        String name;
+    @Column(name = "election_id", nullable = false, unique = true)
+    private String electionId; // Unique string election ID
 
-        String date;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-        int votes;
+    @Column(name = "date", nullable = false)
+    private String date;
 
-        @Transient
-        int partiesSize;
+    @Column(name = "votes")
+    private int votes;
 
-        public Elections(String stringId, String name, int votes, int partiesSize){
-            this.id = stringId;
-            this.name = name;
-            this.votes = votes;
-            this.partiesSize = partiesSize;
-        }
-
-        public Elections() {
-
-        }
-    }
+    public Elections() {}
+}

@@ -8,16 +8,18 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface NationalPartyVotesRepository extends JpaRepository<NationalPartyVotes, NationalPartyVotes.NationalPartyVotesId>{
+public interface NationalPartyVotesRepository extends JpaRepository<NationalPartyVotes, Long> {
 
     // Find all votes for a given election
     List<NationalPartyVotes> findByElectionId(String electionId);
 
     // Find votes for a specific party in an election
-    List<NationalPartyVotes> findByElectionIdAndPartyId(String electionId, String partyId);
+    List<NationalPartyVotes> findByElectionIdAndPartyId(String electionId, Integer partyId);
 
-    @Query("SELECT new com.voteU.election.java.database.responseDTO.PartyVotesDTO(p.key.id, p.name, npv.votes) " +
-            "FROM NationalPartyVotes npv JOIN npv.party p " +
-            "WHERE npv.election.id = :electionId")
+    // Custom DTO projection
+    @Query("SELECT new com.voteU.election.java.database.responseDTO.PartyVotesDTO(p.partyId, p.name, npv.votes) " +
+            "FROM NationalPartyVotes npv " +
+            "JOIN Parties p ON npv.partyId = p.partyId AND npv.electionId = p.electionId " +
+            "WHERE npv.electionId = :electionId")
     List<PartyVotesDTO> findPartyVotesByElection(@Param("electionId") String electionId);
 }

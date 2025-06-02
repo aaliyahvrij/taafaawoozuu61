@@ -45,16 +45,7 @@ public class ElectionService {
         return electionsByElectionId.get(electionId);
     }
 
-    public Elections getCompactElection(String electionId){
-        Election election = getElection(electionId);
-        String id = election.getId();
-        String name = election.getName();
-        int votes = election.getVotes();
-        Map<Integer, Party> parties = election.getParties();
-        int size = parties.size();
 
-        return new Elections(id, name, votes, size);
-    }
 
     public Map<Integer, Party> getAllPartiesByElection(String electionId) {
         Election election = getElection(electionId);

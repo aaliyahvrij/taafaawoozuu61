@@ -51,10 +51,6 @@
             return electionService.getElection(electionId);
         }
 
-        @GetMapping("{electionId}/compact")
-        public Elections getCompactElection(@PathVariable String electionId) {
-            return electionService.getCompactElection(electionId);
-        }
 
         @GetMapping("/{electionId}/parties")
         public Map<Integer, Party> getAllPartiesByElection(@PathVariable String electionId){
