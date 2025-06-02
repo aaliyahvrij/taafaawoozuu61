@@ -71,6 +71,6 @@ watchEffect(() => {
 
 <template>
   <div>
-    <canvas ref="canvasRef" width="400" height="300"></canvas>
+    <canvas ref="canvasRef" width="400px" height="300px"></canvas>
   </div>
 </template>

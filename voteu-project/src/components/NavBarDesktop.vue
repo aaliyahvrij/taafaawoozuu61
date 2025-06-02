@@ -41,8 +41,8 @@
 
 .sidenav ul {
   list-style-type: none; /* Remove bullets */
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
 }
 
 .sidenav .link-item {

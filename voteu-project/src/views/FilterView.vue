@@ -33,7 +33,7 @@ const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const currentVoteLevel = ref<
-  'national' | 'provincial' | 'constituencial' | 'municipal' | 'pollingStation' | null
+  'national' | 'provi' | 'consti' | 'muni' | 'pollingStation' | null
 >(null)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
@@ -163,7 +163,7 @@ async function getProviLevel_affiliationsOf(electionId: string, provId: number):
   try {
     const response = await ProviService.getProviLevel_affiliationsOf(electionId, provId)
     affiVotes.value = response
-    currentVoteLevel.value = 'provincial'
+    currentVoteLevel.value = 'provi'
     console.log('Fetching affiliations of ', proviPath)
   } catch (err) {
     console.error('Error fetching affiliations of ', proviPath, ': ', err)
@@ -191,7 +191,7 @@ async function getConstiLevel_affiliationsOf(electionId: string, constId: string
   try {
     const response = await ConstiService.getConstiLevel_affiliationsOf(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'constituencial'
+    currentVoteLevel.value = 'consti'
     console.log('Fetching affiliations of ', constiPath)
   } catch (err) {
     console.error('Error fetching affiliations of ', constiPath, ': ', err)
@@ -228,7 +228,7 @@ async function getMuniLevel_affiliationsOf(
   try {
     const response = await MuniService.getMuniLevel_affiliationsOf(electionId, constId, munId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    currentVoteLevel.value = 'municipal'
+    currentVoteLevel.value = 'muni'
     console.log('Fetching affiliations of ', muniPath)
   } catch (err) {
     console.error('Error fetching affiliations of ', muniPath, ': ', err)
@@ -533,7 +533,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   border-radius: 12px;
   padding: 24px 32px;
   margin: 24px auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .tag,
@@ -621,11 +621,11 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   padding: 1rem;
   background-color: #f9fafb;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .affi-list p {
-  margin: 0;
+  margin: 0px;
   font-weight: 500;
   color: #333;
 }
@@ -636,7 +636,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   justify-content: space-between; /* pushes name and valid vote count apart */
   transition: all 0.2s ease;
