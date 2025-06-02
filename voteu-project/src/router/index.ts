@@ -6,6 +6,8 @@ import ForumView from "@/views/ForumView.vue";
 import FilterView from "@/views/FilterView.vue";
 import CompareView from "@/views/CompareView.vue";
 import AuthView from '@/views/AuthView.vue'
+import login from '@/components/login.vue'
+import register from '@/components/register.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,18 @@ const router = createRouter({
       path:'/auth',
       name:'auth',
       component: AuthView,
+    },
+
+    {
+      path:'/login',
+      name:'login',
+      component: login,
+    },
+
+    {
+      path:'/register',
+      name:'register',
+      component: register,
     },
   ],
 })
