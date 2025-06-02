@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = 'user')
+@Table(name = "user")
 @Getter
 @Setter
 public class User {
@@ -16,7 +16,7 @@ public class User {
     @GeneratedValue
     @Id
     private int id;
-    private String name;
+    private String username;
     private String email;
     private String first_name;
     private String last_name;
