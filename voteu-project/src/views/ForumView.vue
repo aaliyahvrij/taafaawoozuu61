@@ -9,7 +9,7 @@
 
     <!-- Warning if user not logged in -->
     <div class="login-warning">
-      <p>You must be <a href="">logged in</a> to comment.</p>
+      <p>You must be <a href="/login">logged in</a> to comment.</p>
     </div>
 
     <!-- Comment form (only show if user is logged in and clicked "Add Comment") -->
