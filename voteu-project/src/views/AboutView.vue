@@ -7,5 +7,7 @@
 </template>
 
 <style>
-
+h1 {
+  color: #181818;
+}
 </style>
