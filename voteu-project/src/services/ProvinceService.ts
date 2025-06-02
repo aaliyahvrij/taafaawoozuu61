@@ -1,6 +1,5 @@
 import type { Province } from '@/interface/Province'
 import type { Constituency } from '@/interface/Constituency.ts'
-import type { Party } from '@/interface/Party.ts'
 
 export class ProvinceService {
   static async getProvincesByElection(electionId: string): Promise<Record<number, Province> | null> {
@@ -48,21 +47,32 @@ export class ProvinceService {
 
     return null
   }
-  static async getProvincePartyVotes(electionId: string, provinceId: number): Promise<Party[] | null> {
+
+  static async getTotalVotesForProvinceOverYears(provinceId: number, years: string[],): Promise<number | null> {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/provinces/${provinceId}/parties`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
+      let totalVotes = 0
+
+      for (const year of years) {
+        const response = await fetch(
+          `http://localhost:8080/api/election/TK${year}/provinces/${provinceId}/votes`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
+        )
+
+        if (!response.ok) {
+          console.error(`Fout bij ophalen stemmen voor provincie ${provinceId} in ${year}`)
+          continue
         }
-      )
-      if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
+
+        const yearVotes = await response.json()
+        totalVotes += yearVotes
       }
-      return await response.json()
+
+      return totalVotes
     } catch (error) {
       console.error(error)
       return null
