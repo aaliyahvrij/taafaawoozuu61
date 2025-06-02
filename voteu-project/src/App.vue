@@ -28,8 +28,8 @@ import Header from '@/components/Header.vue'
 }
 
 .layout {
-  flex-direction: column;
   height: 100vh;
+  flex-direction: column;
 }
 
 .content-area {

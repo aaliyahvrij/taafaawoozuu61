@@ -1,0 +1,8 @@
+export { default as AboutView } from './AboutView.vue'
+export { default as CompareView } from './CompareView.vue'
+export { default as FilterView } from './FilterView.vue'
+export { default as ForumView } from './ForumView.vue'
+export { default as HomeView } from './HomeView.vue'
+export { default as HowView } from './HowView.vue'
+export { default as LoginView } from './LoginView.vue'
+export { default as RegisterView } from './RegisterView.vue'
