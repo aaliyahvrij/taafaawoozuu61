@@ -1,0 +1,44 @@
+package com.voteU.election.java.entities;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "posts")
+@Getter
+@Setter
+public class Posts {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @Column(name = "title", nullable = false, length = 45)
+    private String title;
+
+    @Column(name = "description", nullable = false, length = 45)
+    private String description;
+
+    @Lob
+    @Column(name = "body", nullable = false)
+    private String body;
+
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "posts")
+    private Set<Comments> comments = new LinkedHashSet<>();
+
+}
