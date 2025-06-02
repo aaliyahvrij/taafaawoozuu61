@@ -30,6 +30,12 @@ public class ProvinceController {
     public List<CompactProvince> getCompactProvinces(@PathVariable String year) {
         return provinceService.getCompactProvinces(year);
     }
+
+    @GetMapping("/{provinceId}/votes")
+    public int getTotalVotesForProvince(@PathVariable String year, @PathVariable int provinceId) {
+        return provinceService.getTotalVotesForProvince(year, provinceId);
+    }
+
     @GetMapping("/{provinceId}/constituencies")
     public List<Constituency> getConstituenciesByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
         return provinceService.getConstituenciesByProvinceId(year, provinceId);
