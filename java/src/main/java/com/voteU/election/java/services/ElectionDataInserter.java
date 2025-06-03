@@ -37,11 +37,11 @@ public class ElectionDataInserter {
         logger.info("Starting insertion of election with id {}", election.getId());
 
         // Insert single election row (assuming elections table id is unique)
-        //insertElectionRow(election);
+        // insertElectionRow(election);
         // batchInsertParties(election.getId(), election.getParties().values());
-       // batchInsertCandidates(election.getId(), election.getParties().values());
-
-        batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
+         batchInsertCandidates(election.getId(), election.getParties().values());
+        //batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
+        batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
 
         logger.info("Finished insertion of election with id {}", election.getId());
@@ -99,13 +99,28 @@ public class ElectionDataInserter {
         logger.info("Batch inserted national party votes for election {}. Count: {}, Batch update count: {}", electionId, parties.size(), result.length);
     }
 
-
+    private void batchInsertNationalCandidateVotes(String electionId, Collection<Party> parties) {
+        String sql = "INSERT IGNORE INTO national_candidate_votes (candidate_id, party_id, election_id, votes) VALUES (?, ?, ?, ?)";
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Party p : parties) {
+            for (Candidate c : p.getCandidates()) {
+                batchArgs.add(new Object[]{
+                        c.getId(),    // candidate_ref_id (references candidates.id)
+                        p.getId(),    // party_id
+                        electionId,   // election_id
+                        c.getVotes()  // votes
+                });
+            }
+        }
+        int[] result = jdbc.batchUpdate(sql, batchArgs);
+        logger.info("Batch inserted national candidate votes for election {}. Number of entries: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
+    }
 
     public void exportPollingStationCandidateVotesToCSV(Election election, String filePath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("election_id,pollingstation_id,party_id,candidate_id,votes");
             writer.newLine();
-            for(Province province : election.getProvinces()){
+            for (Province province : election.getProvinces()) {
                 for (Constituency c : province.getConstituencies()) {
                     for (Authority a : c.getAuthorities().values()) {
                         for (PollingStation ps : a.getPollingStations().values()) {
@@ -128,7 +143,6 @@ public class ElectionDataInserter {
             }
         }
     }
-
 
 
 }
