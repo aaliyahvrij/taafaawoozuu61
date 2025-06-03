@@ -16,6 +16,7 @@ import java.util.Set;
 public class Comments {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -39,6 +40,6 @@ public class Comments {
     private Instant createdAt;
 
     @OneToMany(mappedBy = "comments")
-    private Set<Comments> commentsId = new LinkedHashSet<>();
+    private Set<Comments> replies = new LinkedHashSet<>();
 
 }
