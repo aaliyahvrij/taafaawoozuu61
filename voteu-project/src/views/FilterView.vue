@@ -9,7 +9,7 @@ import {
   PollingStationService,
   ProviService,
 } from '@/services'
-import AffiChart from '@/components/Data/charts/AffiChart.vue'
+import { AffiChart } from '@/components'
 import type {
   Affiliation,
   Candidate,
