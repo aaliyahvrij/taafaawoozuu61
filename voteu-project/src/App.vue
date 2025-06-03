@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import NavBarDesktop from '@/components/NavBarDesktop.vue'
-import Header from '@/components/Header.vue'
+import { Header, NavBarDesktop } from '@/components'
 </script>
 
 <template>
