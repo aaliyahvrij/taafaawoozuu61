@@ -21,5 +21,5 @@ public interface NationalPartyVotesRepository extends JpaRepository<NationalPart
             "FROM NationalPartyVotes npv " +
             "JOIN Parties p ON npv.partyId = p.partyId AND npv.electionId = p.electionId " +
             "WHERE npv.electionId = :electionId")
-    List<PartyVotesDTO> findPartyVotesByElection(@Param("electionId") String electionId);
+    List<PartyVotesDTO> findNationalPartyVotesByElectionId(@Param("electionId") String electionId);
 }

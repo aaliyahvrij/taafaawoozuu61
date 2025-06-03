@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class NationalVotesService {
+public class NationalPartyVotesService {
 
     private final NationalPartyVotesRepository nationalPartyVotesRepository;
 
-    public NationalVotesService(NationalPartyVotesRepository nationalPartyVotesRepository) {
+    public NationalPartyVotesService(NationalPartyVotesRepository nationalPartyVotesRepository) {
         this.nationalPartyVotesRepository = nationalPartyVotesRepository;
     }
 
-    public List<PartyVotesDTO> getVotesByElection(String electionId) {
-        return  nationalPartyVotesRepository.findPartyVotesByElection(electionId);
+    public List<PartyVotesDTO> getNationalPartyVotesByElectionId(String electionId) {
+        return nationalPartyVotesRepository.findNationalPartyVotesByElectionId(electionId);
     }
 }
