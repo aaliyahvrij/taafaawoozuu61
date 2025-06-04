@@ -30,11 +30,11 @@ public class CommentsController {
         return ResponseEntity.ok(commentsService.createComment(comment));
     }
 
-    @GetMapping("/post/{postId}")
-    public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Posts postId) {
-        List<Comments> comments = commentsService.getCommentsByPostId(postId);
+    @GetMapping("/post/{postsId}")
+    public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Posts postsId) {
+        List<Comments> comments = commentsService.getCommentsByPostsId(postsId);
         if (comments.isEmpty()) {
-            throw new NotFound("No comments found for postId: " + postId);
+            throw new NotFound("No comments found for postId: " + postsId);
         }
         return ResponseEntity.ok(comments);
     }
@@ -48,7 +48,7 @@ public class CommentsController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping
+    @GetMapping("/comments/{commentsId}")
     public ResponseEntity<List<Comments>> getCommentsByCommentsId(@PathVariable Integer commentsId) {
         List<Comments> comments = commentsService.getCommentsByCommentsId(commentsId);
         if (comments.isEmpty()) {
