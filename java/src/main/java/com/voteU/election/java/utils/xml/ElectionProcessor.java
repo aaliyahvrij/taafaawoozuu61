@@ -419,41 +419,41 @@ public class ElectionProcessor<E> {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFI_ID:
-                        HashMap<String, String> affiVotesMap = new HashMap<>(constiMap);
+                        HashMap<String, String> affiMap = new HashMap<>(constiMap);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
                         if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
                             parser.findAndAcceptEndTag(AFFI_ID);
                             continue;
                         }
-                        affiVotesMap.put(AFFI_ID, String.valueOf(affId));
+                        affiMap.put(AFFI_ID, String.valueOf(affId));
                         if (parser.findBeginTag(AFFI_NAME)) {
                             String affiName = parser.getElementText();
-                            affiVotesMap.put(AFFI_NAME, affiName);
+                            affiMap.put(AFFI_NAME, affiName);
                             parser.findAndAcceptEndTag(AFFI_NAME);
                         }
                         parser.findAndAcceptEndTag(AFFI_ID);
                         if (parser.findBeginTag(VV_COUNT)) {
                             int affiVVCount = Integer.parseInt(parser.getElementText());
-                            affiVotesMap.put(VV_COUNT, String.valueOf(affiVVCount));
+                            affiMap.put(VV_COUNT, String.valueOf(affiVVCount));
                             parser.findAndAcceptEndTag(VV_COUNT);
                         }
-                        for (Map.Entry<String, String> affiVotesMapPair : affiVotesMap.entrySet()) {
-                            if (affiVotesMapPair.getValue() == null) {
-                                System.err.println("Missing " + affiVotesMapPair.getKey() + " in affiVotesMap: " + affiVotesMap);
+                        for (Map.Entry<String, String> affiMapPair : affiMap.entrySet()) {
+                            if (affiMapPair.getValue() == null) {
+                                System.err.println("Missing " + affiMapPair.getKey() + " in affiMap: " + affiMap);
                                 return;
-                            } else if (affiVotesMapPair.getKey().equals(VV_COUNT)) {
+                            } else if (affiMapPair.getKey().equals(VV_COUNT)) {
                                 try {
-                                    Integer.parseInt(affiVotesMapPair.getValue());
+                                    Integer.parseInt(affiMapPair.getValue());
                                 } catch (NumberFormatException e) {
-                                    System.err.println("Invalid " + affiVotesMapPair.getKey() + " value '" + affiVotesMapPair.getValue() + "' in affiVotesMap: " + affiVotesMap);
+                                    System.err.println("Invalid " + affiMapPair.getKey() + " value '" + affiMapPair.getValue() + "' in affiMap: " + affiMap);
                                     return;
                                 }
                             }
                         }
-                        this.transformer.registerMuniLevelData(affiVotesMap);
+                        this.transformer.registerMuniLevelData(affiMap);
                         break;
                     case CANDIDATE:
-                        HashMap<String, String> candiVotesMap = new HashMap<>(constiMap);
+                        HashMap<String, String> candiMap = new HashMap<>(constiMap);
                         int candId = 0;
                         if (parser.findBeginTag(CANDI_ID)) {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -468,24 +468,24 @@ public class ElectionProcessor<E> {
                         parser.findAndAcceptEndTag(CANDIDATE);
                         if (parser.findBeginTag(VV_COUNT)) {
                             int candiVVCount = Integer.parseInt(parser.getElementText());
-                            candiVotesMap.put(CANDI_ID, String.valueOf(candId));
-                            candiVotesMap.put(AFFI_ID, String.valueOf(affId));
-                            candiVotesMap.put("candiVVCount", String.valueOf(candiVVCount));
-                            for (Map.Entry<String, String> candiVotesMapPair : candiVotesMap.entrySet()) {
-                                if (candiVotesMapPair.getValue() == null) {
-                                    System.err.println("Missing " + candiVotesMapPair.getKey() + " in candiVotesMap: " + candiVotesMap);
+                            candiMap.put(CANDI_ID, String.valueOf(candId));
+                            candiMap.put(AFFI_ID, String.valueOf(affId));
+                            candiMap.put("candiVVCount", String.valueOf(candiVVCount));
+                            for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
+                                if (candiMapPair.getValue() == null) {
+                                    System.err.println("Missing " + candiMapPair.getKey() + " in candiMap: " + candiMap);
                                     return;
-                                } else if (candiVotesMapPair.getKey().equals(CANDI_ID) || candiVotesMapPair.getKey().equals("CandidateVotes")) {
+                                } else if (candiMapPair.getKey().equals(CANDI_ID) || candiMapPair.getKey().equals("candiVVCount")) {
                                     try {
-                                        Integer.parseInt(candiVotesMapPair.getValue());
+                                        Integer.parseInt(candiMapPair.getValue());
                                     } catch (NumberFormatException e) {
-                                        System.err.println("Invalid " + candiVotesMapPair.getKey() + " value '" + candiVotesMapPair.getValue() + "' in candiVotesMap: " + candiVotesMap);
+                                        System.err.println("Invalid " + candiMapPair.getKey() + " value '" + candiMapPair.getValue() + "' in candiMap: " + candiMap);
                                         return;
                                     }
                                 }
                             }
                             registeredCandiAffiliations.add(candiCompKey);
-                            this.transformer.registerMuniLevelData(candiVotesMap);
+                            this.transformer.registerMuniLevelData(candiMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
                             LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %s of affiliation %d.".formatted(candId, affId));
