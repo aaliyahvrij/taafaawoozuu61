@@ -336,8 +336,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processConstiLevelData(HashMap<String, String> receivedConstiMap, XMLParser parser) throws XMLStreamException {
-        HashMap<String, String> constiMap = new HashMap<>(receivedConstiMap);
+    private void processConstiLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         List<String> affiNamesList = new ArrayList<>();
         List<Integer> affiVotesList = new ArrayList<>();
         HashSet<Integer> processedAffiliations = new HashSet<>();
