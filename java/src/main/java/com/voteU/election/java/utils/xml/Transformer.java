@@ -9,7 +9,7 @@ import java.util.*;
  * HashMap&lt;String, String>, into the models as used by the application. As part of this transformation,
  * it is also responsible for making all the necessary relationships between the different classes and instances.<br>
  * For example, when {@link #registerCandiLevelData(HashMap)} is called,
- * it must add the candidate to the correct Affiliation(party).<br>
+ * it must add the candidate to the correct affiliation.<br>
  * After all the data has been transformed, it should be able to return an instance of a class that encapsulates
  * all the data in the application-specific data classes.
  *
