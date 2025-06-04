@@ -1,7 +1,6 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.models.Candidate;
-import com.voteU.election.java.models.Affiliation;
+import com.voteU.election.java.models.*;
 import com.voteU.election.java.utils.PathUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -15,34 +14,33 @@ import java.util.logging.Logger;
  * doesn't have any knowledge of the data model that is being used by the application.
  * All the datamodel-specific logic must be provided by a separate class that implements
  * the {@link Transformer} interface.<br>
- * At its current state it processes the files in a two-step process. First it constructs the 'kieskringen' and
- * the 'kieslijsten'. Secondly, it processes the vote counts. It behaves similar as the
+ * At its current state, it processes the files in a two-step process.
+ * First, it constructs the 'constituencies' and the 'kieslijsten'. Secondly, it processes the valid vote counts.
+ * It behaves similar as the
  * <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
  * The full dataset consists of three types of files.
  * <ol>
- *     <li>one file per 'kieskring' containing the 'kieslijsten'</li>
- *     <li>one file per 'kieskring' containing the total votes within that 'kieskring' per candidate</li>
- *     <li>one file per municipality containing per polling station, the votes per candidate</li>
+ *     <li>one file per 'constituency' containing the 'kieslijsten'</li>
+ *     <li>one file per 'constituency' containing the total votes within that 'constituency' per candidate</li>
+ *     <li>one file per municipality containing per polling station, the valid vote count per candidate</li>
  * </ol>
- * <em>When processing the files only the first and third type of files are processed by this implementation at this
- * moment, but can be changed if needed!</em><br>
+ * <em>When processing the files only the first and third type of files are processed by this implementation
+ * at this moment, but can be changed if needed!</em><br>
  * <br>
- * The data in the XML files has a more or less hierarchy structure. When a method of the transformer is called, a
- * {@link Map} containing all the information on that level, including the information at the higher levels,
- * is provided. The {@link Map} is specified as: Map&lt;String, String>. It is up to the transformer to convert any
- * numerical information from its {@link String} representation into its appropriate datatype.<br>
+ * The data in the XML files has a more or less hierarchy structure. When a method of the transformer is called,
+ * a {@link Map} containing all the information on that level, including the information at the higher levels,
+ * is provided. The {@link Map} is specified as: Map&lt;String, String>. It is up to the transformer
+ * to convert any numerical information from its {@link String} representation into its appropriate datatype.<br>
  * <br>
  * <em>It assumes that filenames have NOT been changed and that the content has not been altered!
  * The code assumes that there is no whitespace between the open and closing tags.</em><br>
  * <br>
  * Here is an example of how this class could be used.
  * <pre>
- *     DutchElectionTransformer creator = new DutchElectionTransformer();
- *     DutchElectionProcessor<Election> electionProcessor = new DutchElectionProcessor<>(creator);
+ *     ElectionTransformer creator = new ElectionTransformer();
+ *     ElectionProcessor<Election> electionProcessor = new ElectionProcessor<>(creator);
  *     Election election = electionProcessor.processResults("TK2023", PathUtils.getResourcePath("/EML_bestanden_TK2023_HvA_UvA"));
  * </pre>
- * <br>
- * <em>You are encouraged to alter this class so it suits your needs! :-)</em>
  */
 public class ElectionProcessor<E> {
     private static final Logger LOG = Logger.getLogger(ElectionProcessor.class.getName());
