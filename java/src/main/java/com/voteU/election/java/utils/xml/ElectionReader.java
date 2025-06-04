@@ -18,7 +18,7 @@ public class ElectionReader {
 
     public ElectionReader() {
         this.transformer = new ElectionTransformer();
-        this.processor = new ElectionProcessor<>(transformer);
+        this.processor = new ElectionProcessor<>(this.transformer);
     }
 
     /**

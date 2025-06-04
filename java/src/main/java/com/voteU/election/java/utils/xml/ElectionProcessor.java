@@ -32,14 +32,7 @@ import java.util.logging.Logger;
  * to convert any numerical information from its {@link String} representation into its appropriate datatype.<br>
  * <br>
  * <em>It assumes that filenames have NOT been changed and that the content has not been altered!
- * The code assumes that there is no whitespace between the open and closing tags.</em><br>
- * <br>
- * Here is an example of how this class could be used.
- * <pre>
- *     ElectionTransformer electionTransformer = new ElectionTransformer();
- *     ElectionProcessor<Election> electionProcessor = new ElectionProcessor<>(electionTransformer);
- *     Election election = electionProcessor.processResults("TK2023", PathUtils.getResourcePath("/EML_bestanden_TK2023_HvA_UvA"));
- * </pre>
+ * The code assumes that there is no whitespace between the open and closing tags.</em>
  */
 public class ElectionProcessor<E> {
     private static final Logger LOG = Logger.getLogger(ElectionProcessor.class.getName());
