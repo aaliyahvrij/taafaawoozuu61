@@ -52,7 +52,7 @@ public class ElectionTransformer implements Transformer<Election> {
         affiliation = affiListMap.get(affId);
 
         // Handle affiliation-specific data
-        if (!nationMap.containsKey(ElectionProcessor.SHORT_CODE)) {
+        if (!nationMap.containsKey(ElectionProcessor.CANDI_SHORT_CODE)) {
             String affiName = nationMap.get(ElectionProcessor.AFFI_NAME);
             int affiVVCount = Integer.parseInt(nationMap.get(ElectionProcessor.VV_COUNT));
             affiliation = new Affiliation(affId, affiName, affiVVCount);
@@ -61,7 +61,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
         // Handle candidate-specific data
         else {
-            String candiShortCode = nationMap.get(ElectionProcessor.SHORT_CODE);
+            String candiShortCode = nationMap.get(ElectionProcessor.CANDI_SHORT_CODE);
             int candiVVCount = Integer.parseInt(nationMap.get("candiVVCount"));
             if (!affiliation.hasCandiShortCode(candiShortCode)) {
                 Candidate candidate = new Candidate(candiShortCode, candiVVCount);

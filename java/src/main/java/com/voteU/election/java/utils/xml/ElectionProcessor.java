@@ -40,7 +40,6 @@ public class ElectionProcessor<E> {
 
     // Common attribute name that is use on multiple tags.
     public static final String ID = "Id";
-    public static final String SHORT_CODE = "ShortCode";
     public static final String VV_COUNT = "ValidVotes";
 
     /*
@@ -52,7 +51,6 @@ public class ElectionProcessor<E> {
     public static final String ELECTION_NAME = "ElectionName";
     public static final String ELECTION_CATEGORY = "ElectionCategory";
     public static final String ELECTION_DATE = "ElectionDate";
-    public static final String TOTAL_VV_COUNT = "TotalVotes";
 
     /*
      The tag names on the contest level within the XML files, which are also used as keys in the maps
@@ -61,6 +59,7 @@ public class ElectionProcessor<E> {
     public static final String CONSTITUENCY = "Contest";
     public static final String CONSTI_ID = "ContestIdentifier";
     public static final String CONSTI_NAME = "ContestName";
+    public static final String TOTAL_VV_COUNT = "TotalVotes";
 
     /*
      The tag names on the municipality level within the XML files, which are also used as keys in the maps
@@ -92,6 +91,7 @@ public class ElectionProcessor<E> {
      */
     public static final String CANDIDATE = "Candidate";
     public static final String CANDI_ID = "CandidateIdentifier";
+    public static final String CANDI_SHORT_CODE = "ShortCode";
     public static final String PERSON_NAME = "PersonName";
     public static final String NAME_LINE = "NameLine";
     public static final String INITIALS = "Initials"; // For convenience, is used as a key in the data-maps.
@@ -255,7 +255,7 @@ public class ElectionProcessor<E> {
                         case CANDIDATE:
                             String candiShortCode = null;
                             if (parser.findBeginTag(CANDI_ID)) {
-                                candiShortCode = parser.getAttributeValue(null, SHORT_CODE);
+                                candiShortCode = parser.getAttributeValue(null, CANDI_SHORT_CODE);
                                 if (registeredCandiShortCodes.contains(candiShortCode)) {
                                     parser.findAndAcceptEndTag(CANDI_ID);
                                     continue;
@@ -266,7 +266,7 @@ public class ElectionProcessor<E> {
                             if (parser.findBeginTag(VV_COUNT)) {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
                                 Map<String, String> candiMap = new HashMap<>(constiMap);
-                                candiMap.put(SHORT_CODE, candiShortCode);
+                                candiMap.put(CANDI_SHORT_CODE, candiShortCode);
                                 registeredCandiShortCodes.add(candiShortCode);
                                 candiMap.put(AFFI_ID, String.valueOf(affId));
                                 candiMap.put("candiVVCount", String.valueOf(candiVVCount));
