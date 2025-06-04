@@ -6,10 +6,10 @@ import java.util.*;
 
 @Getter
 public class Affiliation {
-    int id;
-    String name;
-    List<Candidate> candidates;
-    int vvCount;
+    private final int id;
+    private final String name;
+    private final List<Candidate> candidates;
+    private final int vvCount;
 
     public Affiliation(int id, String name, int vvCount) {
         this.id = id;

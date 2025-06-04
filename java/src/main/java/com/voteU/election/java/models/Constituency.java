@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 public class Constituency {
     private int id;
     private String name;
-    LinkedHashMap<String, Municipality> municipalities;
+    private LinkedHashMap<String, Municipality> municipalities;
     private LinkedHashMap<Integer, Affiliation> affiliations;
 
     public Constituency(int id, String name) {

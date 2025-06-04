@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 @Getter
 @Setter
 public class Province {
-    int id;
-    String name;
-    LinkedHashMap<Integer, Constituency> constituencies;
+    private int id;
+    private String name;
+    private LinkedHashMap<Integer, Constituency> constituencies;
 
     public Province() {
         this.constituencies = new LinkedHashMap<>();

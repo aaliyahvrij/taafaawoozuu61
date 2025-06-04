@@ -8,13 +8,13 @@ import java.util.LinkedHashMap;
 @Setter
 public class Election {
     private String id;
-    private final String name;
-    private final String date;
+    private String name;
+    private String date;
     private LinkedHashMap<Integer, Province> provinces;
     private LinkedHashMap<Integer, Constituency> constituencies;
-    private final LinkedHashMap<String, Municipality> municipalities;
-    private final LinkedHashMap<String, PollingStation> pollingStations;
-    private final LinkedHashMap<Integer, Affiliation> affiliations;
+    private LinkedHashMap<String, Municipality> municipalities;
+    private LinkedHashMap<String, PollingStation> pollingStations;
+    private LinkedHashMap<Integer, Affiliation> affiliations;
 
     public Election(String id, String name, String date) {
         this.id = id;

@@ -6,10 +6,10 @@ import java.util.LinkedHashMap;
 
 @Getter
 public class PollingStation {
-    String id;
-    String name;
-    LinkedHashMap<Integer, Affiliation> affiliations;
-    int vvCount;
+    private final String id;
+    private final String name;
+    private final LinkedHashMap<Integer, Affiliation> affiliations;
+    private final int vvCount;
 
     public PollingStation(String id, String name, LinkedHashMap<Integer, Affiliation> affiliations, int vvCount) {
         this.id = id;
