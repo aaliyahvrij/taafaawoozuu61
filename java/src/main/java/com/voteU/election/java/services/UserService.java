@@ -8,6 +8,12 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Service class for managing User entities. This class provides methods for
+ * creating, retrieving, updating, and deleting user records in the database.
+ * It interacts with the UserRepository to facilitate data operations.
+ */
 @Service
 public class UserService {
 
@@ -17,27 +23,79 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Retrieves a list of all User entities from the database.
+     *
+     * @return a list of User objects representing all users in the system.
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Creates a new user in the system. The method sets the current timestamp as the creation time
+     * for the user and saves the user entity to the database.
+     *
+     * @param user the User object to be created and saved in the database
+     * @return the created User object after being saved in the database
+     */
     public User createUser(User user) {
         user.setCreatedAt(Instant.now());
         return userRepository.save(user);
     }
 
+    /**
+     * Retrieves a user by their unique identifier.
+     *
+     * @param id the unique identifier of the user to retrieve
+     * @return an Optional containing the User if found, or an empty Optional if no user exists with the specified id
+     */
     public Optional<User> getUserById(Integer id) {
         return userRepository.findUserById(id);
     }
 
+    /**
+     * Retrieves a user entity based on the provided username.
+     *
+     * @param username the username of the user to retrieve
+     * @return an Optional containing the User entity if found, or an empty Optional if no user was found
+     */
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
+    /**
+     * Retrieves a user from the database based on the provided username and password.
+     *
+     * @param username the username of the user to retrieve
+     * @param password the password of the user to retrieve
+     * @return an {@code Optional} containing the user if found, or an empty {@code Optional} if no user matches
+     */
+    public Optional<User> getUserByUsernameAndPassword(String username, String password) {
+        return userRepository.findUserByUsernameAndPassword(username, password);
+    }
+
+    /**
+     * Retrieves a user from the database based on the provided email.
+     *
+     * @param email the email address of the user to retrieve
+     * @return an Optional containing the User if found, or an empty Optional if no user
+     *         exists with the specified email
+     */
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
+    /**
+     * Updates a user's information in the system. This method searches for a user based on
+     * the provided unique identifier, updates their details with the values provided in the
+     * updatedUser object, and saves the changes.
+     *
+     * @param id the unique identifier of the user to update
+     * @param updatedUser the User object containing updated information for the user
+     * @return the updated User object after being saved in the database
+     * @throws RuntimeException if the user with the given ID is not found
+     */
     public User updateUser(Integer id, User updatedUser) {
         return userRepository.findById(id)
                 .map(user -> {
@@ -52,6 +110,11 @@ public class UserService {
                 }).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    /**
+     * Deletes a user from the database by their unique identifier.
+     *
+     * @param id the unique identifier of the user to be deleted
+     */
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }

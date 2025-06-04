@@ -9,6 +9,10 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
+/**
+ * Represents a comment entity that belongs to a particular user, post, or another comment.
+ */
 @Entity
 @Table(name = "comments")
 @Getter

@@ -6,6 +6,13 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+
+/**
+ * Represents a user entity in the system.
+ * This class maps to the "user" table in the database and contains
+ * information regarding users such as their username, email, name, gender, country,
+ * password, and account creation timestamp.
+ */
 @Entity
 @Table(name = "user")
 @Getter

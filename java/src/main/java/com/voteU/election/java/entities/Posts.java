@@ -9,6 +9,11 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
+/**
+ * Represents a post in the application, which contains information such as a title, description,
+ * body content, creation timestamp, and relationships with a user and comments.
+ */
 @Entity
 @Table(name = "posts")
 @Getter

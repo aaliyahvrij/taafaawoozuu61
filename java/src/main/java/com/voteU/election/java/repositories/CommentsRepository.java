@@ -7,8 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
+
+/**
+ * Repository interface for managing database operations related to the Comments entity.
+ * Extends JpaRepository to provide basic CRUD operations and additional query methods.
+ */
 @Repository
 public interface CommentsRepository extends JpaRepository<Comments, Integer> {
 

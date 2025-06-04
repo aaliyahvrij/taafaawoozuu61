@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
+/**
+ * Repository interface for managing database operations related to the Countries entity.
+ * Extends JpaRepository to provide standard CRUD operations and additional query methods.
+ */
 @Repository
 public interface CountriesRepository extends JpaRepository<Countries, Integer> {
 

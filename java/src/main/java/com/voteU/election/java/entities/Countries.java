@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
+/**
+ * Represents a country entity with basic identification and information fields.
+ * This class maps to the "countries" table in the database.
+ */
 @Entity
 @Table(name = "countries")
 @Getter
