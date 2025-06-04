@@ -16,12 +16,11 @@ import java.util.logging.Logger;
  * the {@link Transformer} interface.<br>
  * At its current state, it processes the files in a two-step process.
  * First, it constructs the 'constituencies' and the 'kieslijsten'. Secondly, it processes the valid vote counts.
- * It behaves similar as the
- * <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
+ * It behaves similar as the <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
  * The full dataset consists of three types of files.
  * <ol>
- *     <li>one file per 'constituency' containing the 'kieslijsten'</li>
- *     <li>one file per 'constituency' containing the total votes within that 'constituency' per candidate</li>
+ *     <li>one file per constituency containing the 'kieslijsten'</li>
+ *     <li>one file per constituency containing the total valid vote count within that constituency per candidate</li>
  *     <li>one file per municipality containing per polling station, the valid vote count per candidate</li>
  * </ol>
  * <em>When processing the files only the first and third type of files are processed by this implementation
@@ -37,8 +36,8 @@ import java.util.logging.Logger;
  * <br>
  * Here is an example of how this class could be used.
  * <pre>
- *     ElectionTransformer creator = new ElectionTransformer();
- *     ElectionProcessor<Election> electionProcessor = new ElectionProcessor<>(creator);
+ *     ElectionTransformer electionTransformer = new ElectionTransformer();
+ *     ElectionProcessor<Election> electionProcessor = new ElectionProcessor<>(electionTransformer);
  *     Election election = electionProcessor.processResults("TK2023", PathUtils.getResourcePath("/EML_bestanden_TK2023_HvA_UvA"));
  * </pre>
  */
