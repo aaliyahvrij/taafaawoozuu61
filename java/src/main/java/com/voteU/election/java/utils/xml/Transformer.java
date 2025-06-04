@@ -33,7 +33,7 @@ public interface Transformer<E> {
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold the
      * same information as {@code candiMap} in {@link #registerCandiLevelData(Map)}, and the following information:
      * <ul>
-     *     <li>{@link ElectionProcessor#VALID_VOTES}</li>
+     *     <li>{@link ElectionProcessor#VV_COUNT}</li>
      * </ul>
      *
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
