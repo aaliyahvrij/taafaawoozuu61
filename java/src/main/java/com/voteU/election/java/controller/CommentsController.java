@@ -56,7 +56,7 @@ public class CommentsController {
      * @return a ResponseEntity containing a list of comments associated with the specified post
      * @throws NotFound if no comments are found for the given post ID
      */
-    @GetMapping("/post/{postsId}")
+    @GetMapping("/posts/{postsId}")
     public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Posts postsId) {
         List<Comments> comments = commentsService.getCommentsByPostsId(postsId);
         if (comments.isEmpty()) {
@@ -72,7 +72,7 @@ public class CommentsController {
      * @param userId The user entity whose associated comments are to be retrieved.
      * @return A {@link ResponseEntity} containing a list of {@link Comments} associated with the user.
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<Comments>> getCommentsByUserId(@PathVariable User userId) {
         List<Comments> comments = commentsService.getCommentsByUserId(userId);
         if (comments.isEmpty()) {
@@ -89,7 +89,7 @@ public class CommentsController {
      * @return a ResponseEntity containing the list of comments associated with the specified comment ID
      *         or an HTTP status code indicating the result of the operation
      */
-    @GetMapping("/comments/{commentsId}")
+    @GetMapping("/commentsId/{commentsId}")
     public ResponseEntity<List<Comments>> getCommentsByCommentsId(@PathVariable Integer commentsId) {
         List<Comments> comments = commentsService.getCommentsByCommentsId(commentsId);
         if (comments.isEmpty()) {
