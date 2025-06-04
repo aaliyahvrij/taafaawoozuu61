@@ -1,5 +1,45 @@
-
 <script setup lang="ts">
+
+import { onMounted, ref } from 'vue'
+import type { Countries } from '@/interface/Countries.ts'
+import { getAllCountries } from '@/services/CountriesService.ts'
+import { createUser } from '@/services/UserService.ts'
+import type { User } from '@/interface/User.ts'
+
+const countries = ref<Countries[]>([]);
+const error = ref<string | null>(null);
+
+const registerForm = ref({
+  username: '',
+  email: '',
+  firstName: '',
+  lastName: '',
+  gender: '',
+  country: '',
+  password: '',
+})
+
+const emit = defineEmits(['submit'])
+
+const submit = async () => {
+  try {
+    const newUser = await createUser(registerForm.value);
+    console.log('User created:', newUser);
+    emit('submit', newUser);
+  } catch (e) {
+    error.value = 'Failed to create user';
+    console.error(e);
+  }
+}
+
+onMounted(async () => {
+  try {
+    countries.value = await getAllCountries();
+  } catch (e) {
+    error.value = 'Failed to fetch countries';
+    console.error(e);
+  }
+});
 </script>
 
 <template>
@@ -10,27 +50,27 @@
 
         <div class="form-group">
           <label for="username">Username</label>
-          <input type="text" id="username" name="username" />
+          <input type="text" id="username" name="username" v-model="registerForm.username" />
         </div>
 
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" />
+          <input type="email" id="email" name="email" v-model="registerForm.email"/>
         </div>
 
         <div class="form-group">
           <label for="first-name">First Name</label>
-          <input type="text" id="first-name" name="first-name" />
+          <input type="text" id="first-name" name="first-name" v-model="registerForm.firstName"/>
         </div>
 
         <div class="form-group">
           <label for="last-name">Last Name</label>
-          <input type="text" id="last-name" name="last-name" />
+          <input type="text" id="last-name" name="last-name" v-model="registerForm.lastName"/>
         </div>
 
         <div class="form-group">
           <label for="gender">Gender</label>
-          <select id="gender" name="gender">
+          <select id="gender" name="gender" v-model="registerForm.gender">
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="other">Other</option>
@@ -39,17 +79,25 @@
 
         <div class="form-group">
           <label for="country">Country</label>
-          <select id="country" name="country">
-            <option value="">Select your country</option>
+          <select id="country" name="country" v-model="registerForm.country">
+            <option disabled value="">Select your country</option>
+            <option
+              v-for="country in countries"
+              :key="country.id"
+              :value="country.code"
+            >
+              {{ country.name }}
+            </option>
           </select>
         </div>
 
+
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" />
+          <input type="password" id="password" name="password" v-model="registerForm.password"/>
         </div>
 
-        <button class="submit-btn" type="submit">Register</button>
+        <button class="submit-btn" @click.prevent="submit">Register</button>
       </form>
     </div>
   </div>
