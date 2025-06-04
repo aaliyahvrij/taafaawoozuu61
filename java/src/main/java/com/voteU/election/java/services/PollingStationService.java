@@ -4,7 +4,7 @@ import com.voteU.election.java.models.PollingStation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Slf4j
 @Service
@@ -18,7 +18,7 @@ public class PollingStationService {
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
+    public LinkedHashMap<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
         return this.electionService.getElectoralLevelDataOf(electionId).getPollingStations();
     }
 }

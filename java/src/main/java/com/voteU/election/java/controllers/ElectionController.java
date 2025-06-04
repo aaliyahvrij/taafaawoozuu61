@@ -4,7 +4,7 @@ import com.voteU.election.java.models.*;
 import com.voteU.election.java.services.ElectionService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/election")
@@ -16,17 +16,17 @@ public class ElectionController {
     }
 
     @PostMapping
-    public boolean readResults() {
-        return this.electionService.readElections();
+    public boolean readAllElectoralLevelData() {
+        return this.electionService.readAllElectoralLevelData();
     }
 
     @PostMapping("/{electionId}")
-    public boolean readResultsYear(@PathVariable String electionId) {
-        return this.electionService.readElection(electionId);
+    public boolean readElectoralLevelDataOf(@PathVariable String electionId) {
+        return this.electionService.readElectoralLevelDataOf(electionId);
     }
 
     @GetMapping
-    public Map<String, Election> getAllElectoralLevelData() {
+    public LinkedHashMap<String, Election> getAllElectoralLevelData() {
         return this.electionService.getAllElectoralLevelData();
     }
 
@@ -36,12 +36,12 @@ public class ElectionController {
     }
 
     @GetMapping("/{electionId}/affiliations")
-    public Map<Integer, Affiliation> getElectoralLevel_affiliationsOf(@PathVariable String electionId) {
+    public LinkedHashMap<Integer, Affiliation> getElectoralLevel_affiliationsOf(@PathVariable String electionId) {
         return this.electionService.getElectoralLevel_affiliationsOf(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
-    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
+    public LinkedHashMap<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
         return this.electionService.getElectoralLevel_pollingStationsOf(electionId);
     }
 }

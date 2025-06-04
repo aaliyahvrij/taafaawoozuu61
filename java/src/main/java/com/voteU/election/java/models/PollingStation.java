@@ -2,16 +2,16 @@ package com.voteU.election.java.models;
 
 import lombok.Getter;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 
 @Getter
 public class PollingStation {
     String id;
     String name;
-    Map<Integer, Affiliation> affiliations;
+    LinkedHashMap<Integer, Affiliation> affiliations;
     int vvCount;
 
-    public PollingStation(String id, String name, Map<Integer, Affiliation> affiliations, int vvCount) {
+    public PollingStation(String id, String name, LinkedHashMap<Integer, Affiliation> affiliations, int vvCount) {
         this.id = id;
         this.name = name;
         this.affiliations = affiliations;

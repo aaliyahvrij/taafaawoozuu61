@@ -133,7 +133,7 @@ public class ElectionProcessor<E> {
      */
     public void processResults(String electionId, String folderName) throws IOException, XMLStreamException {
         LOG.info("Loading election data from %s".formatted(folderName));
-        Map<String, String> electionMap = new HashMap<>();
+        HashMap<String, String> electionMap = new HashMap<>();
         electionMap.put(ELECTION_ID, electionId);
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));
@@ -162,7 +162,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processElectoralLevelData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+    private void processElectoralLevelData(HashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(MUNICIPALITY)) {
             if (parser.findBeginTag(MUNI_ID)) {
                 String munId = parser.getAttributeValue(null, "Id");
@@ -207,7 +207,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processNationalLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processNationalLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VV_COUNT)) {
             int affId = 0;
             Set<Integer> registeredAffIds = new HashSet<>();
@@ -217,7 +217,7 @@ public class ElectionProcessor<E> {
                     parser.nextTag();
                     switch (parser.getLocalName()) {
                         case AFFI_ID:
-                            Map<String, String> affiMap = new HashMap<>(constiMap);
+                            HashMap<String, String> affiMap = new HashMap<>(constiMap);
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
                             if (registeredAffIds.contains(affId)) {
                                 parser.findAndAcceptEndTag(AFFI_ID);
@@ -265,7 +265,7 @@ public class ElectionProcessor<E> {
                             parser.findAndAcceptEndTag(CANDIDATE);
                             if (parser.findBeginTag(VV_COUNT)) {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
-                                Map<String, String> candiMap = new HashMap<>(constiMap);
+                                HashMap<String, String> candiMap = new HashMap<>(constiMap);
                                 candiMap.put(CANDI_SHORT_CODE, candiShortCode);
                                 registeredCandiShortCodes.add(candiShortCode);
                                 candiMap.put(AFFI_ID, String.valueOf(affId));
@@ -299,9 +299,9 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processConstiOrMuniLevelData(Map<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
+    private void processConstiOrMuniLevelData(HashMap<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
         if (parser.findBeginTag(CONSTITUENCY)) {
-            Map<String, String> constiMap = new HashMap<>(electionMap);
+            HashMap<String, String> constiMap = new HashMap<>(electionMap);
             if (parser.findBeginTag(CONSTI_ID)) {
                 int constId = parser.getIntegerAttributeValue(null, ID, 0);
                 constiMap.put(CONSTI_ID, String.valueOf(constId));
@@ -336,13 +336,13 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processConstiLevelData(Map<String, String> receivedConstiMap, XMLParser parser) throws XMLStreamException {
-        Map<String, String> constiMap = new HashMap<>(receivedConstiMap);
+    private void processConstiLevelData(HashMap<String, String> receivedConstiMap, XMLParser parser) throws XMLStreamException {
+        HashMap<String, String> constiMap = new HashMap<>(receivedConstiMap);
         List<String> affiNamesList = new ArrayList<>();
         List<Integer> affiVotesList = new ArrayList<>();
-        Set<Integer> processedAffiliations = new HashSet<>();
-        Set<String> processedCandiAffiliations = new HashSet<>();
-        Map<Integer, Map<Integer, Integer>> candiVotesMap = new HashMap<>();
+        HashSet<Integer> processedAffiliations = new HashSet<>();
+        HashSet<String> processedCandiAffiliations = new HashSet<>();
+        HashMap<Integer, Map<Integer, Integer>> candiVotesMap = new HashMap<>();
         if (parser.findBeginTag(CONSTITUENCY)) {
             int constId;
             String constiName;
@@ -412,7 +412,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processMuniLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processMuniLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
             Set<String> registeredCandiAffiliations = new HashSet<>();
@@ -420,7 +420,7 @@ public class ElectionProcessor<E> {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFI_ID:
-                        Map<String, String> affiVotesMap = new HashMap<>(constiMap);
+                        HashMap<String, String> affiVotesMap = new HashMap<>(constiMap);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
                         if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
                             parser.findAndAcceptEndTag(AFFI_ID);
@@ -454,7 +454,7 @@ public class ElectionProcessor<E> {
                         this.transformer.registerMuniLevelData(affiVotesMap);
                         break;
                     case CANDIDATE:
-                        Map<String, String> candiVotesMap = new HashMap<>(constiMap);
+                        HashMap<String, String> candiVotesMap = new HashMap<>(constiMap);
                         int candId = 0;
                         if (parser.findBeginTag(CANDI_ID)) {
                             candId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -500,10 +500,10 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processPollingStationLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        Map<String, String> pollingStationMap = new HashMap<>(constiMap);
+    private void processPollingStationLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+        HashMap<String, String> pollingStationMap = new HashMap<>(constiMap);
         String pollingStationName = null;
-        Map<Integer, Affiliation> pollingStationLevel_affiListMap = new HashMap<>();
+        LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap = new LinkedHashMap<>();
         int pollingStationVVCount = 0;
         Affiliation affiliation;
         int affId = 0;
@@ -589,8 +589,8 @@ public class ElectionProcessor<E> {
         this.transformer.registerPollingStationLevelData(pollingStationMap, pollingStationLevel_affiListMap);
     }
 
-    private void processAffiLevelData(Map<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        Map<String, String> affiMap = new HashMap<>(constiMap);
+    private void processAffiLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+        HashMap<String, String> affiMap = new HashMap<>(constiMap);
         if (parser.findBeginTag(AFFI_ID)) {
             int affId = parser.getIntegerAttributeValue(null, ID, 0);
             affiMap.put(AFFI_ID, String.valueOf(affId));
@@ -609,8 +609,8 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processCandiLevelData(Map<String, String> affiMap, XMLParser parser) throws XMLStreamException {
-        Map<String, String> candiMap = new HashMap<>(affiMap);
+    private void processCandiLevelData(HashMap<String, String> affiMap, XMLParser parser) throws XMLStreamException {
+        HashMap<String, String> candiMap = new HashMap<>(affiMap);
         if (parser.findBeginTag(CANDI_ID)) {
             int candId = parser.getIntegerAttributeValue(null, ID, 0);
             candiMap.put(CANDI_ID, String.valueOf(candId));
@@ -657,9 +657,9 @@ public class ElectionProcessor<E> {
         this.transformer.registerCandiLevelData(candiMap);
     }
 
-    private void processCandiLevel_ConstiData(Map<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+    private void processCandiLevel_ConstiData(HashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONSTITUENCY)) {
-            Map<String, String> constiMap = new HashMap<>(electionMap);
+            HashMap<String, String> constiMap = new HashMap<>(electionMap);
             int constId;
             String constiName;
             if (parser.findBeginTag(CONSTI_ID)) {

@@ -5,13 +5,13 @@ import com.voteU.election.java.utils.xml.ElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 
 @Slf4j
 @Service
 public class ElectionService {
     private final ElectionReader electionReader;
-    private static final Map<String, Election> electionListMap = new HashMap<>();
+    private static final LinkedHashMap<String, Election> electionListMap = new LinkedHashMap<>();
 
     public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -23,13 +23,13 @@ public class ElectionService {
      *
      * @return true if elections were loaded successfully, false otherwise
      */
-    public boolean readElections() {
-        Map<String, Election> elections = this.electionReader.getAllElectoralLevelData();
-        if (elections == null || elections.isEmpty()) {
+    public boolean readAllElectoralLevelData() {
+        LinkedHashMap<String, Election> readerElectionListMap = this.electionReader.getAllElectoralLevelData();
+        if (readerElectionListMap == null || readerElectionListMap.isEmpty()) {
             log.warn("No election data found during readElections().");
             return false;
         }
-        electionListMap.putAll(elections);
+        electionListMap.putAll(readerElectionListMap);
         return true;
     }
 
@@ -39,14 +39,14 @@ public class ElectionService {
      * @param electionId the ID of the election (e.g. "TK2021")
      * @return true if found, false otherwise
      */
-    public boolean readElection(String electionId) {
+    public boolean readElectoralLevelDataOf(String electionId) {
         return electionListMap.containsKey(electionId);
     }
 
     /**
      * Retrieves all the data of all the elections.
      */
-    public Map<String, Election> getAllElectoralLevelData() {
+    public LinkedHashMap<String, Election> getAllElectoralLevelData() {
         return electionListMap;
     }
 
@@ -60,7 +60,7 @@ public class ElectionService {
     /**
      * Retrieves all the affiliation data of a specific election.
      */
-    public Map<Integer, Affiliation> getElectoralLevel_affiliationsOf(String electionId) {
+    public LinkedHashMap<Integer, Affiliation> getElectoralLevel_affiliationsOf(String electionId) {
         Election election = getElectoralLevelDataOf(electionId);
         if (election == null) {
             return null;
@@ -71,7 +71,7 @@ public class ElectionService {
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
+    public LinkedHashMap<String, PollingStation> getElectoralLevel_pollingStationsOf(String electionId) {
         Election election = getElectoralLevelDataOf(electionId);
         if (election == null) {
             return null;

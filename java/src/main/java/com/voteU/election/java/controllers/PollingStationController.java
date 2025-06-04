@@ -4,7 +4,7 @@ import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.services.PollingStationService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/{electionId}/pollingstations")
@@ -16,7 +16,7 @@ public class PollingStationController {
     }
 
     @GetMapping
-    public Map<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
+    public LinkedHashMap<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
         return this.pollingStationService.getElectoralLevel_pollingStationsOf(electionId);
     }
 }

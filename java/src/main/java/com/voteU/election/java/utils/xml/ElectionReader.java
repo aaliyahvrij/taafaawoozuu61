@@ -5,7 +5,7 @@ import com.voteU.election.java.utils.PathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 
 /**
  * Processes election data from XML files and provides access to the results.
@@ -26,7 +26,7 @@ public class ElectionReader {
      *
      * @return A map containing election results, organized by election year.
      */
-    public Map<String, Election> getAllElectoralLevelData() {
+    public LinkedHashMap<String, Election> getAllElectoralLevelData() {
         String[] electionIds = {"TK2021", "TK2023"};
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;

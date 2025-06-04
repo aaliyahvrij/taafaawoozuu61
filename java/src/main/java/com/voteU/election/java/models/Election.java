@@ -2,7 +2,7 @@ package com.voteU.election.java.models;
 
 import lombok.*;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 
 @Getter
 @Setter
@@ -10,20 +10,20 @@ public class Election {
     private String id;
     private final String name;
     private final String date;
-    private Map<Integer, Province> provinces;
-    private Map<Integer, Constituency> constituencies;
-    private final Map<String, Municipality> municipalities;
-    private final Map<String, PollingStation> pollingStations;
-    private final Map<Integer, Affiliation> affiliations;
+    private LinkedHashMap<Integer, Province> provinces;
+    private LinkedHashMap<Integer, Constituency> constituencies;
+    private final LinkedHashMap<String, Municipality> municipalities;
+    private final LinkedHashMap<String, PollingStation> pollingStations;
+    private final LinkedHashMap<Integer, Affiliation> affiliations;
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.provinces = new HashMap<>();
-        this.constituencies = new HashMap<>();
-        this.municipalities = new HashMap<>();
-        this.pollingStations = new HashMap<>();
-        this.affiliations = new HashMap<>();
+        this.provinces = new LinkedHashMap<>();
+        this.constituencies = new LinkedHashMap<>();
+        this.municipalities = new LinkedHashMap<>();
+        this.pollingStations = new LinkedHashMap<>();
+        this.affiliations = new LinkedHashMap<>();
     }
 }

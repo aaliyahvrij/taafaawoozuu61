@@ -5,10 +5,10 @@ import com.voteU.election.java.models.Affiliation;
 import java.util.*;
 
 /**
- * A {@link Transformer} transforms the election information which is contained in a {@link Map},
+ * A {@link Transformer} transforms the election information which is contained in a {@link HashMap},
  * Map&lt;String, String>, into the models as used by the application. As part of this transformation, it is also
  * responsible for making all the necessary relationships between the different classes and instances.<br>
- * For example, when {@link #registerCandiLevelData(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
+ * For example, when {@link #registerCandiLevelData(HashMap)} is called, it must add the candidate to the correct Affiliation(party).<br>
  * After all the data has been transformed, it should be able to return an instance of a class that encapsulates all
  * the data in the application-specific data classes.
  *
@@ -27,11 +27,11 @@ public interface Transformer<E> {
      *
      * @param electionMap a {@code Map} containing the information as {@code String}'s.
      */
-    void registerElectoralLevelData(Map<String, String> electionMap);
+    void registerElectoralLevelData(HashMap<String, String> electionMap);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold the
-     * same information as {@code candiMap} in {@link #registerCandiLevelData(Map)}, and the following information:
+     * same information as {@code candiMap} in {@link #registerCandiLevelData(HashMap)}, and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#VV_COUNT}</li>
      * </ul>
@@ -39,11 +39,11 @@ public interface Transformer<E> {
      * @param nationMap a {@code Map} containing information about the election, constituency, affiliation,
      *                  candidate and vote count.
      */
-    void registerNationalLevelData(Map<String, String> nationMap);
+    void registerNationalLevelData(HashMap<String, String> nationMap);
 
     /**
      * Called once per file with information about the constituency. The {@code constiMap} can hold the
-     * same information as {@code electionMap} in {@link #registerElectoralLevelData(Map)}, and the following information:
+     * same information as {@code electionMap} in {@link #registerElectoralLevelData(HashMap)}, and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#CONSTI_ID}</li>
      *     <li>{@link ElectionProcessor#CONSTI_NAME}</li>
@@ -51,11 +51,11 @@ public interface Transformer<E> {
      *
      * @param constiMap a {@code Map} containing information about the election and constituency.
      */
-    void registerConstiLevelData(Map<String, String> constiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap);
+    void registerConstiLevelData(HashMap<String, String> constiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap);
 
-    void registerMuniLevelData(Map<String, String> muniMap);
+    void registerMuniLevelData(HashMap<String, String> muniMap);
 
-    void registerPollingStationLevelData(Map<String, String> polingStationMap, Map<Integer, Affiliation> pollingStationLevel_affiListMap);
+    void registerPollingStationLevelData(HashMap<String, String> polingStationMap, LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap);
 
     /**
      * Called multiple times per file with information about a candidate.
@@ -70,7 +70,7 @@ public interface Transformer<E> {
      * @param candiMap a {@code Map} containing information about the election, constituency,
      *                 affiliation and the candidate.
      */
-    void registerCandiLevelData(Map<String, String> candiMap);
+    void registerCandiLevelData(HashMap<String, String> candiMap);
 
-    void registerCandiLevel_constiData(Map<String, String> constiMap);
+    void registerCandiLevel_constiData(HashMap<String, String> constiMap);
 }
