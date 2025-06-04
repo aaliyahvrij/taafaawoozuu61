@@ -210,8 +210,8 @@ public class ElectionProcessor<E> {
     private void processNationalLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VV_COUNT)) {
             int affId = 0;
-            Set<Integer> registeredAffIds = new HashSet<>();
-            Set<String> registeredCandiShortCodes = new HashSet<>();
+            HashSet<Integer> registeredAffIds = new HashSet<>();
+            HashSet<String> registeredCandiShortCodes = new HashSet<>();
             if (parser.findBeginTag(SELECTION)) {
                 while (parser.getLocalName().equals(SELECTION)) {
                     parser.nextTag();
@@ -415,7 +415,7 @@ public class ElectionProcessor<E> {
     private void processMuniLevelData(HashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
-            Set<String> registeredCandiAffiliations = new HashSet<>();
+            HashSet<String> registeredCandiAffiliations = new HashSet<>();
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
