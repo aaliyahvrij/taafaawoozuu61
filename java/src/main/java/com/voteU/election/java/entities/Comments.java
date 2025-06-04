@@ -25,11 +25,11 @@ public class Comments {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "posts_id")
-    private Posts posts;
+    private Posts postsId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comments_id")
