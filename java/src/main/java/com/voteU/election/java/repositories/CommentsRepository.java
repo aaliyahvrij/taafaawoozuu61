@@ -12,7 +12,7 @@ import java.util.Set;
 @Repository
 public interface CommentsRepository extends JpaRepository<Comments, Integer> {
 
-    List<Comments> findByPostId(Posts postId);
+    List<Comments> findByPostsId(Posts postsId);
 
     List<Comments> findByUserId(User userId);
 
