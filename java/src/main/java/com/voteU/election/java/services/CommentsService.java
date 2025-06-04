@@ -25,8 +25,8 @@ public class CommentsService {
         return commentsRepository.save(comment);
     }
 
-    public List<Comments> getCommentsByPostId(Posts postId){
-        return commentsRepository.findByPostId(postId);
+    public List<Comments> getCommentsByPostsId(Posts postsId){
+        return commentsRepository.findByPostsId(postsId);
     }
 
     public List<Comments> getCommentsByUserId(User userId){
