@@ -33,7 +33,6 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiListMap = election.getAffiliations();
-        System.out.println("The amount of affiliations of this election: " + affiListMap.size());
         Affiliation affiliation;
         int affId = Integer.parseInt(nationMap.get(ElectionProcessor.AFFI_ID));
         affiliation = affiListMap.get(affId);

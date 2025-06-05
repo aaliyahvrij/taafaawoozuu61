@@ -511,6 +511,11 @@ public class ElectionProcessor<E> {
             String pollingStationId = parser.getAttributeValue(null, ID);
             pollingStationMap.put(POLLING_STATION_ID, pollingStationId);
             pollingStationName = parser.getElementText();
+            System.out.println("before - pollingStationName - " + pollingStationName);
+            if (pollingStationName.contains("Stembureau")) {
+                pollingStationName = pollingStationName.replace("Stembureau ", "");
+            }
+            System.out.println("after - pollingStationName - " + pollingStationName);
             int postCodeIndex = pollingStationName.indexOf("(postcode:");
             if (postCodeIndex >= 0) {
                 int postCodeEndIndex = pollingStationName.indexOf(')', postCodeIndex);
@@ -561,7 +566,7 @@ public class ElectionProcessor<E> {
                         pollingStationLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within reporting unit %s.".formatted(candId, affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag, unable to register votes for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, pollingStationName));
                     }
                     break;
                 default:
