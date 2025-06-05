@@ -41,7 +41,7 @@ function clear() {
         {{ pollingStation.name }}
       </option>
     </select>
-    <div class="tag" v-if="localValue">
+    <button class="tag" v-if="localValue">
       {{ localValue.name }}
       <svg
         @click="clear"
@@ -55,7 +55,7 @@ function clear() {
           d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
         />
       </svg>
-    </div>
+    </button>
   </div>
 </template>
 
