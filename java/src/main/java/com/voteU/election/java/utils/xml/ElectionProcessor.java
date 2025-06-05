@@ -514,8 +514,8 @@ public class ElectionProcessor<E> {
             System.out.println("before - pollingStationName - " + pollingStationName);
             if (pollingStationName.contains("Stembureau")) {
                 pollingStationName = pollingStationName.replace("Stembureau ", "");
+                System.out.println("after - pollingStationName - " + pollingStationName);
             }
-            System.out.println("after - pollingStationName - " + pollingStationName);
             int postCodeIndex = pollingStationName.indexOf("(postcode:");
             if (postCodeIndex >= 0) {
                 int postCodeEndIndex = pollingStationName.indexOf(')', postCodeIndex);
