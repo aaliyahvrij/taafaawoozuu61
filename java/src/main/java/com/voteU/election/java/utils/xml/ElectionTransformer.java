@@ -15,7 +15,7 @@ public class ElectionTransformer implements Transformer<Election> {
     private final LinkedHashMap<String, Election> electionListMap = new LinkedHashMap<>();
 
     @Override
-    public void registerElectoralLevelData(HashMap<String, String> prcsElectionMap) {
+    public void registerElectoralLevelData(LinkedHashMap<String, String> prcsElectionMap) {
         String electionId = prcsElectionMap.get(ElectionProcessor.ELECTION_ID);
         String electionName = prcsElectionMap.get(ElectionProcessor.ELECTION_NAME);
         String electionDate = prcsElectionMap.get(ElectionProcessor.ELECTION_DATE);
@@ -29,7 +29,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNationalLevelData(HashMap<String, String> nationMap) {
+    public void registerNationalLevelData(LinkedHashMap<String, String> nationMap) {
         String electionId = nationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiListMap = election.getAffiliations();
@@ -58,12 +58,12 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstiLevelData(HashMap<String, String> prcsConstiMap, List<String> affiNamesList, List<Integer> affiVotesList, Map<Integer, Map<Integer, Integer>> candiVotesMap) {
+    public void registerConstiLevelData(LinkedHashMap<String, String> prcsConstiMap, List<String> affiNamesList, List<Integer> affiVotesList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiVotesMap) {
         // had to remove the code here due to confusion - will fix this later
     }
 
     @Override
-    public void registerMuniLevelData(HashMap<String, String> muniMap) {
+    public void registerMuniLevelData(LinkedHashMap<String, String> muniMap) {
         int constId = Integer.parseInt(muniMap.get(ElectionProcessor.CONSTI_ID));
         String munId = muniMap.get(ElectionProcessor.MUNI_ID);
         String muniName = muniMap.get("muniName");
@@ -96,7 +96,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerPollingStationLevelData(HashMap<String, String> pollingStationMap, LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap) {
+    public void registerPollingStationLevelData(LinkedHashMap<String, String> pollingStationMap, LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap) {
         String electionId = pollingStationMap.get(ElectionProcessor.ELECTION_ID);
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<String, PollingStation> electoralLevel_pollingStationListMap = election.getPollingStations();
@@ -108,7 +108,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerCandiLevelData(HashMap<String, String> candiMap) {
+    public void registerCandiLevelData(LinkedHashMap<String, String> candiMap) {
         int candId = Integer.parseInt(candiMap.get(ElectionProcessor.CANDI_ID));
         String firstName = candiMap.get(ElectionProcessor.FIRST_NAME);
         String lastName = candiMap.get(ElectionProcessor.LAST_NAME);
@@ -139,7 +139,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerCandiLevel_constiData(HashMap<String, String> constiMap) {
+    public void registerCandiLevel_constiData(LinkedHashMap<String, String> constiMap) {
 
     }
 
