@@ -6,43 +6,43 @@ import java.util.Stack;
 
 public class CollectionBenchmark {
     // 250, 25k 250k
-    private static final long ELEMENT_COUNT = 2500000;
+    private static final long ELEMENT_COUNT = 30000;
 
     public static void main(String[] args) {
-        benchmarkAdd();
-        //benchmarkGet();
+        benchmarkAddFirst();
+       // benchmarkGet();
         //removeFirstElement();
     }
 
-    private static void benchmarkAdd() {
-        System.out.println("== Toevoegen ==");
+    private static void benchmarkAddFirst() {
+        System.out.println("== Toevoegen bij begin (addFirst) ==");
 
-        // ArrayList
+        // ArrayList add at index 0 (slow, shifts elements)
         long start = System.currentTimeMillis();
         ArrayList<Integer> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENT_COUNT; i++) {
-            arrayList.add(i);
+            arrayList.add(0, i);
         }
         long end = System.currentTimeMillis();
-        printDuration("ArrayList add", start, end);
+        printDuration("ArrayList add at start", start, end);
 
-        // LinkedList
+        // LinkedList addFirst (fast, O(1))
         start = System.currentTimeMillis();
         LinkedList<Integer> linkedList = new LinkedList<>();
         for (int i = 0; i < ELEMENT_COUNT; i++) {
-            linkedList.add(i);
+            linkedList.addFirst(i);
         }
         end = System.currentTimeMillis();
-        printDuration("LinkedList add", start, end);
+        printDuration("LinkedList addFirst", start, end);
 
-        // Stack (extending Vector)
+        // Stack push (adds at the end, but no addFirst method, so using push)
         start = System.currentTimeMillis();
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < ELEMENT_COUNT; i++) {
             stack.push(i);
         }
         end = System.currentTimeMillis();
-        printDuration("Stack push", start, end);
+        printDuration("Stack push (add at end)", start, end);
     }
 
     private static void benchmarkGet() {
