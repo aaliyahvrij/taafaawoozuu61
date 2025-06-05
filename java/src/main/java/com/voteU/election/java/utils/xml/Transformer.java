@@ -71,7 +71,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param candiMap a {@code LinkedHashMap} containing information about
-     *                 the election, constituency, affiliation and the candidate.
+     *                 the election, constituency, affiliation and candidate.
      */
     void registerCandiLevelData(LinkedHashMap<String, String> candiMap);
 
