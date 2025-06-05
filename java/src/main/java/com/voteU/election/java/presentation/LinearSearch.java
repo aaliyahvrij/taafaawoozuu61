@@ -12,7 +12,7 @@ public class LinearSearch {
         List<Candidate> candidates = new ArrayList<>();
 
 
-        for (int i = 1; i <= 1000; i++) {//
+        for (int i = 1; i <= 1000000; i++) {//
             Candidate c = new Candidate();//
             c.setId(i); //
             c.setFirstName("Kandidaat" + i); //
@@ -20,12 +20,12 @@ public class LinearSearch {
             candidates.add(c); //
         }
 
-        int searchId = 200; //
-        long startTime = System.nanoTime(); // Start tijd
+        int searchId = 500000; //
+        long startTime = System.currentTimeMillis(); // Start tijd
         Candidate results = linearSearchById(candidates, searchId); //
-        long endTime = System.nanoTime(); // Eind tijd
+        long endTime = System.currentTimeMillis(); // Eindtijd
 
-        System.out.println("Tijd genomen voor Linear Search: " + (endTime - startTime) + " nanoseconds");
+        System.out.println("Tijd voor Linear Search: " + (endTime - startTime) + " ms");
 
         if (results != null) {//
             System.out.println("Gevonden: " + results.getFirstName() + " " + results.getLastName());

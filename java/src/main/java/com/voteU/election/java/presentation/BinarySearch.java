@@ -11,7 +11,7 @@ public class BinarySearch {
     public static void main(String[] args) {
         List<Candidate> candidates = new ArrayList<>();
 
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 1000000; i++) {
             Candidate c = new Candidate();
             c.setId(i);
             c.setFirstName("Kandidaat" + i);
@@ -22,12 +22,12 @@ public class BinarySearch {
         // Sorteer de lijst op ID (vereist voor binary search)
         candidates.sort(Comparator.comparingInt(Candidate::getId));
 
-        int searchId = 200;
-        long startTime = System.nanoTime();
+        int searchId = 500000;
+        long startTime = System.currentTimeMillis();
         Candidate result = binarySearchById(candidates, searchId);
-        long endTime = System.nanoTime(); // Eind tijd
+        long endTime = System.currentTimeMillis(); // Eindtijd
 
-        System.out.println("Tijd genomen voor Binary Search: " + (endTime - startTime) + " nanoseconds");
+        System.out.println("Tijd voor Binary Search: " + (endTime - startTime) + " ms");
 
         if (result != null) {
             System.out.println("Gevonden: " + result.getFirstName() + " " + result.getLastName());
