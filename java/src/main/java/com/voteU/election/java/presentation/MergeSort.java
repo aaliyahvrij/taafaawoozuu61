@@ -19,7 +19,7 @@ public class MergeSort {
 
         merge(list, left, right);
         long end = System.nanoTime ();
-        System.out.println("MergeSort time: " + (end - start) + " ms");
+        System.out.println("MergeSort time: " + (end - start) + " ns");
     }
 
     private static void merge(List<Party> result, List<Party> left, List<Party> right) {
