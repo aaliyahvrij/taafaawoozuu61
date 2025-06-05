@@ -4,10 +4,10 @@ import { onMounted, ref } from 'vue'
 import type { Countries } from '@/interface/Countries.ts'
 import { getAllCountries } from '@/services/CountriesService.ts'
 import { createUser } from '@/services/UserService.ts'
-import type { User } from '@/interface/User.ts'
 
 const countries = ref<Countries[]>([]);
 const error = ref<string | null>(null);
+const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const registerForm = ref({
   username: '',
@@ -19,9 +19,51 @@ const registerForm = ref({
   password: '',
 })
 
+// TODO: make html and css of this so the user sees it
+function validatePassword(password: string): string | null {
+  if (password.length < 8) {
+    return 'Password must be at least 8 characters long.';
+  }
+  if (!/[A-Z]/.test(password)) {
+    return 'Password must contain at least one uppercase letter.';
+  }
+  if (!/[a-z]/.test(password)) {
+    return 'Password must contain at least one lowercase letter.';
+  }
+  if (!/\d/.test(password)) {
+    return 'Password must contain at least one number.';
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return 'Password must contain at least one special character.';
+  }
+  return null;
+}
+
+function validateForm(): boolean {
+  const { password, email } = registerForm.value;
+
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    error.value = passwordError;
+    return false;
+  }
+
+  if (!emailRegex.test(email)) {
+    error.value = 'Please enter a valid email address.';
+    return false;
+  }
+
+  error.value = null;
+  return true;
+}
+
 const emit = defineEmits(['submit'])
 
 const submit = async () => {
+
+  if (!validateForm()) return;
+  emit('submit', { ...registerForm.value });
+
   try {
     const newUser = await createUser(registerForm.value);
     console.log('User created:', newUser);
@@ -40,6 +82,8 @@ onMounted(async () => {
     console.error(e);
   }
 });
+
+
 </script>
 
 <template>
