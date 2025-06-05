@@ -10,8 +10,8 @@ import java.util.*;
  * it is also responsible for making all the necessary relationships between the different classes and instances.<br>
  * For example, when {@link #registerCandiLevelData(LinkedHashMap)} is called,
  * it must add the candidate to the correct affiliation.<br>
- * After all the data has been transformed, it should be able to return an instance of a class that encapsulates
- * all the data in the application-specific data classes.
+ * After all the data has been transformed, it should be able to return an instance of a class
+ * that encapsulates all the data in the application-specific data classes.
  *
  * @param <E>
  */
@@ -38,8 +38,8 @@ public interface Transformer<E> {
      *     <li>{@link ElectionProcessor#VV_COUNT}</li>
      * </ul>
      *
-     * @param nationMap a {@code LinkedHashMap} containing information about the election, constituency, affiliation,
-     *                  candidate and vote count.
+     * @param nationMap a {@code LinkedHashMap} containing information about the election,
+     *                  constituency, affiliation, candidate and valid vote count.
      */
     void registerNationalLevelData(LinkedHashMap<String, String> nationMap);
 
