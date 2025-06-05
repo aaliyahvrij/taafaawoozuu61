@@ -1,28 +1,21 @@
 package com.voteU.election.java.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.io.*;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.*;
+import java.util.*;
 
 /**
  * A helper-class used for traversing a directory structure which contains the Dutch election data.
  */
 public class PathUtils {
-
     /**
      * Starting from @{code sourceLocation} searches the folder and any folder contained in it for files with the
      * specified {@code prefix}.
+     *
      * @param sourceLocation the starting point for the search.
-     * @param prefix files beginning with this prefix are included in the resulting list.
+     * @param prefix         files beginning with this prefix are included in the resulting list.
      * @return A {@link List} containing all the files with the specified {@code prefix} find in this folder or any
      * folder contained in starting folder.
      * @throws IOException in case something went wrong while traversing the folders.
@@ -43,6 +36,7 @@ public class PathUtils {
     /**
      * Transforms a {@code resourceName} into an absolute path of that resource. If it does not exist at the expected
      * location it tries to fall back to a folder called {@code data-files} or {@code Downloads}.
+     *
      * @param resourceName the resource to locate.
      * @return a fully qualified absolute path to the resource.
      */
@@ -74,12 +68,9 @@ public class PathUtils {
                     resourceFilePath = null;
                 }
             }
-
             return resourceFilePath;
-
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
