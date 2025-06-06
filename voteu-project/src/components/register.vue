@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import type { Countries } from '@/interface/Countries.ts'
 import { getAllCountries } from '@/services/CountriesService.ts'
 import { createUser } from '@/services/UserService.ts'
@@ -8,6 +8,10 @@ import { createUser } from '@/services/UserService.ts'
 const countries = ref<Countries[]>([]);
 const error = ref<string | null>(null);
 const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const password = computed(() => registerForm.value.password);
+const passwordTouched = ref(false);
+
 
 const registerForm = ref({
   username: '',
@@ -38,6 +42,9 @@ function validatePassword(password: string): string | null {
   }
   return null;
 }
+
+
+
 
 function validateForm(): boolean {
   const { password, email } = registerForm.value;
@@ -72,6 +79,8 @@ const submit = async () => {
     error.value = 'Failed to create user';
     console.error(e);
   }
+
+
 }
 
 onMounted(async () => {
@@ -138,7 +147,15 @@ onMounted(async () => {
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" v-model="registerForm.password"/>
+          <input type="password" id="password" name="password" v-model="registerForm.password"  @focus="passwordTouched = true"/>
+          <ul v-if="passwordTouched" class="password-requirements">
+            <li :class="{ valid: password.length >= 8 }">At least 8 characters</li>
+            <li :class="{ valid: /[A-Z]/.test(password) }">At least 1 uppercase letter</li>
+            <li :class="{ valid: /[a-z]/.test(password) }">At least 1 lowercase letter</li>
+            <li :class="{ valid: /\d/.test(password) }">At least 1 number</li>
+            <li :class="{ valid: /[!@#$%^&*(),.?':{}|<>]/.test(password) }">At least 1 special character (!@#$...)</li>
+
+          </ul>
         </div>
 
         <button class="submit-btn" @click.prevent="submit">Register</button>
@@ -159,8 +176,8 @@ onMounted(async () => {
 .circle-bg {
   background-color: #fde4c3;
   border-radius: 50%;
-  width: 800px;   /* Groter dan eerst */
-  height: 800px;  /* Even groot voor een perfecte cirkel */
+  width: 800px;
+  height: 800px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,6 +228,17 @@ select {
 
 .submit-btn:hover {
   background-color: #0040ff;
+}
+
+.password-requirements li {
+  color: red;
+  list-style: none;
+  margin-bottom: 4px;
+}
+
+.password-requirements li.valid {
+  color: green;
+  font-weight: bold;
 }
 </style>
 
