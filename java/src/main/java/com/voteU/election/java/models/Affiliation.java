@@ -2,7 +2,8 @@ package com.voteU.election.java.models;
 
 import lombok.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Getter
 public class Affiliation {

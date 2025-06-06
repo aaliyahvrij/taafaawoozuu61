@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-
 import {
   AffiStyleService,
   ElectionService,
@@ -32,9 +31,9 @@ const selectedAffiliation = ref<Affiliation | null>(null)
 const affiVotes = ref<Affiliation[] | null>(null)
 const selectedCandidate = ref<Candidate | null>(null)
 const hasApplied = ref(false)
-const currentVoteLevel = ref<
-  'national' | 'provi' | 'consti' | 'muni' | 'pollingStation' | null
->(null)
+const currentVoteLevel = ref<'national' | 'provi' | 'consti' | 'muni' | 'pollingStation' | null>(
+  null,
+)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
 function handleApply(): void {

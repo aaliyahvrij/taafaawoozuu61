@@ -4,7 +4,8 @@ import com.voteU.election.java.models.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.List;
+import java.util.LinkedHashMap;
 
 /**
  * A Transformer that processes election data and organizes it into Election objects.
@@ -142,7 +143,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
     }
 
-    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, Map<Integer, Affiliation> affiListMap) {
+    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListMap) {
         Affiliation affiliation = affiListMap.get(affId);
         if (affiliation != null) {
             List<Candidate> candidates = affiliation.getCandidates();

@@ -2,7 +2,8 @@ package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.models.Affiliation;
 
-import java.util.*;
+import java.util.List;
+import java.util.LinkedHashMap;
 
 /**
  * A {@link Transformer} transforms the election information which is contained in a {@link LinkedHashMap},
