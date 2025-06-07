@@ -2,12 +2,20 @@
 
 import { ref } from 'vue'
 import { getUserByLogin } from '@/services/UserService.ts'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth.ts'
+
 
 const error = ref<string | null>(null);
 const loginForm = ref({
   username: '',
   password: '',
 })
+
+
+const router = useRouter()
+const { login: loginUser } = useAuth()
+
 
 const emit = defineEmits(['submit'])
 
@@ -20,9 +28,11 @@ const submit = async () => {
   try {
     const user = await getUserByLogin(loginForm.value.username, loginForm.value.password);
     if (user) {
+      loginUser(user)
       emit('submit', user);
       console.log('User logged in:', user);
       error.value = null;
+      await router.push('/')
     } else {
       error.value = 'Invalid username or password.';
     }
@@ -99,18 +109,14 @@ const submit = async () => {
   margin-bottom: 1rem;
 }
 
-input[type="email"],
+input[type="text"],
 input[type="password"] {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.checkbox-group {
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
+
 
 .submit-btn {
   background-color: #002b80;
