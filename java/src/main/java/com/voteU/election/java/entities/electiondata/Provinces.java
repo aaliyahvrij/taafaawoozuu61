@@ -12,13 +12,13 @@ public class Provinces {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Auto-increment primary key
+    private Integer id; // Auto-increment primary key
 
     @Column(name = "province_id")
-    private int provinceId;
+    private Integer provinceId;
 
     @Column(name = "election_id")
-    private int electionId;
+    private String electionId;
 
     @Column(name = "name", nullable = false)
     private String name;

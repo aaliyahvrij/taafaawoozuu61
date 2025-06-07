@@ -2,10 +2,12 @@ package com.voteU.election.java.services;
 
 import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
+import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.Province;
+import com.voteU.election.java.repositories.electiondata.ProvinceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,9 +16,11 @@ import java.util.*;
 public class ProvinceService {
 
     private final ElectionService electionService;
+    private final ProvinceRepository provinceRepository;
 
-    public ProvinceService(ElectionService electionService) {
+    public ProvinceService(ElectionService electionService, ProvinceRepository provinceRepository) {
         this.electionService = electionService;
+        this.provinceRepository = provinceRepository;
     }
 
     public List<Province> getProvinces(String year) {
@@ -112,6 +116,10 @@ public class ProvinceService {
         if (province == null) return Map.of();
 
         return getTotalVotesPerParty(province);
+    }
+
+    public List<DropdownOptionDTO<Integer>> getAllProvinceNames(String year) {
+        return provinceRepository.getProvincesByElectionId(year);
     }
 
 
