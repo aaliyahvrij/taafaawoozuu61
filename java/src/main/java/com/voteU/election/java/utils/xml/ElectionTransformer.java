@@ -58,7 +58,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstiLevelData(LinkedHashMap<String, String> prcsConstiMap, List<String> affiNamesList, List<Integer> affiVotesList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiVotesMap) {
+    public void registerConstiLevelData(LinkedHashMap<String, String> prcsConstiMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap) {
         // had to remove the code here due to confusion - will fix this later
     }
 
