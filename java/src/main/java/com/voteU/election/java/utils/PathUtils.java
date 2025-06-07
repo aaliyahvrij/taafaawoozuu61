@@ -1,11 +1,17 @@
 package com.voteU.election.java.utils;
 
-import java.io.*;
-//import java.io.IOException;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.net.*;
-import java.util.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A helper-class used for traversing a directory structure which contains the Dutch election data.
