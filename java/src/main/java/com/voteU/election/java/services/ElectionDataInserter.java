@@ -43,11 +43,12 @@ public class ElectionDataInserter {
         //batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
         // batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
-       // batchInsertConstituencies(election);
+        // batchInsertConstituencies(election);
         //batchInsertConstituencyPartyVotes(election);
         //batchInsertConstituencyCandidateVotes(election);
         //batchInsertAuthorities(election);
-        batchInsertAuthorityPartyVotes(election);
+        //batchInsertAuthorityPartyVotes(election);
+        batchInsertAuthorityCandidateVotes(election);
 
 
         logger.info("Finished insertion of election with id {}", election.getId());
@@ -68,7 +69,6 @@ public class ElectionDataInserter {
         int[] result = jdbc.batchUpdate(sql, batchArgs);
         logger.info("Batch inserted parties for election {}. Number of parties: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
     }
-
 
     private void batchInsertCandidates(String electionId, Iterable<Party> parties) {
         String sql = "INSERT IGNORE INTO candidates (candidate_id, party_id, election_id, first_name, last_name, gender, locality_name) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -169,13 +169,7 @@ public class ElectionDataInserter {
         for (Province province : election.getProvinces()) {
             for (Constituency constituency : province.getConstituencies()) {
                 for (Authority authority : constituency.getAuthorities().values()) {
-                    batchArgs.add(new Object[]{
-                            authority.getId(),
-                            constituency.getId(),
-                            election.getId(),
-                            authority.getName(),
-                            authority.getVotes()
-                    });
+                    batchArgs.add(new Object[]{authority.getId(), constituency.getId(), election.getId(), authority.getName(), authority.getVotes()});
                 }
             }
         }
@@ -194,12 +188,7 @@ public class ElectionDataInserter {
                 for (Authority authority : constituency.getAuthorities().values()) {
                     // Assuming Authority has a Map<Integer, Party> parties with votes
                     for (Party party : authority.getParties().values()) {
-                        batchArgs.add(new Object[]{
-                                authority.getId(),
-                                party.getId(),
-                                election.getId(),
-                                party.getVotes()
-                        });
+                        batchArgs.add(new Object[]{authority.getId(), party.getId(), election.getId(), party.getVotes()});
                     }
                 }
             }
@@ -209,6 +198,26 @@ public class ElectionDataInserter {
         logger.info("Batch inserted authority party votes for election {}. Total records: {}", election.getId(), batchArgs.size());
     }
 
+    private void batchInsertAuthorityCandidateVotes(Election election) {
+        String sql = "INSERT INTO authority_candidate_votes (authority_id, election_id, party_id, candidate_id, votes) VALUES (?, ?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Authority authority : constituency.getAuthorities().values()) {
+                    for (Party party : authority.getParties().values()) {
+                        for (Candidate candidate : party.getCandidates()) {
+                            batchArgs.add(new Object[]{authority.getId(), election.getId(), party.getId(), candidate.getId(), candidate.getVotes()});
+                        }
+                    }
+                }
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Batch inserted authority candidate votes for election {}. Total records: {}", election.getId(), batchArgs.size());
+    }
 
 
     public void exportPollingStationCandidateVotesToCSV(Election election, String filePath) throws IOException {
