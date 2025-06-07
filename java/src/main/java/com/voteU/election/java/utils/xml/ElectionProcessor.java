@@ -45,8 +45,8 @@ public class ElectionProcessor<E> {
     private final Transformer<E> transformer;
 
     // Tag (attribute) names in multiple levels within the XML files
-    public static final String ID = "Id";
     public static final String VV_COUNT = "ValidVotes";
+    public static final String ID = "Id";
 
     /*
      The tag names on the election level within the XML files, which are also used as keys in the maps
