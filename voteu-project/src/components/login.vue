@@ -1,4 +1,38 @@
 <script setup lang="ts">
+
+import { ref } from 'vue'
+import { getUserByLogin } from '@/services/UserService.ts'
+
+const error = ref<string | null>(null);
+const loginForm = ref({
+  username: '',
+  password: '',
+})
+
+const emit = defineEmits(['submit'])
+
+const submit = async () => {
+  if (!loginForm.value.username || !loginForm.value.password) {
+    error.value = 'Please enter both username and password.';
+    return;
+  }
+
+  try {
+    const user = await getUserByLogin(loginForm.value.username, loginForm.value.password);
+    if (user) {
+      emit('submit', user);
+      console.log('User logged in:', user);
+      error.value = null;
+    } else {
+      error.value = 'Invalid username or password.';
+    }
+  } catch (err) {
+    console.error(err);
+    error.value = 'Login failed. Please try again.';
+  }
+};
+
+
 </script>
 
 <template>
@@ -8,21 +42,18 @@
         <h2 class="form-title">Login</h2>
 
         <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" id="email" />
+          <label for="username">Username</label>
+          <input type="text" id="username" v-model="loginForm.username"/>
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" />
+          <input type="password" id="password" v-model="loginForm.password"/>
         </div>
 
-        <div class="form-group checkbox-group">
-          <input type="checkbox" id="remember" />
-          <label for="remember">Remember me</label>
-        </div>
+        <div v-if="error" class="error-message">{{ error }}</div>
 
-        <button class="submit-btn" type="submit">Sign In</button>
+        <button class="submit-btn" @click.prevent="submit">Sign In</button>
 
         <p class="link-text">
           Not a member? <RouterLink to="/register">Create an account</RouterLink>
