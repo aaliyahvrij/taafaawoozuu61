@@ -216,8 +216,8 @@ public class ElectionProcessor<E> {
     private void processNationalLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VV_COUNT)) {
             int affId = 0;
-            HashSet<Integer> registeredAffIds = new HashSet<>();
-            HashSet<String> registeredCandiShortCodes = new HashSet<>();
+            HashSet<Integer> processedAffIds = new HashSet<>();
+            HashSet<String> processedCandiShortCodes = new HashSet<>();
             if (parser.findBeginTag(SELECTION)) {
                 while (parser.getLocalName().equals(SELECTION)) {
                     parser.nextTag();
@@ -225,7 +225,7 @@ public class ElectionProcessor<E> {
                         case AFFI_ID:
                             LinkedHashMap<String, String> affiMap = new LinkedHashMap<>(constiMap);
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
-                            if (registeredAffIds.contains(affId)) {
+                            if (processedAffIds.contains(affId)) {
                                 parser.findAndAcceptEndTag(AFFI_ID);
                                 continue;
                             }
@@ -242,7 +242,7 @@ public class ElectionProcessor<E> {
                                 affiMap.put(VV_COUNT, String.valueOf(affiVVCount));
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             }
-                            registeredAffIds.add(affId);
+                            processedAffIds.add(affId);
                             for (Map.Entry<String, String> affiMapPair : affiMap.entrySet()) {
                                 if (affiMapPair.getValue() == null) {
                                     System.err.println("National level - Missing " + affiMapPair.getKey() + " in affiMap: " + affiMap);
@@ -263,7 +263,7 @@ public class ElectionProcessor<E> {
                             if (parser.findBeginTag(CANDI_ID)) {
                                 candiShortCode = parser.getAttributeValue(null, CANDI_SHORT_CODE);
                                 parser.findAndAcceptEndTag(CANDI_ID);
-                                if (registeredCandiShortCodes.contains(candiShortCode)) {
+                                if (processedCandiShortCodes.contains(candiShortCode)) {
                                     continue;
                                 }
                             }
@@ -272,7 +272,7 @@ public class ElectionProcessor<E> {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
                                 LinkedHashMap<String, String> candiMap = new LinkedHashMap<>(constiMap);
                                 candiMap.put(CANDI_SHORT_CODE, candiShortCode);
-                                registeredCandiShortCodes.add(candiShortCode);
+                                processedCandiShortCodes.add(candiShortCode);
                                 candiMap.put(AFFI_ID, String.valueOf(affId));
                                 candiMap.put("candiVVCount", String.valueOf(candiVVCount));
                                 for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
@@ -413,14 +413,14 @@ public class ElectionProcessor<E> {
     private void processMuniLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(SELECTION)) {
             int affId = 0;
-            HashSet<String> registeredCandiAffiliations = new HashSet<>();
+            HashSet<String> processedAffiliations = new HashSet<>();
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
                     case AFFI_ID:
                         LinkedHashMap<String, String> affiMap = new LinkedHashMap<>(constiMap);
                         affId = parser.getIntegerAttributeValue(null, ID, 0);
-                        if (registeredCandiAffiliations.contains(String.valueOf(affId))) {
+                        if (processedAffiliations.contains(String.valueOf(affId))) {
                             parser.findAndAcceptEndTag(AFFI_ID);
                             continue;
                         }
@@ -461,7 +461,7 @@ public class ElectionProcessor<E> {
                         // Form a composite key - a true unique identifier of the candidate
                         String candiCompKey = candId + "_" + affId;
                         parser.findAndAcceptEndTag(CANDIDATE);
-                        if (registeredCandiAffiliations.contains(candiCompKey)) {
+                        if (processedAffiliations.contains(candiCompKey)) {
                             continue;
                         }
                         if (parser.findBeginTag(VV_COUNT)) {
@@ -482,7 +482,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            registeredCandiAffiliations.add(candiCompKey);
+                            processedAffiliations.add(candiCompKey);
                             this.transformer.registerMuniLevelData(candiMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
