@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { useAuth } from '@/composables/useAuth'
+import { useRouter } from 'vue-router'
+
+const { user, logout, isLoggedIn } = useAuth()
+const router = useRouter()
+
+function handleLogout() {
+  logout()
+  router.push('/login')
+}
+</script>
+
 <template>
   <aside class="sidenav">
     <nav>
@@ -10,7 +23,9 @@
         <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
       </ul>
     </nav>
-    <div class="login-link"><RouterLink to="/login"><button class="login-button">Login</button></RouterLink>
+    <div class="login-link">
+      <button v-if="!isLoggedIn()" class="login-button" @click="$router.push('/login')">Login</button>
+      <button v-else class="login-button" @click="handleLogout">Logout ({{ user?.username }})</button>
     </div>
 
   </aside>
@@ -64,5 +79,4 @@
   background-color: #0040ff;
 }
 </style>
-<script setup lang="ts">
-</script>
+
