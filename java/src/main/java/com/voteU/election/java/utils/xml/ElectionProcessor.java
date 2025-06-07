@@ -4,8 +4,8 @@ import com.voteU.election.java.models.*;
 import com.voteU.election.java.utils.PathUtils;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class ElectionProcessor<E> {
     public static final String ELECTION_DATE = "ElectionDate";
 
     /*
-     The tag names on the contest level within the XML files, which are also used as keys in the maps
+     The tag names on the constituency level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
     public static final String CONSTITUENCY = "Contest";
@@ -374,9 +374,8 @@ public class ElectionProcessor<E> {
                         if (processedAffiliations.contains(affId)) {
                             continue;
                         }
-                        int affiVVCount;
                         if (parser.findBeginTag(VV_COUNT)) {
-                            affiVVCount = Integer.parseInt(parser.getElementText().trim());
+                            int affiVVCount = Integer.parseInt(parser.getElementText().trim());
                             affiVVCountList.add(affiVVCount);
                             candiMap.putIfAbsent(affId, new LinkedHashMap<>());
                             processedAffiliations.add(affId);
@@ -576,7 +575,7 @@ public class ElectionProcessor<E> {
             if (pollingStationMapPair.getValue() == null) {
                 System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);
                 return;
-            } else if (Objects.equals(pollingStationMapPair.getKey(), POLLING_STATION_ID) || Objects.equals(pollingStationMapPair.getValue(), "pollingStationVVCount")) {
+            } else if (Objects.equals(pollingStationMapPair.getValue(), "pollingStationVVCount")) {
                 try {
                     Integer.parseInt(pollingStationMapPair.getValue());
                 } catch (NumberFormatException e) {
