@@ -342,19 +342,17 @@ public class ElectionProcessor<E> {
     }
 
     private void processConstiLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        List<String> affiNameList = new ArrayList<>();
-        List<Integer> affiVVCountList = new ArrayList<>();
-        HashSet<Integer> processedAffiliations = new HashSet<>();
-        HashSet<String> processedCandidates = new HashSet<>();
-        LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap = new LinkedHashMap<>();
         if (parser.findBeginTag(CONSTITUENCY)) {
-            int constId;
-            String constiName;
+            List<String> affiNameList = new ArrayList<>();
+            List<Integer> affiVVCountList = new ArrayList<>();
+            HashSet<Integer> processedAffiliations = new HashSet<>();
+            HashSet<String> processedCandidates = new HashSet<>();
+            LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap = new LinkedHashMap<>();
             if (parser.findBeginTag(CONSTI_ID)) {
-                constId = parser.getIntegerAttributeValue(null, ID, 0);
+                int constId = parser.getIntegerAttributeValue(null, ID, 0);
                 constiMap.put(CONSTI_ID, String.valueOf(constId));
                 if (parser.findBeginTag(CONSTI_NAME)) {
-                    constiName = parser.getElementText().trim();
+                    String constiName = parser.getElementText().trim();
                     constiMap.put(CONSTI_NAME, constiName);
                     parser.findAndAcceptEndTag(CONSTI_NAME);
                 }
