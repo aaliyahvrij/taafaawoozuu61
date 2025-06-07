@@ -44,7 +44,7 @@ public class ElectionProcessor<E> {
     private static final Logger LOG = Logger.getLogger(ElectionProcessor.class.getName());
     private final Transformer<E> transformer;
 
-    // Common attribute name that is use on multiple tags.
+    // Tag (attribute) names in multiple levels within the XML files
     public static final String ID = "Id";
     public static final String VV_COUNT = "ValidVotes";
 
@@ -575,7 +575,7 @@ public class ElectionProcessor<E> {
             if (pollingStationMapPair.getValue() == null) {
                 System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);
                 return;
-            } else if (Objects.equals(pollingStationMapPair.getValue(), "pollingStationVVCount")) {
+            } else if (Objects.equals(pollingStationMapPair.getKey(), "pollingStationVVCount")) {
                 try {
                     Integer.parseInt(pollingStationMapPair.getValue());
                 } catch (NumberFormatException e) {
