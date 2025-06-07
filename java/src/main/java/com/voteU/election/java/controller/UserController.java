@@ -2,7 +2,7 @@ package com.voteU.election.java.controller;
 
 import com.voteU.election.java.dto.LoginDTO;
 import com.voteU.election.java.entities.User;
-import com.voteU.election.java.exceptions.NotFound;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,13 +52,13 @@ public class UserController {
      *
      * @param id the unique identifier of the user to retrieve
      * @return a ResponseEntity containing the retrieved User object if found
-     * @throws NotFound if the user with the specified id is not found
+     * @throws ResourceNotFoundException if the user with the specified id is not found
      */
     @GetMapping("/id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("User not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserController {
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("User not found with username " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username " + username));
     }
 
     /**
@@ -82,13 +82,13 @@ public class UserController {
      *
      * @param loginDto the login credentials containing the username and password
      * @return a ResponseEntity containing the authenticated User if login is successful
-     * @throws NotFound if the provided credentials are invalid
+     * @throws ResourceNotFoundException if the provided credentials are invalid
      */
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginDTO loginDto) {
         return userService.getUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword())
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("Invalid credentials"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
     }
 
     /**
@@ -97,13 +97,13 @@ public class UserController {
      *
      * @param email the email address of the user to retrieve
      * @return a ResponseEntity containing the User if found
-     * @throws NotFound if no user is found with the given email
+     * @throws ResourceNotFoundException if no user is found with the given email
      */
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("User not found with email " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
     }
 
     /**

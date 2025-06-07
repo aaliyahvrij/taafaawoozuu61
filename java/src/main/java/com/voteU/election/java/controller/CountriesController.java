@@ -1,7 +1,7 @@
 package com.voteU.election.java.controller;
 
 import com.voteU.election.java.entities.Countries;
-import com.voteU.election.java.exceptions.NotFound;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.CountriesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,13 +41,13 @@ public class CountriesController {
      *
      * @param id the unique identifier of the country to retrieve
      * @return a ResponseEntity containing the country details if found
-     * @throws NotFound if no country is found with the specified ID
+     * @throws ResourceNotFoundException if no country is found with the specified ID
      */
     @GetMapping("/id/{id}")
     public ResponseEntity<Countries> getCountriesById(@PathVariable Integer id) {
         return countriesService.getCountryById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("Country not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found with id " + id));
     }
 
     /**
@@ -55,13 +55,13 @@ public class CountriesController {
      *
      * @param code the country code used to identify the country, must be a valid two-character string
      * @return a ResponseEntity containing the country if found
-     * @throws NotFound if no country is found with the specified code
+     * @throws ResourceNotFoundException if no country is found with the specified code
      */
     @GetMapping("/code/{code}")
     public ResponseEntity<Countries> getCountriesByCode(@PathVariable String code) {
         return countriesService.getCountryByCode(code)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("Country not found with code " + code));
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found with code " + code));
     }
 
     /**
@@ -69,12 +69,12 @@ public class CountriesController {
      *
      * @param name the name of the country to retrieve
      * @return a ResponseEntity containing the country details if found
-     * @throws NotFound if no country with the specified name is found
+     * @throws ResourceNotFoundException if no country with the specified name is found
      */
     @GetMapping("/name/{name}")
     public ResponseEntity<Countries> getCountriesByName(@PathVariable String name) {
         return countriesService.getCountryByName(name)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("Country not found with name " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found with name " + name));
     }
 }

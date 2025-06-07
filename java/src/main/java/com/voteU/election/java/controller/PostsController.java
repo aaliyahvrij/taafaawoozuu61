@@ -1,7 +1,7 @@
 package com.voteU.election.java.controller;
 
 import com.voteU.election.java.entities.Posts;
-import com.voteU.election.java.exceptions.NotFound;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.PostsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,13 +45,13 @@ public class PostsController {
      * @param id the unique identifier of the post to retrieve
      * @return a ResponseEntity containing the retrieved Posts object if found,
      *         or throws an exception if no post is found with the specified id
-     * @throws NotFound if the post with the specified id is not found
+     * @throws ResourceNotFoundException if the post with the specified id is not found
      */
     @GetMapping("/{id}")
     public ResponseEntity<Posts> getPostById(@PathVariable Integer id) {
         return postsService.getPostById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new NotFound("Post not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
     }
 
     /**

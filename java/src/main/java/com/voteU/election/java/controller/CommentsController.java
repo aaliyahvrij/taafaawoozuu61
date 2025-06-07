@@ -3,7 +3,7 @@ package com.voteU.election.java.controller;
 import com.voteU.election.java.entities.Comments;
 import com.voteU.election.java.entities.Posts;
 import com.voteU.election.java.entities.User;
-import com.voteU.election.java.exceptions.NotFound;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.CommentsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,20 +54,20 @@ public class CommentsController {
      *
      * @param postsId the post entity whose associated comments are to be retrieved
      * @return a ResponseEntity containing a list of comments associated with the specified post
-     * @throws NotFound if no comments are found for the given post ID
+     * @throws ResourceNotFoundException if no comments are found for the given post ID
      */
     @GetMapping("/posts/{postsId}")
     public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Posts postsId) {
         List<Comments> comments = commentsService.getCommentsByPostsId(postsId);
         if (comments.isEmpty()) {
-            throw new NotFound("No comments found for postId: " + postsId);
+            throw new ResourceNotFoundException("No comments found for postId: " + postsId);
         }
         return ResponseEntity.ok(comments);
     }
 
     /**
      * Retrieves a list of comments associated with a specific user.
-     * Throws a {@link NotFound} exception if no comments are found for the given user ID.
+     * Throws a {@link ResourceNotFoundException} exception if no comments are found for the given user ID.
      *
      * @param userId The user entity whose associated comments are to be retrieved.
      * @return A {@link ResponseEntity} containing a list of {@link Comments} associated with the user.
@@ -76,7 +76,7 @@ public class CommentsController {
     public ResponseEntity<List<Comments>> getCommentsByUserId(@PathVariable User userId) {
         List<Comments> comments = commentsService.getCommentsByUserId(userId);
         if (comments.isEmpty()) {
-            throw new NotFound("No comments found for userId: " + userId);
+            throw new ResourceNotFoundException("No comments found for userId: " + userId);
         }
         return ResponseEntity.ok(comments);
     }
@@ -93,7 +93,7 @@ public class CommentsController {
     public ResponseEntity<List<Comments>> getCommentsByCommentsId(@PathVariable Integer commentsId) {
         List<Comments> comments = commentsService.getCommentsByCommentsId(commentsId);
         if (comments.isEmpty()) {
-            throw new NotFound("No comments found for commentsId: " + commentsId);
+            throw new ResourceNotFoundException("No comments found for commentsId: " + commentsId);
         }
         return ResponseEntity.ok(comments);
     }
