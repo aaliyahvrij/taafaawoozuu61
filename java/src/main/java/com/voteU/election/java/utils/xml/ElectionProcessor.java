@@ -291,7 +291,7 @@ public class ElectionProcessor<E> {
                                 this.transformer.registerNationalLevelData(candiMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
-                                LOG.warning("Missing <ValidVotes> tag - Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
+                                LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
                             }
                             break;
                         default:
@@ -486,7 +486,7 @@ public class ElectionProcessor<E> {
                             this.transformer.registerMuniLevelData(candiMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
-                            LOG.warning("Missing <ValidVotes> tag - Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candId, affId));
+                            LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candId, affId));
                         }
                         break;
                     default:
@@ -543,7 +543,7 @@ public class ElectionProcessor<E> {
                         pollingStationVVCount = pollingStationVVCount + affiVVCount;
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag - Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVVCount);
                     pollingStationLevel_affiListMap.put(affId, affiliation);
@@ -562,7 +562,7 @@ public class ElectionProcessor<E> {
                         pollingStationLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag - Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, pollingStationName));
                     }
                     break;
                 default:
