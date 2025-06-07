@@ -1,38 +1,90 @@
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue'
+import { useAuth } from '@/composables/useAuth'
+import { getAllPosts } from '@/services/PostsService.ts'
+import type { Posts } from '@/interface/Posts.ts'
+
+const { isLoggedIn,  } = useAuth()
+
+const showForm = ref(false)
+const posts = ref<Posts[]>([])
+const newPostBody = ref('')
+const newPostTitle = ref('')
+const newPostDescription = ref('')
+
+async function loadPosts() {
+  posts.value = await getAllPosts()
+}
+
+function handleAddPostClick() {
+  showForm.value = !showForm.value
+}
+
+async function submitPost() {
+  if (!newPostBody.value.trim() || !newPostTitle.value.trim() || !newPostDescription.value.trim()) {
+    alert('Please fill in title, description and body')
+    return
+  }
+
+
+
+  await loadPosts()
+}
+
+onMounted(() => {
+  loadPosts()
+})
+</script>
+
 <template>
   <div class="forum-container">
     <h1 class="forum-title">Election Forum</h1>
 
-    <!-- Add Comment button (top-right corner) -->
-    <div class="top-bar">
-      <button class="add-comment-btn">Add Comment</button>
+    <div class="top-bar" v-if="isLoggedIn()">
+      <button class="add-post-btn" @click="handleAddPostClick">
+        {{ showForm ? 'Cancel' : 'Add Post' }}
+      </button>
     </div>
 
-    <!-- Warning if user not logged in -->
-    <div class="login-warning">
-      <p>You must be <a href="/login">logged in</a> to comment.</p>
+    <div class="login-warning" v-if="!isLoggedIn()">
+      <p>You must be <a href="/login">logged in</a> to add a post.</p>
     </div>
 
-    <!-- Comment form (only show if user is logged in and clicked "Add Comment") -->
-    <div class="comment-form">
-      <textarea placeholder="Write your comment..." class="textarea"></textarea>
-      <button class="submit-btn">Post Comment</button>
+    <div class="post-form" v-if="isLoggedIn() && showForm">
+      <input
+        v-model="newPostTitle"
+        placeholder="Post title"
+        class="textarea"
+        style="margin-bottom: 0.5rem; font-weight: bold;"
+      />
+      <input
+        v-model="newPostDescription"
+        placeholder="Post description"
+        class="textarea"
+        style="margin-bottom: 0.5rem;"
+      />
+      <textarea
+        placeholder="Write your post..."
+        class="textarea"
+        v-model="newPostBody"
+      ></textarea>
+      <button class="submit-btn" @click="submitPost">Post</button>
     </div>
 
-    <!-- Comment box (like a todo list) -->
-    <div class="comments-box">
-      <h2 class="comments-title">All Comments</h2>
-      <ul class="comment-list">
-        <li class="comment-item">
-          <span class="author">Lisa:</span> I think every vote matters.
+    <div class="post-box">
+      <h2 class="post-title">All Posts</h2>
+      <ul class="post-list">
+        <li class="post-item" v-for="post in posts" :key="post.id">
+          <span class="author">User {{ post.userId }}:</span> <strong>{{ post.title }}</strong><br />
+          <em>{{ post.description }}</em><br />
+          <p>{{ post.body }}</p>
         </li>
-        <li class="comment-item">
-          <span class="author">Ahmed:</span> The system needs to be more transparent.
-        </li>
-        <!-- Add more items here -->
       </ul>
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 .forum-container {
@@ -57,7 +109,7 @@
   margin-bottom: 1rem;
 }
 
-.add-comment-btn {
+.add-post-btn {
   background-color: #3b82f6;
   color: white;
   border: none;
@@ -67,7 +119,7 @@
   cursor: pointer;
 }
 
-.add-comment-btn:hover {
+.add-post-btn:hover {
   background-color: #2563eb;
 }
 
@@ -81,12 +133,11 @@
   margin-bottom: 1.5rem;
 }
 
-.comment-form {
+.post-form {
   background-color: #e5e7eb;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  padding: 2rem;
+  border-radius: 1rem;
   margin-bottom: 2rem;
-  display: none; /* default hidden, show via script when Add Comment is clicked */
 }
 
 .textarea {
@@ -99,7 +150,7 @@
 }
 
 .submit-btn {
-  background-color: #10b981;
+  background-color: #1e40af;
   color: white;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
@@ -109,29 +160,29 @@
 }
 
 .submit-btn:hover {
-  background-color: #059669;
+  background-color: #3b82f6;
 }
 
-.comments-box {
+.post-box {
   background-color: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
   padding: 1.5rem;
 }
 
-.comments-title {
+.post-title {
   font-size: 1.25rem;
   margin-bottom: 1rem;
   color: #111827;
 }
 
-.comment-list {
+.post-list {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.comment-item {
+.post-item {
   background-color: #f3f4f6;
   border-radius: 0.5rem;
   padding: 0.75rem;
@@ -140,7 +191,7 @@
   color: #374151;
 }
 
-.comment-item .author {
+.post-item .author {
   font-weight: bold;
   color: #1e40af;
 }
