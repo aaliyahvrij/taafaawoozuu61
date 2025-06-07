@@ -15,7 +15,6 @@
   "dependencies": {
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
-    "color-thief-node": "^1.0.4",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
