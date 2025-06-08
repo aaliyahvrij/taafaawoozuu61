@@ -1,13 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  AffiStyleService,
-  ElectionService,
-  ConstiService,
-  MuniService,
-  PoStService,
-  ProviService,
-} from '@/services'
 import { AffiChart } from '@/components'
 import type {
   Affiliation,
@@ -17,6 +9,14 @@ import type {
   PollingStation,
   Province,
 } from '@/interfaces'
+import {
+  AffiStyleService,
+  ElectionService,
+  ConstiService,
+  MuniService,
+  PoStService,
+  ProviService,
+} from '@/services'
 
 const selectedElection = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvince = ref<Province | null>(null)
@@ -405,9 +405,9 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
       <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
         <option value="null" disabled>Select a polling station</option>
         <option
-          v-for="pollingSt in pollingStations"
-          :key="pollingSt.id"
-          :value="pollingSt"
+          v-for="poSt in pollingStations"
+          :key="poSt.id"
+          :value="poSt"
         >
           {{ poSt.name }}
         </option>

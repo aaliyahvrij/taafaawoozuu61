@@ -1,4 +1,4 @@
-import type { Province, Constituency, Affiliation } from '@/interfaces'
+import type { Affiliation, Constituency, Province } from '@/interfaces'
 
 export class ProviService {
   static async getElectoralLevel_provincesOf(

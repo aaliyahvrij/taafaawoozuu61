@@ -1,6 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
-<template></template>
+<template>
+  <main>
+    <h1>Welcome To The VoteU Forum</h1>
+  </main>
+</template>
 
 <style scoped>
 h1 {

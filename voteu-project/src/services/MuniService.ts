@@ -1,4 +1,4 @@
-import type { Municipality, Affiliation } from '@/interfaces'
+import type { Affiliation, Municipality } from '@/interfaces'
 
 export class MuniService {
   static async getConstiLevel_municipalitiesOf(

@@ -1,4 +1,4 @@
-import type { Constituency, Affiliation } from '@/interfaces'
+import type { Affiliation, Constituency } from '@/interfaces'
 
 export class ConstiService {
   static async getElectoralLevel_constituenciesOf(

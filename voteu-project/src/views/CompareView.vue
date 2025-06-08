@@ -1,12 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  ConstiService,
-  ElectionService,
-  MuniService,
-  PoStService,
-  ProviService,
-} from '@/services'
 import type {
   Affiliation,
   Constituency,
@@ -14,13 +7,20 @@ import type {
   PollingStation,
   Province,
 } from '@/interfaces'
+import {
+  ConstiService,
+  ElectionService,
+  MuniService,
+  PoStService,
+  ProviService,
+} from '@/services'
 
-// the first filter set
+// The first filter set
 const selectedElection1 = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvi1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
-const selectedPollingStation1 = ref<PollingStation | null>(null)
+const selectedPoSt1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
 const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
@@ -30,7 +30,7 @@ const constituencies1 = ref<Constituency[]>([])
 const municipalities1 = ref<Municipality[]>([])
 const pollingStations1 = ref<PollingStation[]>([])
 
-// the second filter set
+// The second filter set
 const selectedElection2 = ref<'TK2021' | 'TK2023' | null>(null)
 const selectedProvi2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
@@ -46,7 +46,7 @@ const constituencies2 = ref<Constituency[]>([])
 const municipalities2 = ref<Municipality[]>([])
 const pollingStations2 = ref<PollingStation[]>([])
 
-// --- Helper functies voor ophalen filters (herbruikbaar) ---
+// --- Helper functies voor ophalen filters ---
 async function getElectoralLevel_provincesOf(
   electionId: string | null,
   provincesRef: typeof provinces1,
@@ -213,7 +213,7 @@ function clearProviAndBelow1() {
   municipalities1.value = []
   selectedMuni1.value = null
   pollingStations1.value = []
-  selectedPollingStation1.value = null
+  selectedPoSt1.value = null
 }
 
 function clearConstiAndBelow1() {
@@ -221,17 +221,17 @@ function clearConstiAndBelow1() {
   municipalities1.value = []
   selectedMuni1.value = null
   pollingStations1.value = []
-  selectedPollingStation1.value = null
+  selectedPoSt1.value = null
 }
 
 function clearMuniAndBelow1() {
   selectedMuni1.value = null
   pollingStations1.value = []
-  selectedPollingStation1.value = null
+  selectedPoSt1.value = null
 }
 
 function clearPollingStation1() {
-  selectedPollingStation1.value = null
+  selectedPoSt1.value = null
 }
 
 function clearProviAndBelow2() {
@@ -385,7 +385,7 @@ async function applyFilter() {
       selectedProvi1.value,
       selectedMuni1.value,
       selectedConsti1.value,
-      selectedPollingStation1.value,
+      selectedPoSt1.value,
       affiVotes1,
       voteLevel1,
     )
@@ -422,7 +422,7 @@ async function applyFilter() {
           <option value="2023">2023</option>
         </select>
         <select v-if="provinces1.length > 0" v-model="selectedProvi1" @change="onProvinceChange1">
-          <option value="null" disabled>Select a province</option>
+          <option value="null" disabled>Select province</option>
           <option v-for="provi in provinces1" :key="provi.id" :value="provi">
             {{ provi.name }}
           </option>
@@ -432,23 +432,23 @@ async function applyFilter() {
           v-model="selectedConsti1"
           @change="onConstiChange1"
         >
-          <option value="null" disabled>Select a constituency</option>
+          <option value="null" disabled>Select constituency</option>
           <option v-for="consti in constituencies1" :key="consti.id" :value="consti">
             {{ consti.name }}
           </option>
         </select>
         <select v-if="municipalities1.length > 0" v-model="selectedMuni1" @change="onMuniChange1">
-          <option value="null" disabled>Select a municipality</option>
+          <option value="null" disabled>Select municipality</option>
           <option v-for="muni in municipalities1" :key="muni.id" :value="muni">
             {{ muni.name }}
           </option>
         </select>
         <select
           v-if="pollingStations1.length > 0"
-          v-model="selectedPollingStation1"
+          v-model="selectedPoSt1"
           @change="onPollingStationChange1"
         >
-          <option value="null" disabled>Select a polling station</option>
+          <option value="null" disabled>Select polling station</option>
           <option
             v-for="poSt in pollingStations1"
             :key="poSt.id"
@@ -468,7 +468,7 @@ async function applyFilter() {
           <option value="2023">2023</option>
         </select>
         <select v-if="provinces2.length > 0" v-model="selectedProvi2" @change="onProvinceChange2">
-          <option value="null" disabled>Select a province</option>
+          <option value="null" disabled>Select province</option>
           <option v-for="provi in provinces2" :key="provi.id" :value="provi">
             {{ provi.name }}
           </option>
@@ -478,13 +478,13 @@ async function applyFilter() {
           v-model="selectedConsti2"
           @change="onConstiChange2"
         >
-          <option value="null" disabled>Select a constituency</option>
+          <option value="null" disabled>Select constituency</option>
           <option v-for="consti in constituencies2" :key="consti.id" :value="consti">
             {{ consti.name }}
           </option>
         </select>
         <select v-if="municipalities2.length > 0" v-model="selectedMuni2" @change="onMuniChange2">
-          <option value="null" disabled>Select a municipality</option>
+          <option value="null" disabled>Select municipality</option>
           <option v-for="muni in municipalities2" :key="muni.id" :value="muni">
             {{ muni.name }}
           </option>
@@ -494,7 +494,7 @@ async function applyFilter() {
           v-model="selectedPollingStation2"
           @change="onPollingStationChange2"
         >
-          <option value="null" disabled>Select a polling station</option>
+          <option value="null" disabled>Select polling station</option>
           <option
             v-for="pollingStation in pollingStations2"
             :key="pollingStation.id"
