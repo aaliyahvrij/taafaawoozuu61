@@ -146,24 +146,23 @@ public class ElectionTransformer implements Transformer<Election> {
     private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListMap) {
         Affiliation affiliation = affiListMap.get(affId);
         if (affiliation != null) {
-            List<Candidate> candidates = affiliation.getCandidates();
-            Candidate existingCandidate = null;
-            for (Candidate candidate : candidates) {
-                if (candidate.getId() == candId && candidate.getAffId() == affId) {
-                    existingCandidate = candidate;
+            List<Candidate> affiLevel_candidates = affiliation.getCandidates();
+            Candidate candidate = null;
+            for (Candidate affiLevel_candidate : affiLevel_candidates) {
+                if (affiLevel_candidate.getId() == candId && affiLevel_candidate.getAffId() == affId) {
+                    candidate = affiLevel_candidate;
+                    candidate.setFirstName(firstName);
+                    candidate.setLastName(lastName);
+                    candidate.setGender(gender);
+                    candidate.setLocalityName(localityName);
                     break;
                 }
             }
-            if (existingCandidate != null) {
-                existingCandidate.setFirstName(firstName);
-                existingCandidate.setLastName(lastName);
-                existingCandidate.setGender(gender);
-                existingCandidate.setLocalityName(localityName);
-            } else {
+            if (candidate == null) {
                 Candidate newCandidate = new Candidate(candId, firstName, lastName);
                 newCandidate.setGender(gender);
                 newCandidate.setLocalityName(localityName);
-                newCandidate.setAffId(affId); // This may be missing in your original
+                newCandidate.setAffId(affId);
                 affiliation.addCandidate(newCandidate);
             }
         }
