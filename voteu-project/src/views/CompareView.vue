@@ -4,7 +4,7 @@ import {
   ConstiService,
   ElectionService,
   MuniService,
-  PollingStationService,
+  PoStService,
   ProviService,
 } from '@/services'
 import type {
@@ -122,7 +122,7 @@ async function getMuniLevel_pollingStationsOf(
   }
   const muniPath = electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await PollingStationService.getMuniLevel_pollingStationsOf(
+    const response = await PoStService.getMuniLevel_pollingStationsOf(
       electionId,
       constId,
       munId,
@@ -151,7 +151,7 @@ async function getAffiliationsOf(
   let logPath = electionId
   try {
     if (pollingStation && municipality && constituency) {
-      const response = await PollingStationService.getPollingStationLevel_affiliationsOf(
+      const response = await PoStService.getPoStLevel_affiliationsOf(
         electionId,
         constituency.id.toString(),
         municipality.id.toString(),

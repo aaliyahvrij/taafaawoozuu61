@@ -329,7 +329,7 @@ public class ElectionProcessor<E> {
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
             while (parser.nextBeginTag(POLLING_STATION)) {
-                processPollingStationLevelData(constiMap, parser);
+                processPoStLevelData(constiMap, parser);
                 parser.findAndAcceptEndTag(POLLING_STATION);
             }
             parser.findAndAcceptEndTag(CONSTITUENCY);
@@ -494,10 +494,10 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processPollingStationLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processPoStLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         LinkedHashMap<String, String> pollingStationMap = new LinkedHashMap<>(constiMap);
         String pollingStationName = null;
-        LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap = new LinkedHashMap<>();
+        LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap = new LinkedHashMap<>();
         int pollingStationVVCount = 0;
         Affiliation affiliation;
         int affId = 0;
@@ -543,7 +543,7 @@ public class ElectionProcessor<E> {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVVCount);
-                    pollingStationLevel_affiListMap.put(affId, affiliation);
+                    poStLevel_affiListMap.put(affId, affiliation);
                     break;
                 case CANDIDATE:
                     int candId = 0;
@@ -556,7 +556,7 @@ public class ElectionProcessor<E> {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candidate = new Candidate(candId, candiVVCount);
                         candidate.setAffId(affId);
-                        pollingStationLevel_affiListMap.get(affId).addCandidate(candidate);
+                        poStLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, pollingStationName));
@@ -583,7 +583,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        this.transformer.registerPollingStationLevelData(pollingStationMap, pollingStationLevel_affiListMap);
+        this.transformer.registerPoStLevelData(pollingStationMap, poStLevel_affiListMap);
     }
 
     private void processAffiLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {

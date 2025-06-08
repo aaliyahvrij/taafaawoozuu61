@@ -8,10 +8,10 @@ import java.util.LinkedHashMap;
 
 @Slf4j
 @Service
-public class PollingStationService {
+public class PoStService {
     private final ElectionService electionService;
 
-    public PollingStationService(ElectionService electionService) {
+    public PoStService(ElectionService electionService) {
         this.electionService = electionService;
     }
 

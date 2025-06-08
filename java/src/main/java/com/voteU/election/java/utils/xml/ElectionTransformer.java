@@ -96,15 +96,15 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerPollingStationLevelData(LinkedHashMap<String, String> pollingStationMap, LinkedHashMap<Integer, Affiliation> pollingStationLevel_affiListMap) {
-        String electionId = pollingStationMap.get(ElectionProcessor.ELECTION_ID);
+    public void registerPoStLevelData(LinkedHashMap<String, String> poStMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap) {
+        String electionId = poStMap.get(ElectionProcessor.ELECTION_ID);
         Election election = this.electionListMap.get(electionId);
-        LinkedHashMap<String, PollingStation> electoralLevel_pollingStationListMap = election.getPollingStations();
-        String pollingStationId = pollingStationMap.get(ElectionProcessor.POLLING_STATION_ID);
-        String pollingStationName = pollingStationMap.get("pollingStationName");
-        int pollingStationVVCount = Integer.parseInt(pollingStationMap.get("pollingStationVVCount"));
-        PollingStation pollingStation = new PollingStation(pollingStationId, pollingStationName, pollingStationLevel_affiListMap, pollingStationVVCount);
-        electoralLevel_pollingStationListMap.put(pollingStationId, pollingStation);
+        LinkedHashMap<String, PollingStation> electoralLevel_poStListMap = election.getPollingStations();
+        String poStId = poStMap.get(ElectionProcessor.POLLING_STATION_ID);
+        String poStName = poStMap.get("poStName");
+        int poStVVCount = Integer.parseInt(poStMap.get("poStVVCount"));
+        PollingStation pollingStation = new PollingStation(poStId, poStName, poStLevel_affiListMap, poStVVCount);
+        electoralLevel_poStListMap.put(poStId, pollingStation);
     }
 
     @Override

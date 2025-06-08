@@ -5,7 +5,7 @@ import {
   ElectionService,
   ConstiService,
   MuniService,
-  PollingStationService,
+  PoStService,
   ProviService,
 } from '@/services'
 import { AffiChart } from '@/components'
@@ -205,7 +205,7 @@ async function getMuniLevel_pollingStationsOf(
   const muniPath = electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
-      const response = await PollingStationService.getMuniLevel_pollingStationsOf(
+      const response = await PoStService.getMuniLevel_pollingStationsOf(
         electionId,
         constId,
         munId,
@@ -246,10 +246,10 @@ async function getPollingStationLevel_affiliationsOf(
     constId +
     ' > muni ' +
     munId +
-    ' > polling station ' +
+    ' > poSt ' +
     pollingStationId
   try {
-    const response = await PollingStationService.getPollingStationLevel_affiliationsOf(
+    const response = await PoStService.getPoStLevel_affiliationsOf(
       electionId,
       constId,
       munId,
@@ -401,7 +401,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="polling-station-filter">
+    <div class="po-st-filter">
       <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
         <option value="null" disabled>Select a polling station</option>
         <option
