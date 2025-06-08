@@ -495,31 +495,31 @@ public class ElectionProcessor<E> {
     }
 
     private void processPoStLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        LinkedHashMap<String, String> pollingStationMap = new LinkedHashMap<>(constiMap);
-        String pollingStationName = null;
+        LinkedHashMap<String, String> poStMap = new LinkedHashMap<>(constiMap);
+        String poStName = null;
         LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap = new LinkedHashMap<>();
-        int pollingStationVVCount = 0;
+        int poStVVCount = 0;
         Affiliation affiliation;
         int affId = 0;
         int selectionIndex = 0;
         if (parser.findBeginTag(POLLING_STATION_ID)) {
             String pollingStationId = parser.getAttributeValue(null, ID);
-            pollingStationMap.put(POLLING_STATION_ID, pollingStationId);
-            pollingStationName = parser.getElementText();
-            if (pollingStationName.contains("Stembureau")) {
-                pollingStationName = pollingStationName.replace("Stembureau ", "");
+            poStMap.put(POLLING_STATION_ID, pollingStationId);
+            poStName = parser.getElementText();
+            if (poStName.contains("Stembureau")) {
+                poStName = poStName.replace("Stembureau ", "");
             }
-            int postCodeIndex = pollingStationName.indexOf("(postcode:");
+            int postCodeIndex = poStName.indexOf("(postcode:");
             if (postCodeIndex >= 0) {
-                int postCodeEndIndex = pollingStationName.indexOf(')', postCodeIndex);
+                int postCodeEndIndex = poStName.indexOf(')', postCodeIndex);
                 if (postCodeEndIndex > postCodeIndex) {
-                    String zipCode = pollingStationName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
-                    pollingStationMap.put(ZIPCODE, zipCode);
-                    pollingStationName = pollingStationName.substring(0, postCodeIndex).trim() + pollingStationName.substring(postCodeEndIndex + 1).trim();
-                    pollingStationMap.put("pollingStationName", pollingStationName);
+                    String zipCode = poStName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
+                    poStMap.put(ZIPCODE, zipCode);
+                    poStName = poStName.substring(0, postCodeIndex).trim() + poStName.substring(postCodeEndIndex + 1).trim();
+                    poStMap.put("poStName", poStName);
                 }
             } else {
-                pollingStationMap.put("pollingStationName", pollingStationName);
+                poStMap.put("poStName", poStName);
             }
             parser.findAndAcceptEndTag(POLLING_STATION_ID);
         }
@@ -537,10 +537,10 @@ public class ElectionProcessor<E> {
                     parser.findAndAcceptEndTag(AFFI_ID);
                     if (parser.findBeginTag(VV_COUNT)) {
                         affiVVCount = Integer.parseInt(parser.getElementText());
-                        pollingStationVVCount = pollingStationVVCount + affiVVCount;
+                        poStVVCount += affiVVCount;
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, poStName));
                     }
                     affiliation = new Affiliation(affId, affiName, affiVVCount);
                     poStLevel_affiListMap.put(affId, affiliation);
@@ -559,7 +559,7 @@ public class ElectionProcessor<E> {
                         poStLevel_affiListMap.get(affId).addCandidate(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, pollingStationName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, poStName));
                     }
                     break;
                 default:
@@ -569,21 +569,21 @@ public class ElectionProcessor<E> {
             parser.findAndAcceptEndTag(SELECTION);
             if (selectionIndex == 3) break;
         }
-        pollingStationMap.put("pollingStationVVCount", String.valueOf(pollingStationVVCount));
-        for (Map.Entry<String, String> pollingStationMapPair : pollingStationMap.entrySet()) {
-            if (pollingStationMapPair.getValue() == null) {
-                System.err.println("Missing " + pollingStationMapPair.getKey() + " in pollingStationMap: " + pollingStationMap);
+        poStMap.put("pollingStationVVCount", String.valueOf(poStVVCount));
+        for (Map.Entry<String, String> poStMapPair : poStMap.entrySet()) {
+            if (poStMapPair.getValue() == null) {
+                System.err.println("Missing " + poStMapPair.getKey() + " in poStMap: " + poStMap);
                 return;
-            } else if (Objects.equals(pollingStationMapPair.getKey(), "pollingStationVVCount")) {
+            } else if (Objects.equals(poStMapPair.getKey(), "pollingStationVVCount")) {
                 try {
-                    Integer.parseInt(pollingStationMapPair.getValue());
+                    Integer.parseInt(poStMapPair.getValue());
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid " + pollingStationMapPair.getKey() + " value '" + pollingStationMapPair.getValue() + "' in pollingStationMap: " + pollingStationMap);
+                    System.err.println("Invalid " + poStMapPair.getKey() + " value '" + poStMapPair.getValue() + "' in poStMap: " + poStMap);
                     return;
                 }
             }
         }
-        this.transformer.registerPoStLevelData(pollingStationMap, poStLevel_affiListMap);
+        this.transformer.registerPoStLevelData(poStMap, poStLevel_affiListMap);
     }
 
     private void processAffiLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
