@@ -566,7 +566,6 @@ public class ElectionProcessor<E> {
                     LOG.warning("Unknown element [%s] found!".formatted(parser.getLocalName()));
             }
             selectionIndex += 1;
-            System.out.println(selectionIndex);
             parser.findAndAcceptEndTag(SELECTION);
             if (selectionIndex == 3) break;
         }
