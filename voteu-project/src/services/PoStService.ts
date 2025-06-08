@@ -30,11 +30,11 @@ export class PoStService {
     electionId: string,
     constId: string,
     munId: string,
-    pollingStationId: string,
+    poStId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${pollingStationId}/affiliations`,
+        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${poStId}/affiliations`,
         {
           method: 'GET',
           headers: {

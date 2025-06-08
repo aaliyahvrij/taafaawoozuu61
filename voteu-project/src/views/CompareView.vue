@@ -22,7 +22,7 @@ const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPollingStation1 = ref<PollingStation | null>(null)
 const affiVotes1 = ref<Affiliation[] | null>(null)
-const currentVoteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'pollingStation' | null>(
+const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
 )
 const provinces1 = ref<Province[]>([])
@@ -37,7 +37,7 @@ const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPollingStation2 = ref<PollingStation | null>(null)
 const affiVotes2 = ref<Affiliation[] | null>(null)
-const currentVoteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'pollingStation' | null>(
+const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
 )
 
@@ -141,11 +141,11 @@ async function getAffiliationsOf(
   constituency: Constituency | null,
   pollingStation: PollingStation | null,
   affiVotesRef: typeof affiVotes1,
-  currentVoteLevelRef: typeof currentVoteLevel1,
+  voteLevelRef: typeof voteLevel1,
 ) {
   if (!electionId) {
     affiVotesRef.value = null
-    currentVoteLevelRef.value = null
+    voteLevelRef.value = null
     return
   }
   let logPath = electionId
@@ -158,13 +158,13 @@ async function getAffiliationsOf(
         pollingStation.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-      currentVoteLevelRef.value = 'pollingStation'
+      voteLevelRef.value = 'poSt'
       logPath +=
         ' > consti ' +
         constituency.id.toString() +
         ' > muni ' +
         municipality.id.toString() +
-        ' > pollingStation ' +
+        ' > poSt ' +
         pollingStation.id
       console.log('Fetching affiliations of ', logPath)
     } else if (municipality && constituency) {
@@ -174,7 +174,7 @@ async function getAffiliationsOf(
         municipality.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-      currentVoteLevelRef.value = 'muni'
+      voteLevelRef.value = 'muni'
       logPath += ' > consti ' + constituency.id.toString() + ' > muni ' + municipality.id.toString()
       console.log('Fetching affiliations of ', logPath)
     } else if (constituency) {
@@ -183,25 +183,25 @@ async function getAffiliationsOf(
         constituency.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-      currentVoteLevelRef.value = 'consti'
+      voteLevelRef.value = 'consti'
       logPath += ' > consti ' + constituency.id
       console.log('Fetching affiliations of ', logPath)
     } else if (province) {
       const response = await ProviService.getProviLevel_affiliationsOf(electionId, province.id)
       affiVotesRef.value = response
-      currentVoteLevelRef.value = 'provi'
+      voteLevelRef.value = 'provi'
       logPath += ' > provi ' + province.id
       console.log('Fetching affiliations of ', logPath)
     } else {
       const response = await ElectionService.getElectoralLevel_affiliationsOf(electionId)
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-      currentVoteLevelRef.value = 'national'
+      voteLevelRef.value = 'national'
       console.log('Fetching affiliations of ', logPath)
     }
   } catch (err) {
     console.error('Error fetching affiliations of ', logPath, ': ', err)
     affiVotesRef.value = null
-    currentVoteLevelRef.value = null
+    voteLevelRef.value = null
   }
 }
 
@@ -266,14 +266,14 @@ function clearPollingStation2() {
 async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
-  currentVoteLevel1.value = null
+  voteLevel1.value = null
   await getElectoralLevel_provincesOf(selectedElection1.value, provinces1, clearProviAndBelow1)
 }
 
 async function onProvinceChange1() {
   clearConstiAndBelow1()
   affiVotes1.value = null
-  currentVoteLevel1.value = null
+  voteLevel1.value = null
   if (selectedProvi1.value) {
     await getProviLevel_constituenciesOf(
       selectedElection1.value,
@@ -287,7 +287,7 @@ async function onProvinceChange1() {
 async function onConstiChange1() {
   clearMuniAndBelow1()
   affiVotes1.value = null
-  currentVoteLevel1.value = null
+  voteLevel1.value = null
   if (selectedConsti1.value) {
     await getConstiLevel_municipalitiesOf(
       selectedElection1.value,
@@ -301,7 +301,7 @@ async function onConstiChange1() {
 async function onMuniChange1() {
   clearPollingStation1()
   affiVotes1.value = null
-  currentVoteLevel1.value = null
+  voteLevel1.value = null
   if (selectedMuni1.value) {
     await getMuniLevel_pollingStationsOf(
       selectedElection1.value,
@@ -315,21 +315,21 @@ async function onMuniChange1() {
 
 function onPollingStationChange1() {
   affiVotes1.value = null
-  currentVoteLevel1.value = null
+  voteLevel1.value = null
 }
 
 // Handles second filter set
 async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null
-  currentVoteLevel2.value = null
+  voteLevel2.value = null
   await getElectoralLevel_provincesOf(selectedElection2.value, provinces2, clearProviAndBelow2)
 }
 
 async function onProvinceChange2() {
   clearConstiAndBelow2()
   affiVotes2.value = null
-  currentVoteLevel2.value = null
+  voteLevel2.value = null
   if (selectedProvi2.value) {
     await getProviLevel_constituenciesOf(
       selectedElection2.value,
@@ -343,7 +343,7 @@ async function onProvinceChange2() {
 async function onConstiChange2() {
   clearMuniAndBelow2()
   affiVotes2.value = null
-  currentVoteLevel2.value = null
+  voteLevel2.value = null
   if (selectedConsti2.value) {
     await getConstiLevel_municipalitiesOf(
       selectedElection2.value,
@@ -357,7 +357,7 @@ async function onConstiChange2() {
 async function onMuniChange2() {
   clearPollingStation2()
   affiVotes2.value = null
-  currentVoteLevel2.value = null
+  voteLevel2.value = null
   if (selectedMuni2.value) {
     await getMuniLevel_pollingStationsOf(
       selectedElection2.value,
@@ -370,7 +370,7 @@ async function onMuniChange2() {
 }
 
 function onPollingStationChange2() {
-  affiVotes2.value = currentVoteLevel2.value = null
+  affiVotes2.value = voteLevel2.value = null
 }
 
 // (both sets)
@@ -387,10 +387,10 @@ async function applyFilter() {
       selectedConsti1.value,
       selectedPollingStation1.value,
       affiVotes1,
-      currentVoteLevel1,
+      voteLevel1,
     )
   } else {
-    affiVotes1.value = currentVoteLevel1.value = null
+    affiVotes1.value = voteLevel1.value = null
   }
   if (selectedElection2.value) {
     await getAffiliationsOf(
@@ -400,11 +400,11 @@ async function applyFilter() {
       selectedConsti2.value,
       selectedPollingStation2.value,
       affiVotes2,
-      currentVoteLevel2,
+      voteLevel2,
     )
   } else {
     affiVotes2.value = null
-    currentVoteLevel2.value = null
+    voteLevel2.value = null
   }
 }
 </script>
@@ -450,11 +450,11 @@ async function applyFilter() {
         >
           <option value="null" disabled>Select a polling station</option>
           <option
-            v-for="pollingStation in pollingStations1"
-            :key="pollingStation.id"
-            :value="pollingStation"
+            v-for="poSt in pollingStations1"
+            :key="poSt.id"
+            :value="poSt"
           >
-            {{ pollingStation.name }}
+            {{ poSt.name }}
           </option>
         </select>
       </div>
