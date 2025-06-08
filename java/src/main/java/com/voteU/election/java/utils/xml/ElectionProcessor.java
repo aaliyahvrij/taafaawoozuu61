@@ -513,7 +513,7 @@ public class ElectionProcessor<E> {
                 int postCodeEndIndex = poStName.indexOf(')', postCodeIndex);
                 if (postCodeEndIndex > postCodeIndex) {
                     String zipCode = poStName.substring(postCodeIndex + 10, postCodeEndIndex).replace(" ", "").toUpperCase();
-                    poStMap.put(ZIPCODE, zipCode);
+                    poStMap.put("zipCode", zipCode);
                     poStName = poStName.substring(0, postCodeIndex).trim() + poStName.substring(postCodeEndIndex + 1).trim();
                     poStMap.put("poStName", poStName);
                 }
