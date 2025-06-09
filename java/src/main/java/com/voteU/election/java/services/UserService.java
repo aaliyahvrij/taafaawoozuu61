@@ -1,6 +1,7 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.entities.User;
+import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
 import com.voteU.election.java.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,12 @@ public class UserService {
      * @return the created User object after being saved in the database
      */
     public User createUser(User user) {
+        if(userRepository.existsByUsername(user.getUsername())) {
+            throw new ResourceAlreadyExistsException("Could not create user: " + user.getUsername() + " username already exists");
+        }
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new ResourceAlreadyExistsException("Could not create user: " + user.getEmail() + " email already exists");
+        }
         user.setCreatedAt(Instant.now());
         return userRepository.save(user);
     }
