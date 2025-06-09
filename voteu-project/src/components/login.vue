@@ -3,7 +3,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authService } from '@/services/AuthService.ts'
+import { useAuth } from '@/composables/useAuth.ts'
 
+const { login, getRole } = useAuth()
 
 const error = ref<string | null>(null);
 const loginForm = ref({
@@ -23,17 +25,13 @@ const submit = async () => {
   }
 
   try {
+    await login(loginForm.value.username, loginForm.value.password);
+    emit('submit');
 
-    await authService.login(loginForm.value.username, loginForm.value.password);
-
-    emit('submit', authService.getDecodedToken());
+    const role = getRole();
+    console.log('User logged in with role:', role);
 
     error.value = null;
-    console.log('User logged in:', authService.getDecodedToken());
-
-    await router.push('/');
-
-    const role = authService.getUserRole();
 
     if (role === 'ADMIN') {
       router.push('/admin');
@@ -47,13 +45,12 @@ const submit = async () => {
   }
 };
 
-
 </script>
 
 <template>
   <div class="login-container">
     <div class="circle-bg">
-      <form class="form">
+      <form class="form" @submit.prevent="submit">
         <h2 class="form-title">Login</h2>
 
         <div class="form-group">
@@ -68,7 +65,7 @@ const submit = async () => {
 
         <div v-if="error" class="error-message">{{ error }}</div>
 
-        <button class="submit-btn" @submit.prevent="submit">Sign In</button>
+        <button class="submit-btn" >Sign In</button>
 
         <p class="link-text">
           Not a member? <RouterLink to="/register">Create an account</RouterLink>
