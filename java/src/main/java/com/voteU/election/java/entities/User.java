@@ -24,6 +24,10 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Column(name = "username", nullable = false, length = 45)
     private String username;
 
@@ -52,3 +56,4 @@ public class User {
     public User() {
     }
 }
+
