@@ -35,7 +35,7 @@ public class PostsController {
      * @return a ResponseEntity containing the newly created Posts object
      */
     @PostMapping
-    public ResponseEntity<Posts> createPost(Posts post) {
+    public ResponseEntity<Posts> createPost(@RequestBody Posts post) {
         return ResponseEntity.ok(postsService.createPost(post));
     }
 
