@@ -1,34 +1,24 @@
-import { ref } from 'vue'
-import type { User } from '@/interface/User.ts'
+import { ref } from 'vue';
+import { authService } from '@/services/AuthService.ts'
 
-const user = ref<User | null>(null)
 
-const storedUser = localStorage.getItem('loggedInUser')
-if (storedUser) {
-  user.value = JSON.parse(storedUser)
-}
-
-function login(newUser: User) {
-  user.value = newUser
-  localStorage.setItem('loggedInUser', JSON.stringify(newUser))
-}
-
-function logout() {
-  user.value = null
-  localStorage.removeItem('loggedInUser')
-}
-
-function isLoggedIn() {
-  return !!user.value
-}
-
+const isLoggedIn = ref(authService.isAuthenticated());
 
 export function useAuth() {
+  const login = async (username: string, password: string) => {
+    await authService.login(username, password);
+    isLoggedIn.value = true;
+  };
+
+  const logout = () => {
+    authService.logout();
+    isLoggedIn.value = false;
+  };
+
   return {
-    user,
+    isLoggedIn,
     login,
     logout,
-    isLoggedIn,
-
-  }
+    getRole: authService.getUserRole,
+  };
 }
