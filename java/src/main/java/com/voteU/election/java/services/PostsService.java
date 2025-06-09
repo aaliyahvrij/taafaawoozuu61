@@ -1,7 +1,9 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.entities.Posts;
+import com.voteU.election.java.entities.User;
 import com.voteU.election.java.repositories.PostsRepository;
+import com.voteU.election.java.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,9 +20,11 @@ import java.util.Optional;
 public class PostsService {
 
     private final PostsRepository postsRepository;
+    private final UserRepository userRepository;
 
-    public PostsService(PostsRepository postsRepository) {
+    public PostsService(PostsRepository postsRepository, UserRepository userRepository) {
         this.postsRepository = postsRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -32,6 +36,8 @@ public class PostsService {
         return postsRepository.findAll();
     }
 
+
+
     /**
      * Creates a new post in the system. This method sets the current timestamp as the creation time
      * for the post and saves the post entity to the database.
@@ -40,6 +46,11 @@ public class PostsService {
      * @return the created Posts object after being saved in the database
      */
     public Posts createPost(Posts post) {
+        Integer userId = post.getUser().getId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        post.setUser(user);
         post.setCreatedAt(Instant.now());
         return postsRepository.save(post);
     }
