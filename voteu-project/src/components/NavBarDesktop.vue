@@ -1,14 +1,7 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/useAuth'
-import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth.ts'
 
-const { user, logout, isLoggedIn } = useAuth()
-const router = useRouter()
-
-function handleLogout() {
-  logout()
-  router.push('/login')
-}
+const { isLoggedIn, logout } = useAuth()
 </script>
 
 <template>
@@ -24,8 +17,8 @@ function handleLogout() {
       </ul>
     </nav>
     <div class="login-link">
-      <button v-if="!isLoggedIn()" class="login-button" @click="$router.push('/login')">Login</button>
-      <button v-else class="login-button" @click="handleLogout">Logout ({{ user?.username }})</button>
+      <button v-if="isLoggedIn" @click="logout">Logout</button>
+      <RouterLink v-else to="/login">Login</RouterLink>
     </div>
 
   </aside>
