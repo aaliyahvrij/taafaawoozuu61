@@ -41,20 +41,6 @@ export async function getUserByUsername(username: string): Promise<User> {
 }
 
 /**
- * Retrieves a user by their login credentials.
- *
- * @param {string} username - The username of the user attempting to log in.
- * @param {string} password - The password of the user attempting to log in.
- * @return {Promise<User>} A promise that resolves to the authenticated user object.
- */
-export async function getUserByLogin(username: string, password: string): Promise<User> {
-  return await apiFetch<User>(`/users/login`, {
-    method: 'POST',
-    body: JSON.stringify({ username, password }),
-  });
-}
-
-/**
  * Creates a new user by sending the provided user details to the API.
  *
  * @param {User} user - The user object containing details of the user to be created.
