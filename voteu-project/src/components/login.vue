@@ -1,9 +1,8 @@
 <script setup lang="ts">
 
 import { ref } from 'vue'
-import { getUserByLogin } from '@/services/UserService.ts'
 import { useRouter } from 'vue-router'
-import { useAuth } from '@/composables/useAuth.ts'
+import { authService } from '@/services/AuthService.ts'
 
 
 const error = ref<string | null>(null);
@@ -14,8 +13,6 @@ const loginForm = ref({
 
 
 const router = useRouter()
-const { login: loginUser } = useAuth()
-
 
 const emit = defineEmits(['submit'])
 
@@ -26,19 +23,27 @@ const submit = async () => {
   }
 
   try {
-    const user = await getUserByLogin(loginForm.value.username, loginForm.value.password);
-    if (user) {
-      loginUser(user)
-      emit('submit', user);
-      console.log('User logged in:', user);
-      error.value = null;
-      await router.push('/')
+
+    await authService.login(loginForm.value.username, loginForm.value.password);
+
+    emit('submit', authService.getDecodedToken());
+
+    error.value = null;
+    console.log('User logged in:', authService.getDecodedToken());
+
+    await router.push('/');
+
+    const role = authService.getUserRole();
+
+    if (role === 'ADMIN') {
+      router.push('/admin');
     } else {
-      error.value = 'Invalid username or password.';
+      router.push('/home');
     }
+
   } catch (err) {
     console.error(err);
-    error.value = 'Login failed. Please try again.';
+    error.value = 'Invalid username or password.';
   }
 };
 
@@ -63,7 +68,7 @@ const submit = async () => {
 
         <div v-if="error" class="error-message">{{ error }}</div>
 
-        <button class="submit-btn" @click.prevent="submit">Sign In</button>
+        <button class="submit-btn" @submit.prevent="submit">Sign In</button>
 
         <p class="link-text">
           Not a member? <RouterLink to="/register">Create an account</RouterLink>
