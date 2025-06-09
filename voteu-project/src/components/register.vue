@@ -4,6 +4,7 @@ import {computed, onMounted, ref} from 'vue'
 import type { Countries } from '@/interface/Countries.ts'
 import { getAllCountries } from '@/services/CountriesService.ts'
 import { createUser } from '@/services/UserService.ts'
+import router from '@/router'
 
 const countries = ref<Countries[]>([]);
 const error = ref<string | null>(null);
@@ -75,6 +76,7 @@ const submit = async () => {
     const newUser = await createUser(registerForm.value);
     console.log('User created:', newUser);
     emit('submit', newUser);
+    router.push('/login');
   } catch (caughtError: any) {
     error.value = caughtError.message
     console.error(error.value);
