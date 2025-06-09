@@ -21,7 +21,7 @@ public class Constituencies {
     private int provinceId;
 
     @Column(name = "election_id")
-    private int electionId;
+    private String electionId;
 
     @Column(name = "name", nullable = false)
     private String name;

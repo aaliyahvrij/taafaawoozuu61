@@ -1,9 +1,11 @@
 package com.voteU.election.java.services;
 import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactElection;
+import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
+import com.voteU.election.java.repositories.electiondata.ConstituencyRepository;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -11,9 +13,11 @@ import java.util.*;
 public class ConstituencyService {
 
     private final ElectionService electionService;
+    private final ConstituencyRepository constituencyRepository;
 
-    public ConstituencyService(ElectionService electionService) {
+    public ConstituencyService(ElectionService electionService, ConstituencyRepository constituencyRepository) {
         this.electionService = electionService;
+        this.constituencyRepository = constituencyRepository;
     }
 
     public Map<Integer, Constituency> getConstituenciesByYear(String year) {
@@ -63,5 +67,13 @@ public class ConstituencyService {
             return null;
         }
         return constituency.getParties();
+    }
+
+    public List<DropdownOptionDTO<Integer>> getAllConstituencyNames(String year) {
+        return constituencyRepository.getAllByElectionId(year);
+    }
+
+    public List<DropdownOptionDTO<Integer>> getAllConstituencyNamesByProvince(String electionId, Integer provinceId) {
+        return constituencyRepository.getAllByProvinceId(electionId, provinceId);
     }
 }

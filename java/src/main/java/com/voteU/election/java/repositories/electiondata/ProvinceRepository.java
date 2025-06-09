@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface ProvinceRepository extends JpaRepository<Provinces, Integer> {
 
-    @Query("SELECT new com.voteU.election.java.dto.DropdownOptionDTO(c.provinceId, c.name) FROM Provinces c where c.electionId = :electionId")
+    @Query("SELECT new com.voteU.election.java.dto.DropdownOptionDTO(p.provinceId, p.name) FROM Provinces p where p.electionId = :electionId")
     List<DropdownOptionDTO<Integer>> getProvincesByElectionId(@Param("electionId") String electionId);
 }
