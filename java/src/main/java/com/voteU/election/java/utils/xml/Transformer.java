@@ -28,7 +28,7 @@ public interface Transformer<E> {
      *
      * @param electionMap a {@code LinkedHashMap} containing the information as {@code String}'s.
      */
-    void registerElectoralData(LinkedHashMap<String, String> electionMap);
+    void registerElectoralLevelData(LinkedHashMap<String, String> electionMap);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold
@@ -45,7 +45,7 @@ public interface Transformer<E> {
 
     /**
      * Called once per file with information about the constituency. The {@code constiMap} can hold
-     * the same information as {@code electionMap} in {@link #registerElectoralData(LinkedHashMap)},
+     * the same information as {@code electionMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
      * and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#CONSTI_ID}</li>

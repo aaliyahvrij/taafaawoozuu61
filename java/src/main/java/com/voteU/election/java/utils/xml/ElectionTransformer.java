@@ -16,7 +16,7 @@ public class ElectionTransformer implements Transformer<Election> {
     private final LinkedHashMap<String, Election> electionListMap = new LinkedHashMap<>();
 
     @Override
-    public void registerElectoralData(LinkedHashMap<String, String> prcsElectionMap) {
+    public void registerElectoralLevelData(LinkedHashMap<String, String> prcsElectionMap) {
         String electionId = prcsElectionMap.get("electionId");
         String electionName = prcsElectionMap.get("electionName");
         String electionDate = prcsElectionMap.get("electionDate");

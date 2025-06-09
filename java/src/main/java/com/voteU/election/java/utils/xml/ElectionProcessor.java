@@ -183,7 +183,7 @@ public class ElectionProcessor<E> {
                     return;
                 }
             }
-            this.transformer.registerElectoralData(electionMap);
+            this.transformer.registerElectoralLevelData(electionMap);
             parser.findAndAcceptEndTag(ELECTION_ID);
         }
     }
