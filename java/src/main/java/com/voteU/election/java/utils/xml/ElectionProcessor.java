@@ -245,7 +245,7 @@ public class ElectionProcessor<E> {
                             if (parser.findBeginTag(VV_COUNT)) {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
                                 LinkedHashMap<String, String> candiMap = new LinkedHashMap<>(constiMap);
-                                candiMap.put("candId", String.valueOf(affId));
+                                candiMap.put("affId", String.valueOf(affId));
                                 candiMap.put("candiShortCode", candiShortCode);
                                 processedCandiShortCodes.add(candiShortCode);
                                 candiMap.put("candiVVCount", String.valueOf(candiVVCount));
