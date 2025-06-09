@@ -1,39 +1,71 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useAuth } from '@/composables/useAuth'
-import { getAllPosts } from '@/services/PostsService.ts'
+import {createPost, getAllPosts} from '@/services/PostsService.ts'
 import type { Posts } from '@/interface/Posts.ts'
+import CommentSection from '@/components/CommentSection.vue'
 
-const { isLoggedIn,  } = useAuth()
+
+const { isLoggedIn, user  } = useAuth()
 
 const showForm = ref(false)
 const posts = ref<Posts[]>([])
-const newPostBody = ref('')
-const newPostTitle = ref('')
-const newPostDescription = ref('')
+
+onMounted(() => {
+  loadPosts()
+})
 
 async function loadPosts() {
   posts.value = await getAllPosts()
 }
+
+const newPost = ref({
+  title: '',
+  description: '',
+  body: ''
+})
 
 function handleAddPostClick() {
   showForm.value = !showForm.value
 }
 
 async function submitPost() {
-  if (!newPostBody.value.trim() || !newPostTitle.value.trim() || !newPostDescription.value.trim()) {
-    alert('Please fill in title, description and body')
+  if (!newPost.value.title || !newPost.value.description || !newPost.value.body) {
+    alert('Please fill in all fields.')
     return
   }
 
+  if (!user.value?.id) {
+    alert('Gebruiker niet ingelogd.');
+    return;
+  }
 
+  try {
+    await createPost({
+      ...newPost.value,
+      createdAt: new Date().toISOString(),
+      user: { id: user.value.id, username: user.value.username  },
+      comments: [],
+      id: undefined as unknown as number
+    })
 
-  await loadPosts()
+    newPost.value = { title: '', description: '', body: '' }
+    showForm.value = false
+    await loadPosts()
+  } catch (error) {
+    console.error('Failed to submit post:', error)
+    alert('Post submission failed.')
+  }
 }
 
-onMounted(() => {
-  loadPosts()
-})
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleString('nl-NL', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  })
+}
+
 </script>
 
 <template>
@@ -52,13 +84,13 @@ onMounted(() => {
 
     <div class="post-form" v-if="isLoggedIn() && showForm">
       <input
-        v-model="newPostTitle"
+        v-model="newPost.title"
         placeholder="Post title"
         class="textarea"
         style="margin-bottom: 0.5rem; font-weight: bold;"
       />
       <input
-        v-model="newPostDescription"
+        v-model="newPost.description"
         placeholder="Post description"
         class="textarea"
         style="margin-bottom: 0.5rem;"
@@ -66,7 +98,7 @@ onMounted(() => {
       <textarea
         placeholder="Write your post..."
         class="textarea"
-        v-model="newPostBody"
+        v-model="newPost.body"
       ></textarea>
       <button class="submit-btn" @click="submitPost">Post</button>
     </div>
@@ -75,9 +107,13 @@ onMounted(() => {
       <h2 class="post-title">All Posts</h2>
       <ul class="post-list">
         <li class="post-item" v-for="post in posts" :key="post.id">
-          <span class="author">User {{ post.userId }}:</span> <strong>{{ post.title }}</strong><br />
+          <span class="author">User {{ post.user.username }}:</span> <strong>{{ post.title }}</strong><br />
           <em>{{ post.description }}</em><br />
           <p>{{ post.body }}</p>
+          <small class="timestamp">
+            📅 {{ formatDate(post.createdAt) }}
+          </small>
+          <CommentSection v-if="post.id" :postId="post.id" />
         </li>
       </ul>
     </div>
@@ -194,5 +230,12 @@ onMounted(() => {
 .post-item .author {
   font-weight: bold;
   color: #1e40af;
+}
+
+.timestamp {
+  display: block;
+  margin-top: 0.5rem;
+  color: #6b7280;
+  font-size: 0.85rem;
 }
 </style>
