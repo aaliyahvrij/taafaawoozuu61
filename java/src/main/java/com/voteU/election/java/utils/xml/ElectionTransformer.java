@@ -58,12 +58,12 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstiLevelData(LinkedHashMap<String, String> prcsConstiMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap) {
+    public void registerConstiLevel_affiData(LinkedHashMap<String, String> prcsConstiMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap) {
         // ee
     }
 
     @Override
-    public void registerMuniLevelData(LinkedHashMap<String, String> muniMap) {
+    public void registerMuniLevel_affiData(LinkedHashMap<String, String> muniMap) {
         int constId = Integer.parseInt(muniMap.get("constId"));
         String munId = muniMap.get("munId");
         String muniName = muniMap.get("muniName");
