@@ -1,7 +1,7 @@
 import type { Affiliation, Constituency, Province } from '@/interfaces'
 
 export class ProviService {
-  static async getElectoralLevel_provincesOf(
+  static async getNationalLevel_provincesOf(
     electionId: string,
   ): Promise<Record<number, Province> | null> {
     try {

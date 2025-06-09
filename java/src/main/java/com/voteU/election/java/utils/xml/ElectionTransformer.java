@@ -16,7 +16,7 @@ public class ElectionTransformer implements Transformer<Election> {
     private final LinkedHashMap<String, Election> electionListMap = new LinkedHashMap<>();
 
     @Override
-    public void registerElectoralLevelData(LinkedHashMap<String, String> prcsElectionMap) {
+    public void registerElectoralData(LinkedHashMap<String, String> prcsElectionMap) {
         String electionId = prcsElectionMap.get("electionId");
         String electionName = prcsElectionMap.get("electionName");
         String electionDate = prcsElectionMap.get("electionDate");
@@ -30,7 +30,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNationalLevelData(LinkedHashMap<String, String> nationMap) {
+    public void registerNationalLevel_affiOrCandiData(LinkedHashMap<String, String> nationMap) {
         String electionId = nationMap.get("electionId");
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiListMap = election.getAffiliations();
@@ -171,7 +171,7 @@ public class ElectionTransformer implements Transformer<Election> {
     /**
      * Retrieves all the data of a specific election.
      */
-    public Election getElectoralLevelDataOf(String year) {
+    public Election getElectoralDataOf(String year) {
         return this.electionListMap.get(year);
     }
 }

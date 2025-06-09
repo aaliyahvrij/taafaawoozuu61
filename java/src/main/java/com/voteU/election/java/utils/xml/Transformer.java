@@ -23,13 +23,12 @@ public interface Transformer<E> {
      * <ul>
      *     <li>{@link ElectionProcessor#ELECTION_ID}</li>
      *     <li>{@link ElectionProcessor#ELECTION_NAME}</li>
-     *     <li>{@link ElectionProcessor#ELECTION_CATEGORY}</li>
      *     <li>{@link ElectionProcessor#ELECTION_DATE}</li>
      * </ul>
      *
      * @param electionMap a {@code LinkedHashMap} containing the information as {@code String}'s.
      */
-    void registerElectoralLevelData(LinkedHashMap<String, String> electionMap);
+    void registerElectoralData(LinkedHashMap<String, String> electionMap);
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold
@@ -42,11 +41,11 @@ public interface Transformer<E> {
      * @param nationMap a {@code LinkedHashMap} containing information about the election,
      *                  constituency, affiliation, candidate and valid vote count.
      */
-    void registerNationalLevelData(LinkedHashMap<String, String> nationMap);
+    void registerNationalLevel_affiOrCandiData(LinkedHashMap<String, String> nationMap);
 
     /**
      * Called once per file with information about the constituency. The {@code constiMap} can hold
-     * the same information as {@code electionMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
+     * the same information as {@code electionMap} in {@link #registerElectoralData(LinkedHashMap)},
      * and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#CONSTI_ID}</li>

@@ -55,7 +55,6 @@ public class ElectionProcessor<E> {
     public static final String ELECTION = "Election";
     public static final String ELECTION_ID = "ElectionIdentifier";
     public static final String ELECTION_NAME = "ElectionName";
-    public static final String ELECTION_CATEGORY = "ElectionCategory";
     public static final String ELECTION_DATE = "ElectionDate";
 
     /*
@@ -81,7 +80,6 @@ public class ElectionProcessor<E> {
     public static final String POLLING_STATION = "ReportingUnitVotes";
     public static final String POLLING_STATION_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
-    public static final String ZIPCODE = "ZipCode"; // For convenience, is used as a key in the data-maps.
 
     /*
      The tag names on the affiliation level within the XML files, which are also used as keys in the maps
@@ -104,10 +102,6 @@ public class ElectionProcessor<E> {
     public static final String FIRST_NAME = "FirstName";
     public static final String LAST_NAME_PREFIX = "NamePrefix";
     public static final String LAST_NAME = "LastName";
-    public static final String GENDER = "Gender";
-    //public static final String QUALIFYING_ADDRESS = "QualifyingAddress";
-    //public static final String LOCALITY = "Locality";
-    public static final String LOCALITY_NAME = "LocalityName";
 
     // Used internally
     private static final String NAME_TYPE = "NameType";
@@ -141,27 +135,30 @@ public class ElectionProcessor<E> {
         LOG.info("Loading election data from %s".formatted(folderName));
         LinkedHashMap<String, String> electionMap = new LinkedHashMap<>();
         electionMap.put("electionId", electionId);
-        for (Path totalVVCountFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
-            LOG.fine("Found: %s".formatted(totalVVCountFile));
-            XMLParser parser = new XMLParser(new FileInputStream(totalVVCountFile.toString()));
+        for (Path nationFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
+            LOG.fine("Found %s - %s".formatted(folderName, nationFile));
+            System.out.println(folderName + " - " + nationFile);
+            XMLParser parser = new XMLParser(new FileInputStream(nationFile.toString()));
             processElectoralLevelData(electionMap, parser);
-            processNationalLevelData(electionMap, parser);
+            processNationalLevel_affiOrCandiData(electionMap, parser);
         }
         for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
-            LOG.fine("Found: %s".formatted(constiFile));
-            System.out.println(folderName + constiFile.toString());
+            LOG.fine("Found %s - %s".formatted(folderName, constiFile));
+            System.out.println(folderName + " - " + constiFile);
             XMLParser parser = new XMLParser(new FileInputStream(constiFile.toString()));
             processElectoralLevelData(electionMap, parser);
             processConstiOrMuniLevelData(electionMap, parser, "consti");
         }
         for (Path muniFile : PathUtils.findFilesToScan(folderName, "Telling_%s_gemeente_".formatted(electionId))) {
-            System.out.println(folderName + muniFile.toString());
+            LOG.fine("Found %s - %s".formatted(folderName, muniFile));
+            System.out.println(folderName + " - " + muniFile);
             XMLParser parser = new XMLParser(new FileInputStream(muniFile.toString()));
             processElectoralLevelData(electionMap, parser);
             processConstiOrMuniLevelData(electionMap, parser, "muni");
         }
         for (Path candiFile : PathUtils.findFilesToScan(folderName, "Kandidatenlijsten_%s_".formatted(electionId))) {
-            LOG.fine("Found: %s".formatted(candiFile));
+            LOG.fine("Found %s - %s".formatted(folderName, candiFile));
+            System.out.println(folderName + " - " + candiFile);
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElectoralLevelData(electionMap, parser);
             processCandiLevel_ConstiData(electionMap, parser);
@@ -169,51 +166,29 @@ public class ElectionProcessor<E> {
     }
 
     private void processElectoralLevelData(LinkedHashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(MUNICIPALITY)) {
-            if (parser.findBeginTag(MUNI_ID)) {
-                String munId = parser.getAttributeValue(null, "Id");
-                electionMap.put("munId", munId);
-                String muniName = parser.getElementText();
-                electionMap.put("muniName", muniName);
-                parser.findAndAcceptEndTag(MUNI_ID);
-            }
-            parser.findAndAcceptEndTag(MUNICIPALITY);
-        }
         if (parser.findBeginTag(ELECTION_ID)) {
-            String expectedElectionId = electionMap.get(ELECTION_ID);
-            String electionId = parser.getAttributeValue(null, ID);
-            if (electionMap.containsKey(ELECTION_ID) && expectedElectionId.equals(electionId)) {
-                if (parser.findBeginTag(ELECTION_NAME)) {
-                    String electionName = parser.getElementText();
-                    electionMap.put("electionName", electionName);
-                    parser.findAndAcceptEndTag(ELECTION_NAME);
-                }
-                if (parser.findBeginTag(ELECTION_CATEGORY)) {
-                    String electionCategory = parser.getElementText();
-                    electionMap.put("electionCategory", electionCategory);
-                    parser.findAndAcceptEndTag(ELECTION_CATEGORY);
-                }
-                if (parser.findBeginTag(ELECTION_DATE)) {
-                    String electionDate = parser.getElementText();
-                    electionMap.put("electionDate", electionDate);
-                    parser.findAndAcceptEndTag(ELECTION_DATE);
-                }
-                for (Map.Entry<String, String> electionMapPair : electionMap.entrySet()) {
-                    if (electionMapPair.getValue() == null) {
-                        System.err.println("Missing " + electionMapPair.getKey() + " in electionMap: " + electionMap);
-                        return;
-                    }
-                }
-                this.transformer.registerElectoralLevelData(electionMap);
-                parser.findAndAcceptEndTag(ELECTION_ID);
-            } else {
-                LOG.warning("The %s %s does not match the expected identifier %s".formatted(ELECTION_ID, electionId, expectedElectionId));
-                parser.findAndAcceptEndTag(ELECTION);
+            if (parser.findBeginTag(ELECTION_NAME)) {
+                String electionName = parser.getElementText();
+                electionMap.put("electionName", electionName);
+                parser.findAndAcceptEndTag(ELECTION_NAME);
             }
+            if (parser.findBeginTag(ELECTION_DATE)) {
+                String electionDate = parser.getElementText();
+                electionMap.put("electionDate", electionDate);
+                parser.findAndAcceptEndTag(ELECTION_DATE);
+            }
+            for (Map.Entry<String, String> electionMapPair : electionMap.entrySet()) {
+                if (electionMapPair.getValue() == null) {
+                    System.err.println("Missing " + electionMapPair.getKey() + " in electionMap: " + electionMap);
+                    return;
+                }
+            }
+            this.transformer.registerElectoralData(electionMap);
+            parser.findAndAcceptEndTag(ELECTION_ID);
         }
     }
 
-    private void processNationalLevelData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processNationalLevel_affiOrCandiData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VV_COUNT)) {
             int affId = 0;
             HashSet<Integer> processedAffIds = new HashSet<>();
@@ -255,7 +230,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            this.transformer.registerNationalLevelData(affiMap);
+                            this.transformer.registerNationalLevel_affiOrCandiData(affiMap);
                             break;
                         case CANDIDATE:
                             String candiShortCode = null;
@@ -270,9 +245,9 @@ public class ElectionProcessor<E> {
                             if (parser.findBeginTag(VV_COUNT)) {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
                                 LinkedHashMap<String, String> candiMap = new LinkedHashMap<>(constiMap);
+                                candiMap.put("candId", String.valueOf(affId));
                                 candiMap.put("candiShortCode", candiShortCode);
                                 processedCandiShortCodes.add(candiShortCode);
-                                candiMap.put("addId", String.valueOf(affId));
                                 candiMap.put("candiVVCount", String.valueOf(candiVVCount));
                                 for (Map.Entry<String, String> candiMapPair : candiMap.entrySet()) {
                                     if (candiMapPair.getValue() == null) {
@@ -287,7 +262,7 @@ public class ElectionProcessor<E> {
                                         }
                                     }
                                 }
-                                this.transformer.registerNationalLevelData(candiMap);
+                                this.transformer.registerNationalLevel_affiOrCandiData(candiMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
                                 LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
@@ -322,6 +297,16 @@ public class ElectionProcessor<E> {
                         processConstiLevelData(constiMap, parser);
                         break;
                     case "muni":
+                        if (parser.findBeginTag(MUNICIPALITY)) {
+                            if (parser.findBeginTag(MUNI_ID)) {
+                                String munId = parser.getAttributeValue(null, "Id");
+                                constiMap.put("munId", munId);
+                                String muniName = parser.getElementText();
+                                constiMap.put("muniName", muniName);
+                                parser.findAndAcceptEndTag(MUNI_ID);
+                            }
+                            parser.findAndAcceptEndTag(MUNICIPALITY);
+                        }
                         processMuniLevelData(constiMap, parser);
                         break;
                 }
@@ -502,8 +487,8 @@ public class ElectionProcessor<E> {
         int affId = 0;
         int selectionIndex = 0;
         if (parser.findBeginTag(POLLING_STATION_ID)) {
-            String pollingStationId = parser.getAttributeValue(null, ID);
-            poStMap.put("poStId", pollingStationId);
+            String poStId = parser.getAttributeValue(null, ID);
+            poStMap.put("poStId", poStId);
             poStName = parser.getElementText();
             if (poStName.contains("Stembureau")) {
                 poStName = poStName.replace("Stembureau ", "");

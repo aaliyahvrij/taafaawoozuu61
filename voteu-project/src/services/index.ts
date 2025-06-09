@@ -1,6 +1,6 @@
 export * from './AffiStyleService'
 export * from './ConstiService'
-export * from './ElectionService'
+export * from './ElectionService.ts'
 export * from './MuniService'
 export * from './PoStService.ts'
 export * from './ProviService'

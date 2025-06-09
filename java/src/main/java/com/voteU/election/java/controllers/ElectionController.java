@@ -20,32 +20,32 @@ public class ElectionController {
     }
 
     @PostMapping
-    public boolean readAllElectoralLevelData() {
-        return this.electionService.readAllElectoralLevelData();
+    public boolean readAllElectoralData() {
+        return this.electionService.readAllElectoralData();
     }
 
     @PostMapping("/{electionId}")
-    public boolean readElectoralLevelDataOf(@PathVariable String electionId) {
-        return this.electionService.readElectoralLevelDataOf(electionId);
+    public boolean readElectoralDataOf(@PathVariable String electionId) {
+        return this.electionService.readElectoralDataOf(electionId);
     }
 
     @GetMapping
-    public LinkedHashMap<String, Election> getAllElectoralLevelData() {
-        return this.electionService.getAllElectoralLevelData();
+    public LinkedHashMap<String, Election> getAllElectoralData() {
+        return this.electionService.getAllElectoralData();
     }
 
     @GetMapping("/{electionId}")
-    public Election getElectoralLevelDataOf(@PathVariable String electionId) {
-        return this.electionService.getElectoralLevelDataOf(electionId);
+    public Election getElectoralDataOf(@PathVariable String electionId) {
+        return this.electionService.getElectoralDataOf(electionId);
     }
 
     @GetMapping("/{electionId}/affiliations")
-    public LinkedHashMap<Integer, Affiliation> getElectoralLevel_affiliationsOf(@PathVariable String electionId) {
-        return this.electionService.getElectoralLevel_affiliationsOf(electionId);
+    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiliationsOf(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_affiliationsOf(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
-    public LinkedHashMap<String, PollingStation> getElectoralLevel_pollingStationsOf(@PathVariable String electionId) {
-        return this.electionService.getElectoralLevel_pollingStationsOf(electionId);
+    public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_pollingStationsOf(electionId);
     }
 }

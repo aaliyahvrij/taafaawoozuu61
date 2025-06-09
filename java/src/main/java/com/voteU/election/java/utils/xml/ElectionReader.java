@@ -26,7 +26,7 @@ public class ElectionReader {
      *
      * @return A map containing election results, organized by election year.
      */
-    public LinkedHashMap<String, Election> getAllElectoralLevelData() {
+    public LinkedHashMap<String, Election> getAllElectoralData() {
         String[] electionIds = {"TK2021", "TK2023"};
         for (String electionId : electionIds) {
             String path = "/EML_bestanden_" + electionId;
@@ -42,7 +42,7 @@ public class ElectionReader {
         return this.transformer.getElectionListMap();
     }
 
-    public Election getElectoralLevelDataOf(String electionId) {
+    public Election getElectoralDataOf(String electionId) {
         String path = "/EML_bestanden_" + electionId;
         try {
             this.processor.processResults(electionId, PathUtils.getResourcePath(path));
@@ -51,6 +51,6 @@ public class ElectionReader {
             log.error("Could not process Election {}", electionId, e);
         }
         System.out.println("All files are processed.\n");
-        return this.transformer.getElectoralLevelDataOf(electionId);
+        return this.transformer.getElectoralDataOf(electionId);
     }
 }
