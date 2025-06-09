@@ -75,23 +75,6 @@ public class UserController {
     }
 
     /**
-     * Authenticates a user based on the provided login credentials.
-     * The method checks the username and password against the stored user data and
-     * returns the authenticated user if the credentials are valid. If the credentials
-     * are invalid, an exception is thrown.
-     *
-     * @param loginDto the login credentials containing the username and password
-     * @return a ResponseEntity containing the authenticated User if login is successful
-     * @throws ResourceNotFoundException if the provided credentials are invalid
-     */
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginDTO loginDto) {
-        return userService.getUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword())
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
-    }
-
-    /**
      * Retrieves a user by their email address.
      * If no user is found with the specified email, a NotFound exception is thrown.
      *
