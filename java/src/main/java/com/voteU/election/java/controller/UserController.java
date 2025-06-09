@@ -4,7 +4,9 @@ import com.voteU.election.java.dto.LoginDTO;
 import com.voteU.election.java.entities.User;
 import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  * as well as performing user-specific queries such as authentication or
  * retrieving users by their username, email, or ID.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -110,8 +113,11 @@ public class UserController {
      * @return {@code ResponseEntity<Void>} indicating the operation was successful and no content is returned
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id, Authentication authentication) {
         userService.deleteUser(id);
+        log.info("Deleting user ID: " + id);
+        log.info("Request made by: " + authentication.getName());
+        log.info("Authorities: " + authentication.getAuthorities());
         return ResponseEntity.noContent().build();
     }
 }
