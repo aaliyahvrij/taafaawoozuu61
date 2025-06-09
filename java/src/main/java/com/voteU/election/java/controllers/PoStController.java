@@ -19,7 +19,7 @@ public class PoStController {
     }
 
     @GetMapping
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStOf(@PathVariable String electionId) {
+    public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(@PathVariable String electionId) {
         return this.poStService.getNationalLevel_pollingStationsOf(electionId);
     }
 }
