@@ -76,6 +76,11 @@ export async function updateUser(user: User): Promise<User> {
 export async function deleteUser(id: number): Promise<void> {
   await apiFetch(`/users/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace 'localStorage.getItem' as needed in your setup
+      'Content-Type': 'application/json',
+    },
+
   })
 }
 
