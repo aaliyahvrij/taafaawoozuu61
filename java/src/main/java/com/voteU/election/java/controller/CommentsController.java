@@ -57,8 +57,10 @@ public class CommentsController {
      * @throws ResourceNotFoundException if no comments are found for the given post ID
      */
     @GetMapping("/posts/{postsId}")
-    public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Posts postsId) {
-        List<Comments> comments = commentsService.getCommentsByPostsId(postsId);
+    public ResponseEntity<List<Comments>> getCommentsByPostId(@PathVariable Integer postsId) {
+        Posts post = new Posts();
+        post.setId(postsId);
+        List<Comments> comments = commentsService.getCommentsByPostsId(post);
         if (comments.isEmpty()) {
             throw new ResourceNotFoundException("No comments found for postId: " + postsId);
         }
