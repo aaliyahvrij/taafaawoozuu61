@@ -140,7 +140,7 @@ public class ElectionProcessor<E> {
             System.out.println(folderName + " - " + nationFile);
             XMLParser parser = new XMLParser(new FileInputStream(nationFile.toString()));
             processElectoralLevelData(electionMap, parser);
-            processNationalLevel_affiOrCandiData(electionMap, parser);
+            processNationalLevel_affiData(electionMap, parser);
         }
         for (Path constiFile : PathUtils.findFilesToScan(folderName, "Telling_%s_kieskring_".formatted(electionId))) {
             LOG.fine("Found %s - %s".formatted(folderName, constiFile));
@@ -198,7 +198,7 @@ public class ElectionProcessor<E> {
         }
     }
 
-    private void processNationalLevel_affiOrCandiData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
+    private void processNationalLevel_affiData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(TOTAL_VV_COUNT)) {
             int affId = 0;
             HashSet<Integer> processedAffIds = new HashSet<>();
@@ -240,7 +240,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            this.transformer.registerNationalLevel_affiOrCandiData(affiMap);
+                            this.transformer.registerNationalLevel_affiData(affiMap);
                             break;
                         case CANDIDATE:
                             String candiShortCode = null;
@@ -272,7 +272,7 @@ public class ElectionProcessor<E> {
                                         }
                                     }
                                 }
-                                this.transformer.registerNationalLevel_affiOrCandiData(candiMap);
+                                this.transformer.registerNationalLevel_affiData(candiMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
                                 LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candiShortCode, affId));

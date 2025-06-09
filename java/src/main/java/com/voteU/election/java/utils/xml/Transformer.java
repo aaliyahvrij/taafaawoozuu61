@@ -41,7 +41,7 @@ public interface Transformer<E> {
      * @param nationMap a {@code LinkedHashMap} containing information about the election,
      *                  constituency, affiliation, candidate and valid vote count.
      */
-    void registerNationalLevel_affiOrCandiData(LinkedHashMap<String, String> nationMap);
+    void registerNationalLevel_affiData(LinkedHashMap<String, String> nationMap);
 
     /**
      * Called once per file with information about the constituency. The {@code constiMap} can hold
@@ -58,7 +58,7 @@ public interface Transformer<E> {
 
     void registerMuniLevel_affiData(LinkedHashMap<String, String> muniMap);
 
-    void registerPoStLevelData(LinkedHashMap<String, String> polingStationMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap);
+    void registerPoStLevelData(LinkedHashMap<String, String> poStMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap);
 
     /**
      * Called multiple times per file with information about a candidate.

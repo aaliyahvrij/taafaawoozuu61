@@ -30,7 +30,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerNationalLevel_affiOrCandiData(LinkedHashMap<String, String> nationMap) {
+    public void registerNationalLevel_affiData(LinkedHashMap<String, String> nationMap) {
         String electionId = nationMap.get("electionId");
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiListMap = election.getAffiliations();
