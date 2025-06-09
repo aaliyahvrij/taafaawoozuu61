@@ -9,6 +9,7 @@ import AuthView from '@/views/AuthView.vue'
 import login from '@/components/login.vue'
 import register from '@/components/register.vue'
 import AdminView from '@/views/AdminView.vue'
+import { authService } from '@/services/AuthService.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,6 +66,11 @@ const router = createRouter({
       path:'/admin',
       name: 'admin',
       component: AdminView,
+      beforeEnter: (to, from, next) => {
+        const role = authService.getUserRole();
+        if (role === 'ADMIN') next();
+        else next('/home');
+      }
     },
   ],
 })
