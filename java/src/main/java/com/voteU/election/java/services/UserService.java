@@ -1,7 +1,9 @@
 package com.voteU.election.java.services;
 
+import com.voteU.election.java.entities.Role;
 import com.voteU.election.java.entities.User;
 import com.voteU.election.java.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,9 +20,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -41,6 +45,9 @@ public class UserService {
      */
     public User createUser(User user) {
         user.setCreatedAt(Instant.now());
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
@@ -62,17 +69,6 @@ public class UserService {
      */
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
-    }
-
-    /**
-     * Retrieves a user from the database based on the provided username and password.
-     *
-     * @param username the username of the user to retrieve
-     * @param password the password of the user to retrieve
-     * @return an {@code Optional} containing the user if found, or an empty {@code Optional} if no user matches
-     */
-    public Optional<User> getUserByUsernameAndPassword(String username, String password) {
-        return userRepository.findUserByUsernameAndPassword(username, password);
     }
 
     /**
