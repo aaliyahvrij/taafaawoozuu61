@@ -313,7 +313,6 @@ public class ElectionProcessor<E> {
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
             while (parser.nextBeginTag(POLLING_STATION)) {
-                System.out.println("found POLLING_STATION tag");
                 processPoStLevelData(constiMap, parser);
                 parser.findAndAcceptEndTag(POLLING_STATION);
             }
