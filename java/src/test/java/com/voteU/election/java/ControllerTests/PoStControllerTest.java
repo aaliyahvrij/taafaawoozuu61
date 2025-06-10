@@ -59,7 +59,7 @@ class PoStControllerTest {
     @Test
     void test_getMuniLevel_compactPoStList() {
         when(poStService.getMuniLevel_compactPoStListOf(electionId, constId, munId)).thenReturn(List.of(sampleCompactPoSt));
-        List<CompactPollingStation> result = poStController.getMuniLevel_poStListOf_compact(electionId, constId, munId);
+        List<CompactPollingStation> result = poStController.getMuniLevel_compactPoStListOf(electionId, constId, munId);
         assertEquals(1, result.size());
         assertEquals(poStId, result.getFirst().getId());
         verify(poStService, times(1)).getMuniLevel_compactPoStListOf(electionId, constId, munId);
