@@ -4,8 +4,11 @@ import { useAuth } from '@/composables/useAuth'
 import {createPost, getAllPosts} from '@/services/PostsService.ts'
 import type { Posts } from '@/interface/Posts.ts'
 import CommentSection from '@/components/CommentSection.vue'
+import { useRouter } from 'vue-router'
 
-
+//TODO: ADD DATE TO CARD
+//TODO: ADD LIKE
+const router = useRouter()
 const { isLoggedIn, user  } = useAuth()
 
 const showForm = ref(false)
@@ -66,6 +69,11 @@ function formatDate(dateStr: string): string {
   })
 }
 
+function goToPost(postId : number) :void{
+  console.log("ID:", postId);
+  router.push({ path: `/post/${postId}` });
+}
+
 </script>
 
 <template>
@@ -106,10 +114,9 @@ function formatDate(dateStr: string): string {
     <div class="post-box">
       <h2 class="post-title">All Posts</h2>
       <ul class="post-list">
-        <li class="post-item" v-for="post in posts" :key="post.id">
+        <li class="post-item" v-for="post in posts" :key="post.id" @click="goToPost(post.id)">
           <span class="author">User {{ post.user.username }}:</span> <strong>{{ post.title }}</strong><br />
           <em>{{ post.description }}</em><br />
-          <p>{{ post.body }}</p>
           <small class="timestamp">
             📅 {{ formatDate(post.createdAt) }}
           </small>
@@ -225,6 +232,11 @@ function formatDate(dateStr: string): string {
   margin-bottom: 0.75rem;
   font-size: 1rem;
   color: #374151;
+}
+
+.post-item:hover{
+  cursor: pointer;
+  background-color: #dfdfe1;
 }
 
 .post-item .author {

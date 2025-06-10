@@ -1,5 +1,10 @@
 package com.voteU.election.java.CompactDTO;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CompactPollingStation {
     String id;
     String name;

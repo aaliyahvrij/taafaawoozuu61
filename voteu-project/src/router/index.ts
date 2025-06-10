@@ -8,6 +8,7 @@ import CompareView from "@/views/CompareView.vue";
 import AuthView from '@/views/AuthView.vue'
 import login from '@/components/login.vue'
 import register from '@/components/register.vue'
+import PostDetailView from '@/views/PostDetailView.vue'
 import AdminView from '@/views/AdminView.vue'
 import { authService } from '@/services/AuthService.ts'
 
@@ -33,6 +34,11 @@ const router = createRouter({
       path:'/forum',
       name:'forum',
       component: ForumView,
+    },
+    {
+      path: '/post/:id',
+      name: 'postdetail',
+      component: PostDetailView,
     },
     {
       path:'/filter',

@@ -4,6 +4,7 @@ import {computed, onMounted, ref} from 'vue'
 import type { Countries } from '@/interface/Countries.ts'
 import { getAllCountries } from '@/services/CountriesService.ts'
 import { createUser } from '@/services/UserService.ts'
+import router from '@/router'
 
 const countries = ref<Countries[]>([]);
 const error = ref<string | null>(null);
@@ -75,9 +76,10 @@ const submit = async () => {
     const newUser = await createUser(registerForm.value);
     console.log('User created:', newUser);
     emit('submit', newUser);
-  } catch (e) {
-    error.value = 'Failed to create user';
-    console.error(e);
+    router.push('/login');
+  } catch (caughtError: any) {
+    error.value = caughtError.message
+    console.error(error.value);
   }
 
 
@@ -149,6 +151,7 @@ onMounted(async () => {
           <label for="password">Password</label>
           <input type="password" id="password" name="password" v-model="registerForm.password"  @focus="passwordTouched = true"/>
           <ul v-if="passwordTouched" class="password-requirements">
+            <li v-if="error">{{error}}</li>
             <li :class="{ valid: password.length >= 8 }">At least 8 characters</li>
             <li :class="{ valid: /[A-Z]/.test(password) }">At least 1 uppercase letter</li>
             <li :class="{ valid: /[a-z]/.test(password) }">At least 1 lowercase letter</li>
