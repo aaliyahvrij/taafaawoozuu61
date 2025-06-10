@@ -382,8 +382,8 @@ public class ElectionProcessor<E> {
                                 candiVVCount = Integer.parseInt(parser.getElementText().trim());
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             }
-                            processedCandidates.add(candiCompKey);
                             candiMap.computeIfAbsent(affId, key -> new LinkedHashMap<>()).put(candId, candiVVCount);
+                            processedCandidates.add(candiCompKey);
                     }
                     parser.findAndAcceptEndTag(SELECTION);
                 }
