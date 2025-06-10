@@ -101,7 +101,7 @@ public class UserController {
      * @param updatedUser the updated user object containing new details for the user
      * @return a ResponseEntity containing the updated User object
      */
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
         return ResponseEntity.ok(userService.updateUser(id, updatedUser));
     }
@@ -112,7 +112,7 @@ public class UserController {
      * @param id the unique identifier of the user to be deleted
      * @return {@code ResponseEntity<Void>} indicating the operation was successful and no content is returned
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id, Authentication authentication) {
         userService.deleteUser(id);
         log.info("Deleting user ID: " + id);
