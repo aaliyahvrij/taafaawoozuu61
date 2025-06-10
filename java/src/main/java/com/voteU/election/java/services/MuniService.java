@@ -6,9 +6,9 @@ import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.models.*;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class MuniService {
@@ -59,19 +59,19 @@ public class MuniService {
         return municipality;
     }
 
-    public Map<Integer, Affiliation> getMuniLevel_affiliationsOf(String electionId, Integer constituencyId, String authorityId) {
-        Municipality municipality = getMunicipalityById(electionId, constituencyId, authorityId);
+    public Map<Integer, Affiliation> getMuniLevel_affiliationsOf(String electionId, Integer constId, String munId) {
+        Municipality municipality = getMunicipalityById(electionId, constId, munId);
         if (municipality == null) {
-            throw new ResourceNotFoundException("Municipality " + authorityId + " not found");
+            throw new ResourceNotFoundException("Municipality " + munId + " not found");
         }
         return municipality.getAffiliations();
     }
 
-    public Affiliation getAffiliationById(String electionId, Integer constId, String munId, Integer partyId) {
+    public Affiliation getAffiliationById(String electionId, Integer constId, String munId, Integer affId) {
         Map<Integer, Affiliation> affiliations = getMuniLevel_affiliationsOf(electionId, constId, munId);
-        Affiliation affiliation = affiliations.get(partyId);
+        Affiliation affiliation = affiliations.get(affId);
         if (affiliation == null) {
-            throw new ResourceNotFoundException("Party " + partyId + " not found");
+            throw new ResourceNotFoundException("Affiliation " + affId + " not found");
         }
         return affiliation;
     }
