@@ -14,7 +14,8 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 
 @RestController
-@RequestMapping("/api/{electionId}/pollingstations")
+//@RequestMapping("/api/{electionId}/pollingstations")
+@RequestMapping("/api/election/{electionId}/constituencies/{constId}/municipalities/{munId}/pollingstations")
 public class PoStController {
     private final PoStService poStService;
 
