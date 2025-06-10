@@ -2,7 +2,6 @@
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { authService } from '@/services/AuthService.ts'
 import { useAuth } from '@/composables/useAuth.ts'
 
 const { login, getRole } = useAuth()
