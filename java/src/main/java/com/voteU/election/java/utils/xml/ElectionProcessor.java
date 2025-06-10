@@ -161,7 +161,7 @@ public class ElectionProcessor<E> {
             System.out.println(folderName + " - " + candiFile);
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElectoralLevelData(electionMap, parser);
-            processCandiLevel_ConstiData(electionMap, parser);
+            processCandiLevel_constiData(electionMap, parser);
         }
     }
 
@@ -639,7 +639,7 @@ public class ElectionProcessor<E> {
         this.transformer.registerCandiLevelData(candiMap);
     }
 
-    private void processCandiLevel_ConstiData(LinkedHashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
+    private void processCandiLevel_constiData(LinkedHashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONSTITUENCY)) {
             LinkedHashMap<String, String> constiMap = new LinkedHashMap<>(electionMap);
             int constId;
