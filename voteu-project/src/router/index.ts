@@ -69,7 +69,7 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         const role = authService.getUserRole();
         if (role === 'ADMIN') next();
-        else next('/home');
+        else next('/');
       }
     },
   ],
