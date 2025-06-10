@@ -9,7 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,8 +27,8 @@ class PollingStationControllerTest {
     private final String poStId = "poll456";
     private PollingStation samplePollingStation;
     private CompactPollingStation sampleCompactPollingStation;
-    private Map<String, PollingStation> poStMap;
-    private Map<Integer, Affiliation> affiMap;
+    private LinkedHashMap<String, PollingStation> poStListMap;
+    private LinkedHashMap<Integer, Affiliation> affiListMap;
 
     @BeforeEach
     void setUp() {
@@ -37,16 +39,16 @@ class PollingStationControllerTest {
         sampleCompactPollingStation = new CompactPollingStation("PS1", "Station A", "1234AB");
         sampleCompactPollingStation.setId(poStId);
         sampleCompactPollingStation.setName("Station A");
-        poStMap = new HashMap<>();
-        poStMap.put(poStId, samplePollingStation);
-        affiMap = new HashMap<>();
+        poStListMap = new LinkedHashMap<>();
+        poStListMap.put(poStId, samplePollingStation);
+        affiListMap = new LinkedHashMap<>();
         Affiliation affi = new Affiliation(10, "Affi X", 1447);
-        affiMap.put(affi.getId(), affi);
+        affiListMap.put(affi.getId(), affi);
     }
 
     @Test
     void test_getMuniLevel_pollingStations() {
-        when(poStService.getMuniLevel_pollingStationsOf(electionId, constId, munId)).thenReturn(poStMap);
+        when(poStService.getMuniLevel_pollingStationsOf(electionId, constId, munId)).thenReturn(poStListMap);
         Map<String, PollingStation> result = poStController.getMuniLevel_pollingStationsOf(electionId, constId, munId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(poStId));
@@ -74,7 +76,7 @@ class PollingStationControllerTest {
 
     @Test
     void test_getPoStLevel_affiliations() {
-        when(poStService.getPoStLevel_affiliationsOf(electionId, constId, munId, poStId)).thenReturn(affiMap);
+        when(poStService.getPoStLevel_affiliationsOf(electionId, constId, munId, poStId)).thenReturn(affiListMap);
         Map<Integer, Affiliation> result = poStController.getPoStLevel_affiliationsOf(electionId, constId, munId, poStId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(10));
