@@ -119,14 +119,14 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = candiMap.get("electionId");
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<Integer, Constituency> electoralLevel_constiListMap = election.getConstiListMap();
-        Constituency consti = electoralLevel_constiListMap.get(constId);
-        if (consti != null) {
+        Constituency electoralLevel_consti = electoralLevel_constiListMap.get(constId);
+        if (electoralLevel_consti != null) {
             // Update or insert a candidate in a constituencial level affiliation
-            LinkedHashMap<Integer, Affiliation> constiLevel_affiListMap = consti.getAffiListMap();
+            LinkedHashMap<Integer, Affiliation> constiLevel_affiListMap = electoralLevel_consti.getAffiListMap();
             populateCandidate(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListMap);
 
             // Update or insert a candidate in each municipal level affiliation
-            LinkedHashMap<String, Municipality> constiLevel_muniListMap = consti.getMuniListMap();
+            LinkedHashMap<String, Municipality> constiLevel_muniListMap = electoralLevel_consti.getMuniListMap();
             for (Municipality constiLevel_muni : constiLevel_muniListMap.values()) {
                 LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = constiLevel_muni.getAffiListMap();
                 populateCandidate(candId, firstName, lastName, gender, localityName, affId, muniLevel_affiListMap);
@@ -159,11 +159,11 @@ public class ElectionTransformer implements Transformer<Election> {
                 }
             }
             if (candi == null) {
-                Candidate newCandi = new Candidate(candId, firstName, lastName);
-                newCandi.setGender(gender);
-                newCandi.setLocalityName(localityName);
-                newCandi.setAffId(affId);
-                affi.addCandi(newCandi);
+                candi = new Candidate(candId, firstName, lastName);
+                candi.setGender(gender);
+                candi.setLocalityName(localityName);
+                candi.setAffId(affId);
+                affi.addCandi(candi);
             }
         }
     }
