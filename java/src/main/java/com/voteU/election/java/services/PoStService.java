@@ -29,7 +29,6 @@ public class PoStService {
     /*public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(String electionId) {
         return this.electionService.getElectoralDataOf(electionId).getPollingStations();
     }*/
-
     public PoStService(MuniService muniService) {
         this.muniService = muniService;
     }
@@ -43,7 +42,6 @@ public class PoStService {
         Municipality municipality = muniService.getMunicipalityById(electionId, constId, munId);
         Map<String, PollingStation> pollingStations = municipality.getPollingStations();
         List<CompactPollingStation> CompactPollingStations = new ArrayList<>();
-
         for (PollingStation pollingStation : pollingStations.values()) {
             CompactPollingStations.add(new CompactPollingStation(pollingStation.getId(), pollingStation.getName(), pollingStation.getZipCode()));
         }

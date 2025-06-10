@@ -63,7 +63,7 @@ class PollingStationControllerTest {
         List<CompactPollingStation> result = poStController.getMuniLevel_pollingStationsOf_compact(electionId, constId, munId);
         assertEquals(1, result.size());
         assertEquals(poStId, result.getFirst().getId());
-        verify(poStService, times(1)).getMuniLevel_pollingStations_compact(electionId, constId, munId);
+        verify(poStService, times(1)).getMuniLevel_pollingStationsOf_compact(electionId, constId, munId);
     }
 
     @Test
