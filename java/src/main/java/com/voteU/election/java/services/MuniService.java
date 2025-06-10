@@ -48,11 +48,11 @@ public class MuniService {
 
     public Municipality getMuniById(String electionId, Integer constId, String munId) {
         LinkedHashMap<String, Municipality> constiLevel_muniListMap = getConstiLevel_muniListMapOf(electionId, constId);
-        Municipality muni = constiLevel_muniListMap.get(munId);
-        if (muni == null) {
+        Municipality constiLevel_muni = constiLevel_muniListMap.get(munId);
+        if (constiLevel_muni == null) {
             throw new ResourceNotFoundException("Muni " + munId + " not found in consti " + constId);
         }
-        return muni;
+        return constiLevel_muni;
     }
 
     public LinkedHashMap<Integer, Affiliation> getMuniLevel_affiListMapOf(String electionId, Integer constId, String munId) {
