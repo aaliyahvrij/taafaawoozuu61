@@ -74,10 +74,10 @@ export async function updateUser(user: User): Promise<User> {
  * @return {Promise<void>} A promise that resolves when the user is successfully deleted.
  */
 export async function deleteUser(id: number): Promise<void> {
-  await apiFetch(`/users/${id}`, {
+  await apiFetch(`/users/id/${id}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace 'localStorage.getItem' as needed in your setup
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json',
     },
 
