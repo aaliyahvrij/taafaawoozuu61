@@ -492,10 +492,8 @@ public class ElectionProcessor<E> {
             String poStId = parser.getAttributeValue(null, ID);
             poStMap.put("poStId", poStId);
             poStName = parser.getElementText();
-            System.out.println("before - poStName - " + poStName);
             if (poStName.contains("Stembureau")) {
                 poStName = poStName.replace("Stembureau ", "");
-                System.out.println("after - poStName - " + poStName);
             }
             int postCodeIndex = poStName.indexOf("(postcode:");
             if (postCodeIndex >= 0) {
