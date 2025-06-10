@@ -26,8 +26,8 @@ public class PoStService {
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    /*public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(String electionId) {
-        return this.electionService.getElectoralDataOf(electionId).getPollingStations();
+    /*public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMapOf(String electionId) {
+        return this.electionService.getElectoralDataOf(electionId).getPoStListMap();
     }*/
     public PoStService(MuniService muniService) {
         this.muniService = muniService;

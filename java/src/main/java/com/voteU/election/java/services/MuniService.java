@@ -67,7 +67,7 @@ public class MuniService {
         LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = getMuniLevel_affiListMapOf(electionId, constId, munId);
         Affiliation affi = muniLevel_affiListMap.get(affId);
         if (affi == null) {
-            throw new ResourceNotFoundException("Affiliation " + affId + " not found");
+            throw new ResourceNotFoundException("Affi " + affId + " not found");
         }
         return affi;
     }
@@ -75,7 +75,7 @@ public class MuniService {
     public List<Candidate> getAffiLevel_candiListOf(String electionId, Integer constId, String munId, Integer affId) {
         Affiliation affi = getAffiById(electionId, constId, munId, affId);
         if (affi == null) {
-            throw new ResourceNotFoundException("Affiliation " + affId + " not found");
+            throw new ResourceNotFoundException("Affi " + affId + " not found");
         }
         return affi.getCandiList();
     }
