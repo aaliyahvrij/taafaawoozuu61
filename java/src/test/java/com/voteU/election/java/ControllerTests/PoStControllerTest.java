@@ -40,7 +40,7 @@ class PollingStationControllerTest {
         poStMap = new HashMap<>();
         poStMap.put(poStId, samplePollingStation);
         affiMap = new HashMap<>();
-        Affiliation affi = new Affiliation(10, "Party X", 1447);
+        Affiliation affi = new Affiliation(10, "Affi X", 1447);
         affiMap.put(affi.getId(), affi);
     }
 
@@ -78,7 +78,7 @@ class PollingStationControllerTest {
         Map<Integer, Affiliation> result = poStController.getPoStLevel_affiliationsOf(electionId, constId, munId, poStId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(10));
-        assertEquals("Party X", result.get(10).getName());
+        assertEquals("Affi X", result.get(10).getName());
         verify(poStService, times(1)).getPoStLevel_affiliationsOf(electionId, constId, munId, poStId);
     }
 }
