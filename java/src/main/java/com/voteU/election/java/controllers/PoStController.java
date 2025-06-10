@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/{electionId}/pollingstations")
@@ -22,10 +22,10 @@ public class PoStController {
         this.poStService = poStService;
     }
 
-    @GetMapping
+    /*@GetMapping
     public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(@PathVariable String electionId) {
         return this.poStService.getNationalLevel_pollingStationsOf(electionId);
-    }
+    }*/
 
     @GetMapping
     public Map<String, PollingStation> getMuniLevel_pollingStationsOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
@@ -37,12 +37,12 @@ public class PoStController {
         return poStService.getMuniLevel_pollingStationsOf_compact(electionId, constId, munId);
     }
 
-    @GetMapping("/{pollingStationId}")
+    @GetMapping("/{poStId}")
     public PollingStation getPollingStationById(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
         return poStService.getPollingStationById(electionId, constId, munId, poStId);
     }
 
-    @GetMapping("/{pollingStationId}/parties")
+    @GetMapping("/{poStId}/affiliations")
     public Map<Integer, Affiliation> getPoStLevel_affiliationsOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
         return poStService.getPoStLevel_affiliationsOf(electionId, constId, munId, poStId);
     }

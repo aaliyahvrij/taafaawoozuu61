@@ -17,15 +17,12 @@ import static org.mockito.Mockito.*;
 class PollingStationControllerTest {
     @Mock
     private PoStService poStService;
-
     @InjectMocks
     private PoStController poStController;
-
     private final String electionId = "2023";
     private final int constId = 1;
     private final String munId = "auth123";
     private final String poStId = "poll456";
-
     private PollingStation samplePollingStation;
     private CompactPollingStation sampleCompactPollingStation;
     private Map<String, PollingStation> poStMap;
