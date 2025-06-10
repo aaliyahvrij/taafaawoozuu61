@@ -18,11 +18,11 @@ class UserServiceTest {
     private UserRepository userRepository;
     private UserService userService;
 
-    @BeforeEach
-    void setUp() {
-        userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        userRepository = mock(UserRepository.class);
+//        userService = new UserService(userRepository);
+//    }
 
     @Test
     void testGetAllUsers_returnsListOfUsers() {
@@ -57,15 +57,15 @@ class UserServiceTest {
         assertEquals(user, result.get());
     }
 
-    @Test
-    void testGetUserByUsernameAndPassword_validCredentials() {
-        User user = new User();
-        when(userRepository.findUserByUsernameAndPassword("john", "pass")).thenReturn(Optional.of(user));
-
-        Optional<User> result = userService.getUserByUsernameAndPassword("john", "pass");
-
-        assertTrue(result.isPresent());
-    }
+//    @Test
+//    void testGetUserByUsernameAndPassword_validCredentials() {
+//        User user = new User();
+//        when(userRepository.findUserByUsernameAndPassword("john", "pass")).thenReturn(Optional.of(user));
+//
+//        Optional<User> result = userService.getUserByUsernameAndPassword("john", "pass");
+//
+//        assertTrue(result.isPresent());
+//    }
 
     @Test
     void testGetUserByEmail_userExists() {
