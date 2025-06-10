@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth.ts'
+import { computed } from 'vue'
 
 const { isLoggedIn, logout } = useAuth()
+
+const role = computed(() => useAuth().getRole())
 </script>
 
 <template>
@@ -14,6 +17,7 @@ const { isLoggedIn, logout } = useAuth()
         <li class="link-item"><RouterLink to="/filter">Filter</RouterLink></li>
         <li class="link-item"><RouterLink to="/compare">Compare</RouterLink></li>
         <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
+        <li class="link-item" v-if="role === 'ADMIN'"><RouterLink to="/admin">Admin Page</RouterLink></li>
       </ul>
     </nav>
     <div class="login-link">
