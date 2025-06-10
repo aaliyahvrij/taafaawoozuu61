@@ -10,20 +10,20 @@ public class Election {
     private String id;
     private String name;
     private String date;
-    private LinkedHashMap<Integer, Province> provinces;
-    private LinkedHashMap<Integer, Constituency> constituencies;
-    private LinkedHashMap<String, Municipality> municipalities;
-    private LinkedHashMap<String, PollingStation> pollingStations;
-    private LinkedHashMap<Integer, Affiliation> affiliations;
+    private LinkedHashMap<Integer, Province> proviListMap;
+    private LinkedHashMap<Integer, Constituency> constiListMap;
+    private LinkedHashMap<String, Municipality> muniListMap;
+    private LinkedHashMap<String, PollingStation> poStListMap;
+    private LinkedHashMap<Integer, Affiliation> affiListMap;
 
     public Election(String id, String name, String date) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.provinces = new LinkedHashMap<>();
-        this.constituencies = new LinkedHashMap<>();
-        this.municipalities = new LinkedHashMap<>();
-        this.pollingStations = new LinkedHashMap<>();
-        this.affiliations = new LinkedHashMap<>();
+        this.proviListMap = new LinkedHashMap<>();
+        this.constiListMap = new LinkedHashMap<>();
+        this.muniListMap = new LinkedHashMap<>();
+        this.poStListMap = new LinkedHashMap<>();
+        this.affiListMap = new LinkedHashMap<>();
     }
 }

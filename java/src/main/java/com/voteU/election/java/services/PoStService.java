@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
+//import java.util.Map;
 import java.util.LinkedHashMap;
 
 @Slf4j
@@ -33,28 +33,28 @@ public class PoStService {
         this.muniService = muniService;
     }
 
-    public Map<String, PollingStation> getMuniLevel_pollingStationsOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality municipality = muniService.getMunicipalityById(electionId, constId, munId);
-        return municipality.getPollingStations();
+    public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
+        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+        return muni.getPoStListMap();
     }
 
-    public List<CompactPollingStation> getMuniLevel_pollingStationsOf_compact(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality municipality = muniService.getMunicipalityById(electionId, constId, munId);
-        Map<String, PollingStation> pollingStations = municipality.getPollingStations();
-        List<CompactPollingStation> CompactPollingStations = new ArrayList<>();
-        for (PollingStation pollingStation : pollingStations.values()) {
-            CompactPollingStations.add(new CompactPollingStation(pollingStation.getId(), pollingStation.getName(), pollingStation.getZipCode()));
+    public List<CompactPollingStation> getMuniLevel_compactPoStListOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
+        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+        LinkedHashMap<String, PollingStation> muniLevel_poStListMap = muni.getPoStListMap();
+        List<CompactPollingStation> compactPoStList = new ArrayList<>();
+        for (PollingStation muniLevel_poSt : muniLevel_poStListMap.values()) {
+            compactPoStList.add(new CompactPollingStation(muniLevel_poSt.getId(), muniLevel_poSt.getName(), muniLevel_poSt.getZipCode()));
         }
-        return CompactPollingStations;
+        return compactPoStList;
     }
 
-    public PollingStation getPollingStationById(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        Municipality municipality = muniService.getMunicipalityById(electionId, constId, munId);
-        return municipality.getPollingStations().get(poStId);
+    public PollingStation getPoStById(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+        return muni.getPoStListMap().get(poStId);
     }
 
-    public Map<Integer, Affiliation> getPoStLevel_affiliationsOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        PollingStation pollingStation = getPollingStationById(electionId, constId, munId, poStId);
-        return pollingStation.getAffiliations();
+    public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        PollingStation poSt = getPoStById(electionId, constId, munId, poStId);
+        return poSt.getAffiListMap();
     }
 }

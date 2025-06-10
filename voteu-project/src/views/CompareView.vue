@@ -25,10 +25,10 @@ const affiVotes1 = ref<Affiliation[] | null>(null)
 const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
 )
-const provinces1 = ref<Province[]>([])
-const constituencies1 = ref<Constituency[]>([])
-const municipalities1 = ref<Municipality[]>([])
-const pollingStations1 = ref<PollingStation[]>([])
+const proviList1 = ref<Province[]>([])
+const constiList1 = ref<Constituency[]>([])
+const muniList1 = ref<Municipality[]>([])
+const poStList1 = ref<PollingStation[]>([])
 
 // The second filter set
 const selectedElection2 = ref<'TK2021' | 'TK2023' | null>(null)
@@ -41,15 +41,15 @@ const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>
   null,
 )
 
-const provinces2 = ref<Province[]>([])
-const constituencies2 = ref<Constituency[]>([])
-const municipalities2 = ref<Municipality[]>([])
-const pollingStations2 = ref<PollingStation[]>([])
+const proviList2 = ref<Province[]>([])
+const constiList2 = ref<Constituency[]>([])
+const muniList2 = ref<Municipality[]>([])
+const poStList2 = ref<PollingStation[]>([])
 
 // --- Helper functies voor ophalen filters ---
-async function getNationalLevel_provincesOf(
+async function getNationalLevel_proviListOf(
   electionId: string | null,
-  provincesRef: typeof provinces1,
+  provincesRef: typeof proviList1,
   clearSelectedProvi: () => void,
 ) {
   if (!electionId) {
@@ -58,7 +58,7 @@ async function getNationalLevel_provincesOf(
     return
   }
   try {
-    const response = await ProviService.getNationalLevel_provincesOf(electionId)
+    const response = await ProviService.getNationalLevel_proviListOf(electionId)
     provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching provinces of ', electionId)
   } catch (err) {
@@ -66,10 +66,10 @@ async function getNationalLevel_provincesOf(
   }
 }
 
-async function getProviLevel_constituenciesOf(
+async function getProviLevel_constiListOf(
   electionId: string | null,
   provId: string | undefined,
-  constituenciesRef: typeof constituencies1,
+  constituenciesRef: typeof constiList1,
   clearSelectedConsti: () => void,
 ) {
   if (!electionId || !provId) {
@@ -79,7 +79,7 @@ async function getProviLevel_constituenciesOf(
   }
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
-    const response = await ProviService.getProviLevel_constituenciesOf(electionId, provId)
+    const response = await ProviService.getProviLevel_constiListOf(electionId, provId)
     constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching constituencies of ', proviPath)
   } catch (err) {
@@ -87,10 +87,10 @@ async function getProviLevel_constituenciesOf(
   }
 }
 
-async function getConstiLevel_municipalitiesOf(
+async function getConstiLevel_muniListOf(
   electionId: string | null,
   constId: string | undefined,
-  municipalitiesRef: typeof municipalities1,
+  municipalitiesRef: typeof muniList1,
   clearSelectedMuni: () => void,
 ) {
   if (!electionId || !constId) {
@@ -100,7 +100,7 @@ async function getConstiLevel_municipalitiesOf(
   }
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await MuniService.getConstiLevel_municipalitiesOf(electionId, constId)
+    const response = await MuniService.getConstiLevel_muniListOf(electionId, constId)
     municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching municipalities of ', constiPath)
   } catch (err) {
@@ -108,11 +108,11 @@ async function getConstiLevel_municipalitiesOf(
   }
 }
 
-async function getMuniLevel_pollingStationsOf(
+async function getMuniLevel_poStListOf(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
-  pollingStationsRef: typeof pollingStations1,
+  pollingStationsRef: typeof poStList1,
   clearSelectedPoSt: () => void,
 ) {
   if (!electionId || !constId || !munId) {
@@ -122,7 +122,7 @@ async function getMuniLevel_pollingStationsOf(
   }
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await PoStService.getMuniLevel_pollingStationsOf(
+    const response = await PoStService.getMuniLevel_poStListOf(
       electionId,
       constId,
       munId,
@@ -134,12 +134,12 @@ async function getMuniLevel_pollingStationsOf(
   }
 }
 
-async function getAffiliationsOf(
+async function getAffiListOf(
   electionId: string | null,
-  province: Province | null,
-  municipality: Municipality | null,
-  constituency: Constituency | null,
-  pollingStation: PollingStation | null,
+  provi: Province | null,
+  muni: Municipality | null,
+  consti: Constituency | null,
+  poSt: PollingStation | null,
   affiVotesRef: typeof affiVotes1,
   voteLevelRef: typeof voteLevel1,
 ) {
@@ -150,50 +150,50 @@ async function getAffiliationsOf(
   }
   let levelPath = 'election ' + electionId
   try {
-    if (pollingStation && municipality && constituency) {
-      const response = await PoStService.getPoStLevel_affiliationsOf(
+    if (poSt && muni && consti) {
+      const response = await PoStService.getPoStLevel_affiListOf(
         electionId,
-        constituency.id.toString(),
-        municipality.id.toString(),
-        pollingStation.id.toString(),
+        consti.id.toString(),
+        muni.id.toString(),
+        poSt.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'poSt'
       levelPath +=
         ' > consti ' +
-        constituency.id.toString() +
+        consti.id.toString() +
         ' > muni ' +
-        municipality.id.toString() +
+        muni.id.toString() +
         ' > poSt ' +
-        pollingStation.id
+        poSt.id
       console.log('Fetching affiliations of ', levelPath)
-    } else if (municipality && constituency) {
-      const response = await MuniService.getMuniLevel_affiliationsOf(
+    } else if (muni && consti) {
+      const response = await MuniService.getMuniLevel_affiListOf(
         electionId,
-        constituency.id.toString(),
-        municipality.id.toString(),
+        consti.id.toString(),
+        muni.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'muni'
-      levelPath += ' > consti ' + constituency.id.toString() + ' > muni ' + municipality.id.toString()
+      levelPath += ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString()
       console.log('Fetching affiliations of ', levelPath)
-    } else if (constituency) {
-      const response = await ConstiService.getConstiLevel_affiliationsOf(
+    } else if (consti) {
+      const response = await ConstiService.getConstiLevel_affiListOf(
         electionId,
-        constituency.id.toString(),
+        consti.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'consti'
-      levelPath += ' > consti ' + constituency.id
+      levelPath += ' > consti ' + consti.id
       console.log('Fetching affiliations of ', levelPath)
-    } else if (province) {
-      const response = await ProviService.getProviLevel_affiliationsOf(electionId, province.id)
+    } else if (provi) {
+      const response = await ProviService.getProviLevel_affiListOf(electionId, provi.id)
       affiVotesRef.value = response
       voteLevelRef.value = 'provi'
-      levelPath += ' > provi ' + province.id
+      levelPath += ' > provi ' + provi.id
       console.log('Fetching affiliations of ', levelPath)
     } else {
-      const response = await ElectionService.getNationalLevel_affiliationsOf(electionId)
+      const response = await ElectionService.getNationalLevel_affiListOf(electionId)
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'national'
       console.log('Fetching affiliations of ', levelPath)
@@ -208,25 +208,25 @@ async function getAffiliationsOf(
 // --- Reset functies per filterset ---
 function clearProviAndBelow1() {
   selectedProvi1.value = null
-  constituencies1.value = []
+  constiList1.value = []
   selectedConsti1.value = null
-  municipalities1.value = []
+  muniList1.value = []
   selectedMuni1.value = null
-  pollingStations1.value = []
+  poStList1.value = []
   selectedPoSt1.value = null
 }
 
 function clearConstiAndBelow1() {
   selectedConsti1.value = null
-  municipalities1.value = []
+  muniList1.value = []
   selectedMuni1.value = null
-  pollingStations1.value = []
+  poStList1.value = []
   selectedPoSt1.value = null
 }
 
 function clearMuniAndBelow1() {
   selectedMuni1.value = null
-  pollingStations1.value = []
+  poStList1.value = []
   selectedPoSt1.value = null
 }
 
@@ -236,25 +236,25 @@ function clearPoSt1() {
 
 function clearProviAndBelow2() {
   selectedProvi2.value = null
-  constituencies2.value = []
+  constiList2.value = []
   selectedConsti2.value = null
-  municipalities2.value = []
+  muniList2.value = []
   selectedMuni2.value = null
-  pollingStations2.value = []
+  poStList2.value = []
   selectedPoSt2.value = null
 }
 
 function clearConstiAndBelow2() {
   selectedConsti2.value = null
-  municipalities2.value = []
+  muniList2.value = []
   selectedMuni2.value = null
-  pollingStations2.value = []
+  poStList2.value = []
   selectedPoSt2.value = null
 }
 
 function clearMuniAndBelow2() {
   selectedMuni2.value = null
-  pollingStations2.value = []
+  poStList2.value = []
   selectedPoSt2.value = null
 }
 
@@ -267,7 +267,7 @@ async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
   voteLevel1.value = null
-  await getNationalLevel_provincesOf(selectedElection1.value, provinces1, clearProviAndBelow1)
+  await getNationalLevel_proviListOf(selectedElection1.value, proviList1, clearProviAndBelow1)
 }
 
 async function onProviChange1() {
@@ -275,10 +275,10 @@ async function onProviChange1() {
   affiVotes1.value = null
   voteLevel1.value = null
   if (selectedProvi1.value) {
-    await getProviLevel_constituenciesOf(
+    await getProviLevel_constiListOf(
       selectedElection1.value,
       selectedProvi1.value.id.toString(),
-      constituencies1,
+      constiList1,
       clearConstiAndBelow1,
     )
   }
@@ -289,10 +289,10 @@ async function onConstiChange1() {
   affiVotes1.value = null
   voteLevel1.value = null
   if (selectedConsti1.value) {
-    await getConstiLevel_municipalitiesOf(
+    await getConstiLevel_muniListOf(
       selectedElection1.value,
       selectedConsti1.value.id.toString(),
-      municipalities1,
+      muniList1,
       clearMuniAndBelow1,
     )
   }
@@ -303,11 +303,11 @@ async function onMuniChange1() {
   affiVotes1.value = null
   voteLevel1.value = null
   if (selectedMuni1.value) {
-    await getMuniLevel_pollingStationsOf(
+    await getMuniLevel_poStListOf(
       selectedElection1.value,
       selectedConsti1.value?.id.toString(),
       selectedMuni1.value.id.toString(),
-      pollingStations1,
+      poStList1,
       clearPoSt1,
     )
   }
@@ -323,7 +323,7 @@ async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null
   voteLevel2.value = null
-  await getNationalLevel_provincesOf(selectedElection2.value, provinces2, clearProviAndBelow2)
+  await getNationalLevel_proviListOf(selectedElection2.value, proviList2, clearProviAndBelow2)
 }
 
 async function onProviChange2() {
@@ -331,10 +331,10 @@ async function onProviChange2() {
   affiVotes2.value = null
   voteLevel2.value = null
   if (selectedProvi2.value) {
-    await getProviLevel_constituenciesOf(
+    await getProviLevel_constiListOf(
       selectedElection2.value,
       selectedProvi2.value.id.toString(),
-      constituencies2,
+      constiList2,
       clearConstiAndBelow2,
     )
   }
@@ -345,10 +345,10 @@ async function onConstiChange2() {
   affiVotes2.value = null
   voteLevel2.value = null
   if (selectedConsti2.value) {
-    await getConstiLevel_municipalitiesOf(
+    await getConstiLevel_muniListOf(
       selectedElection2.value,
       selectedConsti2.value.id.toString(),
-      municipalities2,
+      muniList2,
       clearMuniAndBelow2,
     )
   }
@@ -359,11 +359,11 @@ async function onMuniChange2() {
   affiVotes2.value = null
   voteLevel2.value = null
   if (selectedMuni2.value) {
-    await getMuniLevel_pollingStationsOf(
+    await getMuniLevel_poStListOf(
       selectedElection2.value,
       selectedConsti2.value?.id.toString(),
       selectedMuni2.value.id.toString(),
-      pollingStations2,
+      poStList2,
       clearPoSt2,
     )
   }
@@ -380,7 +380,7 @@ async function applyFilter() {
     return
   }
   if (selectedElection1.value) {
-    await getAffiliationsOf(
+    await getAffiListOf(
       selectedElection1.value,
       selectedProvi1.value,
       selectedMuni1.value,
@@ -393,7 +393,7 @@ async function applyFilter() {
     affiVotes1.value = voteLevel1.value = null
   }
   if (selectedElection2.value) {
-    await getAffiliationsOf(
+    await getAffiListOf(
       selectedElection2.value,
       selectedProvi2.value,
       selectedMuni2.value,
@@ -421,36 +421,36 @@ async function applyFilter() {
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-        <select v-if="provinces1.length > 0" v-model="selectedProvi1" @change="onProviChange1">
+        <select v-if="proviList1.length > 0" v-model="selectedProvi1" @change="onProviChange1">
           <option value="null" disabled>Select province</option>
-          <option v-for="provi in provinces1" :key="provi.id" :value="provi">
+          <option v-for="provi in proviList1" :key="provi.id" :value="provi">
             {{ provi.name }}
           </option>
         </select>
         <select
-          v-if="constituencies1.length > 0"
+          v-if="constiList1.length > 0"
           v-model="selectedConsti1"
           @change="onConstiChange1"
         >
           <option value="null" disabled>Select constituency</option>
-          <option v-for="consti in constituencies1" :key="consti.id" :value="consti">
+          <option v-for="consti in constiList1" :key="consti.id" :value="consti">
             {{ consti.name }}
           </option>
         </select>
-        <select v-if="municipalities1.length > 0" v-model="selectedMuni1" @change="onMuniChange1">
+        <select v-if="muniList1.length > 0" v-model="selectedMuni1" @change="onMuniChange1">
           <option value="null" disabled>Select municipality</option>
-          <option v-for="muni in municipalities1" :key="muni.id" :value="muni">
+          <option v-for="muni in muniList1" :key="muni.id" :value="muni">
             {{ muni.name }}
           </option>
         </select>
         <select
-          v-if="pollingStations1.length > 0"
+          v-if="poStList1.length > 0"
           v-model="selectedPoSt1"
           @change="onPoStChange1"
         >
           <option value="null" disabled>Select polling station</option>
           <option
-            v-for="poSt in pollingStations1"
+            v-for="poSt in poStList1"
             :key="poSt.id"
             :value="poSt"
           >
@@ -467,36 +467,36 @@ async function applyFilter() {
           <option value="2021">2021</option>
           <option value="2023">2023</option>
         </select>
-        <select v-if="provinces2.length > 0" v-model="selectedProvi2" @change="onProviChange2">
+        <select v-if="proviList2.length > 0" v-model="selectedProvi2" @change="onProviChange2">
           <option value="null" disabled>Select province</option>
-          <option v-for="provi in provinces2" :key="provi.id" :value="provi">
+          <option v-for="provi in proviList2" :key="provi.id" :value="provi">
             {{ provi.name }}
           </option>
         </select>
         <select
-          v-if="constituencies2.length > 0"
+          v-if="constiList2.length > 0"
           v-model="selectedConsti2"
           @change="onConstiChange2"
         >
           <option value="null" disabled>Select constituency</option>
-          <option v-for="consti in constituencies2" :key="consti.id" :value="consti">
+          <option v-for="consti in constiList2" :key="consti.id" :value="consti">
             {{ consti.name }}
           </option>
         </select>
-        <select v-if="municipalities2.length > 0" v-model="selectedMuni2" @change="onMuniChange2">
+        <select v-if="muniList2.length > 0" v-model="selectedMuni2" @change="onMuniChange2">
           <option value="null" disabled>Select municipality</option>
-          <option v-for="muni in municipalities2" :key="muni.id" :value="muni">
+          <option v-for="muni in muniList2" :key="muni.id" :value="muni">
             {{ muni.name }}
           </option>
         </select>
         <select
-          v-if="pollingStations2.length > 0"
+          v-if="poStList2.length > 0"
           v-model="selectedPoSt2"
           @change="onPoStChange2"
         >
           <option value="null" disabled>Select polling station</option>
           <option
-            v-for="poSt in pollingStations2"
+            v-for="poSt in poStList2"
             :key="poSt.id"
             :value="poSt"
           >

@@ -1,7 +1,7 @@
 import type { Affiliation, Constituency } from '@/interfaces'
 
 export class ConstiService {
-  static async getNationalLevel_constituenciesOf(
+  static async getNationalLevel_constiListOf(
     electionId: string,
   ): Promise<Record<number, Constituency> | null> {
     try {
@@ -24,7 +24,7 @@ export class ConstiService {
     return null
   }
 
-  static async getConstiLevel_affiliationsOf(
+  static async getConstiLevel_affiListOf(
     electionId: string,
     constId: string,
   ): Promise<Record<number, Affiliation> | null> {

@@ -9,15 +9,15 @@ import java.util.LinkedHashMap;
 public class Province {
     private int id;
     private String name;
-    private LinkedHashMap<Integer, Constituency> constituencies;
+    private LinkedHashMap<Integer, Constituency> constiListMap;
 
     public Province() {
-        this.constituencies = new LinkedHashMap<>();
+        this.constiListMap = new LinkedHashMap<>();
     }
 
     public Province(int id, String name) {
         this.id = id;
         this.name = name;
-        this.constituencies = new LinkedHashMap<>();
+        this.constiListMap = new LinkedHashMap<>();
     }
 }

@@ -9,23 +9,23 @@ import java.util.ArrayList;
 public class Affiliation {
     private final int id;
     private final String name;
-    private final List<Candidate> candidates;
+    private final List<Candidate> candiList;
     private final int vvCount;
 
     public Affiliation(int id, String name, int vvCount) {
         this.id = id;
         this.name = name;
-        this.candidates = new ArrayList<>();
+        this.candiList = new ArrayList<>();
         this.vvCount = vvCount;
     }
 
-    public void addCandidate(Candidate candidate) {
-        candidates.add(candidate);
+    public void addCandi(Candidate candidate) {
+        candiList.add(candidate);
     }
 
     public boolean hasCandiShortCode(String candiShortCode) {
-        for (Candidate candidate : this.candidates) {
-            if (candidate.getShortCode().equals(candiShortCode)) {
+        for (Candidate candi : this.candiList) {
+            if (candi.getShortCode().equals(candiShortCode)) {
                 return true;
             }
         }
@@ -33,8 +33,8 @@ public class Affiliation {
     }
 
     public boolean hasCandId(int candId) {
-        for (Candidate candidate : this.candidates) {
-            if (candidate.getId() == candId) {
+        for (Candidate candi : this.candiList) {
+            if (candi.getId() == candId) {
                 return true;
             }
         }

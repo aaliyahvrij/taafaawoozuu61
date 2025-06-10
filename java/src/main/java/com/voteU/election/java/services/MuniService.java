@@ -1,14 +1,13 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.exceptions.AccessDeniedException;
-import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
+//import com.voteU.election.java.exceptions.AccessDeniedException;
+//import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
 import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.models.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Service
 public class MuniService {
@@ -18,69 +17,66 @@ public class MuniService {
         this.electionService = electionService;
     }
 
-    public Map<String, Municipality> getConstiLevel_municipalitiesOf(String electionId, int constId) {
+    public LinkedHashMap<String, Municipality> getConstiLevel_muniListMapOf(String electionId, int constId) {
         Election election = electionService.getElectoralDataOf(electionId);
         if (election == null) {
             throw new ResourceNotFoundException("Election " + electionId + " not found");
         }
-        Constituency constituency = election.getConstituencies().get(constId);
-        if (constituency == null) {
-            throw new ResourceNotFoundException("Constituency " + constId + " not found in election " + electionId);
+        Constituency consti = election.getConstiListMap().get(constId);
+        if (consti == null) {
+            throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
         }
-        return constituency.getMunicipalities();
+        return consti.getMuniListMap();
     }
 
-    public Map<String, Municipality> getConstiLevel_municipalitiesOf_compact(String electionId, int constId) {
+    public LinkedHashMap<String, Municipality> getConstiLevel_compactMuniListMapOf(String electionId, int constId) {
         Election election = electionService.getElectoralDataOf(electionId);
         if (election == null) {
             throw new ResourceNotFoundException("Election " + electionId + " not found");
         }
-        Constituency constituency = election.getConstituencies().get(constId);
+        Constituency constituency = election.getConstiListMap().get(constId);
         if (constituency == null) {
-            throw new ResourceNotFoundException("Constituency " + constId + " not found in election " + electionId);
+            throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
         }
-
-        Map<String, Municipality> municipalities = constituency.getMunicipalities();
-        Map<String, Municipality> compactMunicipalities = new HashMap<>();
-
-        for (Municipality municipality : municipalities.values()) {
-            compactMunicipalities.put(municipality.getId(), new Municipality(municipality.getId(), municipality.getName()));
+        LinkedHashMap<String, Municipality> constiLevel_muniListMap = constituency.getMuniListMap();
+        LinkedHashMap<String, Municipality> compactMuniListMap = new LinkedHashMap<>();
+        for (Municipality constiLevel_muni : constiLevel_muniListMap.values()) {
+            compactMuniListMap.put(constiLevel_muni.getId(), new Municipality(constiLevel_muni.getId(), constiLevel_muni.getName()));
         }
-
-        return compactMunicipalities;
+        return compactMuniListMap;
     }
 
-    public Municipality getMunicipalityById(String electionId, Integer constId, String munId) {
-        Map<String, Municipality> municipalities = getConstiLevel_municipalitiesOf(electionId, constId);
-        Municipality municipality = municipalities.get(munId);
-        if (municipality == null) {
-            throw new ResourceNotFoundException("Municipality " + munId + " not found in constituency " + constId);
+    public Municipality getMuniById(String electionId, Integer constId, String munId) {
+        LinkedHashMap<String, Municipality> constiLevel_muniListMap = getConstiLevel_muniListMapOf(electionId, constId);
+        Municipality muni = constiLevel_muniListMap.get(munId);
+        if (muni == null) {
+            throw new ResourceNotFoundException("Muni " + munId + " not found in consti " + constId);
         }
-        return municipality;
+        return muni;
     }
 
-    public Map<Integer, Affiliation> getMuniLevel_affiliationsOf(String electionId, Integer constId, String munId) {
-        Municipality municipality = getMunicipalityById(electionId, constId, munId);
-        if (municipality == null) {
-            throw new ResourceNotFoundException("Municipality " + munId + " not found");
+    public LinkedHashMap<Integer, Affiliation> getMuniLevel_affiListMapOf(String electionId, Integer constId, String munId) {
+        Municipality muni = getMuniById(electionId, constId, munId);
+        if (muni == null) {
+            throw new ResourceNotFoundException("Muni " + munId + " not found");
         }
-        return municipality.getAffiliations();
+        return muni.getAffiListMap();
     }
 
-    public Affiliation getAffiliationById(String electionId, Integer constId, String munId, Integer affId) {
-        Map<Integer, Affiliation> affiliations = getMuniLevel_affiliationsOf(electionId, constId, munId);
-        Affiliation affiliation = affiliations.get(affId);
-        if (affiliation == null) {
+    public Affiliation getAffiById(String electionId, Integer constId, String munId, Integer affId) {
+        LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = getMuniLevel_affiListMapOf(electionId, constId, munId);
+        Affiliation affi = muniLevel_affiListMap.get(affId);
+        if (affi == null) {
             throw new ResourceNotFoundException("Affiliation " + affId + " not found");
         }
-        return affiliation;
+        return affi;
     }
 
-    public List<Candidate> getAffiLevel_candidatesOf(String electionId, Integer constId, String munId, Integer affId) {
-        Affiliation affiliation = getAffiliationById(electionId, constId, munId, affId);
-        if (affiliation == null) {
+    public List<Candidate> getAffiLevel_candiListOf(String electionId, Integer constId, String munId, Integer affId) {
+        Affiliation affi = getAffiById(electionId, constId, munId, affId);
+        if (affi == null) {
             throw new ResourceNotFoundException("Affiliation " + affId + " not found");
         }
-        return affiliation.getCandidates();
+        return affi.getCandiList();
     }
 }

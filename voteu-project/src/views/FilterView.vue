@@ -19,118 +19,118 @@ import {
 } from '@/services'
 
 const selectedElection = ref<'TK2021' | 'TK2023' | null>(null)
-const selectedProvince = ref<Province | null>(null)
-const provinces = ref<Province[]>([])
-const selectedConstituency = ref<Constituency | null>(null)
-const constituencies = ref<Constituency[]>([])
-const selectedMunicipality = ref<Municipality | null>(null)
-const municipalities = ref<Municipality[]>([])
-const selectedPollingStation = ref<PollingStation | null>(null)
-const pollingStations = ref<PollingStation[]>([])
-const selectedAffiliation = ref<Affiliation | null>(null)
+const selectedProvi = ref<Province | null>(null)
+const proviList = ref<Province[]>([])
+const selectedConsti = ref<Constituency | null>(null)
+const constiList = ref<Constituency[]>([])
+const selectedMuni = ref<Municipality | null>(null)
+const muniList = ref<Municipality[]>([])
+const selectedPoSt = ref<PollingStation | null>(null)
+const poStList = ref<PollingStation[]>([])
+const selectedAffi = ref<Affiliation | null>(null)
 const affiVotes = ref<Affiliation[] | null>(null)
-const selectedCandidate = ref<Candidate | null>(null)
+const selectedCandi = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const voteLevel = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
 const displayedAffiVotes = computed(() => affiVotes.value)
 
 function handleApply(): void {
   hasApplied.value = true
-  selectedAffiliation.value = null
+  selectedAffi.value = null
   affiVotes.value = null
-  selectedCandidate.value = null
+  selectedCandi.value = null
   if (
     selectedElection.value &&
-    selectedConstituency.value &&
-    selectedMunicipality.value &&
-    selectedPollingStation.value
+    selectedConsti.value &&
+    selectedMuni.value &&
+    selectedPoSt.value
   ) {
-    getPoStLevel_affiliationsOf(
+    getPoStLevel_affiListOf(
       selectedElection.value,
-      selectedConstituency.value.id.toString(),
-      selectedMunicipality.value.id.toString(),
-      selectedPollingStation.value.id.toString(),
+      selectedConsti.value.id.toString(),
+      selectedMuni.value.id.toString(),
+      selectedPoSt.value.id.toString(),
     )
-  } else if (selectedElection.value && selectedConstituency.value && selectedMunicipality.value) {
-    getMuniLevel_affiliationsOf(
+  } else if (selectedElection.value && selectedConsti.value && selectedMuni.value) {
+    getMuniLevel_affiListOf(
       selectedElection.value,
-      selectedConstituency.value.id.toString(),
-      selectedMunicipality.value.id.toString(),
+      selectedConsti.value.id.toString(),
+      selectedMuni.value.id.toString(),
     )
-  } else if (selectedElection.value && selectedConstituency.value && !selectedMunicipality.value) {
-    getConstiLevel_affiliationsOf(selectedElection.value, selectedConstituency.value.id.toString())
-  } else if (selectedElection.value && selectedProvince.value && !selectedConstituency.value) {
-    getProviLevel_affiliationsOf(selectedElection.value, selectedProvince.value.id)
+  } else if (selectedElection.value && selectedConsti.value && !selectedMuni.value) {
+    getConstiLevel_affiListOf(selectedElection.value, selectedConsti.value.id.toString())
+  } else if (selectedElection.value && selectedProvi.value && !selectedConsti.value) {
+    getProviLevel_affiListOf(selectedElection.value, selectedProvi.value.id)
   } else if (selectedElection.value) {
-    getNationalLevel_affiliationsOf(selectedElection.value)
+    getNationalLevel_affiListOf(selectedElection.value)
   } else {
     console.warn('Invalid selection state.')
   }
 }
 
 function clearSelectedElection(): void {
-  selectedAffiliation.value = null
+  selectedAffi.value = null
   affiVotes.value = null
   hasApplied.value = false
   selectedElection.value = null
-  selectedProvince.value = null
-  provinces.value = []
-  selectedConstituency.value = null
-  constituencies.value = []
-  selectedMunicipality.value = null
-  municipalities.value = []
+  selectedProvi.value = null
+  proviList.value = []
+  selectedConsti.value = null
+  constiList.value = []
+  selectedMuni.value = null
+  muniList.value = []
   voteLevel.value = null
-  selectedPollingStation.value = null
-  pollingStations.value = []
+  selectedPoSt.value = null
+  poStList.value = []
 }
 
 function clearSelectedProvi(): void {
-  selectedProvince.value = null
-  constituencies.value = []
-  selectedConstituency.value = null
-  selectedMunicipality.value = null
-  municipalities.value = []
-  selectedPollingStation.value = null
-  pollingStations.value = []
+  selectedProvi.value = null
+  constiList.value = []
+  selectedConsti.value = null
+  selectedMuni.value = null
+  muniList.value = []
+  selectedPoSt.value = null
+  poStList.value = []
 }
 
 function clearSelectedConsti(): void {
-  selectedConstituency.value = null
-  selectedMunicipality.value = null
-  municipalities.value = []
-  selectedPollingStation.value = null
-  pollingStations.value = []
+  selectedConsti.value = null
+  selectedMuni.value = null
+  muniList.value = []
+  selectedPoSt.value = null
+  poStList.value = []
 }
 
 function clearSelectedMuni(): void {
-  selectedMunicipality.value = null
-  selectedPollingStation.value = null
-  pollingStations.value = []
+  selectedMuni.value = null
+  selectedPoSt.value = null
+  poStList.value = []
 }
 
 function clearSelectedPoSt(): void {
-  selectedPollingStation.value = null
+  selectedPoSt.value = null
 }
 
-async function getNationalLevel_provincesOf(electionId: string | null): Promise<void> {
+async function getNationalLevel_proviListOf(electionId: string | null): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
     if (electionId) {
-      const response = await ProviService.getNationalLevel_provincesOf(electionId)
-      provinces.value = Array.isArray(response) ? response : Object.values(response || {})
+      const response = await ProviService.getNationalLevel_proviListOf(electionId)
+      proviList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching provinces of ', proviPath)
     } else {
-      provinces.value = []
+      proviList.value = []
     }
   } catch (err) {
     console.error('Error fetching provinces of ', proviPath, ': ', err)
   }
 }
 
-async function getNationalLevel_affiliationsOf(electionId: string): Promise<void> {
+async function getNationalLevel_affiListOf(electionId: string): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
-    const response = await ElectionService.getNationalLevel_affiliationsOf(electionId)
+    const response = await ElectionService.getNationalLevel_affiListOf(electionId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
     console.log('Fetching affiliations of ', proviPath)
@@ -139,28 +139,28 @@ async function getNationalLevel_affiliationsOf(electionId: string): Promise<void
   }
 }
 
-async function getProviLevel_constituenciesOf(
+async function getProviLevel_constiListOf(
   electionId: string | null,
   provId: string | undefined,
 ): Promise<void> {
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
     if (electionId && provId) {
-      const response = await ProviService.getProviLevel_constituenciesOf(electionId, provId)
-      constituencies.value = Array.isArray(response) ? response : Object.values(response || {})
+      const response = await ProviService.getProviLevel_constiListOf(electionId, provId)
+      constiList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching constituencies of ', proviPath)
     } else {
-      constituencies.value = []
+      constiList.value = []
     }
   } catch (err) {
     console.error('Error fetching constituencies of ', proviPath, ': ', err)
   }
 }
 
-async function getProviLevel_affiliationsOf(electionId: string, provId: number): Promise<void> {
+async function getProviLevel_affiListOf(electionId: string, provId: number): Promise<void> {
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
-    const response = await ProviService.getProviLevel_affiliationsOf(electionId, provId)
+    const response = await ProviService.getProviLevel_affiListOf(electionId, provId)
     affiVotes.value = response
     voteLevel.value = 'provi'
     console.log('Fetching affiliations of ', proviPath)
@@ -169,15 +169,15 @@ async function getProviLevel_affiliationsOf(electionId: string, provId: number):
   }
 }
 
-async function getConstiLevel_municipalitiesOf(
+async function getConstiLevel_muniListOf(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
     if (electionId && constId) {
-      const response = await MuniService.getConstiLevel_municipalitiesOf(electionId, constId)
-      municipalities.value = Array.isArray(response) ? response : Object.values(response || {})
+      const response = await MuniService.getConstiLevel_muniListOf(electionId, constId)
+      muniList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching municipalities of ', constiPath)
     }
   } catch (err) {
@@ -185,10 +185,10 @@ async function getConstiLevel_municipalitiesOf(
   }
 }
 
-async function getConstiLevel_affiliationsOf(electionId: string, constId: string): Promise<void> {
+async function getConstiLevel_affiListOf(electionId: string, constId: string): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await ConstiService.getConstiLevel_affiliationsOf(electionId, constId)
+    const response = await ConstiService.getConstiLevel_affiListOf(electionId, constId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
     console.log('Fetching affiliations of ', constiPath)
@@ -197,7 +197,7 @@ async function getConstiLevel_affiliationsOf(electionId: string, constId: string
   }
 }
 
-async function getMuniLevel_pollingStationsOf(
+async function getMuniLevel_poStListOf(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
@@ -205,8 +205,8 @@ async function getMuniLevel_pollingStationsOf(
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
-      const response = await PoStService.getMuniLevel_pollingStationsOf(electionId, constId, munId)
-      pollingStations.value = Array.isArray(response) ? response : Object.values(response || {})
+      const response = await PoStService.getMuniLevel_poStListOf(electionId, constId, munId)
+      poStList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching polling stations of ', muniPath)
     }
   } catch (err) {
@@ -214,14 +214,14 @@ async function getMuniLevel_pollingStationsOf(
   }
 }
 
-async function getMuniLevel_affiliationsOf(
+async function getMuniLevel_affiListOf(
   electionId: string,
   constId: string,
   munId: string,
 ): Promise<void> {
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await MuniService.getMuniLevel_affiliationsOf(electionId, constId, munId)
+    const response = await MuniService.getMuniLevel_affiListOf(electionId, constId, munId)
     affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
     console.log('Fetching affiliations of ', muniPath)
@@ -230,7 +230,7 @@ async function getMuniLevel_affiliationsOf(
   }
 }
 
-async function getPoStLevel_affiliationsOf(
+async function getPoStLevel_affiListOf(
   electionId: string,
   constId: string,
   munId: string,
@@ -239,7 +239,7 @@ async function getPoStLevel_affiliationsOf(
   const poStPath =
     'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId + ' > poSt ' + poStId
   try {
-    const response = await PoStService.getPoStLevel_affiliationsOf(
+    const response = await PoStService.getPoStLevel_affiListOf(
       electionId,
       constId,
       munId,
@@ -255,11 +255,11 @@ async function getPoStLevel_affiliationsOf(
 }
 
 function handleAffiChange(affiliation: Affiliation): void {
-  selectedAffiliation.value = affiliation
+  selectedAffi.value = affiliation
 }
 
 function handleCandiChange(candidate: Candidate): void {
-  selectedCandidate.value = candidate
+  selectedCandi.value = candidate
 }
 
 function sortCandidatesByName(candidates: Candidate[]): Candidate[] {
@@ -277,7 +277,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
       <select
         class="dropdown"
         v-model="selectedElection"
-        @change="getNationalLevel_provincesOf(selectedElection)"
+        @change="getNationalLevel_proviListOf(selectedElection)"
       >
         <option value="null" disabled>Select an election</option>
         <option value="2021">2021</option>
@@ -302,17 +302,17 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
     <div class="provi-filter">
       <select
         class="dropdown"
-        v-if="provinces.length > 0"
-        v-model="selectedProvince"
-        @change="getProviLevel_constituenciesOf(selectedElection, selectedProvince?.id.toString())"
+        v-if="proviList.length > 0"
+        v-model="selectedProvi"
+        @change="getProviLevel_constiListOf(selectedElection, selectedProvi?.id.toString())"
       >
         <option value="null" disabled>Select a province</option>
-        <option v-for="provi in provinces" :key="provi.id" :value="provi">
+        <option v-for="provi in proviList" :key="provi.id" :value="provi">
           {{ provi.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedProvince">
-        {{ selectedProvince.name }}
+      <div class="tag" v-if="selectedProvi">
+        {{ selectedProvi.name }}
         <svg
           @click="clearSelectedProvi()"
           xmlns="http://www.w3.org/2000/svg"
@@ -330,19 +330,19 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
     <div class="consti-filter">
       <select
         class="dropdown"
-        v-if="constituencies.length > 0"
-        v-model="selectedConstituency"
+        v-if="constiList.length > 0"
+        v-model="selectedConsti"
         @change="
-          getConstiLevel_municipalitiesOf(selectedElection, selectedConstituency?.id.toString())
+          getConstiLevel_muniListOf(selectedElection, selectedConsti?.id.toString())
         "
       >
         <option value="null" disabled>Select a constituency</option>
-        <option v-for="consti in constituencies" :key="consti.id" :value="consti">
+        <option v-for="consti in constiList" :key="consti.id" :value="consti">
           {{ consti.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedConstituency">
-        {{ selectedConstituency.name }}
+      <div class="tag" v-if="selectedConsti">
+        {{ selectedConsti.name }}
         <svg
           @click="clearSelectedConsti()"
           xmlns="http://www.w3.org/2000/svg"
@@ -360,23 +360,23 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
     <div class="muni-filter">
       <select
         class="dropdown"
-        v-if="municipalities.length > 0"
-        v-model="selectedMunicipality"
+        v-if="muniList.length > 0"
+        v-model="selectedMuni"
         @change="
-          getMuniLevel_pollingStationsOf(
+          getMuniLevel_poStListOf(
             selectedElection,
-            selectedConstituency?.id.toString(),
-            selectedMunicipality?.id.toString(),
+            selectedConsti?.id.toString(),
+            selectedMuni?.id.toString(),
           )
         "
       >
         <option value="null" disabled>Select a municipality</option>
-        <option v-for="muni in municipalities" :key="muni.id" :value="muni">
+        <option v-for="muni in muniList" :key="muni.id" :value="muni">
           {{ muni.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedMunicipality">
-        {{ selectedMunicipality.name }}
+      <div class="tag" v-if="selectedMuni">
+        {{ selectedMuni.name }}
         <svg
           @click="clearSelectedMuni()"
           xmlns="http://www.w3.org/2000/svg"
@@ -392,14 +392,14 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
       </div>
     </div>
     <div class="po-st-filter">
-      <select class="dropdown" v-if="pollingStations.length > 0" v-model="selectedPollingStation">
+      <select class="dropdown" v-if="poStList.length > 0" v-model="selectedPoSt">
         <option value="null" disabled>Select a polling station</option>
-        <option v-for="poSt in pollingStations" :key="poSt.id" :value="poSt">
+        <option v-for="poSt in poStList" :key="poSt.id" :value="poSt">
           {{ poSt.name }}
         </option>
       </select>
-      <div class="tag" v-if="selectedPollingStation">
-        {{ selectedPollingStation.name }}
+      <div class="tag" v-if="selectedPoSt">
+        {{ selectedPoSt.name }}
         <svg
           @click="clearSelectedPoSt()"
           xmlns="http://www.w3.org/2000/svg"
@@ -421,7 +421,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
     </div>
   </div>
   <div class="filtered-data">
-    <div class="affi-list" v-if="selectedElection && displayedAffiVotes && !selectedAffiliation">
+    <div class="affi-list" v-if="selectedElection && displayedAffiVotes && !selectedAffi">
       <p>{{ voteLevel }} affiliation votes of Election {{ selectedElection }}</p>
       <AffiChart v-if="affiVotes" :affiVotes="displayedAffiVotes" />
       <div
@@ -436,15 +436,15 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
         <div class="affi-percentage">{{ affi.percentage.toFixed(2) }}%</div>
       </div>
     </div>
-    <div v-if="selectedAffiliation && selectedElection && !selectedCandidate">
-      <h1 class="affi-title">{{ selectedAffiliation.name }}</h1>
+    <div v-if="selectedAffi && selectedElection && !selectedCandi">
+      <h1 class="affi-title">{{ selectedAffi.name }}</h1>
       <h2 class="candi-list-title">Candidates</h2>
       <div class="buttons">
-        <button class="back-btn" @click="selectedAffiliation = null">Back</button>
+        <button class="back-btn" @click="selectedAffi = null">Back</button>
         <button
           class="back-btn"
           @click="
-            selectedAffiliation.candidates = sortCandidatesByName(selectedAffiliation.candidates)
+            selectedAffi.candidates = sortCandidatesByName(selectedAffi.candidates)
           "
         >
           sort by name
@@ -452,7 +452,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
         <button
           class="back-btn"
           @click="
-            selectedAffiliation.candidates = sortCandidatesByVVCount(selectedAffiliation.candidates)
+            selectedAffi.candidates = sortCandidatesByVVCount(selectedAffi.candidates)
           "
         >
           sort by votes
@@ -460,7 +460,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
       </div>
       <div
         class="candidate"
-        v-for="candi in selectedAffiliation.candidates"
+        v-for="candi in selectedAffi.candidates"
         :key="candi.id"
         @click="handleCandiChange(candi)"
       >
@@ -469,17 +469,17 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
         </p>
       </div>
     </div>
-    <div v-if="selectedCandidate && selectedElection" class="candi-details-card">
-      <h2 class="candi-title" v-if="selectedCandidate.shortCode">
-        {{ selectedCandidate.shortCode }}
+    <div v-if="selectedCandi && selectedElection" class="candi-details-card">
+      <h2 class="candi-title" v-if="selectedCandi.shortCode">
+        {{ selectedCandi.shortCode }}
       </h2>
-      <h3 class="candi-name" v-if="selectedCandidate.firstName && selectedCandidate.lastName">
-        {{ selectedCandidate.firstName }} {{ selectedCandidate.lastName }}
+      <h3 class="candi-name" v-if="selectedCandi.firstName && selectedCandi.lastName">
+        {{ selectedCandi.firstName }} {{ selectedCandi.lastName }}
       </h3>
       <p class="candi-info">
-        <strong>Gender:</strong> {{ selectedCandidate.gender }}
+        <strong>Gender:</strong> {{ selectedCandi.gender }}
         <svg
-          v-if="selectedCandidate.gender === 'male'"
+          v-if="selectedCandi.gender === 'male'"
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
           viewBox="0 -960 960 960"
@@ -491,7 +491,7 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
           />
         </svg>
         <svg
-          v-if="selectedCandidate.gender === 'female'"
+          v-if="selectedCandi.gender === 'female'"
           xmlns="http://www.w3.org/2000/svg"
           height="24px"
           viewBox="0 -960 960 960"
@@ -503,12 +503,12 @@ function sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
           />
         </svg>
         <br />
-        <strong>Locality:</strong> {{ selectedCandidate.localityName }}
+        <strong>Locality:</strong> {{ selectedCandi.localityName }}
       </p>
       <p class="candi-vv-count">
-        Votes: <strong>{{ selectedCandidate.vvCount.toLocaleString() }}</strong>
+        Votes: <strong>{{ selectedCandi.vvCount.toLocaleString() }}</strong>
       </p>
-      <button class="back-btn" @click="selectedCandidate = null">Back</button>
+      <button class="back-btn" @click="selectedCandi = null">Back</button>
     </div>
   </div>
 </template>

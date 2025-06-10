@@ -60,22 +60,22 @@ public class ElectionService {
     /**
      * Retrieves all the affiliation data of a specific election.
      */
-    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiliationsOf(String electionId) {
+    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMapOf(String electionId) {
         Election election = getElectoralDataOf(electionId);
         if (election == null) {
             return null;
         }
-        return election.getAffiliations();
+        return election.getAffiListMap();
     }
 
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    public LinkedHashMap<String, PollingStation> getNationalLevel_pollingStationsOf(String electionId) {
+    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMapOf(String electionId) {
         Election election = getElectoralDataOf(electionId);
         if (election == null) {
             return null;
         }
-        return election.getPollingStations();
+        return election.getPoStListMap();
     }
 }

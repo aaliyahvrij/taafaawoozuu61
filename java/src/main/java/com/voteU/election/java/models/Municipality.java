@@ -12,14 +12,14 @@ public class Municipality {
     private String name;
     @Setter
     private int constId;
-    private final LinkedHashMap<String, PollingStation> pollingStations;
-    private final LinkedHashMap<Integer, Affiliation> affiliations;
+    private final LinkedHashMap<String, PollingStation> poStListMap;
+    private final LinkedHashMap<Integer, Affiliation> affiListMap;
 
     public Municipality(String id) {
         this.id = id;
         this.name = "";
         this.constId = 0;
-        this.pollingStations = new LinkedHashMap<>();
-        this.affiliations = new LinkedHashMap<>();
+        this.poStListMap = new LinkedHashMap<>();
+        this.affiListMap = new LinkedHashMap<>();
     }
 }

@@ -275,7 +275,7 @@ public class ElectionProcessor<E> {
                                 this.transformer.registerNationalLevel_affiData(candiMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
-                                LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candiShortCode, affId));
+                                LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %s of affi %d.".formatted(candiShortCode, affId));
                             }
                             break;
                         default:
@@ -468,7 +468,7 @@ public class ElectionProcessor<E> {
                             this.transformer.registerMuniLevel_affiData(candiMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
-                            LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %s of affiliation %d.".formatted(candId, affId));
+                            LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %s of affi %d.".formatted(candId, affId));
                         }
                         break;
                     default:
@@ -484,7 +484,7 @@ public class ElectionProcessor<E> {
         String poStName = null;
         LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap = new LinkedHashMap<>();
         int poStVVCount = 0;
-        Affiliation affiliation;
+        Affiliation affi;
         int affId = 0;
         int selectionIndex = 0;
         if (parser.findBeginTag(POLLING_STATION_ID)) {
@@ -525,10 +525,10 @@ public class ElectionProcessor<E> {
                         poStVVCount += affiVVCount;
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affiliation %d within polling station %s.".formatted(affId, poStName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affi %d within poSt %s.".formatted(affId, poStName));
                     }
-                    affiliation = new Affiliation(affId, affiName, affiVVCount);
-                    poStLevel_affiListMap.put(affId, affiliation);
+                    affi = new Affiliation(affId, affiName, affiVVCount);
+                    poStLevel_affiListMap.put(affId, affi);
                     break;
                 case CANDIDATE:
                     int candId = 0;
@@ -541,10 +541,10 @@ public class ElectionProcessor<E> {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candidate = new Candidate(candId, candiVVCount);
                         candidate.setAffId(affId);
-                        poStLevel_affiListMap.get(affId).addCandidate(candidate);
+                        poStLevel_affiListMap.get(affId).addCandi(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candidate %d of affiliation %d within polling station %s.".formatted(candId, affId, poStName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
                     }
                     break;
                 default:
