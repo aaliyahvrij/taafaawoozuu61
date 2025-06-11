@@ -24,7 +24,6 @@ const registerForm = ref({
   password: '',
 })
 
-// TODO: make html and css of this so the user sees it
 function validatePassword(password: string): string | null {
   if (password.length < 8) {
     return 'Password must be at least 8 characters long.';
@@ -43,9 +42,6 @@ function validatePassword(password: string): string | null {
   }
   return null;
 }
-
-
-
 
 function validateForm(): boolean {
   const { password, email } = registerForm.value;

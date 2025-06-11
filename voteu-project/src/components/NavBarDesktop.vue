@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth.ts'
-import { computed } from 'vue'
+import { computed, type ComputedRef } from 'vue'
 
 const { isLoggedIn, logout } = useAuth()
 
-const role = computed(() => useAuth().getRole())
+const role: ComputedRef<string | null> = computed(() => useAuth().getRole())
 </script>
 
 <template>
