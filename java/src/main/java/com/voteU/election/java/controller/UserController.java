@@ -5,6 +5,8 @@ import com.voteU.election.java.entities.User;
 import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +42,33 @@ public class UserController {
      */
     @Operation(summary = "Retrieve all users", description = "Fetch the complete list of all users.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "List of users retrieved successfully."),
-            @ApiResponse(responseCode = "500", description = "Internal server error."),
-            @ApiResponse(responseCode = "403", description = "unauthorized")
+            @ApiResponse(responseCode = "200", description = "List of users retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "List of users retrieved successfully.",
+                        "data": [
+                            { "id": 1, "username": "john_doe", "email": "john.doe@example.com" },
+                            { "id": 2, "username": "jane_doe", "email": "jane.doe@example.com" }
+                        ]
+                    }
+                """))),
+            @ApiResponse(responseCode = "500", description = "Internal server error.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Internal Server Error",
+                        "message": "An unexpected error occurred. Please try again later."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Unauthorized",
+                        "message": "You do not have permission to access this resource."
+                    }
+                """)))
     })
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -57,8 +83,26 @@ public class UserController {
      */
     @Operation(summary = "Create a new user", description = "Add a new user to the system.")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "User successfully created."),
-            @ApiResponse(responseCode = "400", description = "Invalid input.")
+            @ApiResponse(responseCode = "201", description = "User successfully created.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User successfully created.",
+                        "data": {
+                            "id": 3,
+                            "username": "new_user",
+                            "email": "new.user@example.com"
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "400", description = "Invalid input.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Bad Request",
+                        "message": "The provided user details are invalid."
+                    }
+                """)))
     })
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -74,9 +118,34 @@ public class UserController {
      */
     @Operation(summary = "Retrieve user by ID", description = "Fetch a user based on their unique identifier.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found."),
-            @ApiResponse(responseCode = "403", description = "unauthorized")
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User retrieved successfully.",
+                        "data": {
+                            "id": 1,
+                            "username": "john_doe",
+                            "email": "john.doe@example.com"
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "404", description = "User not found.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Not Found",
+                        "message": "User with ID 123 not found."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Forbidden",
+                        "message": "You do not have access to this resource."
+                    }
+                """)))
     })
     @GetMapping("/id/{id}")
     public ResponseEntity<Optional<User>> getUserById(@PathVariable Integer id) {
@@ -94,9 +163,34 @@ public class UserController {
      */
     @Operation(summary = "Retrieve user by username", description = "Fetch a user by their unique username.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found."),
-            @ApiResponse(responseCode = "403", description = "unauthorized")
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User retrieved successfully.",
+                        "data": {
+                            "id": 2,
+                            "username": "jane_doe",
+                            "email": "jane.doe@example.com"
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "404", description = "User not found.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Not Found",
+                        "message": "User with username 'unknown_user' not found."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Forbidden",
+                        "message": "You do not have access to this resource."
+                    }
+                """)))
     })
     @GetMapping("/username/{username}")
     public ResponseEntity<Optional<User>> getUserByUsername(@PathVariable String username) {
@@ -114,9 +208,34 @@ public class UserController {
      */
     @Operation(summary = "Retrieve user by email", description = "Fetch a user based on their email address.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found."),
-            @ApiResponse(responseCode = "403", description = "unauthorized")
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User retrieved successfully.",
+                        "data": {
+                            "id": 2,
+                            "username": "jane_doe",
+                            "email": "jane.doe@example.com"
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "404", description = "User not found.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Not Found",
+                        "message": "User with email 'unknown_user@unknown.com' not found."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Forbidden",
+                        "message": "You do not have access to this resource."
+                    }
+                """)))
     })
     @GetMapping("/email/{email}")
     public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email) {
@@ -137,9 +256,34 @@ public class UserController {
      */
     @Operation(summary = "Update an existing user", description = "Modify the details of an existing user.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User updated successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found."),
-            @ApiResponse(responseCode = "400", description = "Invalid input.")
+            @ApiResponse(responseCode = "200", description = "User updated successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User updated successfully.",
+                        "data": {
+                            "id": 2,
+                            "username": "jane_doe",
+                            "email": "jane.doe@example.com"
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "404", description = "User not found.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Not Found",
+                        "message": "User with id '4' not found."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Forbidden",
+                        "message": "You do not have access to this resource."
+                    }
+                """)))
     })
     @PutMapping("/id/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
@@ -154,9 +298,32 @@ public class UserController {
      */
     @Operation(summary = "Delete a user", description = "Remove a user by their unique ID.")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "User deleted successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found."),
-            @ApiResponse(responseCode = "403", description = "unauthorized")
+            @ApiResponse(responseCode = "204", description = "User deleted successfully.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "message": "User deleted successfully.",
+                        "data": {
+                            ""
+                        }
+                    }
+                """))),
+            @ApiResponse(responseCode = "404", description = "User not found.",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Not Found",
+                        "message": "User with id '4' not found."
+                    }
+                """))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                    {
+                        "error": "Forbidden",
+                        "message": "You do not have access to this resource."
+                    }
+                """)))
     })
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id, Authentication authentication) {
