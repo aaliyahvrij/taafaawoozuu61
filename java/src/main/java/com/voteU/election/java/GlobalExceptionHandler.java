@@ -53,6 +53,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         logger.error("Unexpected error occurred", ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Er is een fout opgetreden.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("an error occurred");
     }
 }
