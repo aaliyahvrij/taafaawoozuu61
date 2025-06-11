@@ -3,6 +3,7 @@ package com.voteU.election.java.services;
 import com.voteU.election.java.entities.Role;
 import com.voteU.election.java.entities.User;
 import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,11 @@ public class UserService {
      * @return an Optional containing the User if found, or an empty Optional if no user exists with the specified id
      */
     public Optional<User> getUserById(Integer id) {
+
+        if(id == null) {
+            throw new ResourceNotFoundException("User not found with id " + id);
+        }
+
         return userRepository.findUserById(id);
     }
 
@@ -75,7 +81,11 @@ public class UserService {
      * @return an Optional containing the User entity if found, or an empty Optional if no user was found
      */
     public Optional<User> getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+        if(username == null) {
+            throw new ResourceNotFoundException("User not found with username " + username);
+        }
+
+        return (userRepository.findUserByUsername(username));
     }
 
     /**
@@ -86,6 +96,11 @@ public class UserService {
      *         exists with the specified email
      */
     public Optional<User> getUserByEmail(String email) {
+
+        if (email == null) {
+           throw new ResourceNotFoundException("User not found with email " + email);
+        }
+
         return userRepository.findUserByEmail(email);
     }
 
@@ -110,7 +125,7 @@ public class UserService {
                     user.setCountry(updatedUser.getCountry());
                     user.setPassword(updatedUser.getPassword());
                     return userRepository.save(user);
-                }).orElseThrow(() -> new RuntimeException("User not found"));
+                }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     /**

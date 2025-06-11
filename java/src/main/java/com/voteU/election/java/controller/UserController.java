@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -58,10 +59,11 @@ public class UserController {
      * @throws ResourceNotFoundException if the user with the specified id is not found
      */
     @GetMapping("/id/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable Integer id) {
+
+        Optional<User> user = userService.getUserById(id);
+
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -71,10 +73,10 @@ public class UserController {
      * @return a ResponseEntity containing the User object if found, or throws a NotFound exception
      */
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with username " + username));
+    public ResponseEntity<Optional<User>> getUserByUsername(@PathVariable String username) {
+        Optional<User> user = userService.getUserByUsername(username);
+
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -86,10 +88,11 @@ public class UserController {
      * @throws ResourceNotFoundException if no user is found with the given email
      */
     @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
+    public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email) {
+
+        Optional<User> user = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(user);
     }
 
     /**
