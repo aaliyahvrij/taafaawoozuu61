@@ -4,6 +4,7 @@ import com.voteU.election.java.model.*;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
 import com.voteU.election.java.utils.xml.Transformer;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
@@ -16,6 +17,7 @@ import java.util.*;
  * This class also maintains an internal representation of elections data and handles mappings necessary for data processing.
  * It extends multiple parent classes and overrides their methods to achieve functionality specific to Dutch elections.
  */
+@Slf4j
 @Getter
 public class DutchElectionTransformer implements Transformer<Election> {
     private final Map<String, Election> elections = new HashMap<>();
@@ -50,7 +52,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionDate = electionData.get(DutchElectionProcessor.ELECTION_DATE);
 
         if (electionId == null || electionName == null || electionDate == null) {
-            System.out.println("Incomplete election data: Missing ID, Name, or Date.");
+            log.error("Incomplete election data: Missing ID, Name, or Date.");
             return;
         }
 
@@ -73,8 +75,6 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Optional: Handle affiliation data if required separately
     }
 
-
-
     public void registerConstituency(Map<String, String> constituencyData, Map<Integer, Integer> affiliationVotes, Map<Integer, Map<Integer, Integer>> candidateVotes, Map<Integer, String> affiliationNames) {
         // Step 1: Extract required info
         String electionId = constituencyData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
@@ -85,18 +85,18 @@ public class DutchElectionTransformer implements Transformer<Election> {
         // Step 2: Retrieve election
         Election election = elections.get(electionId);
         if (election == null) {
-            System.err.println("[registerConstituency] ❌ No election found for ID: '" + electionId + "'. Aborting.");
+            log.error("[registerConstituency] ❌ No election found for ID: '" + electionId + "'. Aborting.");
             return;
         }
 
         // Step 3: Get or create constituency map
         Map<Integer, Constituency> constituencyMap = election.getConstituencies();
         if (constituencyMap == null) {
-            System.out.println("[registerConstituency] ⚠️ Constituencies map was null. Initializing new map.");
+            log.warn("[registerConstituency] ⚠️ Constituencies map was null. Initializing new map.");
             constituencyMap = new HashMap<>();
             election.setConstituencies(constituencyMap);
         } else {
-            System.out.println("[registerConstituency] ✅ Found existing constituencies map with size: " + constituencyMap.size());
+            log.info("[registerConstituency] ✅ Found existing constituencies map with size: " + constituencyMap.size());
         }
 
 
@@ -151,13 +151,13 @@ public class DutchElectionTransformer implements Transformer<Election> {
         String electionId = votesData.get(DutchElectionProcessor.ELECTION_IDENTIFIER);
         Election election = elections.get(electionId);
         if (election == null) {
-            System.err.println("❌ No election found for ID: '" + electionId + "'");
+            log.error("❌ No election found for ID: '" + electionId + "'");
             return;
         }
 
         Map<Integer, Constituency> constituencies = election.getConstituencies();
         if (constituencies == null || constituencies.isEmpty()) {
-            System.err.println("❌ No constituencies found for election ID: '" + electionId + "'");
+            log.error("❌ No constituencies found for election ID: '" + electionId + "'");
             return;
         }
 
@@ -263,7 +263,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         Constituency constituency = election.getConstituencies().get(contestId);
         if (constituency == null) {
-            System.err.println("[registerAuthority] ❌ Constituency with ID " + contestId + " not found in election " + electionId);
+            log.error("[registerAuthority] ❌ Constituency with ID " + contestId + " not found in election " + electionId);
             return;
         }
 
@@ -343,7 +343,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         Constituency constituency = election.getConstituencies().get(contestId);
         if (constituency == null) {
-            System.err.println("[registerPollingStation] ❌ Constituency with ID " + contestId + " not found in election " + electionId);
+            log.error("[registerPollingStation] ❌ Constituency with ID " + contestId + " not found in election " + electionId);
             return;
         }
 
@@ -351,7 +351,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
         Map<String, Authority> authorityMap = constituency.getAuthorities();
         Authority authority = authorityMap.get(authorityId);
         if (authority == null) {
-            System.err.println("[registerPollingStation] ❌ Authority with ID " + authorityId + " not found in constituency " + contestId);
+            log.error("[registerPollingStation] ❌ Authority with ID " + authorityId + " not found in constituency " + contestId);
             return;
         }
 
@@ -489,7 +489,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
     public void registerProvinceConstituencies(String electionId) {
         Election election = elections.get(electionId);
         if (election == null) {
-            System.err.println("[registerProvinceConstituencies] ❌ No election found for ID: '" + electionId + "'.");
+            log.error("[registerProvinceConstituencies] ❌ No election found for ID: '" + electionId + "'.");
             return;
         }
 
@@ -522,7 +522,7 @@ public class DutchElectionTransformer implements Transformer<Election> {
             if (matchedProvince != null) {
                 matchedProvince.getConstituencies().add(constituency);
             } else {
-                System.err.println("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
+                log.error("[registerProvinceConstituencies] ❌ Province not found for ID: " + provinceId);
             }
         }
 
