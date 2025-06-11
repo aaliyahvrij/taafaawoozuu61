@@ -1,15 +1,13 @@
-variables:
-  DEPLOY_MKDOCS: "true"
-  DEPLOY_HIC: "false"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
-include:
-  - ".gitlab-ci.mkdocs.yml"
-
 stages:
   - build
   - test
   - package
+  - deploy
+
+variables:
+  DEPLOY_MKDOCS: "true"
+  DEPLOY_HIC: "false"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 cache:
   paths:
@@ -38,8 +36,13 @@ test-job:
 package-job:
   stage: package
   script:
-    - mvn clean package -DskipTests
+    - mvn clean package
+
+pages:
+  stage: deploy
+  script:
+    - echo "Deploying documentation..."
   artifacts:
     paths:
-      - target/*.jar
-    expire_in: 1 day
+      - public
+
