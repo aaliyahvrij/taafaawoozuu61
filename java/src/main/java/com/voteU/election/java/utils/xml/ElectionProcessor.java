@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * All the datamodel-specific logic must be provided by a separate class that implements
  * the {@link Transformer} interface.<br>
  * At its current state, it processes the files in a two-step process.
- * First, it constructs the 'constituencies' and the 'kieslijsten'. Secondly, it processes the valid vote counts.
+ * First, it constructs the 'constituencies' and the 'kieslijsten'. Secondly, it processes the valid vote count.
  * It behaves similar as the <a href="https://www.baeldung.com/java-visitor-pattern">visitor pattern</a>.<br>
  * The full dataset consists of three types of files.
  * <ol>
@@ -61,7 +61,7 @@ public class ElectionProcessor<E> {
      The tag names on the constituency level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String CONSTITUENCY = "Contest";
+    public static final String CONSTI = "Contest";
     public static final String CONSTI_ID = "ContestIdentifier";
     public static final String CONSTI_NAME = "ContestName";
     public static final String TOTAL_VV_COUNT = "TotalVotes";
@@ -70,22 +70,22 @@ public class ElectionProcessor<E> {
      The tag names on the municipality level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String MUNICIPALITY = "ManagingAuthority";
+    public static final String MUNI = "ManagingAuthority";
     public static final String MUNI_ID = "AuthorityIdentifier";
 
     /*
      The tag names on the polling station level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String POLLING_STATION = "ReportingUnitVotes";
-    public static final String POLLING_STATION_ID = "ReportingUnitIdentifier";
+    public static final String PO_ST = "ReportingUnitVotes";
+    public static final String PO_ST_ID = "ReportingUnitIdentifier";
     public static final String SELECTION = "Selection";
 
     /*
      The tag names on the affiliation level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String AFFILIATION = "Affiliation";
+    public static final String AFFI = "Affiliation";
     public static final String AFFI_ID = "AffiliationIdentifier";
     public static final String AFFI_NAME = "RegisteredName";
 
@@ -93,7 +93,7 @@ public class ElectionProcessor<E> {
      The tag names on the candidate level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String CANDIDATE = "Candidate";
+    public static final String CANDI = "Candidate";
     public static final String CANDI_ID = "CandidateIdentifier";
     public static final String CANDI_SHORT_CODE = "ShortCode";
     public static final String CANDI_FULL_NAME = "PersonName";
@@ -166,7 +166,7 @@ public class ElectionProcessor<E> {
     }
 
     private void processElectoralLevelData(LinkedHashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(MUNICIPALITY)) {
+        if (parser.findBeginTag(MUNI)) {
             if (parser.findBeginTag(MUNI_ID)) {
                 String munId = parser.getAttributeValue(null, "Id");
                 electionMap.put("munId", munId);
@@ -174,7 +174,7 @@ public class ElectionProcessor<E> {
                 electionMap.put("muniName", muniName);
                 parser.findAndAcceptEndTag(MUNI_ID);
             }
-            parser.findAndAcceptEndTag(MUNICIPALITY);
+            parser.findAndAcceptEndTag(MUNI);
         }
         if (parser.findBeginTag(ELECTION_ID)) {
             if (parser.findBeginTag(ELECTION_NAME)) {
@@ -242,7 +242,7 @@ public class ElectionProcessor<E> {
                             }
                             this.transformer.registerNationalLevel_affiData(affiMap);
                             break;
-                        case CANDIDATE:
+                        case CANDI:
                             String candiShortCode = null;
                             if (parser.findBeginTag(CANDI_ID)) {
                                 candiShortCode = parser.getAttributeValue(null, CANDI_SHORT_CODE);
@@ -251,7 +251,7 @@ public class ElectionProcessor<E> {
                                     continue;
                                 }
                             }
-                            parser.findAndAcceptEndTag(CANDIDATE);
+                            parser.findAndAcceptEndTag(CANDI);
                             if (parser.findBeginTag(VV_COUNT)) {
                                 int candiVVCount = Integer.parseInt(parser.getElementText());
                                 LinkedHashMap<String, String> candiMap = new LinkedHashMap<>(constiMap);
@@ -275,7 +275,7 @@ public class ElectionProcessor<E> {
                                 this.transformer.registerNationalLevel_affiData(candiMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
-                                LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %s of affi %d.".formatted(candiShortCode, affId));
+                                LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %s of affi %d.".formatted(candiShortCode, affId));
                             }
                             break;
                         default:
@@ -289,7 +289,7 @@ public class ElectionProcessor<E> {
     }
 
     private void processConstiOrMuniLevel_affiData(LinkedHashMap<String, String> electionMap, XMLParser parser, String fileType) throws XMLStreamException {
-        if (parser.findBeginTag(CONSTITUENCY)) {
+        if (parser.findBeginTag(CONSTI)) {
             LinkedHashMap<String, String> constiMap = new LinkedHashMap<>(electionMap);
             if (parser.findBeginTag(CONSTI_ID)) {
                 int constId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -312,12 +312,12 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
-            while (parser.nextBeginTag(POLLING_STATION)) {
+            while (parser.nextBeginTag(PO_ST)) {
                 processPoStLevelData(constiMap, parser);
-                parser.findAndAcceptEndTag(POLLING_STATION);
+                parser.findAndAcceptEndTag(PO_ST);
             }
-            parser.findAndAcceptEndTag(CONSTITUENCY);
-            if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
+            parser.findAndAcceptEndTag(CONSTI);
+            if (!parser.findAndAcceptEndTag(CONSTI)) {
                 LOG.warning("Cannot find </Contest> tag.");
             }
         } else {
@@ -326,7 +326,7 @@ public class ElectionProcessor<E> {
     }
 
     private void processConstiLevel_affiData(LinkedHashMap<String, String> constiMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(CONSTITUENCY)) {
+        if (parser.findBeginTag(CONSTI)) {
             List<String> affiNameList = new ArrayList<>();
             List<Integer> affiVVCountList = new ArrayList<>();
             HashSet<Integer> processedAffiHashSet = new HashSet<>();
@@ -366,7 +366,7 @@ public class ElectionProcessor<E> {
                                 processedAffiHashSet.add(affId);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             }
-                        case CANDIDATE:
+                        case CANDI:
                             int candId = -1;
                             if (parser.findBeginTag(CANDI_ID)) {
                                 candId = parser.getIntegerAttributeValue(null, ID, 0);
@@ -433,7 +433,7 @@ public class ElectionProcessor<E> {
                         }
                         this.transformer.registerMuniLevel_affiData(affiMap);
                         break;
-                    case CANDIDATE:
+                    case CANDI:
                         LinkedHashMap<String, String> candiMap = new LinkedHashMap<>(constiMap);
                         int candId = 0;
                         if (parser.findBeginTag(CANDI_ID)) {
@@ -442,7 +442,7 @@ public class ElectionProcessor<E> {
                         }
                         // Form a composite key - a true unique identifier of the candidate
                         String candiCompKey = candId + "_" + affId;
-                        parser.findAndAcceptEndTag(CANDIDATE);
+                        parser.findAndAcceptEndTag(CANDI);
                         if (processedAffiHashSet.contains(candiCompKey)) {
                             continue;
                         }
@@ -468,7 +468,7 @@ public class ElectionProcessor<E> {
                             this.transformer.registerMuniLevel_affiData(candiMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
-                            LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %s of affi %d.".formatted(candId, affId));
+                            LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %s of affi %d.".formatted(candId, affId));
                         }
                         break;
                     default:
@@ -487,7 +487,7 @@ public class ElectionProcessor<E> {
         Affiliation affi;
         int affId = 0;
         int selectionIndex = 0;
-        if (parser.findBeginTag(POLLING_STATION_ID)) {
+        if (parser.findBeginTag(PO_ST_ID)) {
             String poStId = parser.getAttributeValue(null, ID);
             poStMap.put("poStId", poStId);
             poStName = parser.getElementText();
@@ -506,7 +506,7 @@ public class ElectionProcessor<E> {
             } else {
                 poStMap.put("poStName", poStName);
             }
-            parser.findAndAcceptEndTag(POLLING_STATION_ID);
+            parser.findAndAcceptEndTag(PO_ST_ID);
         }
         while (parser.getLocalName().equals(SELECTION)) {
             parser.nextTag();
@@ -525,18 +525,18 @@ public class ElectionProcessor<E> {
                         poStVVCount += affiVVCount;
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for affi %d within poSt %s.".formatted(affId, poStName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for affi %d within poSt %s.".formatted(affId, poStName));
                     }
                     affi = new Affiliation(affId, affiName, affiVVCount);
                     poStLevel_affiListMap.put(affId, affi);
                     break;
-                case CANDIDATE:
+                case CANDI:
                     int candId = 0;
                     if (parser.findBeginTag(CANDI_ID)) {
                         candId = parser.getIntegerAttributeValue(null, ID, 0);
                         parser.findAndAcceptEndTag(CANDI_ID);
                     }
-                    parser.findAndAcceptEndTag(CANDIDATE);
+                    parser.findAndAcceptEndTag(CANDI);
                     if (parser.findBeginTag(VV_COUNT)) {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candidate = new Candidate(candId, candiVVCount);
@@ -544,7 +544,7 @@ public class ElectionProcessor<E> {
                         poStLevel_affiListMap.get(affId).addCandi(candidate);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
-                        LOG.warning("Missing <ValidVotes> tag. Unable to register the valid vote count for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
+                        LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
                     }
                     break;
                 default:
@@ -583,10 +583,10 @@ public class ElectionProcessor<E> {
             }
             parser.findAndAcceptEndTag(AFFI_ID);
         }
-        if (parser.findBeginTag(CANDIDATE)) {
-            while (parser.getLocalName().equals(CANDIDATE)) {
+        if (parser.findBeginTag(CANDI)) {
+            while (parser.getLocalName().equals(CANDI)) {
                 processCandiLevelData(affiMap, parser);
-                parser.findAndAcceptEndTag(CANDIDATE);
+                parser.findAndAcceptEndTag(CANDI);
             }
         }
     }
@@ -640,7 +640,7 @@ public class ElectionProcessor<E> {
     }
 
     private void processCandiLevel_constiData(LinkedHashMap<String, String> electionMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(CONSTITUENCY)) {
+        if (parser.findBeginTag(CONSTI)) {
             LinkedHashMap<String, String> constiMap = new LinkedHashMap<>(electionMap);
             int constId;
             String constiName;
@@ -655,14 +655,14 @@ public class ElectionProcessor<E> {
                 parser.findAndAcceptEndTag(CONSTI_ID);
             }
             this.transformer.registerCandiLevel_constiData(constiMap);
-            if (parser.findBeginTag(AFFILIATION)) {
-                while (parser.getLocalName().equals(AFFILIATION)) {
+            if (parser.findBeginTag(AFFI)) {
+                while (parser.getLocalName().equals(AFFI)) {
                     processAffiLevelData(constiMap, parser);
-                    parser.findAndAcceptEndTag(AFFILIATION);
+                    parser.findAndAcceptEndTag(AFFI);
                 }
             }
-            parser.findAndAcceptEndTag(CONSTITUENCY);
-            if (!parser.findAndAcceptEndTag(CONSTITUENCY)) {
+            parser.findAndAcceptEndTag(CONSTI);
+            if (!parser.findAndAcceptEndTag(CONSTI)) {
                 LOG.warning("Cannot find </Contest> tag.");
             }
         } else {
