@@ -15,6 +15,10 @@ export async function apiFetch<T>(endpoint: string, options: RequestInit = {}): 
       throw new Error(errorMessage);
     }
 
+    if (response.status === 204) {
+      return null as unknown as T;
+    }
+
     return await response.json();
   } catch (error) {
     console.error('API fetch error:', error);
