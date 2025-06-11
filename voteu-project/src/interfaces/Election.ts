@@ -3,8 +3,8 @@ import type { Province, Constituency, Municipality, Affiliation } from '@/interf
 export interface Election {
   id: string
   name: string
-  provinces: Province[]
-  constituencies: { [key: number]: Constituency }
-  municipalities: { [key: string]: Municipality }
-  affiliations: { [key: number]: Affiliation }
+  proviListMap: { [key: number]: Province }
+  constiListMap: { [key: number]: Constituency }
+  muniListMap: { [key: string]: Municipality }
+  affiListMap: { [key: number]: Affiliation }
 }

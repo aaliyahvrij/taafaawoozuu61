@@ -47,64 +47,64 @@ const muniList2 = ref<Municipality[]>([])
 const poStList2 = ref<PollingStation[]>([])
 
 // --- Helper functies voor ophalen filters ---
-async function getNationalLevel_proviListOf(
+async function getNationalLevel_proviListMapOf(
   electionId: string | null,
-  provincesRef: typeof proviList1,
+  proviListRef: typeof proviList1,
   clearSelectedProvi: () => void,
 ) {
   if (!electionId) {
-    provincesRef.value = []
+    proviListRef.value = []
     clearSelectedProvi()
     return
   }
   try {
-    const response = await ProviService.getNationalLevel_proviListOf(electionId)
-    provincesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching provinces of ', electionId)
+    const response = await ProviService.getNationalLevel_proviListMapOf(electionId)
+    proviListRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('Fetching proviListMap of ', electionId)
   } catch (err) {
-    console.error('Error fetching provinces of ', electionId, '', err)
+    console.error('Error fetching proviListMap of ', electionId, '', err)
   }
 }
 
 async function getProviLevel_constiListOf(
   electionId: string | null,
   provId: string | undefined,
-  constituenciesRef: typeof constiList1,
+  constiListRef: typeof constiList1,
   clearSelectedConsti: () => void,
 ) {
   if (!electionId || !provId) {
-    constituenciesRef.value = []
+    constiListRef.value = []
     clearSelectedConsti()
     return
   }
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
     const response = await ProviService.getProviLevel_constiListOf(electionId, provId)
-    constituenciesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching constituencies of ', proviPath)
+    constiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('Fetching constiList of ', proviPath)
   } catch (err) {
-    console.error('Error fetching constituencies of ', proviPath, ': ', err)
+    console.error('Error fetching constiList of ', proviPath, ': ', err)
   }
 }
 
-async function getConstiLevel_muniListOf(
+async function getConstiLevel_muniListMapOf(
   electionId: string | null,
   constId: string | undefined,
-  municipalitiesRef: typeof muniList1,
+  muniListRef: typeof muniList1,
   clearSelectedMuni: () => void,
 ) {
   if (!electionId || !constId) {
-    municipalitiesRef.value = []
+    muniListRef.value = []
     clearSelectedMuni()
     return
   }
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await MuniService.getConstiLevel_muniListOf(electionId, constId)
-    municipalitiesRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching municipalities of ', constiPath)
+    const response = await MuniService.getConstiLevel_muniListMapOf(electionId, constId)
+    muniListRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('Fetching muniListMap of ', constiPath)
   } catch (err) {
-    console.error('Error fetching municipalities of ', constiPath, ': ', err)
+    console.error('Error fetching muniListMap of ', constiPath, ': ', err)
   }
 }
 
@@ -112,29 +112,29 @@ async function getMuniLevel_poStListOf(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
-  pollingStationsRef: typeof poStList1,
+  poStListRef: typeof poStList1,
   clearSelectedPoSt: () => void,
 ) {
   if (!electionId || !constId || !munId) {
-    pollingStationsRef.value = []
+    poStListRef.value = []
     clearSelectedPoSt()
     return
   }
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await PoStService.getMuniLevel_poStListOf(
+    const response = await PoStService.getMuniLevel_poStListMapOf(
       electionId,
       constId,
       munId,
     )
-    pollingStationsRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching polling stations of ', muniPath)
+    poStListRef.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('Fetching poStListMap of ', muniPath)
   } catch (err) {
-    console.error('Error fetching polling stations of ', muniPath, ': ', err)
+    console.error('Error fetching poStListMap of ', muniPath, ': ', err)
   }
 }
 
-async function getAffiListOf(
+async function getAffiListOrListMapOf(
   electionId: string | null,
   provi: Province | null,
   muni: Municipality | null,
@@ -151,7 +151,7 @@ async function getAffiListOf(
   let levelPath = 'election ' + electionId
   try {
     if (poSt && muni && consti) {
-      const response = await PoStService.getPoStLevel_affiListOf(
+      const response = await PoStService.getPoStLevel_affiListMapOf(
         electionId,
         consti.id.toString(),
         muni.id.toString(),
@@ -166,9 +166,9 @@ async function getAffiListOf(
         muni.id.toString() +
         ' > poSt ' +
         poSt.id
-      console.log('Fetching affiliations of ', levelPath)
+      console.log('Fetching affiListMap of ', levelPath)
     } else if (muni && consti) {
-      const response = await MuniService.getMuniLevel_affiListOf(
+      const response = await MuniService.getMuniLevel_affiListMapOf(
         electionId,
         consti.id.toString(),
         muni.id.toString(),
@@ -176,30 +176,30 @@ async function getAffiListOf(
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'muni'
       levelPath += ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString()
-      console.log('Fetching affiliations of ', levelPath)
+      console.log('Fetching affiListMap of ', levelPath)
     } else if (consti) {
-      const response = await ConstiService.getConstiLevel_affiListOf(
+      const response = await ConstiService.getConstiLevel_affiListMapOf(
         electionId,
         consti.id.toString(),
       )
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'consti'
       levelPath += ' > consti ' + consti.id
-      console.log('Fetching affiliations of ', levelPath)
+      console.log('Fetching affiListMap of ', levelPath)
     } else if (provi) {
       const response = await ProviService.getProviLevel_affiListOf(electionId, provi.id)
       affiVotesRef.value = response
       voteLevelRef.value = 'provi'
       levelPath += ' > provi ' + provi.id
-      console.log('Fetching affiliations of ', levelPath)
+      console.log('Fetching affiList of ', levelPath)
     } else {
-      const response = await ElectionService.getNationalLevel_affiListOf(electionId)
+      const response = await ElectionService.getNationalLevel_affiListMapOf(electionId)
       affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'national'
-      console.log('Fetching affiliations of ', levelPath)
+      console.log('Fetching affiListMap of ', levelPath)
     }
   } catch (err) {
-    console.error('Error fetching affiliations of ', levelPath, ': ', err)
+    console.error('Error fetching affiList(Map) of ', levelPath, ': ', err)
     affiVotesRef.value = null
     voteLevelRef.value = null
   }
@@ -267,7 +267,7 @@ async function onElectionChange1() {
   clearProviAndBelow1()
   affiVotes1.value = null
   voteLevel1.value = null
-  await getNationalLevel_proviListOf(selectedElection1.value, proviList1, clearProviAndBelow1)
+  await getNationalLevel_proviListMapOf(selectedElection1.value, proviList1, clearProviAndBelow1)
 }
 
 async function onProviChange1() {
@@ -289,7 +289,7 @@ async function onConstiChange1() {
   affiVotes1.value = null
   voteLevel1.value = null
   if (selectedConsti1.value) {
-    await getConstiLevel_muniListOf(
+    await getConstiLevel_muniListMapOf(
       selectedElection1.value,
       selectedConsti1.value.id.toString(),
       muniList1,
@@ -323,7 +323,7 @@ async function onElectionChange2() {
   clearProviAndBelow2()
   affiVotes2.value = null
   voteLevel2.value = null
-  await getNationalLevel_proviListOf(selectedElection2.value, proviList2, clearProviAndBelow2)
+  await getNationalLevel_proviListMapOf(selectedElection2.value, proviList2, clearProviAndBelow2)
 }
 
 async function onProviChange2() {
@@ -345,7 +345,7 @@ async function onConstiChange2() {
   affiVotes2.value = null
   voteLevel2.value = null
   if (selectedConsti2.value) {
-    await getConstiLevel_muniListOf(
+    await getConstiLevel_muniListMapOf(
       selectedElection2.value,
       selectedConsti2.value.id.toString(),
       muniList2,
@@ -380,7 +380,7 @@ async function applyFilter() {
     return
   }
   if (selectedElection1.value) {
-    await getAffiListOf(
+    await getAffiListOrListMapOf(
       selectedElection1.value,
       selectedProvi1.value,
       selectedMuni1.value,
@@ -393,7 +393,7 @@ async function applyFilter() {
     affiVotes1.value = voteLevel1.value = null
   }
   if (selectedElection2.value) {
-    await getAffiListOf(
+    await getAffiListOrListMapOf(
       selectedElection2.value,
       selectedProvi2.value,
       selectedMuni2.value,

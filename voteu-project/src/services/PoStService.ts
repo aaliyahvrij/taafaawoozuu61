@@ -1,7 +1,7 @@
 import type { Affiliation, PollingStation } from '@/interfaces'
 
 export class PoStService {
-  static async getMuniLevel_poStListOf(
+  static async getMuniLevel_poStListMapOf(
     electionId: string,
     constId: string,
     munId: string,
@@ -26,7 +26,7 @@ export class PoStService {
     return null
   }
 
-  static async getPoStLevel_affiListOf(
+  static async getPoStLevel_affiListMapOf(
     electionId: string,
     constId: string,
     munId: string,

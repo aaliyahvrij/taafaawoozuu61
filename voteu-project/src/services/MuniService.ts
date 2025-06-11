@@ -1,7 +1,7 @@
 import type { Affiliation, Municipality } from '@/interfaces'
 
 export class MuniService {
-  static async getConstiLevel_muniListOf(
+  static async getConstiLevel_muniListMapOf(
     electionId: string,
     constId: string,
   ): Promise<Record<string, Municipality> | null> {
@@ -25,7 +25,7 @@ export class MuniService {
     return null
   }
 
-  static async getMuniLevel_affiListOf(
+  static async getMuniLevel_affiListMapOf(
     electionId: string,
     constId: string,
     munId: string,
