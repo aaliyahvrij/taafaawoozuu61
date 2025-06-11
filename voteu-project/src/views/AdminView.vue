@@ -27,17 +27,16 @@ const handleDelete = async (userId: number) => {
     return;
   }
 
-  isDeleting.value = userId; // Set the deleting state
+  isDeleting.value = userId;
   try {
-    await deleteUser(userId); // Call deleteUser() from UserService.ts
-    // Remove the user from the local list after deletion
-    users.value = users.value.filter((user) => user.id !== userId);
+    await deleteUser(userId);
+
     alert('User successfully deleted.');
   } catch (err) {
     console.error('Error deleting user:', err);
     alert('An error occurred while deleting the user. Please try again.');
   } finally {
-    isDeleting.value = null; // Reset the deleting state
+    isDeleting.value = null;
   }
 };
 
