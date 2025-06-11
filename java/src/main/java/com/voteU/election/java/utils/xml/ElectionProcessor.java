@@ -52,7 +52,6 @@ public class ElectionProcessor<E> {
      The tag names on the election level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
-    public static final String ELECTION = "Election";
     public static final String ELECTION_ID = "ElectionIdentifier";
     public static final String ELECTION_NAME = "ElectionName";
     public static final String ELECTION_DATE = "ElectionDate";
