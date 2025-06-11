@@ -41,7 +41,8 @@ public class UserController {
     @Operation(summary = "Retrieve all users", description = "Fetch the complete list of all users.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of users retrieved successfully."),
-            @ApiResponse(responseCode = "500", description = "Internal server error.")
+            @ApiResponse(responseCode = "500", description = "Internal server error."),
+            @ApiResponse(responseCode = "403", description = "unauthorized")
     })
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -74,7 +75,8 @@ public class UserController {
     @Operation(summary = "Retrieve user by ID", description = "Fetch a user based on their unique identifier.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found.")
+            @ApiResponse(responseCode = "404", description = "User not found."),
+            @ApiResponse(responseCode = "403", description = "unauthorized")
     })
     @GetMapping("/id/{id}")
     public ResponseEntity<Optional<User>> getUserById(@PathVariable Integer id) {
@@ -93,7 +95,8 @@ public class UserController {
     @Operation(summary = "Retrieve user by username", description = "Fetch a user by their unique username.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found.")
+            @ApiResponse(responseCode = "404", description = "User not found."),
+            @ApiResponse(responseCode = "403", description = "unauthorized")
     })
     @GetMapping("/username/{username}")
     public ResponseEntity<Optional<User>> getUserByUsername(@PathVariable String username) {
@@ -112,7 +115,8 @@ public class UserController {
     @Operation(summary = "Retrieve user by email", description = "Fetch a user based on their email address.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found.")
+            @ApiResponse(responseCode = "404", description = "User not found."),
+            @ApiResponse(responseCode = "403", description = "unauthorized")
     })
     @GetMapping("/email/{email}")
     public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email) {
@@ -151,7 +155,8 @@ public class UserController {
     @Operation(summary = "Delete a user", description = "Remove a user by their unique ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "User deleted successfully."),
-            @ApiResponse(responseCode = "404", description = "User not found.")
+            @ApiResponse(responseCode = "404", description = "User not found."),
+            @ApiResponse(responseCode = "403", description = "unauthorized")
     })
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id, Authentication authentication) {
