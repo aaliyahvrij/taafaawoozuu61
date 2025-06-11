@@ -39,12 +39,7 @@ function handleApply(): void {
   selectedAffi.value = null
   affiList.value = null
   selectedCandi.value = null
-  if (
-    selectedElection.value &&
-    selectedConsti.value &&
-    selectedMuni.value &&
-    selectedPoSt.value
-  ) {
+  if (selectedElection.value && selectedConsti.value && selectedMuni.value && selectedPoSt.value) {
     getPoStLevel_affiListMapOf(
       selectedElection.value,
       selectedConsti.value.id.toString(),
@@ -332,9 +327,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="constiList.length > 0"
         v-model="selectedConsti"
-        @change="
-          getConstiLevel_muniListMapOf(selectedElection, selectedConsti?.id.toString())
-        "
+        @change="getConstiLevel_muniListMapOf(selectedElection, selectedConsti?.id.toString())"
       >
         <option value="null" disabled>Select a constituency</option>
         <option v-for="consti in constiList" :key="consti.id" :value="consti">
@@ -443,17 +436,13 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         <button class="back-btn" @click="selectedAffi = null">Back</button>
         <button
           class="back-btn"
-          @click="
-            selectedAffi.candiList = sortCandidatesByName(selectedAffi.candiList)
-          "
+          @click="selectedAffi.candiList = sortCandidatesByName(selectedAffi.candiList)"
         >
           sort by name
         </button>
         <button
           class="back-btn"
-          @click="
-            selectedAffi.candiList = sortCandidatesByVVCount(selectedAffi.candiList)
-          "
+          @click="selectedAffi.candiList = sortCandidatesByVVCount(selectedAffi.candiList)"
         >
           sort by votes
         </button>

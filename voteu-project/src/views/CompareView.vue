@@ -7,13 +7,7 @@ import type {
   PollingStation,
   Province,
 } from '@/interfaces'
-import {
-  ConstiService,
-  ElectionService,
-  MuniService,
-  PoStService,
-  ProviService,
-} from '@/services'
+import { ConstiService, ElectionService, MuniService, PoStService, ProviService } from '@/services'
 
 // The first filter set
 const selectedElection1 = ref<'TK2021' | 'TK2023' | null>(null)
@@ -22,9 +16,7 @@ const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPoSt1 = ref<PollingStation | null>(null)
 const affiList1 = ref<Affiliation[] | null>(null)
-const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
-  null,
-)
+const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
 const proviList1 = ref<Province[]>([])
 const constiList1 = ref<Constituency[]>([])
 const muniList1 = ref<Municipality[]>([])
@@ -37,9 +29,7 @@ const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPoSt2 = ref<PollingStation | null>(null)
 const affiList2 = ref<Affiliation[] | null>(null)
-const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
-  null,
-)
+const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
 
 const proviList2 = ref<Province[]>([])
 const constiList2 = ref<Constituency[]>([])
@@ -122,11 +112,7 @@ async function getMuniLevel_poStListMapOf(
   }
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await PoStService.getMuniLevel_poStListMapOf(
-      electionId,
-      constId,
-      munId,
-    )
+    const response = await PoStService.getMuniLevel_poStListMapOf(electionId, constId, munId)
     poStListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching poStListMap of ', muniPath)
   } catch (err) {
@@ -160,12 +146,7 @@ async function getAffiListOrListMapOf(
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'poSt'
       levelPath +=
-        ' > consti ' +
-        consti.id.toString() +
-        ' > muni ' +
-        muni.id.toString() +
-        ' > poSt ' +
-        poSt.id
+        ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString() + ' > poSt ' + poSt.id
       console.log('Fetching affiListMap of ', levelPath)
     } else if (muni && consti) {
       const response = await MuniService.getMuniLevel_affiListMapOf(
@@ -427,11 +408,7 @@ async function applyFilter() {
             {{ provi.name }}
           </option>
         </select>
-        <select
-          v-if="constiList1.length > 0"
-          v-model="selectedConsti1"
-          @change="onConstiChange1"
-        >
+        <select v-if="constiList1.length > 0" v-model="selectedConsti1" @change="onConstiChange1">
           <option value="null" disabled>Select constituency</option>
           <option v-for="consti in constiList1" :key="consti.id" :value="consti">
             {{ consti.name }}
@@ -443,17 +420,9 @@ async function applyFilter() {
             {{ muni.name }}
           </option>
         </select>
-        <select
-          v-if="poStList1.length > 0"
-          v-model="selectedPoSt1"
-          @change="onPoStChange1"
-        >
+        <select v-if="poStList1.length > 0" v-model="selectedPoSt1" @change="onPoStChange1">
           <option value="null" disabled>Select polling station</option>
-          <option
-            v-for="poSt in poStList1"
-            :key="poSt.id"
-            :value="poSt"
-          >
+          <option v-for="poSt in poStList1" :key="poSt.id" :value="poSt">
             {{ poSt.name }}
           </option>
         </select>
@@ -473,11 +442,7 @@ async function applyFilter() {
             {{ provi.name }}
           </option>
         </select>
-        <select
-          v-if="constiList2.length > 0"
-          v-model="selectedConsti2"
-          @change="onConstiChange2"
-        >
+        <select v-if="constiList2.length > 0" v-model="selectedConsti2" @change="onConstiChange2">
           <option value="null" disabled>Select constituency</option>
           <option v-for="consti in constiList2" :key="consti.id" :value="consti">
             {{ consti.name }}
@@ -489,17 +454,9 @@ async function applyFilter() {
             {{ muni.name }}
           </option>
         </select>
-        <select
-          v-if="poStList2.length > 0"
-          v-model="selectedPoSt2"
-          @change="onPoStChange2"
-        >
+        <select v-if="poStList2.length > 0" v-model="selectedPoSt2" @change="onPoStChange2">
           <option value="null" disabled>Select polling station</option>
-          <option
-            v-for="poSt in poStList2"
-            :key="poSt.id"
-            :value="poSt"
-          >
+          <option v-for="poSt in poStList2" :key="poSt.id" :value="poSt">
             {{ poSt.name }}
           </option>
         </select>
