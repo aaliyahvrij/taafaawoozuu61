@@ -72,25 +72,25 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = muniMap.get("electionId");
         Election election = this.electionListMap.get(electionId);
         LinkedHashMap<String, Municipality> electoralLevel_muniListMap = election.getMuniListMap();
-        Municipality muni = electoralLevel_muniListMap.computeIfAbsent(munId, id -> {
-            Municipality m = new Municipality(id);
-            m.setName(muniName);
-            m.setConstId(constId);
-            return m;
+        Municipality electoralLevel_muni = electoralLevel_muniListMap.computeIfAbsent(munId, id -> {
+            Municipality muni = new Municipality(id);
+            muni.setName(muniName);
+            muni.setConstId(constId);
+            return muni;
         });
-        LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = muni.getAffiListMap();
-        Affiliation affi = muniLevel_affiListMap.get(affId);
-        if (affi == null) {
+        LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = electoralLevel_muni.getAffiListMap();
+        Affiliation muniLevel_affi = muniLevel_affiListMap.get(affId);
+        if (muniLevel_affi == null) {
             int affiVVCount = Integer.parseInt(muniMap.get("affiVVCount"));
-            affi = new Affiliation(affId, affiName, affiVVCount);
-            muniLevel_affiListMap.put(affId, affi);
+            muniLevel_affi = new Affiliation(affId, affiName, affiVVCount);
+            muniLevel_affiListMap.put(affId, muniLevel_affi);
         }
         if (electoralLevel_muniListMap.containsKey("candiVVCount")) {
             int candId = Integer.parseInt(muniMap.get("candId"));
             int candiVVCount = Integer.parseInt(muniMap.get("candiVVCount"));
-            if (!affi.hasCandId(candId)) {
-                Candidate candidate = new Candidate(candId, candiVVCount);
-                affi.addCandi(candidate);
+            if (!muniLevel_affi.hasCandId(candId)) {
+                Candidate candi = new Candidate(candId, candiVVCount);
+                muniLevel_affi.addCandi(candi);
             }
         }
     }
@@ -123,16 +123,16 @@ public class ElectionTransformer implements Transformer<Election> {
         if (electoralLevel_consti != null) {
             // Update or insert a candidate in a constituencial level affiliation
             LinkedHashMap<Integer, Affiliation> constiLevel_affiListMap = electoralLevel_consti.getAffiListMap();
-            populateCandidate(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListMap);
+            populateCandi(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListMap);
 
             // Update or insert a candidate in each municipal level affiliation
             LinkedHashMap<String, Municipality> constiLevel_muniListMap = electoralLevel_consti.getMuniListMap();
             for (Municipality constiLevel_muni : constiLevel_muniListMap.values()) {
                 LinkedHashMap<Integer, Affiliation> muniLevel_affiListMap = constiLevel_muni.getAffiListMap();
-                populateCandidate(candId, firstName, lastName, gender, localityName, affId, muniLevel_affiListMap);
-                LinkedHashMap<String, PollingStation> poStListMap = constiLevel_muni.getPoStListMap();
-                for (PollingStation poSt : poStListMap.values()) {
-                    populateCandidate(candId, firstName, lastName, gender, localityName, affId, poSt.getAffiListMap());
+                populateCandi(candId, firstName, lastName, gender, localityName, affId, muniLevel_affiListMap);
+                LinkedHashMap<String, PollingStation> constiLevel_poStListMap = constiLevel_muni.getPoStListMap();
+                for (PollingStation constiLevel_poSt : constiLevel_poStListMap.values()) {
+                    populateCandi(candId, firstName, lastName, gender, localityName, affId, constiLevel_poSt.getAffiListMap());
                 }
             }
         }
@@ -143,14 +143,14 @@ public class ElectionTransformer implements Transformer<Election> {
 
     }
 
-    private void populateCandidate(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListMap) {
+    private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListMap) {
         Affiliation affi = affiListMap.get(affId);
         if (affi != null) {
-            List<Candidate> affiLevel_candidates = affi.getCandiList();
+            List<Candidate> affiLevel_candiList = affi.getCandiList();
             Candidate candi = null;
-            for (Candidate affiLevel_candidate : affiLevel_candidates) {
-                if (affiLevel_candidate.getId() == candId && affiLevel_candidate.getAffId() == affId) {
-                    candi = affiLevel_candidate;
+            for (Candidate affiLevel_candi : affiLevel_candiList) {
+                if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {
+                    candi = affiLevel_candi;
                     candi.setFirstName(firstName);
                     candi.setLastName(lastName);
                     candi.setGender(gender);
