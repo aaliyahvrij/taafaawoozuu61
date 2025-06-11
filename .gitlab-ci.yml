@@ -1,6 +1,45 @@
 variables:
   DEPLOY_MKDOCS: "true"
   DEPLOY_HIC: "false"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 include:
   - ".gitlab-ci.mkdocs.yml"
+
+stages:
+  - build
+  - test
+  - package
+
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - apt-get update -y
+  - apt-get install -y maven default-jdk
+  - java -version
+  - mvn -version
+
+build-job:
+  stage: build
+  script:
+    - mvn clean compile
+
+test-job:
+  stage: test
+  script:
+    - mvn test
+  artifacts:
+    when: always
+    reports:
+      junit: target/surefire-reports/*.xml
+
+package-job:
+  stage: package
+  script:
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 day
