@@ -10,7 +10,7 @@ import { ElectionService } from '@/services/ElectionService.ts'
 import { ProvinceService } from '@/services/ProvinceService.ts'
 import { AuthorityService } from '@/services/AuthorityService.ts'
 import { PollingStationService } from '@/services/PollingStationService.ts'
-import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
+import { ConstituencyService } from '@/services/ConstituencyService.ts'
 
 import RegionFilter from '@/components/filters/RegionFilter.vue'
 import BarChartCompare from '@/components/Data/charts/BarChartCompare.vue'
@@ -83,7 +83,7 @@ async function fetchVotes(election: string | null, ps: PollingStation | null, au
     } else if (auth && con) {
       data = await AuthorityService.getAuthorityVotesByConstituencyId(election, con.id.toString(), auth.id)
     } else if (con) {
-      data = await ConstituencyServiceService.getConstituencyPartyVotes(election, con.id.toString())
+      data = await ConstituencyService.getConstituencyPartyVotes(election, con.id.toString())
     } else if (prov) {
       data = await ProvinceService.getProvincePartyVotes(election, prov.id)
     } else {

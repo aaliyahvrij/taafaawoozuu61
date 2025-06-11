@@ -1,48 +1,33 @@
-import type { Constituency } from '@/interface/Constituency.ts'
-import type { Party } from '@/interface/Party.ts'
+import type { Constituency } from '@/interface/Constituency.ts';
+import type { Party } from '@/interface/Party.ts';
+import { apiFetch } from '@/services/api.ts'
+import type { DropdownOption } from '@/interface/DropdownOption.ts'
 
-export class ConstituencyServiceService {
-  static async getConstituenciesByElection(electionId: string,): Promise<Record<number, Constituency> | null> {
+export class ConstituencyService {
+  static async getConstituenciesByElection(electionId: string): Promise<Record<number, Constituency> | null> {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/compact`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-
-      if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
-      }
-      return await response.json()
+      return await apiFetch<Record<number, Constituency>>(`/election/TK${electionId}/constituencies/compact`);
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      return null;
     }
-    return null
   }
 
   static async getConstituencyPartyVotes(electionId: string, constituencyId: string): Promise<Record<number, Party> | null> {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/election/TK${electionId}/constituencies/${constituencyId}/parties`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      return await apiFetch<Record<number, Party>>(`/election/TK${electionId}/constituencies/${constituencyId}/parties`);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 
-      if (!response.ok) {
-        throw new Error('HTTP error!: ' + response.status)
-      }
-      return await response.json()
+  static async getConstituencyNames(electionId: string, provinceId: number): Promise<DropdownOption[] | null> {
+    try {
+      return await apiFetch<DropdownOption[]>(`/constituencies?electionId=${electionId}&provinceId=${provinceId}`)
     } catch (error) {
       console.error(error)
+      return null
     }
-    return null
   }
 }

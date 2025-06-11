@@ -1,49 +1,95 @@
 <script setup lang="ts">
+import FilterSelect from '@/components/FilterSelect.vue'
+import { ElectionService } from '@/services/ElectionService.ts'
+import { ProvinceService } from '@/services/ProvinceService.ts'
+import { ConstituencyService } from '@/services/ConstituencyService.ts'
+import type { DropdownOption } from '@/interface/DropdownOption'
+import { ref, watch, onMounted } from 'vue'
 
-const selectedElection : Ref<string> = ("")
+const elections = ref<DropdownOption[]>([])
+const selectedElection = ref<DropdownOption | null>(null)
+const provinces = ref<DropdownOption[]>([])
+const selectedProvince = ref<DropdownOption | null>(null)
+const constituencies = ref<DropdownOption[]>([])
+const selectedConstituency = ref<DropdownOption | null>(null)
+onMounted(async () => {
+  const data = await ElectionService.getElectionNames()
+  if (data) {
+    elections.value = data
+    console.log(data)
+  }
+})
 
+async function fetchProvinceOptions(electionId: string) : Promise<void> {
+  try {
+    const data = await ProvinceService.getProvinceNames(electionId);
+    provinces.value = data || []
+  } catch (e) {
+    console.error(e)
+  }
+}
 
-async function getElection()
+async function fetchConstituencyOptions(electionId: string, provinceId: number): Promise<void> {
+  try {
+    const data = await ConstituencyService.getConstituencyNames(electionId, provinceId)
+    constituencies.value = data || []
+  } catch (e) {
+    console.error(e)
+  }
+}
 
+watch(selectedElection, (newElection) => {
+  console.log('selectedElection changed:', newElection);
+  if (newElection && newElection.id) {
+    fetchProvinceOptions(String(newElection.id))
+  } else {
+    provinces.value = []
+  }
+})
+
+  watch([selectedElection, selectedProvince], ([newElection, newProvince]) => {
+    if (newElection?.id && newProvince?.id) {
+      fetchConstituencyOptions(String(newElection.id), Number(newProvince.id))
+    } else {
+      constituencies.value = []
+      selectedConstituency.value = null
+    }
+  })
 </script>
 
 <template>
   <div class="filter-bar">
+
     <div class="election-filter">
       <FilterSelect
-        label="Election"
         v-model="selectedElection"
-        :options="electionOptions"
+        :options="elections"
         optionLabelKey="name"
         disabledLabel="Select election"
       />
     </div>
 
-    <div class="constituency-filter" v-if="selectedElection">
+    <div class="province-filter" v-if="provinces.length">
       <FilterSelect
-        label="Constituency"
+        v-model="selectedProvince"
+      :options="provinces"
+      disabledLabel="Select province"
+      />
+    </div>
+
+    <div class="constituency-filter" v-if="constituencies.length">
+      <FilterSelect
         v-model="selectedConstituency"
-        :options="constituencyOptions"
-        optionLabelKey="name"
+        :options="constituencies"
         disabledLabel="Select constituency"
       />
     </div>
 
-    <div class="authority-filter" v-if="selectedConstituency">
-      <FilterSelect
-        label="Authority"
-        v-model="selectedAuthority"
-        :options="authorityOptions"
-        optionLabelKey="name"
-        disabledLabel="Select authority"
-      />
-    </div>
-  </div>
 
+  </div>
 </template>
 
 <style scoped>
-
 .buttons button {
   margin: 0.5rem;
 }

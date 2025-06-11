@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/provinces")
+@RequestMapping("/api/provinces")
 public class ProvincesController {
 
     private final ProvinceService provinceService;
@@ -19,7 +19,7 @@ public class ProvincesController {
         this.provinceService = provinceService;
     }
 
-    @GetMapping("/names")
+    @GetMapping()
     public List<DropdownOptionDTO<Integer>> getProvinces(@RequestParam String electionId) {
         return provinceService.getAllProvinceNames(electionId);
     }

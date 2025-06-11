@@ -1,8 +1,10 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.CompactDTO.CompactElection;
+import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.reader.DutchElectionReader;
+import com.voteU.election.java.repositories.electiondata.ElectionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -12,9 +14,11 @@ import java.util.*;
 public class ElectionService {
     private final DutchElectionReader electionReader;
     private final Map<String, Election> electionsByElectionId = new HashMap<>();
+    private final ElectionRepository electionRepository;
 
-    public ElectionService(DutchElectionReader electionReader) {
+    public ElectionService(DutchElectionReader electionReader, ElectionRepository electionRepository) {
         this.electionReader = electionReader;
+        this.electionRepository = electionRepository;
     }
 
     public boolean readElections() {
@@ -62,5 +66,9 @@ public class ElectionService {
             return null;
         }
         return election.getParties();
+    }
+
+    public List<DropdownOptionDTO<String>> getElectionNames() {
+        return electionRepository.getElectionNames();
     }
 }

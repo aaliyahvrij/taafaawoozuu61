@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface ElectionRepository extends JpaRepository<Elections, Integer> {
 
-    @Query("SELECT new com.voteU.election.java.dto.DropdownOptionDTO(e.electionId, e.name) FROM Elections e where e.electionId = :electionId")
-    List<DropdownOptionDTO<Integer>> getAllByElectionId(@Param("electionId") String electionId);
+    @Query("SELECT new com.voteU.election.java.dto.DropdownOptionDTO(e.electionId, e.name) FROM Elections e ")
+    List<DropdownOptionDTO<String>> getElectionNames();
 
 
 }

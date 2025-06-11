@@ -27,7 +27,7 @@ public class ConstituenciesController {
         return constituencyService.getAllConstituencyNames(electionId);
     }
 
-    @GetMapping("/by-province")
+    @GetMapping()
     public List<DropdownOptionDTO<Integer>> getConstituenciesByProvinceId(@RequestParam String electionId, @RequestParam Integer provinceId) {
         return constituencyService.getAllConstituencyNamesByProvince(electionId, provinceId);
     }

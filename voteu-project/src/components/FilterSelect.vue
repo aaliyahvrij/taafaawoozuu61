@@ -1,49 +1,57 @@
 <script setup lang="ts">
-type OptionType = {
-  id: string | number
-  name?: string
-  [key: string]: any
-}
+import type { DropdownOption } from '@/interface/DropdownOption.ts'
 
+// receives from parent
 const props = defineProps<{
-  label: string
-  modelValue: OptionType | null
-  options: OptionType[]
-  optionLabelKey?: string
+  modelValue: DropdownOption | null
+  options: DropdownOption[]
   disabledLabel?: string
 }>()
 
+//gives to parent
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: OptionType | null): void
+  (e: 'update:modelValue', value: DropdownOption | null): void
   (e: 'clear'): void
 }>()
 
-const handleChange = (event: Event) => {
-  const selectedId = (event.target as HTMLSelectElement).value
-  const selected = props.options.find(opt => String(opt.id) === selectedId) || null
-  emit('update:modelValue', selected)
+// Normal function to handle change event
+function handleChange(event: Event) {
+  // Tell TypeScript that event.target is an HTMLSelectElement, so we can access `.value`
+  const selectElement = event.target as HTMLSelectElement
+  const selectedId = selectElement.value
+  // Find the selected option from the option list by matching the id as a string
+  const selectedOption = props.options.find(function(opt) {
+    return String(opt.id) === selectedId
+  }) || null
+
+  // Emit the update event to update a v-model
+  emit('update:modelValue', selectedOption)
+}
+
+// Clear selection when clicking the clear button
+function clearSelection() {
+  emit('update:modelValue', null)
+  emit('clear')
 }
 </script>
 
 <template>
   <div class="filter-select">
-    <label>{{ label }}</label>
-
     <select :value="modelValue?.id ?? ''" @change="handleChange">
-      <option value="" disabled>{{ disabledLabel || `Select ${label.toLowerCase()}` }}</option>
+      <option value="" disabled>{{ disabledLabel ?? 'Select Option' }}</option>
       <option
         v-for="option in options"
         :key="option.id"
         :value="option.id"
       >
-        {{ optionLabelKey ? option[optionLabelKey] : option.name }}
+        {{ option.name }}
       </option>
     </select>
 
     <div class="tag" v-if="modelValue">
-      {{ optionLabelKey ? modelValue[optionLabelKey] : modelValue.name }}
+      {{ modelValue.name }}
       <svg
-        @click="emit('update:modelValue', null); emit('clear')"
+        @click="clearSelection"
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
         viewBox="0 -960 960 960"
@@ -57,3 +65,35 @@ const handleChange = (event: Event) => {
     </div>
   </div>
 </template>
+
+<style>
+select {
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #002970;
+  background-color: white;
+  color: #002970;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  display: block;
+}
+
+.tag {
+  background-color: #002970;
+  color: white;
+  border-radius: 20px;
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  cursor: default;
+}
+.tag svg {
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+</style>
