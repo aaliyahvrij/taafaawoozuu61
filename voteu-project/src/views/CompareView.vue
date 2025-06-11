@@ -21,7 +21,7 @@ const selectedProvi1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPoSt1 = ref<PollingStation | null>(null)
-const affiVotes1 = ref<Affiliation[] | null>(null)
+const affiList1 = ref<Affiliation[] | null>(null)
 const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
 )
@@ -36,7 +36,7 @@ const selectedProvi2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPoSt2 = ref<PollingStation | null>(null)
-const affiVotes2 = ref<Affiliation[] | null>(null)
+const affiList2 = ref<Affiliation[] | null>(null)
 const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(
   null,
 )
@@ -108,7 +108,7 @@ async function getConstiLevel_muniListMapOf(
   }
 }
 
-async function getMuniLevel_poStListOf(
+async function getMuniLevel_poStListMapOf(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
@@ -140,11 +140,11 @@ async function getAffiListOrListMapOf(
   muni: Municipality | null,
   consti: Constituency | null,
   poSt: PollingStation | null,
-  affiVotesRef: typeof affiVotes1,
+  affiListRef: typeof affiList1,
   voteLevelRef: typeof voteLevel1,
 ) {
   if (!electionId) {
-    affiVotesRef.value = null
+    affiListRef.value = null
     voteLevelRef.value = null
     return
   }
@@ -157,7 +157,7 @@ async function getAffiListOrListMapOf(
         muni.id.toString(),
         poSt.id.toString(),
       )
-      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+      affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'poSt'
       levelPath +=
         ' > consti ' +
@@ -173,7 +173,7 @@ async function getAffiListOrListMapOf(
         consti.id.toString(),
         muni.id.toString(),
       )
-      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+      affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'muni'
       levelPath += ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString()
       console.log('Fetching affiListMap of ', levelPath)
@@ -182,25 +182,25 @@ async function getAffiListOrListMapOf(
         electionId,
         consti.id.toString(),
       )
-      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+      affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'consti'
       levelPath += ' > consti ' + consti.id
       console.log('Fetching affiListMap of ', levelPath)
     } else if (provi) {
       const response = await ProviService.getProviLevel_affiListOf(electionId, provi.id)
-      affiVotesRef.value = response
+      affiListRef.value = response
       voteLevelRef.value = 'provi'
       levelPath += ' > provi ' + provi.id
       console.log('Fetching affiList of ', levelPath)
     } else {
       const response = await ElectionService.getNationalLevel_affiListMapOf(electionId)
-      affiVotesRef.value = Array.isArray(response) ? response : Object.values(response || {})
+      affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'national'
       console.log('Fetching affiListMap of ', levelPath)
     }
   } catch (err) {
     console.error('Error fetching affiList(Map) of ', levelPath, ': ', err)
-    affiVotesRef.value = null
+    affiListRef.value = null
     voteLevelRef.value = null
   }
 }
@@ -265,14 +265,14 @@ function clearPoSt2() {
 // Handles first filter set
 async function onElectionChange1() {
   clearProviAndBelow1()
-  affiVotes1.value = null
+  affiList1.value = null
   voteLevel1.value = null
   await getNationalLevel_proviListMapOf(selectedElection1.value, proviList1, clearProviAndBelow1)
 }
 
 async function onProviChange1() {
   clearConstiAndBelow1()
-  affiVotes1.value = null
+  affiList1.value = null
   voteLevel1.value = null
   if (selectedProvi1.value) {
     await getProviLevel_constiListOf(
@@ -286,7 +286,7 @@ async function onProviChange1() {
 
 async function onConstiChange1() {
   clearMuniAndBelow1()
-  affiVotes1.value = null
+  affiList1.value = null
   voteLevel1.value = null
   if (selectedConsti1.value) {
     await getConstiLevel_muniListMapOf(
@@ -300,10 +300,10 @@ async function onConstiChange1() {
 
 async function onMuniChange1() {
   clearPoSt1()
-  affiVotes1.value = null
+  affiList1.value = null
   voteLevel1.value = null
   if (selectedMuni1.value) {
-    await getMuniLevel_poStListOf(
+    await getMuniLevel_poStListMapOf(
       selectedElection1.value,
       selectedConsti1.value?.id.toString(),
       selectedMuni1.value.id.toString(),
@@ -314,21 +314,21 @@ async function onMuniChange1() {
 }
 
 function onPoStChange1() {
-  affiVotes1.value = null
+  affiList1.value = null
   voteLevel1.value = null
 }
 
 // Handles second filter set
 async function onElectionChange2() {
   clearProviAndBelow2()
-  affiVotes2.value = null
+  affiList2.value = null
   voteLevel2.value = null
   await getNationalLevel_proviListMapOf(selectedElection2.value, proviList2, clearProviAndBelow2)
 }
 
 async function onProviChange2() {
   clearConstiAndBelow2()
-  affiVotes2.value = null
+  affiList2.value = null
   voteLevel2.value = null
   if (selectedProvi2.value) {
     await getProviLevel_constiListOf(
@@ -342,7 +342,7 @@ async function onProviChange2() {
 
 async function onConstiChange2() {
   clearMuniAndBelow2()
-  affiVotes2.value = null
+  affiList2.value = null
   voteLevel2.value = null
   if (selectedConsti2.value) {
     await getConstiLevel_muniListMapOf(
@@ -356,10 +356,10 @@ async function onConstiChange2() {
 
 async function onMuniChange2() {
   clearPoSt2()
-  affiVotes2.value = null
+  affiList2.value = null
   voteLevel2.value = null
   if (selectedMuni2.value) {
-    await getMuniLevel_poStListOf(
+    await getMuniLevel_poStListMapOf(
       selectedElection2.value,
       selectedConsti2.value?.id.toString(),
       selectedMuni2.value.id.toString(),
@@ -370,7 +370,7 @@ async function onMuniChange2() {
 }
 
 function onPoStChange2() {
-  affiVotes2.value = voteLevel2.value = null
+  affiList2.value = voteLevel2.value = null
 }
 
 // (both sets)
@@ -386,11 +386,11 @@ async function applyFilter() {
       selectedMuni1.value,
       selectedConsti1.value,
       selectedPoSt1.value,
-      affiVotes1,
+      affiList1,
       voteLevel1,
     )
   } else {
-    affiVotes1.value = voteLevel1.value = null
+    affiList1.value = voteLevel1.value = null
   }
   if (selectedElection2.value) {
     await getAffiListOrListMapOf(
@@ -399,11 +399,11 @@ async function applyFilter() {
       selectedMuni2.value,
       selectedConsti2.value,
       selectedPoSt2.value,
-      affiVotes2,
+      affiList2,
       voteLevel2,
     )
   } else {
-    affiVotes2.value = null
+    affiList2.value = null
     voteLevel2.value = null
   }
 }
@@ -509,11 +509,11 @@ async function applyFilter() {
     <div class="result-wrapper">
       <!-- Placeholder texts for results -->
       <div class="result-set">
-        <p v-if="affiVotes1">Results for Set 1 (will be replaced by chart)</p>
+        <p v-if="affiList1">Results for Set 1 (will be replaced by chart)</p>
         <p v-else>No data for Set 1</p>
       </div>
       <div class="result-set">
-        <p v-if="affiVotes2">Results for Set 2 (will be replaced by chart)</p>
+        <p v-if="affiList2">Results for Set 2 (will be replaced by chart)</p>
         <p v-else>No data for Set 2</p>
       </div>
     </div>

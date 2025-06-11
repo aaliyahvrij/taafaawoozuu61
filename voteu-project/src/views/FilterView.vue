@@ -28,16 +28,16 @@ const muniList = ref<Municipality[]>([])
 const selectedPoSt = ref<PollingStation | null>(null)
 const poStList = ref<PollingStation[]>([])
 const selectedAffi = ref<Affiliation | null>(null)
-const affiVotes = ref<Affiliation[] | null>(null)
+const affiList = ref<Affiliation[] | null>(null)
 const selectedCandi = ref<Candidate | null>(null)
 const hasApplied = ref(false)
 const voteLevel = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
-const displayedAffiVotes = computed(() => affiVotes.value)
+const displayedAffiVotes = computed(() => affiList.value)
 
 function handleApply(): void {
   hasApplied.value = true
   selectedAffi.value = null
-  affiVotes.value = null
+  affiList.value = null
   selectedCandi.value = null
   if (
     selectedElection.value &&
@@ -70,7 +70,7 @@ function handleApply(): void {
 
 function clearSelectedElection(): void {
   selectedAffi.value = null
-  affiVotes.value = null
+  affiList.value = null
   hasApplied.value = false
   selectedElection.value = null
   selectedProvi.value = null
@@ -131,7 +131,7 @@ async function getNationalLevel_affiListMapOf(electionId: string): Promise<void>
   const proviPath = 'election ' + electionId
   try {
     const response = await ElectionService.getNationalLevel_affiListMapOf(electionId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
     console.log('Fetching affiListMap of ', proviPath)
   } catch (err) {
@@ -161,7 +161,7 @@ async function getProviLevel_affiListOf(electionId: string, provId: number): Pro
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
     const response = await ProviService.getProviLevel_affiListOf(electionId, provId)
-    affiVotes.value = response
+    affiList.value = response
     voteLevel.value = 'provi'
     console.log('Fetching affiList of ', proviPath)
   } catch (err) {
@@ -189,7 +189,7 @@ async function getConstiLevel_affiListMapOf(electionId: string, constId: string)
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
     const response = await ConstiService.getConstiLevel_affiListMapOf(electionId, constId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
     console.log('Fetching affiListMap of ', constiPath)
   } catch (err) {
@@ -222,7 +222,7 @@ async function getMuniLevel_affiListMapOf(
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     const response = await MuniService.getMuniLevel_affiListMapOf(electionId, constId, munId)
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
+    affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
     console.log('Fetching affiListMap of ', muniPath)
   } catch (err) {
@@ -245,8 +245,8 @@ async function getPoStLevel_affiListMapOf(
       munId,
       poStId,
     )
-    affiVotes.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('votes', affiVotes.value)
+    affiList.value = Array.isArray(response) ? response : Object.values(response || {})
+    console.log('votes', affiList.value)
     voteLevel.value = 'poSt'
     console.log('Fetching affiListMap of ', poStPath)
   } catch (err) {
@@ -423,7 +423,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   <div class="filtered-data">
     <div class="affi-list" v-if="selectedElection && displayedAffiVotes && !selectedAffi">
       <p>{{ voteLevel }} affiliation votes of Election {{ selectedElection }}</p>
-      <AffiChart v-if="affiVotes" :affiVotes="displayedAffiVotes" />
+      <AffiChart v-if="affiList" :affiVotes="displayedAffiVotes" />
       <div
         class="affi-row"
         v-for="affi in displayedAffiVotes"
