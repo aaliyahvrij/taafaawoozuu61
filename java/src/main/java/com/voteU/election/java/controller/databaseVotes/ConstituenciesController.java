@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/constituencies")
+@RequestMapping("api/constituencies")
 public class ConstituenciesController {
 
     private final ConstituencyService constituencyService;
@@ -22,7 +22,7 @@ public class ConstituenciesController {
         this.constituencyService = constituencyService;
     }
 
-    @GetMapping("/by-election")
+    @GetMapping("/all")
     public List<DropdownOptionDTO<Integer>> getConstituencies(@RequestParam String electionId) {
         return constituencyService.getAllConstituencyNames(electionId);
     }

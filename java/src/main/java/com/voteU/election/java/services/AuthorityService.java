@@ -1,7 +1,9 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.CompactDTO.CompactAuthority;
+import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.*;
+import com.voteU.election.java.repositories.electiondata.AuthorityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,14 +20,16 @@ import java.util.Map;
 @Service
 public class AuthorityService {
     private final ElectionService electionService;
+    private final AuthorityRepository authorityRepository;
 
     /**
      * Constructor for the AuthorityService class.
      *
      * @param electionService the ElectionService instance used to retrieve election-related data
      */
-    public AuthorityService(ElectionService electionService) {
+    public AuthorityService(ElectionService electionService, AuthorityRepository authorityRepository) {
         this.electionService = electionService;
+        this.authorityRepository = authorityRepository;
     }
 
 
@@ -132,5 +136,9 @@ public class AuthorityService {
             return null;
         }
         return party.getCandidates();
+    }
+
+    public List<DropdownOptionDTO<String>> getAuthorityNamesByConstituencyId(String electionId, int constituencyId) {
+        return authorityRepository.getAllByConstituencyId(electionId, constituencyId);
     }
 }

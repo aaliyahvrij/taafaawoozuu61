@@ -1,25 +1,35 @@
-<!-- components/FilterSelect.vue -->
 <script setup lang="ts">
-defineProps<{
+type OptionType = {
+  id: string | number
+  name?: string
+  [key: string]: any
+}
+
+const props = defineProps<{
   label: string
-  modelValue: any
-  options: any[]
+  modelValue: OptionType | null
+  options: OptionType[]
   optionLabelKey?: string
-  onChange?: Function
   disabledLabel?: string
 }>()
 
-const emit = defineEmits(['update:modelValue', 'clear'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: OptionType | null): void
+  (e: 'clear'): void
+}>()
+
+const handleChange = (event: Event) => {
+  const selectedId = (event.target as HTMLSelectElement).value
+  const selected = props.options.find(opt => String(opt.id) === selectedId) || null
+  emit('update:modelValue', selected)
+}
 </script>
 
 <template>
   <div class="filter-select">
     <label>{{ label }}</label>
-    <select
-      v-if="options.length"
-      :value="modelValue"
-      @change="e => onChange?.(e.target.value); emit('update:modelValue', options.find(opt => opt.id == e.target.value))"
-    >
+
+    <select :value="modelValue?.id ?? ''" @change="handleChange">
       <option value="" disabled>{{ disabledLabel || `Select ${label.toLowerCase()}` }}</option>
       <option
         v-for="option in options"

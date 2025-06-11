@@ -1,51 +1,45 @@
 <script setup lang="ts">
 
-import { PartyStyleService } from '@/services/PartyStyleService.ts'
+const selectedElection : Ref<string> = ("")
 
 
-import type { Party } from '@/interface/Party.ts'
-import type { Candidate } from '@/interface/Candidate.ts'
+async function getElection()
 
-import VoteListOverview from '@/components/filters/VoteListOverview.vue'
-
-let filterSelection: number[] = []
-
-
-
-function handlePartyChange(party: Party): void {
-  selectedParty.value = party
-}
-
-function handleCandidateChange(candidate: Candidate): void {
-  selectedCandidate.value = candidate
-}
-function sortByName() {
-  if (selectedParty.value)
-    selectedParty.value.candidates = PartyStyleService.sortCandidateNames(selectedParty.value.candidates)
-}
-function sortByVotes() {
-  if (selectedParty.value)
-    selectedParty.value.candidates = PartyStyleService.sortCandidatesByVotes(selectedParty.value.candidates)
-}
 </script>
 
 <template>
+  <div class="filter-bar">
+    <div class="election-filter">
+      <FilterSelect
+        label="Election"
+        v-model="selectedElection"
+        :options="electionOptions"
+        optionLabelKey="name"
+        disabledLabel="Select election"
+      />
+    </div>
 
+    <div class="constituency-filter" v-if="selectedElection">
+      <FilterSelect
+        label="Constituency"
+        v-model="selectedConstituency"
+        :options="constituencyOptions"
+        optionLabelKey="name"
+        disabledLabel="Select constituency"
+      />
+    </div>
 
-  <VoteListOverview
-    :selectedElection="selectedElection"
-    :displayedPartyVotes="displayedPartyVotes"
-    :partyVotes="partyVotes"
-    :selectedParty="selectedParty"
-    :selectedCandidate="selectedCandidate"
-    :currentVoteLevel="currentVoteLevel"
-    @select-party="handlePartyChange"
-    @deselect-party="selectedParty = null"
-    @select-candidate="handleCandidateChange"
-    @deselect-candidate="selectedCandidate = null"
-    @sort-candidates-by-name="sortByName"
-    @sort-candidates-by-votes="sortByVotes"
-  />
+    <div class="authority-filter" v-if="selectedConstituency">
+      <FilterSelect
+        label="Authority"
+        v-model="selectedAuthority"
+        :options="authorityOptions"
+        optionLabelKey="name"
+        disabledLabel="Select authority"
+      />
+    </div>
+  </div>
+
 </template>
 
 <style scoped>
