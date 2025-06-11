@@ -2,6 +2,7 @@ package com.voteU.election.java.services;
 
 import com.voteU.election.java.entities.Posts;
 import com.voteU.election.java.entities.User;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.repositories.PostsRepository;
 import com.voteU.election.java.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class PostsService {
     public Posts createPost(Posts post) {
         Integer userId = post.getUser().getId();
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
         post.setUser(user);
         post.setCreatedAt(Instant.now());
@@ -62,6 +63,10 @@ public class PostsService {
      * @return an Optional containing the Posts entity if found, or an empty Optional if no post exists with the specified id
      */
     public Optional<Posts> getPostById(Integer id){
+        if(id == null) {
+            throw new ResourceNotFoundException("Post not found with id " + id);
+        }
+
         return postsRepository.findPostsById(id);
     }
 

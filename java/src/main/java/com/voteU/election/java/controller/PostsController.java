@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -48,10 +49,11 @@ public class PostsController {
      * @throws ResourceNotFoundException if the post with the specified id is not found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Posts> getPostById(@PathVariable Integer id) {
-        return postsService.getPostById(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
+    public ResponseEntity<Optional<Posts>> getPostById(@PathVariable Integer id) {
+
+        Optional<Posts> post = postsService.getPostById(id);
+
+        return ResponseEntity.ok(post);
     }
 
     /**
