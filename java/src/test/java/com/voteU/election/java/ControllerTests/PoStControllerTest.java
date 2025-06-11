@@ -21,10 +21,10 @@ class PoStControllerTest {
     private PoStService poStService;
     @InjectMocks
     private PoStController poStController;
-    private final String electionId = "2023";
+    private final String electionId = "tk2023";
     private final int constId = 1;
-    private final String munId = "auth123";
-    private final String poStId = "poll456";
+    private final String munId = "muni123";
+    private final String poStId = "poSt456";
     private PollingStation samplePoSt;
     private CompactPollingStation sampleCompactPoSt;
     private LinkedHashMap<String, PollingStation> poStListMap;
@@ -33,16 +33,13 @@ class PoStControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        samplePoSt = new PollingStation("PS1", "Station A", "1234AB");
-        samplePoSt.setId(poStId);
-        samplePoSt.setName("Station A");
-        sampleCompactPoSt = new CompactPollingStation("PS1", "Station A", "1234AB");
-        sampleCompactPoSt.setId(poStId);
-        sampleCompactPoSt.setName("Station A");
+        samplePoSt = new PollingStation(poStId, "poStA");
+        samplePoSt.setZipCode("1234AB");
+        sampleCompactPoSt = new CompactPollingStation(poStId, "poStA", "1234AB");
         poStListMap = new LinkedHashMap<>();
         poStListMap.put(poStId, samplePoSt);
         affiListMap = new LinkedHashMap<>();
-        Affiliation affi = new Affiliation(10, "Affi X", 1447);
+        Affiliation affi = new Affiliation(10, "affiX", 1447);
         affiListMap.put(affi.getId(), affi);
     }
 
@@ -52,7 +49,7 @@ class PoStControllerTest {
         Map<String, PollingStation> result = poStController.getMuniLevel_poStListMapOf(electionId, constId, munId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(poStId));
-        assertEquals("Station A", result.get(poStId).getName());
+        assertEquals("poStA", result.get(poStId).getName());
         verify(poStService, times(1)).getMuniLevel_poStListMapOf(electionId, constId, munId);
     }
 
@@ -70,7 +67,7 @@ class PoStControllerTest {
         when(poStService.getPoStById(electionId, constId, munId, poStId)).thenReturn(samplePoSt);
         PollingStation result = poStController.getPoStById(electionId, constId, munId, poStId);
         assertNotNull(result);
-        assertEquals("Station A", result.getName());
+        assertEquals("poStA", result.getName());
         verify(poStService, times(1)).getPoStById(electionId, constId, munId, poStId);
     }
 
@@ -80,7 +77,7 @@ class PoStControllerTest {
         Map<Integer, Affiliation> result = poStController.getPoStLevel_affiListMapOf(electionId, constId, munId, poStId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(10));
-        assertEquals("Affi X", result.get(10).getName());
+        assertEquals("affiX", result.get(10).getName());
         verify(poStService, times(1)).getPoStLevel_affiListMapOf(electionId, constId, munId, poStId);
     }
 }
