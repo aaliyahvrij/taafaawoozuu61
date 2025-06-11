@@ -459,7 +459,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </button>
       </div>
       <div
-        class="candidate"
+        class="candi"
         v-for="candi in selectedAffi.candiList"
         :key="candi.id"
         @click="handleCandiChange(candi)"
@@ -595,7 +595,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   padding: 0.5rem;
 }
 
-.candidate:hover {
+.candi:hover {
   background-color: #efefef;
 }
 
@@ -616,7 +616,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .affi-row,
-.candidate {
+.candi {
   padding: 0.75rem 1rem;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
@@ -721,7 +721,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
 
 .tag,
 .affi-row,
-.candidate,
+.candi,
 .filter-bar {
   display: flex;
 }
@@ -732,7 +732,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
 
 .tag,
 .affi-row,
-.candidate {
+.candi {
   align-items: center;
 }
 

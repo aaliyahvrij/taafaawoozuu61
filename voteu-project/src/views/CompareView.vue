@@ -62,7 +62,7 @@ async function getNationalLevel_proviListMapOf(
     proviListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching proviListMap of ', electionId)
   } catch (err) {
-    console.error('Error fetching proviListMap of ', electionId, '', err)
+    console.error('Error fetching proviListMap of ', electionId, ': ', err)
   }
 }
 
@@ -412,7 +412,7 @@ async function applyFilter() {
 <template>
   <div class="compare-view">
     <h2 style="text-align: center; margin-bottom: 1rem">Compare Election Results</h2>
-    <div class="filters-wrapper">
+    <div class="filter-wrapper">
       <!-- Filter Set 1 -->
       <div class="filter-set">
         <h3>Set 1</h3>
@@ -506,7 +506,7 @@ async function applyFilter() {
       </div>
     </div>
     <button @click="applyFilter" style="display: block; margin: 1rem auto">Compare</button>
-    <div class="results-wrapper">
+    <div class="result-wrapper">
       <!-- Placeholder texts for results -->
       <div class="result-set">
         <p v-if="affiVotes1">Results for Set 1 (will be replaced by chart)</p>
@@ -526,7 +526,7 @@ async function applyFilter() {
   padding: 1rem;
 }
 
-.filters-wrapper {
+.filter-wrapper {
   display: flex;
   gap: 2rem;
 }
