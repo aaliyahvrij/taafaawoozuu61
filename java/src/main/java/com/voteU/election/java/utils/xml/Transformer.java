@@ -32,7 +32,7 @@ public interface Transformer<E> {
 
     /**
      * Called multiple times per file with information about a candidate. The {@code nationMap} can hold
-     * the same information as {@code candiMap} in {@link #registerCandiLevelData(LinkedHashMap)},
+     * the same information as {@code candiLhMap} in {@link #registerCandiLevelData(LinkedHashMap)},
      * and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#VV_COUNT}</li>
@@ -44,7 +44,7 @@ public interface Transformer<E> {
     void registerNationalLevel_affiData(LinkedHashMap<String, String> nationMap);
 
     /**
-     * Called once per file with information about the constituency. The {@code constiMap} can hold
+     * Called once per file with information about the constituency. The {@code constiLhMap} can hold
      * the same information as {@code electionMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
      * and the following information:
      * <ul>
@@ -52,13 +52,13 @@ public interface Transformer<E> {
      *     <li>{@link ElectionProcessor#CONSTI_NAME}</li>
      * </ul>
      *
-     * @param constiMap a {@code LinkedHashMap} containing information about the election and constituency.
+     * @param constiLhMap a {@code LinkedHashMap} containing information about the election and constituency.
      */
-    void registerConstiLevel_affiData(LinkedHashMap<String, String> constiMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiMap);
+    void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap);
 
-    void registerMuniLevel_affiData(LinkedHashMap<String, String> muniMap);
+    void registerMuniLevel_affiData(LinkedHashMap<String, String> muniLhMap);
 
-    void registerPoStLevelData(LinkedHashMap<String, String> poStMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiListMap);
+    void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiList_lhMap);
 
     /**
      * Called multiple times per file with information about a candidate.
@@ -70,10 +70,10 @@ public interface Transformer<E> {
      *     <li>{@link ElectionProcessor#LAST_NAME}</li>
      * </ul>
      *
-     * @param candiMap a {@code LinkedHashMap} containing information about
+     * @param candiLhMap a {@code LinkedHashMap} containing information about
      *                 the election, constituency, affiliation and candidate.
      */
-    void registerCandiLevelData(LinkedHashMap<String, String> candiMap);
+    void registerCandiLevelData(LinkedHashMap<String, String> candiLhMap);
 
-    void registerCandiLevel_constiData(LinkedHashMap<String, String> constiMap);
+    void registerCandiLevel_constiData(LinkedHashMap<String, String> constiLhMap);
 }

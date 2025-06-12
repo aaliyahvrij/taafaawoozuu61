@@ -5,5 +5,5 @@ export interface PollingStation {
   name: string
   zipCode: string
   munId: string
-  affiListMap: { [affId: number]: Affiliation }
+  affiList_lhMap: { [affId: number]: Affiliation }
 }

@@ -4,7 +4,7 @@ export interface Constituency {
   id: number
   name: string
   provId: number
-  muniListMap: { [key: string]: Municipality }
-  affiListMap: { [key: number]: Affiliation }
+  muniList_lhMap: { [key: string]: Municipality }
+  affiList_lhMap: { [key: number]: Affiliation }
   vvCount: number
 }

@@ -9,13 +9,13 @@ import java.util.LinkedHashMap;
 public class Constituency {
     private int id;
     private String name;
-    private LinkedHashMap<String, Municipality> muniListMap;
-    private LinkedHashMap<Integer, Affiliation> affiListMap;
+    private LinkedHashMap<String, Municipality> muniList_lhMap;
+    private LinkedHashMap<Integer, Affiliation> affiList_lhMap;
 
     public Constituency(int id, String name) {
         this.id = id;
         this.name = name;
-        this.muniListMap = new LinkedHashMap<>();
-        this.affiListMap = new LinkedHashMap<>();
+        this.muniList_lhMap = new LinkedHashMap<>();
+        this.affiList_lhMap = new LinkedHashMap<>();
     }
 }

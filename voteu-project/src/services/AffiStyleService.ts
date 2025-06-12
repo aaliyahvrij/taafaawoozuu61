@@ -11,8 +11,8 @@ export class AffiStyleService {
     return `hsl(${hue}, 70%, 60%)`
   }
 
-  static sortCandidatesByName(candidates: Candidate[]): Candidate[] {
-    return candidates.slice().sort((a, b) => {
+  static sortCandidatesByName(candiList: Candidate[]): Candidate[] {
+    return candiList.slice().sort((a, b) => {
       const lastNameA = a.lastName.toLowerCase()
       const lastNameB = b.lastName.toLowerCase()
       if (lastNameA < lastNameB) return -1
@@ -27,7 +27,7 @@ export class AffiStyleService {
     })
   }
 
-  static sortCandidatesByVVCount(candidates: Candidate[]): Candidate[] {
-    return [...candidates].sort((a, b) => b.vvCount - a.vvCount) // descending order, highest votes first
+  static sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
+    return [...candiList].sort((a, b) => b.vvCount - a.vvCount) // descending order, highest votes first
   }
 }

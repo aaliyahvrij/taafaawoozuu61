@@ -1,12 +1,12 @@
 import type { Affiliation, Constituency, Province } from '@/interfaces'
 
 export class ProviService {
-  static async getNationalLevel_proviListMap(
-    electionId: string,
+  static async getNationalLevel_proviList_lhMap(
+    electionIdListString: string,
   ): Promise<Record<number, Province> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/provinces/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/provinces/compact`,
         {
           method: 'GET',
           headers: {
@@ -25,12 +25,12 @@ export class ProviService {
   }
 
   static async getProviLevel_constiList(
-    electionId: string,
+    electionIdListString: string,
     provId: string,
   ): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/provinces/${provId}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/constituencies/compact`,
         {
           method: 'GET',
           headers: {
@@ -48,10 +48,10 @@ export class ProviService {
     return null
   }
 
-  static async getProviLevel_affiList(electionId: string, provId: number): Promise<Affiliation[] | null> {
+  static async getProviLevel_affiList(electionIdListString: string, provId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/provinces/${provId}/affiliations`,
+        `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/affiliations`,
         {
           method: 'GET',
           headers: {

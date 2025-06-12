@@ -19,33 +19,23 @@ public class ElectionController {
         this.electionService = electionService;
     }
 
-    @PostMapping
-    public boolean readAllElectoralData() {
-        return this.electionService.readAllElectoralData();
+    @PostMapping("/{electionIdListString}")
+    public boolean readElectoralData(@PathVariable String electionIdListString) {
+        return this.electionService.readElectoralData(electionIdListString);
     }
 
-    @PostMapping("/{electionId}")
-    public boolean readElectoralDataOf(@PathVariable String electionId) {
-        return this.electionService.readElectoralDataOf(electionId);
-    }
-
-    @GetMapping
-    public LinkedHashMap<String, Election> getAllElectoralData() {
-        return this.electionService.getAllElectoralData();
-    }
-
-    @GetMapping("/{electionId}")
-    public Election getElectoralDataOf(@PathVariable String electionId) {
-        return this.electionService.getElectoralDataOf(electionId);
+    @GetMapping("/{electionIdListString}")
+    public LinkedHashMap<String, Election> getElectoralData(@PathVariable String electionIdListString) {
+        return this.electionService.getElectoralData(electionIdListString);
     }
 
     @GetMapping("/{electionId}/affiliations")
-    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMap(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_affiListMap(electionId);
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_affiList_lhMap(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_poStListMap(electionId);
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_poStList_lhMap(electionId);
     }
 }

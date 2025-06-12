@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 
 /**
- * Processes election data from XML files and provides access to the results.
+ * Calls to the processor to retrieve the specified election data from the XML files.
  */
 @Slf4j
 @Component
@@ -22,35 +22,22 @@ public class ElectionReader {
     }
 
     /**
-     * Reads and processes all the data of all the elections.
+     * Reads and processes the data of the specified election(s).
      *
      * @return A map containing election results, organized by election year.
      */
-    public LinkedHashMap<String, Election> getAllElectoralData() {
-        String[] electionIds = {"TK2021", "TK2023"};
-        for (String electionId : electionIds) {
-            String path = "/EML_bestanden_" + electionId;
+    public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
+        String[] electionIdList = electionIdListString.split(",");
+        for (String electionId : electionIdList) {
+            String filePath = "/EML_bestanden_" + electionId;
             try {
-                this.processor.processResults(electionId, PathUtils.getResourcePath(path));
+                this.processor.processResults(electionId, PathUtils.getResourcePath(filePath));
                 log.info("Processed Election {}", electionId);
             } catch (Exception e) {
                 log.error("Could not process Election {}", electionId, e);
-                e.printStackTrace();
             }
         }
         System.out.println("All files are processed.\n");
-        return this.transformer.getElectionListMap();
-    }
-
-    public Election getElectoralDataOf(String electionId) {
-        String path = "/EML_bestanden_" + electionId;
-        try {
-            this.processor.processResults(electionId, PathUtils.getResourcePath(path));
-            log.info("Processed Election {}", electionId);
-        } catch (Exception e) {
-            log.error("Could not process Election {}", electionId, e);
-        }
-        System.out.println("All files are processed.\n");
-        return this.transformer.getElectoralDataOf(electionId);
+        return this.transformer.getElectionList_lhMap();
     }
 }

@@ -11,70 +11,72 @@ import java.util.LinkedHashMap;
 @Service
 public class ElectionService {
     private final ElectionReader electionReader;
-    private static final LinkedHashMap<String, Election> electionListMap = new LinkedHashMap<>();
+    private static final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
 
     public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
     }
 
     /**
-     * Calls upon the reader to call upon the processor to retrieve all the electoral data from the XML files.
+     * Calls upon the reader to call upon the processor to retrieve
+     * the electoral data of the specified election(s).
      *
      * @return true if the data has been loaded successfully, false otherwise
      */
-    public boolean readAllElectoralData() {
-        LinkedHashMap<String, Election> readerElectionListMap = this.electionReader.getAllElectoralData();
-        if (readerElectionListMap == null || readerElectionListMap.isEmpty()) {
-            log.warn("No electoral data found during readAllElectoralData().");
+    public boolean readElectoralData(String electionIdListString) {
+        String[] electionIdList = electionIdListString.split(",");
+        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectoralData(electionIdList);
+        if (readerElectionList_lhMap == null || readerElectionList_lhMap.isEmpty()) {
+            log.warn("No electoral data found during readElectoralData(%s).".formatted(electionIdList));
             return false;
         }
-        electionListMap.putAll(readerElectionListMap);
+        electionList_lhMap.putAll(readerElectionList_lhMap);
         return true;
     }
 
     /**
-     * Checks if a specific election year is available in memory.
-     *
-     * @param electionId the ID of the election (e.g. "TK2021")
-     * @return true if found, false otherwise
+     * Retrieves all the data of the specified election(s).
      */
-    public boolean readElectoralDataOf(String electionId) {
-        return electionListMap.containsKey(electionId);
-    }
-
-    /**
-     * Retrieves all the data of all the elections.
-     */
-    public LinkedHashMap<String, Election> getAllElectoralData() {
-        return electionListMap;
-    }
-
-    /**
-     * Retrieves all the data of a specific election.
-     */
-    public Election getElectoralDataOf(String electionId) {
-        return electionListMap.get(electionId);
-    }
-
-    /**
-     * Retrieves all the affiliation data of a specific election.
-     */
-    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMap(String electionId) {
-        Election election = getElectoralDataOf(electionId);
-        if (election == null) {
-            return null;
+    public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
+        String[] electionIdList = electionIdListString.split(",");
+        LinkedHashMap<String, Election> specifiedElectionList_lhMap = null;
+        for (String electionId : electionIdList) {
+            if (electionList_lhMap.containsKey(electionId)) {
+                specifiedElectionList_lhMap.put(electionId, electionList_lhMap.get(electionId));
+            }
         }
-        return election.getAffiListMap();
+        return specifiedElectionList_lhMap;
     }
 
     /**
-     * Retrieves all the polling station data of a specific election.
+     * Retrieves all the affiliation data of the specified election(s).
      */
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(String electionId) {
-        Election election = getElectoralDataOf(electionId);
-        if (election == null) {
-            return null;
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(String electionIdListString) {
+        String[] electionIdList = electionIdListString.split(",");
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_listMap = null;
+        for (String electionId : electionIdList) {
+            Election election = getElectoralData(electionId).get(electionId);
+            if (election == null) {
+                return null;
+            }
+            affiList_listMap.put(electionId, election.getAffiList_lhMap());
         }
-        return election.getPoStListMap();
+        return affiList_listMap;
+    }
+
+    /**
+     * Retrieves all the polling station data of the specified election(s).
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(String electionIdListString) {
+        String[] electionIdList = electionIdListString.split(",");
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_listMap = null;
+        for (String electionId : electionIdList) {
+            Election election = getElectoralData(electionId).get(electionId);
+            if (election == null) {
+                return null;
+            }
+            poStList_listMap.put(electionId, election.getPoStList_lhMap());
+        }
+        return poStList_listMap;
     }
 }

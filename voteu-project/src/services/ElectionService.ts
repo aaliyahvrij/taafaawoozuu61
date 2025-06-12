@@ -1,9 +1,9 @@
 import type { Affiliation, Election } from '@/interfaces'
 
 export class ElectionService {
-  static async getElectoralDataOf(electionId: string): Promise<Election | null> {
+  static async getElectoralDataOf(electionIdListString: string): Promise<Election | null> {
     try {
-      const response = await fetch(`http://localhost:8080/api/election/${electionId}`, {
+      const response = await fetch(`http://localhost:8080/api/election/${electionIdListString}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export class ElectionService {
     return null
   }
 
-  static async getNationalLevel_affiListMap(
+  static async getNationalLevel_affiList_lhMap(
     electionId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {

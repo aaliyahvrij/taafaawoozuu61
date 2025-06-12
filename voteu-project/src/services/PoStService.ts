@@ -1,7 +1,7 @@
 import type { Affiliation, PollingStation } from '@/interfaces'
 
 export class PoStService {
-  static async getMuniLevel_poStListMap(
+  static async getMuniLevel_poStList_lhMap(
     electionId: string,
     constId: string,
     munId: string,
@@ -26,15 +26,15 @@ export class PoStService {
     return null
   }
 
-  static async getPoStLevel_affiListMap(
-    electionId: string,
+  static async getPoStLevel_affiList_lhMap(
+    electionIdListString: string,
     constId: string,
     munId: string,
     poStId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations/${poStId}/affiliations`,
+        `http://localhost:8080/api/election/${electionIdListString}/constituencies/${constId}/municipalities/${munId}/pollingStations/${poStId}/affiliations`,
         {
           method: 'GET',
           headers: {

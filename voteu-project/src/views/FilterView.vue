@@ -40,24 +40,24 @@ function handleApply(): void {
   affiList.value = null
   selectedCandi.value = null
   if (selectedElection.value && selectedConsti.value && selectedMuni.value && selectedPoSt.value) {
-    getPoStLevel_affiListMap(
+    getPoStLevel_affiList_lhMap(
       selectedElection.value,
       selectedConsti.value.id.toString(),
       selectedMuni.value.id.toString(),
       selectedPoSt.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConsti.value && selectedMuni.value) {
-    getMuniLevel_affiListMap(
+    getMuniLevel_affiList_lhMap(
       selectedElection.value,
       selectedConsti.value.id.toString(),
       selectedMuni.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConsti.value && !selectedMuni.value) {
-    getConstiLevel_affiListMap(selectedElection.value, selectedConsti.value.id.toString())
+    getConstiLevel_affiList_lhMap(selectedElection.value, selectedConsti.value.id.toString())
   } else if (selectedElection.value && selectedProvi.value && !selectedConsti.value) {
     getProviLevel_affiList(selectedElection.value, selectedProvi.value.id)
   } else if (selectedElection.value) {
-    getNationalLevel_affiListMap(selectedElection.value)
+    getNationalLevel_affiList_lhMap(selectedElection.value)
   } else {
     console.warn('Invalid selection state.')
   }
@@ -107,30 +107,30 @@ function clearSelectedPoSt(): void {
   selectedPoSt.value = null
 }
 
-async function getNationalLevel_proviListMapOf(electionId: string | null): Promise<void> {
+async function getNationalLevel_proviList_lhMap(electionId: string | null): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
     if (electionId) {
-      const response = await ProviService.getNationalLevel_proviListMap(electionId)
+      const response = await ProviService.getNationalLevel_proviList_lhMap(electionId)
       proviList.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching proviListMap of ', proviPath)
+      console.log('Fetching proviList_lhMap of ', proviPath)
     } else {
       proviList.value = []
     }
   } catch (err) {
-    console.error('Error fetching proviListMap of ', proviPath, ': ', err)
+    console.error('Error fetching proviList_lhMap of ', proviPath, ': ', err)
   }
 }
 
-async function getNationalLevel_affiListMap(electionId: string): Promise<void> {
+async function getNationalLevel_affiList_lhMap(electionId: string): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
-    const response = await ElectionService.getNationalLevel_affiListMap(electionId)
+    const response = await ElectionService.getNationalLevel_affiList_lhMap(electionId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
-    console.log('Fetching affiListMap of ', proviPath)
+    console.log('Fetching affiList_lhMap of ', proviPath)
   } catch (err) {
-    console.error('Error fetching affiListMap of ', proviPath, ': ', err)
+    console.error('Error fetching affiList_lhMap of ', proviPath, ': ', err)
   }
 }
 
@@ -164,35 +164,35 @@ async function getProviLevel_affiList(electionId: string, provId: number): Promi
   }
 }
 
-async function getConstiLevel_muniListMapOf(
+async function getConstiLevel_muniList_lhMap(
   electionId: string | null,
   constId: string | undefined,
 ): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
     if (electionId && constId) {
-      const response = await MuniService.getConstiLevel_muniListMap(electionId, constId)
+      const response = await MuniService.getConstiLevel_muniList_lhMap(electionId, constId)
       muniList.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching muniListMap of ', constiPath)
+      console.log('Fetching muniList_lhMap of ', constiPath)
     }
   } catch (err) {
-    console.error('Error fetching muniListMap of', constiPath, ': ', err)
+    console.error('Error fetching muniList_lhMap of', constiPath, ': ', err)
   }
 }
 
-async function getConstiLevel_affiListMap(electionId: string, constId: string): Promise<void> {
+async function getConstiLevel_affiList_lhMap(electionId: string, constId: string): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await ConstiService.getConstiLevel_affiListMap(electionId, constId)
+    const response = await ConstiService.getConstiLevel_affiList_lhMap(electionId, constId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
-    console.log('Fetching affiListMap of ', constiPath)
+    console.log('Fetching affiList_lhMap of ', constiPath)
   } catch (err) {
-    console.error('Error fetching affiListMap of ', constiPath, ': ', err)
+    console.error('Error fetching affiList_lhMap of ', constiPath, ': ', err)
   }
 }
 
-async function getMuniLevel_poStListMap(
+async function getMuniLevel_poStList_lhMap(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
@@ -200,32 +200,32 @@ async function getMuniLevel_poStListMap(
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
-      const response = await PoStService.getMuniLevel_poStListMap(electionId, constId, munId)
+      const response = await PoStService.getMuniLevel_poStList_lhMap(electionId, constId, munId)
       poStList.value = Array.isArray(response) ? response : Object.values(response || {})
-      console.log('Fetching poStListMap of ', muniPath)
+      console.log('Fetching poStList_lhMap of ', muniPath)
     }
   } catch (err) {
-    console.error('Error fetching poStListMap of ', muniPath, ': ', err)
+    console.error('Error fetching poStList_lhMap of ', muniPath, ': ', err)
   }
 }
 
-async function getMuniLevel_affiListMap(
+async function getMuniLevel_affiList_lhMap(
   electionId: string,
   constId: string,
   munId: string,
 ): Promise<void> {
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await MuniService.getMuniLevel_affiListMap(electionId, constId, munId)
+    const response = await MuniService.getMuniLevel_affiList_lhMap(electionId, constId, munId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
-    console.log('Fetching affiListMap of ', muniPath)
+    console.log('Fetching affiList_lhMap of ', muniPath)
   } catch (err) {
-    console.error('Error fetching affiListMap of ', muniPath, ': ', err)
+    console.error('Error fetching affiList_lhMap of ', muniPath, ': ', err)
   }
 }
 
-async function getPoStLevel_affiListMap(
+async function getPoStLevel_affiList_lhMap(
   electionId: string,
   constId: string,
   munId: string,
@@ -234,7 +234,7 @@ async function getPoStLevel_affiListMap(
   const poStPath =
     'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId + ' > poSt ' + poStId
   try {
-    const response = await PoStService.getPoStLevel_affiListMap(
+    const response = await PoStService.getPoStLevel_affiList_lhMap(
       electionId,
       constId,
       munId,
@@ -243,9 +243,9 @@ async function getPoStLevel_affiListMap(
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiList.value)
     voteLevel.value = 'poSt'
-    console.log('Fetching affiListMap of ', poStPath)
+    console.log('Fetching affiList_lhMap of ', poStPath)
   } catch (err) {
-    console.error('Error fetching affiListMap of ', poStPath, ': ', err)
+    console.error('Error fetching affiList_lhMap of ', poStPath, ': ', err)
   }
 }
 
@@ -272,7 +272,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
       <select
         class="dropdown"
         v-model="selectedElection"
-        @change="getNationalLevel_proviListMapOf(selectedElection)"
+        @change="getNationalLevel_proviList_lhMap(selectedElection)"
       >
         <option value="null" disabled>Select an election</option>
         <option value="2021">2021</option>
@@ -327,7 +327,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="constiList.length > 0"
         v-model="selectedConsti"
-        @change="getConstiLevel_muniListMapOf(selectedElection, selectedConsti?.id.toString())"
+        @change="getConstiLevel_muniList_lhMap(selectedElection, selectedConsti?.id.toString())"
       >
         <option value="null" disabled>Select a constituency</option>
         <option v-for="consti in constiList" :key="consti.id" :value="consti">
@@ -356,7 +356,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         v-if="muniList.length > 0"
         v-model="selectedMuni"
         @change="
-          getMuniLevel_poStListMap(
+          getMuniLevel_poStList_lhMap(
             selectedElection,
             selectedConsti?.id.toString(),
             selectedMuni?.id.toString(),

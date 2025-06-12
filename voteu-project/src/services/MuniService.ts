@@ -1,13 +1,13 @@
 import type { Affiliation, Municipality } from '@/interfaces'
 
 export class MuniService {
-  static async getConstiLevel_muniListMap(
-    electionId: string,
+  static async getConstiLevel_muniList_lhMap(
+    electionIdListString: string,
     constId: string,
   ): Promise<Record<string, Municipality> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/constituencies/${constId}/municipalities/compact`,
         {
           method: 'GET',
           headers: {
@@ -25,14 +25,14 @@ export class MuniService {
     return null
   }
 
-  static async getMuniLevel_affiListMap(
-    electionId: string,
+  static async getMuniLevel_affiList_lhMap(
+    electionIdListString: string,
     constId: string,
     munId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/affiliations`,
+        `http://localhost:8080/api/election/${electionIdListString}/constituencies/${constId}/municipalities/${munId}/affiliations`,
         {
           method: 'GET',
           headers: {
