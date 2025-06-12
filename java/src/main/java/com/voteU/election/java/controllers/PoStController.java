@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.LinkedHashMap;
 
 @RestController
-//@RequestMapping("/api/{electionId}/pollingstations")
 @RequestMapping("/api/election/{electionId}/constituencies/{constId}/municipalities/{munId}/pollingstations")
 public class PoStController {
     private final PoStService poStService;
@@ -22,11 +20,6 @@ public class PoStController {
     public PoStController(PoStService poStService) {
         this.poStService = poStService;
     }
-
-    /*@GetMapping
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(@PathVariable String electionId) {
-        return this.poStService.getNationalLevel_poStListMap(electionId);
-    }*/
 
     @GetMapping
     public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {

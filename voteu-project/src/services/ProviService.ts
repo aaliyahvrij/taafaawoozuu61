@@ -1,7 +1,7 @@
 import type { Affiliation, Constituency, Province } from '@/interfaces'
 
 export class ProviService {
-  static async getNationalLevel_proviListMapOf(
+  static async getNationalLevel_proviListMap(
     electionId: string,
   ): Promise<Record<number, Province> | null> {
     try {
@@ -24,7 +24,7 @@ export class ProviService {
     return null
   }
 
-  static async getProviLevel_constiListOf(
+  static async getProviLevel_constiList(
     electionId: string,
     provId: string,
   ): Promise<Constituency[] | null> {
@@ -48,7 +48,7 @@ export class ProviService {
     return null
   }
 
-  static async getProviLevel_affiListOf(electionId: string, provId: number): Promise<Affiliation[] | null> {
+  static async getProviLevel_affiList(electionId: string, provId: number): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/${electionId}/provinces/${provId}/affiliations`,

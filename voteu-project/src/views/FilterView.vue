@@ -40,24 +40,24 @@ function handleApply(): void {
   affiList.value = null
   selectedCandi.value = null
   if (selectedElection.value && selectedConsti.value && selectedMuni.value && selectedPoSt.value) {
-    getPoStLevel_affiListMapOf(
+    getPoStLevel_affiListMap(
       selectedElection.value,
       selectedConsti.value.id.toString(),
       selectedMuni.value.id.toString(),
       selectedPoSt.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConsti.value && selectedMuni.value) {
-    getMuniLevel_affiListMapOf(
+    getMuniLevel_affiListMap(
       selectedElection.value,
       selectedConsti.value.id.toString(),
       selectedMuni.value.id.toString(),
     )
   } else if (selectedElection.value && selectedConsti.value && !selectedMuni.value) {
-    getConstiLevel_affiListMapOf(selectedElection.value, selectedConsti.value.id.toString())
+    getConstiLevel_affiListMap(selectedElection.value, selectedConsti.value.id.toString())
   } else if (selectedElection.value && selectedProvi.value && !selectedConsti.value) {
-    getProviLevel_affiListOf(selectedElection.value, selectedProvi.value.id)
+    getProviLevel_affiList(selectedElection.value, selectedProvi.value.id)
   } else if (selectedElection.value) {
-    getNationalLevel_affiListMapOf(selectedElection.value)
+    getNationalLevel_affiListMap(selectedElection.value)
   } else {
     console.warn('Invalid selection state.')
   }
@@ -111,7 +111,7 @@ async function getNationalLevel_proviListMapOf(electionId: string | null): Promi
   const proviPath = 'election ' + electionId
   try {
     if (electionId) {
-      const response = await ProviService.getNationalLevel_proviListMapOf(electionId)
+      const response = await ProviService.getNationalLevel_proviListMap(electionId)
       proviList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching proviListMap of ', proviPath)
     } else {
@@ -122,10 +122,10 @@ async function getNationalLevel_proviListMapOf(electionId: string | null): Promi
   }
 }
 
-async function getNationalLevel_affiListMapOf(electionId: string): Promise<void> {
+async function getNationalLevel_affiListMap(electionId: string): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
-    const response = await ElectionService.getNationalLevel_affiListMapOf(electionId)
+    const response = await ElectionService.getNationalLevel_affiListMap(electionId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
     console.log('Fetching affiListMap of ', proviPath)
@@ -134,14 +134,14 @@ async function getNationalLevel_affiListMapOf(electionId: string): Promise<void>
   }
 }
 
-async function getProviLevel_constiListOf(
+async function getProviLevel_constiList(
   electionId: string | null,
   provId: string | undefined,
 ): Promise<void> {
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
     if (electionId && provId) {
-      const response = await ProviService.getProviLevel_constiListOf(electionId, provId)
+      const response = await ProviService.getProviLevel_constiList(electionId, provId)
       constiList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching constiList of ', proviPath)
     } else {
@@ -152,10 +152,10 @@ async function getProviLevel_constiListOf(
   }
 }
 
-async function getProviLevel_affiListOf(electionId: string, provId: number): Promise<void> {
+async function getProviLevel_affiList(electionId: string, provId: number): Promise<void> {
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
-    const response = await ProviService.getProviLevel_affiListOf(electionId, provId)
+    const response = await ProviService.getProviLevel_affiList(electionId, provId)
     affiList.value = response
     voteLevel.value = 'provi'
     console.log('Fetching affiList of ', proviPath)
@@ -171,7 +171,7 @@ async function getConstiLevel_muniListMapOf(
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
     if (electionId && constId) {
-      const response = await MuniService.getConstiLevel_muniListMapOf(electionId, constId)
+      const response = await MuniService.getConstiLevel_muniListMap(electionId, constId)
       muniList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching muniListMap of ', constiPath)
     }
@@ -180,10 +180,10 @@ async function getConstiLevel_muniListMapOf(
   }
 }
 
-async function getConstiLevel_affiListMapOf(electionId: string, constId: string): Promise<void> {
+async function getConstiLevel_affiListMap(electionId: string, constId: string): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await ConstiService.getConstiLevel_affiListMapOf(electionId, constId)
+    const response = await ConstiService.getConstiLevel_affiListMap(electionId, constId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
     console.log('Fetching affiListMap of ', constiPath)
@@ -192,7 +192,7 @@ async function getConstiLevel_affiListMapOf(electionId: string, constId: string)
   }
 }
 
-async function getMuniLevel_poStListMapOf(
+async function getMuniLevel_poStListMap(
   electionId: string | null,
   constId: string | undefined,
   munId: string | undefined,
@@ -200,7 +200,7 @@ async function getMuniLevel_poStListMapOf(
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
-      const response = await PoStService.getMuniLevel_poStListMapOf(electionId, constId, munId)
+      const response = await PoStService.getMuniLevel_poStListMap(electionId, constId, munId)
       poStList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching poStListMap of ', muniPath)
     }
@@ -209,14 +209,14 @@ async function getMuniLevel_poStListMapOf(
   }
 }
 
-async function getMuniLevel_affiListMapOf(
+async function getMuniLevel_affiListMap(
   electionId: string,
   constId: string,
   munId: string,
 ): Promise<void> {
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await MuniService.getMuniLevel_affiListMapOf(electionId, constId, munId)
+    const response = await MuniService.getMuniLevel_affiListMap(electionId, constId, munId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
     console.log('Fetching affiListMap of ', muniPath)
@@ -225,7 +225,7 @@ async function getMuniLevel_affiListMapOf(
   }
 }
 
-async function getPoStLevel_affiListMapOf(
+async function getPoStLevel_affiListMap(
   electionId: string,
   constId: string,
   munId: string,
@@ -234,7 +234,7 @@ async function getPoStLevel_affiListMapOf(
   const poStPath =
     'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId + ' > poSt ' + poStId
   try {
-    const response = await PoStService.getPoStLevel_affiListMapOf(
+    const response = await PoStService.getPoStLevel_affiListMap(
       electionId,
       constId,
       munId,
@@ -299,7 +299,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         class="dropdown"
         v-if="proviList.length > 0"
         v-model="selectedProvi"
-        @change="getProviLevel_constiListOf(selectedElection, selectedProvi?.id.toString())"
+        @change="getProviLevel_constiList(selectedElection, selectedProvi?.id.toString())"
       >
         <option value="null" disabled>Select a province</option>
         <option v-for="provi in proviList" :key="provi.id" :value="provi">
@@ -356,7 +356,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         v-if="muniList.length > 0"
         v-model="selectedMuni"
         @change="
-          getMuniLevel_poStListMapOf(
+          getMuniLevel_poStListMap(
             selectedElection,
             selectedConsti?.id.toString(),
             selectedMuni?.id.toString(),
