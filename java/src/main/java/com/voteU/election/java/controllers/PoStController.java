@@ -39,8 +39,8 @@ public class PoStController {
     }
 
     @GetMapping("/{poStId}")
-    public PollingStation getPoStById(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        return poStService.getPoStById(electionId, constId, munId, poStId);
+    public PollingStation getMuniLevel_poStOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        return poStService.getMuniLevel_poStOf(electionId, constId, munId, poStId);
     }
 
     @GetMapping("/{poStId}/affiliations")

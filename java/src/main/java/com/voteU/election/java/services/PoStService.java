@@ -34,12 +34,12 @@ public class PoStService {
     }
 
     public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
         return muni.getPoStListMap();
     }
 
     public List<CompactPollingStation> getMuniLevel_compactPoStListOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
         LinkedHashMap<String, PollingStation> muniLevel_poStListMap = muni.getPoStListMap();
         List<CompactPollingStation> compactPoStList = new ArrayList<>();
         for (PollingStation muniLevel_poSt : muniLevel_poStListMap.values()) {
@@ -48,13 +48,13 @@ public class PoStService {
         return compactPoStList;
     }
 
-    public PollingStation getPoStById(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        Municipality muni = muniService.getMuniById(electionId, constId, munId);
+    public PollingStation getMuniLevel_poStOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
         return muni.getPoStListMap().get(poStId);
     }
 
     public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        PollingStation poSt = getPoStById(electionId, constId, munId, poStId);
+        PollingStation poSt = getMuniLevel_poStOf(electionId, constId, munId, poStId);
         return poSt.getAffiListMap();
     }
 }

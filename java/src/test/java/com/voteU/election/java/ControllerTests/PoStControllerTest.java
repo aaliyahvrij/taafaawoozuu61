@@ -33,8 +33,7 @@ class PoStControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        samplePoSt = new PollingStation(poStId, "poStA");
-        samplePoSt.setZipCode("1234AB");
+        samplePoSt = new PollingStation(poStId, "poStA", "1234AB");
         sampleCompactPoSt = new CompactPollingStation(poStId, "poStA", "1234AB");
         poStListMap = new LinkedHashMap<>();
         poStListMap.put(poStId, samplePoSt);
@@ -63,12 +62,12 @@ class PoStControllerTest {
     }
 
     @Test
-    void test_getPoStById() {
-        when(poStService.getPoStById(electionId, constId, munId, poStId)).thenReturn(samplePoSt);
-        PollingStation result = poStController.getPoStById(electionId, constId, munId, poStId);
+    void test_getMuniLevel_poSt() {
+        when(poStService.getMuniLevel_poStOf(electionId, constId, munId, poStId)).thenReturn(samplePoSt);
+        PollingStation result = poStController.getMuniLevel_poStOf(electionId, constId, munId, poStId);
         assertNotNull(result);
         assertEquals("poStA", result.getName());
-        verify(poStService, times(1)).getPoStById(electionId, constId, munId, poStId);
+        verify(poStService, times(1)).getMuniLevel_poStOf(electionId, constId, munId, poStId);
     }
 
     @Test
