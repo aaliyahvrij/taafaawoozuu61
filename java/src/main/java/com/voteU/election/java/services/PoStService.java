@@ -21,16 +21,16 @@ public class PoStService {
         this.muniService = muniService;
     }
 
-    public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
+    public LinkedHashMap<String, PollingStation> getMuniLevel_poStList_lhMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
         Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
-        return muni.getPoStListMap();
+        return muni.getPoStList_lhMap();
     }
 
     public List<CompactPollingStation> getMuniLevel_compactPoStList(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
         Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
-        LinkedHashMap<String, PollingStation> muniLevel_poStListMap = muni.getPoStListMap();
+        LinkedHashMap<String, PollingStation> muniLevel_poStList_lhMap = muni.getPoStList_lhMap();
         List<CompactPollingStation> compactPoStList = new ArrayList<>();
-        for (PollingStation muniLevel_poSt : muniLevel_poStListMap.values()) {
+        for (PollingStation muniLevel_poSt : muniLevel_poStList_lhMap.values()) {
             compactPoStList.add(new CompactPollingStation(muniLevel_poSt.getId(), muniLevel_poSt.getName(), muniLevel_poSt.getZipCode()));
         }
         return compactPoStList;
@@ -38,11 +38,11 @@ public class PoStService {
 
     public PollingStation getMuniLevel_poSt(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
         Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
-        return muni.getPoStListMap().get(poStId);
+        return muni.getPoStList_lhMap().get(poStId);
     }
 
-    public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiListMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+    public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiList_lhMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
         PollingStation poSt = getMuniLevel_poSt(electionId, constId, munId, poStId);
-        return poSt.getAffiListMap();
+        return poSt.getAffiList_lhMap();
     }
 }
