@@ -26,20 +26,20 @@ public class PoStService {
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    /*public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMapOf(String electionId) {
-        return this.electionService.getElectoralDataOf(electionId).getPoStListMap();
+    /*public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(String electionId) {
+        return this.electionService.getElectoralData(electionId).getPoStListMap();
     }*/
     public PoStService(MuniService muniService) {
         this.muniService = muniService;
     }
 
-    public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
+    public LinkedHashMap<String, PollingStation> getMuniLevel_poStListMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
+        Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
         return muni.getPoStListMap();
     }
 
-    public List<CompactPollingStation> getMuniLevel_compactPoStListOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
-        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
+    public List<CompactPollingStation> getMuniLevel_compactPoStList(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId) {
+        Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
         LinkedHashMap<String, PollingStation> muniLevel_poStListMap = muni.getPoStListMap();
         List<CompactPollingStation> compactPoStList = new ArrayList<>();
         for (PollingStation muniLevel_poSt : muniLevel_poStListMap.values()) {
@@ -48,13 +48,13 @@ public class PoStService {
         return compactPoStList;
     }
 
-    public PollingStation getMuniLevel_poStOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        Municipality muni = muniService.getConstiLevel_muniOf(electionId, constId, munId);
+    public PollingStation getMuniLevel_poSt(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        Municipality muni = muniService.getConstiLevel_muni(electionId, constId, munId);
         return muni.getPoStListMap().get(poStId);
     }
 
-    public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiListMapOf(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        PollingStation poSt = getMuniLevel_poStOf(electionId, constId, munId, poStId);
+    public LinkedHashMap<Integer, Affiliation> getPoStLevel_affiListMap(@PathVariable String electionId, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+        PollingStation poSt = getMuniLevel_poSt(electionId, constId, munId, poStId);
         return poSt.getAffiListMap();
     }
 }

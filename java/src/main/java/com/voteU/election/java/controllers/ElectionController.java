@@ -40,12 +40,12 @@ public class ElectionController {
     }
 
     @GetMapping("/{electionId}/affiliations")
-    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMapOf(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_affiListMapOf(electionId);
+    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMap(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_affiListMap(electionId);
     }
 
     @GetMapping("/{electionId}/pollingstations")
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMapOf(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_poStListMapOf(electionId);
+    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(@PathVariable String electionId) {
+        return this.electionService.getNationalLevel_poStListMap(electionId);
     }
 }

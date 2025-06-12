@@ -60,7 +60,7 @@ public class ElectionService {
     /**
      * Retrieves all the affiliation data of a specific election.
      */
-    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMapOf(String electionId) {
+    public LinkedHashMap<Integer, Affiliation> getNationalLevel_affiListMap(String electionId) {
         Election election = getElectoralDataOf(electionId);
         if (election == null) {
             return null;
@@ -71,7 +71,7 @@ public class ElectionService {
     /**
      * Retrieves all the polling station data of a specific election.
      */
-    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMapOf(String electionId) {
+    public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(String electionId) {
         Election election = getElectoralDataOf(electionId);
         if (election == null) {
             return null;
