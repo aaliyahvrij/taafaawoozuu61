@@ -32,11 +32,11 @@ public class MuniService {
         if (election == null) {
             throw new ResourceNotFoundException("Election " + electionId + " not found");
         }
-        Constituency constituency = election.getConstiListMap().get(constId);
-        if (constituency == null) {
+        Constituency electoralLevel_consti = election.getConstiListMap().get(constId);
+        if (electoralLevel_consti == null) {
             throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
         }
-        LinkedHashMap<String, Municipality> constiLevel_muniListMap = constituency.getMuniListMap();
+        LinkedHashMap<String, Municipality> constiLevel_muniListMap = electoralLevel_consti.getMuniListMap();
         LinkedHashMap<String, Municipality> compactMuniListMap = new LinkedHashMap<>();
         for (Municipality constiLevel_muni : constiLevel_muniListMap.values()) {
             compactMuniListMap.put(constiLevel_muni.getId(), new Municipality(constiLevel_muni.getId(), constiLevel_muni.getName()));
