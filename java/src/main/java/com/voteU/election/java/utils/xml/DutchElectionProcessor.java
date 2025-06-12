@@ -163,8 +163,8 @@ public class DutchElectionProcessor<E> {
 
 
             XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
-            processElection(electionData, parser);
-            processVotes(electionData, parser, "gemeente");
+           // processElection(electionData, parser);
+           // processVotes(electionData, parser, "gemeente");
 
             currentIndex++;
         }

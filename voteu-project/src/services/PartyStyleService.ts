@@ -38,6 +38,9 @@ export class PartyStyleService {
   }
 
   static generateColorFromName(name: string): string {
+    if (!name) {
+      return `hsl(0, 0%, 90%)` // fallback light gray
+    }
     let hash = 0
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash)

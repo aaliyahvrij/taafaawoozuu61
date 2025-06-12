@@ -6,13 +6,21 @@ import { ConstituencyService } from '@/services/ConstituencyService.ts'
 import type { DropdownOption } from '@/interface/DropdownOption'
 import { ref, watch, onMounted } from 'vue'
 import VoteListOverview from '@/components/filters/VoteListOverview.vue'
-
+import type { PartyVotesDTO } from '@/interface/PartyVotesDTO.ts'
+import type { Candidate } from '@/interface/Candidate.ts'
 const elections = ref<DropdownOption[]>([])
 const selectedElection = ref<DropdownOption | null>(null)
 const provinces = ref<DropdownOption[]>([])
 const selectedProvince = ref<DropdownOption | null>(null)
 const constituencies = ref<DropdownOption[]>([])
 const selectedConstituency = ref<DropdownOption | null>(null)
+const nationalVotes = ref<PartyVotesDTO[]>([])
+const partyVotes = ref<PartyVotesDTO[]>([]) // placeholder
+const selectedParty = ref<string>('') // placeholder
+const selectedCandidate = ref<Candidate | null>(null) // placeholder
+const currentVoteLevel = ref<string>('') // will hold the string 'national',
+const voteLevels = ref<(string | number)[]>([])
+
 onMounted(async () => {
   const data = await ElectionService.getElectionNames()
   if (data) {
@@ -39,23 +47,71 @@ async function fetchConstituencyOptions(electionId: string, provinceId: number):
   }
 }
 
+async function fetchNationalVotes(electionId: string ): Promise<void> {
+  try {
+    const data = await ElectionService.getNationalPartyVotes2(electionId)
+    nationalVotes.value = data || []
+    currentVoteLevel.value = `national`
+    console.log(data)
+
+  } catch (e){
+    console.error(e)
+  }
+}
+
+
 watch(selectedElection, (newElection) => {
-  console.log('selectedElection changed:', newElection);
-  if (newElection && newElection.id) {
+  if (newElection) {
+    voteLevels.value = [newElection.id]
     fetchProvinceOptions(String(newElection.id))
   } else {
+    voteLevels.value = []
     provinces.value = []
+    constituencies.value = []
   }
 })
 
-  watch([selectedElection, selectedProvince], ([newElection, newProvince]) => {
-    if (newElection?.id && newProvince?.id) {
-      fetchConstituencyOptions(String(newElection.id), Number(newProvince.id))
-    } else {
-      constituencies.value = []
-      selectedConstituency.value = null
-    }
-  })
+watch(selectedProvince, (newProvince) => {
+  if (newProvince && selectedElection.value) {
+    voteLevels.value = [selectedElection.value.id, newProvince.id]
+    fetchConstituencyOptions(String(selectedElection.value.id), Number(newProvince.id))
+  } else if (selectedElection.value) {
+    voteLevels.value = [selectedElection.value.id]
+    constituencies.value = []
+  }
+})
+
+watch(selectedConstituency, (newConstituency) => {
+  if (newConstituency && selectedElection.value && selectedProvince.value) {
+    voteLevels.value = [
+      selectedElection.value.id,
+      selectedProvince.value.id,
+      newConstituency.id
+    ]
+  } else if (selectedElection.value && selectedProvince.value) {
+    voteLevels.value = [
+      selectedElection.value.id,
+      selectedProvince.value.id
+    ]
+  }
+})
+
+
+
+const isPartyListVisible = ref(false)
+
+function handleApply() {
+  if (selectedElection.value) {
+    // Only fetch national votes here
+    fetchNationalVotes(String(selectedElection.value.id))
+    isPartyListVisible.value = true
+  } else {
+    alert("Please select an election.")
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -86,9 +142,20 @@ watch(selectedElection, (newElection) => {
       />
     </div>
 
+    <div class="apply-button-wrapper">
+      <button class="apply-button" @click="handleApply">Apply</button>
+    </div>
+
 
   </div>
-  <vote-list-overview selected-election="selectedElection" displayed-party-votes="" party-votes="" selected-party="" selected-candidate="" current-vote-level=""</v>
+  <VoteListOverview
+    v-if="isPartyListVisible"
+                    :selected-election="selectedElection?.id ?? null"
+                    :displayed-party-votes="nationalVotes"
+                    :party-votes="partyVotes"
+                    :selected-party="selectedParty"
+                    :selected-candidate="selectedCandidate"
+                    :current-vote-level="currentVoteLevel"/>
 </template>
 
 <style scoped>

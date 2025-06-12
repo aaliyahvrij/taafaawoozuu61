@@ -43,12 +43,14 @@ public class ElectionDataInserter {
         //batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
         // batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
+        batchInsertProvinces(election);
+
         // batchInsertConstituencies(election);
         //batchInsertConstituencyPartyVotes(election);
         //batchInsertConstituencyCandidateVotes(election);
         //batchInsertAuthorities(election);
         //batchInsertAuthorityPartyVotes(election);
-        batchInsertAuthorityCandidateVotes(election);
+        //batchInsertAuthorityCandidateVotes(election);
 
 
         logger.info("Finished insertion of election with id {}", election.getId());
@@ -108,6 +110,16 @@ public class ElectionDataInserter {
         }
         int[] result = jdbc.batchUpdate(sql, batchArgs);
         logger.info("Batch inserted national candidate votes for election {}. Number of entries: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
+    }
+
+    private void batchInsertProvinces(Election election) {
+        String sql = "INSERT IGNORE INTO provinces (province_id, election_id, name, votes) VALUES (?, ?, ?, ?)";
+        List<Object[]> batchArgs = new ArrayList<>();
+        for(Province p: election.getProvinces()){
+            batchArgs.add(new Object[]{p.getId(), election.getId(), p.getName(), p.getVotes()});
+        }
+        batchUpdateInChunks(sql, batchArgs, election.getProvinces().size());
+        logger.info("inserted provinces");
     }
 
     private void batchInsertConstituencies(Election election) {
