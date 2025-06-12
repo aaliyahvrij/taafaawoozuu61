@@ -61,11 +61,11 @@ public class UserController {
                         "message": "An unexpected error occurred. Please try again later."
                     }
                 """))),
-            @ApiResponse(responseCode = "403", description = "unauthorized",
+            @ApiResponse(responseCode = "403", description = "Forbidden",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(value = """
                     {
-                        "error": "Unauthorized",
+                        "error": "Forbidden",
                         "message": "You do not have permission to access this resource."
                     }
                 """)))
