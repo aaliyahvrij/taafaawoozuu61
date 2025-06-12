@@ -18,15 +18,14 @@ public class ElectionService {
     }
 
     /**
-     * Loads all elections from the reader and stores them internally.
-     * This is intended to be called via a POST-like operation.
+     * Calls upon the reader to call upon the processor to retrieve all the electoral data from the XML files.
      *
-     * @return true if elections were loaded successfully, false otherwise
+     * @return true if the data has been loaded successfully, false otherwise
      */
     public boolean readAllElectoralData() {
         LinkedHashMap<String, Election> readerElectionListMap = this.electionReader.getAllElectoralData();
         if (readerElectionListMap == null || readerElectionListMap.isEmpty()) {
-            log.warn("No election data found during readAllElectoralData().");
+            log.warn("No electoral data found during readAllElectoralData().");
             return false;
         }
         electionListMap.putAll(readerElectionListMap);
