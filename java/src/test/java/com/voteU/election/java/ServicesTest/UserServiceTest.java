@@ -1,33 +1,40 @@
 package com.voteU.election.java.ServicesTest;
 
+import com.voteU.election.java.entities.Role;
 import com.voteU.election.java.entities.User;
+import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
+import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.repositories.UserRepository;
 import com.voteU.election.java.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
+    @Mock private UserRepository userRepository;
     @Mock
-    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+
+    @InjectMocks
     private UserService userService;
 
-//    @BeforeEach
-//    void setUp() {
-//        userRepository = mock(UserRepository.class);
-//        userService = new UserService(userRepository);
-//    }
-
     @Test
-    void testGetAllUsers_returnsListOfUsers() {
-        List<User> mockUsers = List.of(new User(), new User());
-        when(userRepository.findAll()).thenReturn(mockUsers);
+    void getAllUsers_returnsUserList() {
+        List<User> users = List.of(new User(), new User());
+        when(userRepository.findAll()).thenReturn(users);
 
         List<User> result = userService.getAllUsers();
 
@@ -36,77 +43,95 @@ class UserServiceTest {
     }
 
     @Test
-    void testCreateUser_setsCreatedAtAndSavesUser() {
-        User input = new User();
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    void createUser_success() {
+        User user = new User();
+        user.setUsername("john");
+        user.setEmail("john@example.com");
+        user.setPassword("plaintext");
 
-        User result = userService.createUser(input);
+        when(userRepository.existsByUsername("john")).thenReturn(false);
+        when(userRepository.existsByEmail("john@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("plaintext")).thenReturn("hashed");
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        assertNotNull(result.getCreatedAt());
-        verify(userRepository).save(input);
+        User created = userService.createUser(user);
+
+        assertEquals("hashed", created.getPassword());
+        assertEquals(Role.USER, created.getRole());
+        verify(userRepository).save(user);
     }
 
     @Test
-    void testGetUserByUsername_userExists() {
+    void createUser_existingUsername_throwsException() {
         User user = new User();
-        when(userRepository.findUserByUsername("john")).thenReturn(Optional.of(user));
+        user.setUsername("john");
+        user.setEmail("john@example.com");
 
-        Optional<User> result = userService.getUserByUsername("john");
+        when(userRepository.existsByUsername("john")).thenReturn(true);
 
-        assertTrue(result.isPresent());
-        assertEquals(user, result.get());
+        assertThrows(ResourceAlreadyExistsException.class, () -> userService.createUser(user));
     }
 
-//    @Test
-//    void testGetUserByUsernameAndPassword_validCredentials() {
-//        User user = new User();
-//        when(userRepository.findUserByUsernameAndPassword("john", "pass")).thenReturn(Optional.of(user));
-//
-//        Optional<User> result = userService.getUserByUsernameAndPassword("john", "pass");
-//
-//        assertTrue(result.isPresent());
-//    }
-
     @Test
-    void testGetUserByEmail_userExists() {
+    void getUserById_validId_returnsUser() {
         User user = new User();
-        when(userRepository.findUserByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findUserById(1)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.getUserByEmail("test@example.com");
+        Optional<User> result = userService.getUserById(1);
 
         assertTrue(result.isPresent());
     }
 
     @Test
-    void testUpdateUser_userExists_updatesAndSaves() {
+    void getUserById_nullId_throwsException() {
+        assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(null));
+    }
+
+    @Test
+    void getUserByUsername_validUsername_returnsUser() {
+        when(userRepository.findUserByUsername("jane")).thenReturn(Optional.of(new User()));
+
+        Optional<User> result = userService.getUserByUsername("jane");
+
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    void getUserByUsername_null_throwsException() {
+        assertThrows(ResourceNotFoundException.class, () -> userService.getUserByUsername(null));
+    }
+
+    @Test
+    void updateUser_userExists_updatesFields() {
         User existing = new User();
-        existing.setUsername("old");
-
         User updated = new User();
         updated.setUsername("new");
+        updated.setEmail("new@example.com");
+        updated.setPassword("pass");
+        updated.setFirstName("First");
+        updated.setLastName("Last");
+        updated.setCountry("US");
+        updated.setGender("Other");
 
         when(userRepository.findById(1)).thenReturn(Optional.of(existing));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         User result = userService.updateUser(1, updated);
 
         assertEquals("new", result.getUsername());
-        verify(userRepository).save(existing);
     }
 
     @Test
-    void testUpdateUser_userNotFound_throwsException() {
-        when(userRepository.findById(999)).thenReturn(Optional.empty());
+    void updateUser_userNotFound_throwsException() {
+        when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> userService.updateUser(999, new User()));
+        assertThrows(ResourceNotFoundException.class, () -> userService.updateUser(99, new User()));
     }
 
     @Test
-    void testDeleteUser_deletesSuccessfully() {
-        userService.deleteUser(1);
+    void deleteUser_callsRepository() {
+        userService.deleteUser(5);
 
-        verify(userRepository).deleteById(1);
+        verify(userRepository).deleteById(5);
     }
-
-
 }
