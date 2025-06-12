@@ -45,5 +45,14 @@ public class ProvinceController {
         return provinceService.getTotalVotesPerParty(year, provinceId);
     }
 
+    @GetMapping("/{provinceId}/partiess")
+    public Map<Integer,Party> getPartiesByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
+        return provinceService.getParties(year, provinceId);
+    }
+
+    @GetMapping("/{provinceId}/summary")
+    public Map<String, Object> getSummaryByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
+        return provinceService.getSummary(year, provinceId);
+    }
 
 }

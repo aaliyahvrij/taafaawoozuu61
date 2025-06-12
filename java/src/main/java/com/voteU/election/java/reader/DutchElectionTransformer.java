@@ -426,6 +426,12 @@ public class DutchElectionTransformer implements Transformer<Election> {
                 Map<Integer, Party> electionParties = election.getParties();
                 populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, electionParties, electionId);
 
+                List<Province> provinces = election.getProvinces();
+                for (Province province : provinces) {
+                    Map<Integer, Party> provinceParties = province.getParties();
+                    populateCandidate(caFirstName, caLastName, localityName, gender, caId, affId, provinceParties, electionId);
+                }
+
                 Map<Integer, Constituency> constituencies = election.getConstituencies();
                 Constituency constituency = constituencies.get(contestId);
 
@@ -528,6 +534,9 @@ public class DutchElectionTransformer implements Transformer<Election> {
 
         // Zet de nieuwe, gekoppelde provinces in de election
         election.setProvinces(updatedProvinces);
+        for (Province province : updatedProvinces) {
+            aggregateProvinceVotes(province);
+        }
     }
 
     private String getProvinceName(int id) {
@@ -548,6 +557,51 @@ public class DutchElectionTransformer implements Transformer<Election> {
             default -> "Onbekend";
         };
     }
+    public void aggregateProvinceVotes(Province province) {
+        Map<Integer, Party> provincePartyMap = new HashMap<>();
+
+        for (Constituency constituency : province.getConstituencies()) {
+            for (Party consParty : constituency.getParties().values()) {
+                int partyId = consParty.getId();
+
+                // Get or create a province-level party
+                Party provinceParty = provincePartyMap.computeIfAbsent(partyId, id -> new Party(id, consParty.getName()));
+
+                // Accumulate party votes
+                provinceParty.setVotes(provinceParty.getVotes() + consParty.getVotes());
+
+                // Handle candidate vote accumulation
+                Map<Integer, Candidate> candidateMap = new HashMap<>();
+                if (provinceParty.getCandidates() != null) {
+                    for (Candidate existing : provinceParty.getCandidates()) {
+                        candidateMap.put(existing.getId(), existing);
+                    }
+                }
+
+                for (Candidate cand : consParty.getCandidates()) {
+                    Candidate existing = candidateMap.computeIfAbsent(cand.getId(), id -> {
+                        Candidate c = new Candidate();
+                        c.setId(id);
+                        c.setPartyId(cand.getPartyId());
+                        return c;
+                    });
+
+                    existing.setVotes(existing.getVotes() + cand.getVotes());
+                }
+
+                // Store the accumulated candidate list
+                provinceParty.setCandidates(new ArrayList<>(candidateMap.values()));
+            }
+        }
+
+        // Save the aggregated data back to the province
+        province.setParties(provincePartyMap);
+
+        // Optionally, update total province vote count
+        int totalVotes = provincePartyMap.values().stream().mapToInt(Party::getVotes).sum();
+        province.setVotes(totalVotes);
+    }
+
 
 
 

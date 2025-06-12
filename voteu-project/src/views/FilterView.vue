@@ -5,6 +5,7 @@ import { ProvinceService } from '@/services/ProvinceService.ts'
 import { ConstituencyService } from '@/services/ConstituencyService.ts'
 import type { DropdownOption } from '@/interface/DropdownOption'
 import { ref, watch, onMounted } from 'vue'
+import VoteListOverview from '@/components/filters/VoteListOverview.vue'
 
 const elections = ref<DropdownOption[]>([])
 const selectedElection = ref<DropdownOption | null>(null)
@@ -87,6 +88,7 @@ watch(selectedElection, (newElection) => {
 
 
   </div>
+  <vote-list-overview selected-election="selectedElection" displayed-party-votes="" party-votes="" selected-party="" selected-candidate="" current-vote-level=""</v>
 </template>
 
 <style scoped>
@@ -127,6 +129,10 @@ watch(selectedElection, (newElection) => {
 .constituency-filter select,
 .authority-filter select {
   width: 100%;
+}
+
+.filter-bar div {
+  margin-right: 10px;
 }
 
 .tag svg {

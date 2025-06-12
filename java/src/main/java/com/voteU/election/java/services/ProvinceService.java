@@ -122,5 +122,27 @@ public class ProvinceService {
         return provinceRepository.getProvincesByElectionId(year);
     }
 
+    public Map<Integer, Party> getParties(String year,  int provinceId) {
+        Election election = electionService.getElection(year);
+        List<Province> provinces = election.getProvinces();
+        for (Province province : provinces) {
+            if (province.getId() == provinceId){
+                return province.getParties();
+            }
+        }
+        return null;
+    }
+
+    public Map<String, Object> getSummary(String year, int provinceId) {
+        Election election = electionService.getElection(year);
+        List<Province> provinces = election.getProvinces();
+        for (Province province : provinces) {
+            if (province.getId() == provinceId) {
+                return province.getSummary();
+            }
+        }
+        return null;
+    }
+
 
 }

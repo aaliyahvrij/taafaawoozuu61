@@ -37,38 +37,41 @@ function clearSelection() {
 
 <template>
   <div class="filter-select">
-    <select :value="modelValue?.id ?? ''" @change="handleChange">
-      <option value="" disabled>{{ disabledLabel ?? 'Select Option' }}</option>
-      <option
-        v-for="option in options"
-        :key="option.id"
-        :value="option.id"
-      >
-        {{ option.name }}
-      </option>
-    </select>
+    <div class="select-wrapper">
+      <select :value="modelValue?.id ?? ''" @change="handleChange">
+        <option value="" disabled>{{ disabledLabel ?? 'Select Option' }}</option>
+        <option
+          v-for="option in options"
+          :key="option.id"
+          :value="option.id"
+          :title="option.name"
+        >
+          {{ option.name }}
+        </option>
+      </select>
 
-    <div class="tag" v-if="modelValue">
-      {{ modelValue.name }}
-      <svg
-        @click="clearSelection"
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 -960 960 960"
-        width="24px"
-        fill="#FFFFFF"
-      >
-        <path
-          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-        />
-      </svg>
+      <div class="tag" v-if="modelValue">
+        {{ modelValue.name }}
+        <svg
+          @click="clearSelection"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#FFFFFF"
+        >
+          <path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          />
+        </svg>
+      </div>
     </div>
   </div>
 </template>
 
+
 <style>
 select {
-  margin: 0.5rem 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border-radius: 8px;
@@ -80,6 +83,8 @@ select {
   width: 100%;
   max-width: 300px;
   display: block;
+  white-space: normal;
+  height: auto;
 }
 
 .tag {
