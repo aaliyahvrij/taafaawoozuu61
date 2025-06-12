@@ -10,25 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.ArrayList;
-//import java.util.Map;
 import java.util.LinkedHashMap;
 
 @Slf4j
 @Service
 public class PoStService {
-    //private final ElectionService electionService;
     private final MuniService muniService;
 
-    /*public PoStService(ElectionService electionService) {
-        this.electionService = electionService;
-    }*/
-
-    /**
-     * Retrieves all the polling station data of a specific election.
-     */
-    /*public LinkedHashMap<String, PollingStation> getNationalLevel_poStListMap(String electionId) {
-        return this.electionService.getElectoralData(electionId).getPoStListMap();
-    }*/
     public PoStService(MuniService muniService) {
         this.muniService = muniService;
     }

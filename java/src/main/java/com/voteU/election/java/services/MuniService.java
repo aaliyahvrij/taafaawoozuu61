@@ -1,7 +1,5 @@
 package com.voteU.election.java.services;
 
-//import com.voteU.election.java.exceptions.AccessDeniedException;
-//import com.voteU.election.java.exceptions.ResourceAlreadyExistsException;
 import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.models.*;
 import org.springframework.stereotype.Service;
@@ -41,7 +39,7 @@ public class MuniService {
         LinkedHashMap<String, Municipality> constiLevel_muniListMap = constituency.getMuniListMap();
         LinkedHashMap<String, Municipality> compactMuniListMap = new LinkedHashMap<>();
         for (Municipality constiLevel_muni : constiLevel_muniListMap.values()) {
-            //compactMuniListMap.put(constiLevel_muni.getId(), new Municipality(constiLevel_muni.getId(), constiLevel_muni.getName()));
+            compactMuniListMap.put(constiLevel_muni.getId(), new Municipality(constiLevel_muni.getId(), constiLevel_muni.getName()));
         }
         return compactMuniListMap;
     }
