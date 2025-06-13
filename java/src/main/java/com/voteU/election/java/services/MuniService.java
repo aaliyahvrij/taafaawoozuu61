@@ -45,8 +45,8 @@ public class MuniService {
     }
 
     public Municipality getConstiLevel_muni(String electionId, Integer constId, String munId) {
-        LinkedHashMap<String, Municipality> constiLevel_muniListMap = getConstiLevel_muniList_lhMap(electionId, constId);
-        Municipality constiLevel_muni = constiLevel_muniListMap.get(munId);
+        LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = getConstiLevel_muniList_lhMap(electionId, constId);
+        Municipality constiLevel_muni = constiLevel_muniList_lhMap.get(munId);
         if (constiLevel_muni == null) {
             throw new ResourceNotFoundException("Muni " + munId + " not found in consti " + constId);
         }
