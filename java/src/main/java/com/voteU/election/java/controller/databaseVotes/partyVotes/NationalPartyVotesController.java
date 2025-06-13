@@ -1,4 +1,4 @@
-package com.voteU.election.java.controller.databaseVotes;
+package com.voteU.election.java.controller.databaseVotes.partyVotes;
 
 
 import com.voteU.election.java.dto.PartyVotesDTO;

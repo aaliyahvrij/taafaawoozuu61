@@ -43,7 +43,9 @@ public class ElectionDataInserter {
         //batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
         // batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
-        batchInsertProvinces(election);
+       // batchInsertProvinces(election);\
+        batchInsertProvincePartyVotes(election);
+        batchInsertProvinceCandidateVotes(election);
 
         // batchInsertConstituencies(election);
         //batchInsertConstituencyPartyVotes(election);
@@ -121,6 +123,51 @@ public class ElectionDataInserter {
         batchUpdateInChunks(sql, batchArgs, election.getProvinces().size());
         logger.info("inserted provinces");
     }
+
+    private void batchInsertProvincePartyVotes(Election election) {
+        String sql = "INSERT INTO province_party_votes (election_id, province_id, party_id, votes) VALUES (?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Party party : province.getParties().values()) {
+                batchArgs.add(new Object[]{
+                        election.getId(),
+                        province.getId(),
+                        party.getId(),
+                        party.getVotes()
+                });
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Inserted province_party_votes for election {}: {} rows", election.getId(), batchArgs.size());
+    }
+
+    private void batchInsertProvinceCandidateVotes(Election election) {
+        String sql = "INSERT INTO province_candidate_votes (election_id, province_id, party_id, candidate_id, votes) VALUES (?, ?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Party party : province.getParties().values()) {
+                for (Candidate candidate : party.getCandidates()) {
+                    batchArgs.add(new Object[]{
+                            election.getId(),
+                            province.getId(),
+                            party.getId(),
+                            candidate.getId(),
+                            candidate.getVotes()
+                    });
+                }
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Inserted province_candidate_votes for election {}: {} rows", election.getId(), batchArgs.size());
+    }
+
+
 
     private void batchInsertConstituencies(Election election) {
         String sql = "INSERT INTO constituencies " + "(constituency_id, province_id, election_id, name, votes) VALUES (?, ?, ?, ?, ?)";
