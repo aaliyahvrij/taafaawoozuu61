@@ -38,10 +38,10 @@ public interface Transformer<E> {
      *     <li>{@link ElectionProcessor#VV_COUNT}</li>
      * </ul>
      *
-     * @param nationMap a {@code LinkedHashMap} containing information about the election,
+     * @param nationLhMap a {@code LinkedHashMap} containing information about the election,
      *                  constituency, affiliation, candidate and valid vote count.
      */
-    void registerNationalLevel_affiData(LinkedHashMap<String, String> nationMap);
+    void registerNationalLevel_affiData(LinkedHashMap<String, String> nationLhMap);
 
     /**
      * Called once per file with information about the constituency. The {@code constiLhMap} can hold
