@@ -19,8 +19,17 @@ public class ProvincePartyVotesController {
     @GetMapping
     public List<PartyVotesDTO> getVotesByElectionAndProvince(
             @RequestParam String electionId,
-            @RequestParam Integer provinceId) {
+            @RequestParam Integer provinceId,
+            @RequestParam(required = false, defaultValue = "false") boolean byvotes,
+            @RequestParam(required = false, defaultValue = "false") boolean byname
+            ){
+        if(byvotes){
+            return provincePartyVotesService.getPartyVotesSortedByVotes(electionId,provinceId);
+        }
+        if(byname){
+            return provincePartyVotesService.getPartyVotesSortedByName(electionId,provinceId);
+        }
 
-        return provincePartyVotesService.getVotesByElectionAndProvince(electionId, provinceId);
+        return provincePartyVotesService.getPartyVotes(electionId, provinceId);
     }
 }

@@ -32,13 +32,5 @@ export class ProvinceService {
     }
   }
 
-  static async getProvinceNames(electionId: string): Promise<DropdownOption[] | null> {
-    try {
-      return await apiFetch<DropdownOption[]>(`/provinces?electionId=${electionId}`)
-    } catch (error) {
-      console.error(error)
-      return null
-    }
-  }
 
 }

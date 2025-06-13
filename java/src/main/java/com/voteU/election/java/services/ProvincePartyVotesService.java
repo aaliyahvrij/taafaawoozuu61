@@ -16,8 +16,24 @@ public class ProvincePartyVotesService {
         this.repository = repository;
     }
 
-    public List<PartyVotesDTO> getVotesByElectionAndProvince(String electionId, Integer provinceId) {
+    public List<PartyVotesDTO> getPartyVotes(String electionId, Integer provinceId) {
         List<PartyVotesDTO> votes = repository.findProvincePartyVotes(electionId, provinceId);
+        if (votes == null || votes.isEmpty()) {
+            throw new ResourceNotFoundException("No votes found for electionId " + electionId + " and provinceId " + provinceId);
+        }
+        return votes;
+    }
+
+    public List<PartyVotesDTO> getPartyVotesSortedByVotes(String electionId, Integer provinceId) {
+        List<PartyVotesDTO> votes = repository.findProvincePartyVotesSortedByVotes(electionId, provinceId);
+        if (votes == null || votes.isEmpty()) {
+            throw new ResourceNotFoundException("No votes found for electionId " + electionId + " and provinceId " + provinceId);
+        }
+        return votes;
+    }
+
+    public List<PartyVotesDTO> getPartyVotesSortedByName(String electionId, Integer provinceId) {
+        List<PartyVotesDTO> votes = repository.findProvincePartyVotesSortedByName(electionId, provinceId);
         if (votes == null || votes.isEmpty()) {
             throw new ResourceNotFoundException("No votes found for electionId " + electionId + " and provinceId " + provinceId);
         }
