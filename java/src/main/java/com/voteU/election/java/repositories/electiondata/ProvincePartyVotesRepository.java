@@ -20,7 +20,7 @@ public interface ProvincePartyVotesRepository extends JpaRepository<ProvincePart
     @Query("SELECT new com.voteU.election.java.dto.PartyVotesDTO(p.partyId, p.name, ppv.votes) " +
             "FROM ProvincePartyVotes ppv " +
             "JOIN Parties p ON ppv.partyId = p.partyId AND ppv.electionId = p.electionId " +
-            "WHERE ppv.electionId = :electionId AND ppv.provinceId = :ProvinceId")
+            "WHERE ppv.electionId = :electionId AND ppv.provinceId = :provinceId")
     List<PartyVotesDTO> findProvincePartyVotes(
             @Param("electionId") String electionId,
             @Param("provinceId") Integer provinceId);
