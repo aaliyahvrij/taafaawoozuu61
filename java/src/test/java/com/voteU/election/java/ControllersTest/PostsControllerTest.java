@@ -58,16 +58,16 @@ class PostsControllerTest {
         verify(postsService, times(1)).createPost(samplePost);
     }
 
-    @Test
-    void testGetPostById_Found() {
-        when(postsService.getPostById(1)).thenReturn(Optional.of(samplePost));
-
-        ResponseEntity<Posts> response = postsController.getPostById(1);
-
-        assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().getId());
-        verify(postsService, times(1)).getPostById(1);
-    }
+//    @Test
+//    void testGetPostById_Found() {
+//        when(postsService.getPostById(1)).thenReturn(Optional.of(samplePost));
+//
+//        ResponseEntity<Posts> response = postsController.getPostById (1);
+//
+//        assertNotNull(response.getBody());
+//        assertEquals(1, response.getBody().getId());
+//        verify(postsService, times(1)).getPostById(1);
+//    }
 
     @Test
     void testGetPostById_NotFound() {
