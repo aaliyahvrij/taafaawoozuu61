@@ -24,10 +24,9 @@ public class ElectionService {
      * @return true if the data has been loaded successfully, false otherwise
      */
     public boolean readElectoralData(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split(",");
-        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectoralData(electionIdList);
+        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectoralData(electionIdListString);
         if (readerElectionList_lhMap == null || readerElectionList_lhMap.isEmpty()) {
-            log.warn("No electoral data found during readElectoralData(%s).".formatted(electionIdList));
+            log.warn("No electoral data found during readElectoralData(%s).".formatted(electionIdListString));
             return false;
         }
         electionList_lhMap.putAll(readerElectionList_lhMap);
