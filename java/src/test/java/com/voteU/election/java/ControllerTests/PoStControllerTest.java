@@ -45,7 +45,7 @@ class PoStControllerTest {
     @Test
     void test_getMuniLevel_poStList_lhMap() {
         when(poStService.getMuniLevel_poStList_lhMap(electionId, constId, munId)).thenReturn(poStList_lhMap);
-        Map<String, PollingStation> result = poStController.getMuniLevel_poStList_lhMap(electionId, constId, munId);
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> result = poStController.getMuniLevel_poStList_lhMap(electionId, constId, munId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(poStId));
         assertEquals("poStA", result.get(poStId).getName());
@@ -55,7 +55,7 @@ class PoStControllerTest {
     @Test
     void test_getMuniLevel_compactPoStList() {
         when(poStService.getMuniLevel_compactPoStList(electionId, constId, munId)).thenReturn(List.of(sampleCompactPoSt));
-        List<CompactPollingStation> result = poStController.getMuniLevel_compactPoStList(electionId, constId, munId);
+        LinkedHashMap<String, List<CompactPollingStation>> result = poStController.getMuniLevel_compactPoStList(electionId, constId, munId);
         assertEquals(1, result.size());
         assertEquals(poStId, result.getFirst().getId());
         verify(poStService, times(1)).getMuniLevel_compactPoStList(electionId, constId, munId);
@@ -73,7 +73,7 @@ class PoStControllerTest {
     @Test
     void test_getPoStLevel_affiList_lhMap() {
         when(poStService.getPoStLevel_affiList_lhMap(electionId, constId, munId, poStId)).thenReturn(affiList_lhMap);
-        Map<Integer, Affiliation> result = poStController.getPoStLevel_affiList_lhMap(electionId, constId, munId, poStId);
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> result = poStController.getPoStLevel_affiList_lhMap(electionId, constId, munId, poStId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(10));
         assertEquals("affiX", result.get(10).getName());

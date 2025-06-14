@@ -52,15 +52,15 @@ public class ElectionService {
      */
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split(",");
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_listMap = null;
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = getElectoralData(electionId).get(electionId);
             if (election == null) {
                 return null;
             }
-            affiList_listMap.put(electionId, election.getAffiList_lhMap());
+            affiList_list_lhMap.put(electionId, election.getAffiList_lhMap());
         }
-        return affiList_listMap;
+        return affiList_list_lhMap;
     }
 
     /**
@@ -68,14 +68,14 @@ public class ElectionService {
      */
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split(",");
-        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_listMap = null;
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = getElectoralData(electionId).get(electionId);
             if (election == null) {
                 return null;
             }
-            poStList_listMap.put(electionId, election.getPoStList_lhMap());
+            poStList_list_lhMap.put(electionId, election.getPoStList_lhMap());
         }
-        return poStList_listMap;
+        return poStList_list_lhMap;
     }
 }
