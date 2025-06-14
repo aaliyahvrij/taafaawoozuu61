@@ -136,7 +136,7 @@ http://localhost:8080/api
 
 ---
 
-## 🌍 Countries
+## Countries
 
 ### GET `/countries`
 
