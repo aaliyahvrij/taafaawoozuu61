@@ -12,6 +12,7 @@ export function useAuth() {
 
   const logout = () => {
     authService.logout();
+    window.location.reload();
     isLoggedIn.value = false;
   };
 
