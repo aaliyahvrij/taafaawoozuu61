@@ -42,7 +42,7 @@ public class MuniController {
     }
 
     @GetMapping("/{munId}/affiliations/{affId}")
-    public LinkedHashMap<String, Affiliation> getMuniLevel_affi(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId, @PathVariable int affId) {
-        return muniService.getMuniLevel_affi(electionIdListString, constId, munId, affId);
+    public LinkedHashMap<String, Affiliation> getMuniLevel_affi(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable int affId) {
+        return muniService.getMuniLevel_affi(electionIdListString, munId, affId);
     }
 }
