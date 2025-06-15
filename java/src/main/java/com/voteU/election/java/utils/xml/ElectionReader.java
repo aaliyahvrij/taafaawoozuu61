@@ -32,8 +32,7 @@ public class ElectionReader {
         String[] electionIdList;
         if (Objects.equals(electionIdListString, "all")) {
             electionIdList = theEntireElectionIdList;
-        }
-        else {
+        } else {
             electionIdList = electionIdListString.split("-");
         }
         for (String electionId : electionIdList) {
