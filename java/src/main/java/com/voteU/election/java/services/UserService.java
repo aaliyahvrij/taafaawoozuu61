@@ -117,13 +117,26 @@ public class UserService {
     public User updateUser(Integer id, User updatedUser) {
         return userRepository.findById(id)
                 .map(user -> {
-                    user.setUsername(updatedUser.getUsername());
-                    user.setEmail(updatedUser.getEmail());
-                    user.setFirstName(updatedUser.getFirstName());
-                    user.setLastName(updatedUser.getLastName());
-                    user.setGender(updatedUser.getGender());
-                    user.setCountry(updatedUser.getCountry());
-                    user.setPassword(updatedUser.getPassword());
+
+                    if (updatedUser.getUsername() != null) {
+                        user.setUsername(updatedUser.getUsername());
+                    }
+                    if (updatedUser.getEmail() != null) {
+                        user.setEmail(updatedUser.getEmail());
+                    }
+                    if (updatedUser.getFirstName() != null) {
+                        user.setFirstName(updatedUser.getFirstName());
+                    }
+                    if (updatedUser.getLastName() != null) {
+                        user.setLastName(updatedUser.getLastName());
+                    }
+                    if (updatedUser.getGender() != null) {
+                        user.setGender(updatedUser.getGender());
+                    }
+                    if (updatedUser.getCountry() != null) {
+                        user.setCountry(updatedUser.getCountry());
+                    }
+
                     return userRepository.save(user);
                 }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
