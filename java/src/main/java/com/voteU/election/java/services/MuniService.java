@@ -24,8 +24,8 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_LhMap = null;
         for (String electionId : electionIdList) {
-            Municipality muni = constiService.getConstiLevel_muni(electionIdListString, constId, munId);
-            poStList_list_LhMap.put(electionId, muni.getPoStList_lhMap());
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
+            poStList_list_LhMap.put(electionId, constiLevel_muni.getPoStList_lhMap());
         }
         return poStList_list_LhMap;
     }
@@ -34,7 +34,7 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, List<CompactPollingStation>> compactPoStList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = constiService.getConstiLevel_muni(electionId, constId, munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
             LinkedHashMap<String, PollingStation> muniLevel_poStList_lhMap = constiLevel_muni.getPoStList_lhMap();
             List<CompactPollingStation> compactPoStList = new ArrayList<>();
             for (PollingStation muniLevel_poSt : muniLevel_poStList_lhMap.values()) {
@@ -49,7 +49,7 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, PollingStation> poStList_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = constiService.getConstiLevel_muni(electionId, constId, munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
             poStList_lhMap.put(electionId, constiLevel_muni.getPoStList_lhMap().get(poStId));
         }
         return poStList_lhMap;
@@ -59,7 +59,7 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = constiService.getConstiLevel_muni(electionId, constId, munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
             if (constiLevel_muni == null) {
                 throw new ResourceNotFoundException("Muni " + munId + " not found");
             }
@@ -72,7 +72,7 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Affiliation> affiList_lhMap = null;
         for (String electionId : electionIdList) {
-            LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = getMuniLevel_affiList_lhMap(electionId, constId, munId);
+            LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId).getAffiList_lhMap();
             Affiliation muniLevel_affi = muniLevel_affiList_lhMap.get(affId);
             if (muniLevel_affi == null) {
                 throw new ResourceNotFoundException("Affi " + affId + " not found");
