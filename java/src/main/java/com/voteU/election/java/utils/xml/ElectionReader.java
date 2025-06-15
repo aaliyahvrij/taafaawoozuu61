@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 /**
  * Calls to the processor to retrieve the specified election data from the XML files.
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 public class ElectionReader {
     private final ElectionProcessor<Election> processor;
     private final ElectionTransformer transformer;
+    private final String[] theEntireElectionIdList = {"TK2021", "TK2023"};
 
     public ElectionReader() {
         this.transformer = new ElectionTransformer();
@@ -27,7 +29,13 @@ public class ElectionReader {
      * @return A map containing election results, organized by election year.
      */
     public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split("-");
+        String[] electionIdList;
+        if (Objects.equals(electionIdListString, "all")) {
+            electionIdList = theEntireElectionIdList;
+        }
+        else {
+            electionIdList = electionIdListString.split("-");
+        }
         for (String electionId : electionIdList) {
             String filePath = "/EML_bestanden_" + electionId;
             try {
