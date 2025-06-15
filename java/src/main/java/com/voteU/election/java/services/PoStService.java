@@ -21,8 +21,8 @@ public class PoStService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            PollingStation poSt = muniService.getMuniLevel_poSt(electionId, constId, munId, poStId);
-            affiList_list_lhMap.put(electionId, poSt.getAffiList_lhMap());
+            PollingStation muniLevel_poSt = muniService.getMuniLevel_poSt(electionId, constId, munId, poStId);
+            affiList_list_lhMap.put(electionId, muniLevel_poSt.getAffiList_lhMap());
         }
         return affiList_list_lhMap;
     }

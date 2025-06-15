@@ -38,7 +38,7 @@ public class ElectionService {
     /**
      * Retrieves all the data of the specified election(s).
      */
-    public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
+    /*public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Election> specifiedElectionList_lhMap = null;
         for (String electionId : electionIdList) {
@@ -47,7 +47,7 @@ public class ElectionService {
             }
         }
         return specifiedElectionList_lhMap;
-    }
+    }*/
 
     /**
      * Retrieves all the affiliation data of the specified election(s).
@@ -56,7 +56,7 @@ public class ElectionService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Election election = getElectoralData(electionId).get(electionId);
+            Election election = electionList_lhMap.get(electionId);
             if (election == null) {
                 return null;
             }
@@ -72,7 +72,7 @@ public class ElectionService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Election election = getElectoralData(electionId).get(electionId);
+            Election election = electionList_lhMap.get(electionId);
             if (election == null) {
                 return null;
             }
