@@ -15,11 +15,11 @@ public class AffiService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, List<Candidate>> candiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Affiliation muniLevel_affi = ElectionService.electionList_lhMap.get(electionId).getAffiList_lhMap().get(affId);
-            if (muniLevel_affi == null) {
+            Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getAffiList_lhMap().get(affId);
+            if (affi == null) {
                 throw new ResourceNotFoundException("Affi " + affId + " not found");
             }
-            candiList_list_lhMap.put(electionId, muniLevel_affi.getCandiList());
+            candiList_list_lhMap.put(electionId, affi.getCandiList());
         }
         return candiList_list_lhMap;
     }

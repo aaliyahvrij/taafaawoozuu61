@@ -16,11 +16,11 @@ public class ConstiService {
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
-            Constituency electoralLevel_consti = election.getConstiList_lhMap().get(constId);
-            if (electoralLevel_consti == null) {
+            Constituency consti = election.getConstiList_lhMap().get(constId);
+            if (consti == null) {
                 throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
             }
-            muniList_list_lhMap.put(electionId, electoralLevel_consti.getMuniList_lhMap());
+            muniList_list_lhMap.put(electionId, consti.getMuniList_lhMap());
         }
         return muniList_list_lhMap;
     }
@@ -30,11 +30,11 @@ public class ConstiService {
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
-            Constituency electoralLevel_consti = election.getConstiList_lhMap().get(constId);
-            if (electoralLevel_consti == null) {
+            Constituency consti = election.getConstiList_lhMap().get(constId);
+            if (consti == null) {
                 throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
             }
-            LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = electoralLevel_consti.getMuniList_lhMap();
+            LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = consti.getMuniList_lhMap();
             LinkedHashMap<String, Municipality> compactMuniList_lhMap = new LinkedHashMap<>();
             for (Municipality constiLevel_muni : constiLevel_muniList_lhMap.values()) {
                 compactMuniList_lhMap.put(constiLevel_muni.getId(), new Municipality(constiLevel_muni.getId(), constiLevel_muni.getName()));
