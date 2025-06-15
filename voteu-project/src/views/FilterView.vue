@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FilterSelect from '@/components/FilterSelect.vue'
-import { ConstituencyService } from '@/services/ConstituencyService.ts'
 import type { DropdownOption } from '@/interface/DropdownOption'
 import { ref, watch, onMounted } from 'vue'
 import VoteListOverview from '@/components/filters/VoteListOverview.vue'
@@ -9,6 +8,8 @@ import type { Candidate } from '@/interface/Candidate.ts'
 import { ElectionsService } from '@/services/databaseVotes/ElectionsService.ts'
 import { ProvincesService } from '@/services/databaseVotes/ProvincesService.ts'
 import { AuthoritiesService } from '@/services/databaseVotes/AuthoritiesService.ts'
+import { ConstituenciesService } from '@/services/databaseVotes/ConstituenciesService.ts'
+
 const elections = ref<DropdownOption[]>([])
 const selectedElection = ref<DropdownOption | null>(null)
 
@@ -18,7 +19,7 @@ const selectedProvince = ref<DropdownOption | null>(null)
 const constituencies = ref<DropdownOption[]>([])
 const selectedConstituency = ref<DropdownOption | null>(null)
 
-const authorities= ref<DropdownOption[]>([])
+const authorities = ref<DropdownOption[]>([])
 const selectedAuthority = ref<DropdownOption | null>(null)
 
 const partyVotes = ref<PartyVotesDTO[]>([])
@@ -35,9 +36,9 @@ onMounted(async () => {
   }
 })
 
-async function fetchProvinceOptions(electionId: string) : Promise<void> {
+async function fetchProvinceOptions(electionId: string): Promise<void> {
   try {
-    const data = await ProvincesService.getProvinceNames(electionId);
+    const data = await ProvincesService.getProvinceNames(electionId)
     provinces.value = data || []
   } catch (e) {
     console.error(e)
@@ -46,7 +47,7 @@ async function fetchProvinceOptions(electionId: string) : Promise<void> {
 
 async function fetchConstituencyOptions(electionId: string, provinceId: number): Promise<void> {
   try {
-    const data = await ConstituencyService.getConstituencyNames(electionId, provinceId)
+    const data = await ConstituenciesService.getConstituencyNames(electionId, provinceId)
     constituencies.value = data || []
   } catch (e) {
     console.error(e)
@@ -62,108 +63,102 @@ async function fetchAuthorityOptions(electionId: string, constituencyId: number)
   }
 }
 
-  async function fetchNationalVotes(electionId: string): Promise<void> {
-    try {
-      const data = await ElectionsService.getNationalPartyVotes(electionId)
-      partyVotes.value = data || []
-      currentVoteLevel.value = `national`
-      console.log(data)
+async function fetchNationalVotes(electionId: string): Promise<void> {
+  try {
+    const data = await ElectionsService.getNationalPartyVotes(electionId)
+    partyVotes.value = data || []
+    currentVoteLevel.value = `national`
+  } catch (e) {
+    console.error(e)
+  }
+}
 
-    } catch (e) {
-      console.error(e)
-    }
+async function fetchProvincePartyVotes(electionId: string, provinceId: number): Promise<void> {
+  try {
+    const data = await ProvincesService.getProvincePartyVotes(electionId, provinceId)
+    partyVotes.value = data || []
+    currentVoteLevel.value = `province`
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function fetchConstituencyPartyVotes(
+  electionId: string,
+  constituencyId: number,
+): Promise<void> {
+  try {
+    const data = await ConstituenciesService.getConstituencyPartyVotes(electionId, constituencyId)
+    partyVotes.value = data || []
+    currentVoteLevel.value = `constituency`
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+watch(selectedElection, (newElection) => {
+  if (newElection) {
+    voteLevels.value = [newElection.id]
+    fetchProvinceOptions(String(newElection.id))
   }
 
-  async function fetchProvincePartyVotes(electionId: string, provinceId: number): Promise<void> {
-    try {
-      const data = await ProvincesService.getProvincePartyVotes(electionId, provinceId)
-      partyVotes.value = data || []
-      currentVoteLevel.value = `national`
-      console.log(data)
+  selectedProvince.value = null
+  selectedConstituency.value = null
+  selectedAuthority.value = null
+  provinces.value = []
+  constituencies.value = []
+  authorities.value = []
+})
 
-    } catch (e) {
-      console.error(e)
-    }
+watch(selectedProvince, (newProvince) => {
+  if (newProvince && selectedElection.value) {
+    voteLevels.value = [selectedElection.value.id, newProvince.id]
+    fetchConstituencyOptions(String(selectedElection.value.id), Number(newProvince.id))
   }
 
+  selectedConstituency.value = null
+  selectedAuthority.value = null
+  constituencies.value = []
+  authorities.value = []
+})
 
-  watch(selectedElection, (newElection) => {
-    if (newElection) {
-      voteLevels.value = [newElection.id]
-      fetchProvinceOptions(String(newElection.id))
-    }
-
-    selectedProvince.value = null
-    selectedConstituency.value = null
-    selectedAuthority.value = null
-    provinces.value = []
-    constituencies.value = []
-    authorities.value = []
-  })
-
-
-  watch(selectedProvince, (newProvince) => {
-    if (newProvince && selectedElection.value) {
-      voteLevels.value = [selectedElection.value.id, newProvince.id]
-      fetchConstituencyOptions(String(selectedElection.value.id), Number(newProvince.id))
-    }
-
-    selectedConstituency.value = null
-    selectedAuthority.value = null
-    constituencies.value = []
-    authorities.value = []
-  })
-
-
-  watch(selectedConstituency, (newConstituency) => {
-    if (newConstituency && selectedElection.value && selectedProvince.value) {
-      voteLevels.value = [
-        selectedElection.value.id,
-        selectedProvince.value.id,
-        newConstituency.id
-      ]
-      fetchAuthorityOptions(
-        String(selectedElection.value.id),
-        Number(newConstituency.id)
-      )
-    }
-
-    selectedAuthority.value = null
-    authorities.value = []
-  })
-
-
-  const isPartyListVisible = ref(false)
-
-  function handleApply() {
-    if (!selectedElection.value) {
-      alert("Please select an election.");
-      return;
-    }
-
-    if (selectedProvince.value) {
-      // Fetch votes for selected provinces
-      fetchProvincePartyVotes(
-        String(selectedElection.value.id),
-        Number(selectedProvince.value.id)
-      );
-    } else {
-      // Fetch national votes if no province selected
-      fetchNationalVotes(String(selectedElection.value.id));
-    }
-
-    isPartyListVisible.value = true;
+watch(selectedConstituency, (newConstituency) => {
+  if (newConstituency && selectedElection.value && selectedProvince.value) {
+    voteLevels.value = [selectedElection.value.id, selectedProvince.value.id, newConstituency.id]
+    fetchAuthorityOptions(String(selectedElection.value.id), Number(newConstituency.id))
   }
 
+  selectedAuthority.value = null
+  authorities.value = []
+})
 
+const isPartyListVisible = ref(false)
 
+function handleApply() {
+  if (!selectedElection.value) {
+    alert('Please select an election.')
+    return
+  }
 
+  if (selectedConstituency.value) {
+    fetchConstituencyPartyVotes(
+      String(selectedElection.value.id),
+      Number(selectedConstituency.value.id),
+    )
+  } else if (selectedProvince.value) {
+    // Fetch votes for selected provinces
+    fetchProvincePartyVotes(String(selectedElection.value.id), Number(selectedProvince.value.id))
+  } else {
+    // Fetch national votes if no province selected
+    fetchNationalVotes(String(selectedElection.value.id))
+  }
 
+  isPartyListVisible.value = true
+}
 </script>
 
 <template>
   <div class="filter-bar">
-
     <div class="election-filter">
       <FilterSelect
         v-model="selectedElection"
@@ -176,8 +171,8 @@ async function fetchAuthorityOptions(electionId: string, constituencyId: number)
     <div class="province-filter" v-if="provinces.length">
       <FilterSelect
         v-model="selectedProvince"
-      :options="provinces"
-      disabledLabel="Select Province"
+        :options="provinces"
+        disabledLabel="Select Province"
       />
     </div>
 
@@ -200,17 +195,16 @@ async function fetchAuthorityOptions(electionId: string, constituencyId: number)
     <div class="apply-button-wrapper">
       <button class="apply-button" @click="handleApply">Apply</button>
     </div>
-
-
   </div>
   <VoteListOverview
     v-if="isPartyListVisible"
-                    :selected-election="selectedElection?.id ?? null"
-                    :displayed-party-votes="partyVotes"
-                    :party-votes="partyVotes"
-                    :selected-party="selectedParty"
-                    :selected-candidate="selectedCandidate"
-                    :current-vote-level="currentVoteLevel"/>
+    :selected-election="selectedElection?.id ?? null"
+    :displayed-party-votes="partyVotes"
+    :party-votes="partyVotes"
+    :selected-party="selectedParty"
+    :selected-candidate="selectedCandidate"
+    :current-vote-level="currentVoteLevel"
+  />
 </template>
 
 <style scoped>

@@ -2,8 +2,9 @@
   import BarChart from '@/components/Data/charts/Bar/BarChart.vue'
   import { PartyStyleService } from '@/services/PartyStyleService'
   import type { PartyVotesDTO } from '@/interface/PartyVotesDTO.ts'
+  import { computed } from 'vue'
 
-  defineProps<{
+  const props = defineProps<{
     selectedElection: string | number
     partyVotes: PartyVotesDTO[]
     barChartVotes: PartyVotesDTO[] | null
@@ -13,11 +14,15 @@
   defineEmits<{
     (e: 'select-party', party: PartyVotesDTO): void
   }>()
+
+  const electionYear = computed(() =>
+    String(props.selectedElection).replace(/\D/g, '')
+  )
   </script>
 
   <template>
     <div class="party-list">
-      <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection}}</p>
+      <p>Showing {{ currentVoteLevel }} party votes for Election {{ electionYear}}</p>
 
       <BarChart v-if="barChartVotes" :partyVotes="partyVotes" />
 

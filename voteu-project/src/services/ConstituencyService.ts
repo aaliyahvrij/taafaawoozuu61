@@ -1,7 +1,6 @@
 import type { Constituency } from '@/interface/Constituency.ts';
 import type { Party } from '@/interface/Party.ts';
 import { apiFetch } from '@/services/api.ts'
-import type { DropdownOption } from '@/interface/DropdownOption.ts'
 
 export class ConstituencyService {
   static async getConstituenciesByElection(electionId: string): Promise<Record<number, Constituency> | null> {
@@ -22,12 +21,4 @@ export class ConstituencyService {
     }
   }
 
-  static async getConstituencyNames(electionId: string, provinceId: number): Promise<DropdownOption[] | null> {
-    try {
-      return await apiFetch<DropdownOption[]>(`/constituencies?electionId=${electionId}&provinceId=${provinceId}`)
-    } catch (error) {
-      console.error(error)
-      return null
-    }
-  }
 }
