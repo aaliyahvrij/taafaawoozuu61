@@ -1,17 +1,15 @@
 <script setup lang="ts">
-
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth.ts'
 
 const { login, getRole } = useAuth()
 
-const error = ref<string | null>(null);
+const error = ref<string | null>(null)
 const loginForm = ref({
   username: '',
   password: '',
 })
-
 
 const router = useRouter()
 
@@ -19,31 +17,30 @@ const emit = defineEmits(['submit'])
 
 const submit = async () => {
   if (!loginForm.value.username || !loginForm.value.password) {
-    error.value = 'Please enter both username and password.';
-    return;
+    error.value = 'Please enter both username and password.'
+    return
   }
 
   try {
-    await login(loginForm.value.username, loginForm.value.password);
-    emit('submit');
+    await login(loginForm.value.username, loginForm.value.password)
+    emit('submit')
 
-    const role = getRole();
-    console.log('User logged in with role:', role);
-
-    error.value = null;
+    const role = getRole()
+    console.log('User logged in with role:', role)
+    error.value = null
 
     if (role === 'ADMIN') {
-      router.push('/admin');
+      await router.push('/admin')
+    } else if (role === 'USER') {
+      await router.push('/profile')
     } else {
-      router.push('/home');
+      await router.push('/')
     }
-
   } catch (err) {
-    console.error(err);
-    error.value = 'Invalid username or password.';
+    console.error(err)
+    error.value = 'Invalid username or password.'
   }
-};
-
+}
 </script>
 
 <template>
@@ -54,17 +51,17 @@ const submit = async () => {
 
         <div class="form-group">
           <label for="username">Username</label>
-          <input type="text" id="username" v-model="loginForm.username"/>
+          <input type="text" id="username" v-model="loginForm.username" />
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model="loginForm.password"/>
+          <input type="password" id="password" v-model="loginForm.password" />
         </div>
 
         <div v-if="error" class="error-message">{{ error }}</div>
 
-        <button class="submit-btn" >Sign In</button>
+        <button class="submit-btn">Sign In</button>
 
         <p class="link-text">
           Not a member? <RouterLink to="/register">Create an account</RouterLink>
@@ -110,14 +107,12 @@ const submit = async () => {
   margin-bottom: 1rem;
 }
 
-input[type="text"],
-input[type="password"] {
+input[type='text'],
+input[type='password'] {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-
 
 .submit-btn {
   background-color: #002b80;
