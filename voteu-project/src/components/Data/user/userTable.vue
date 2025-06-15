@@ -32,6 +32,7 @@ const handleDelete = async (userId: number) => {
     await deleteUser(userId);
 
     alert('User successfully deleted.');
+    location.reload();
   } catch (err) {
     console.error('Error deleting user:', err);
     alert('An error occurred while deleting the user. Please try again.');
