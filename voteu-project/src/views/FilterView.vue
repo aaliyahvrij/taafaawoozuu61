@@ -8,14 +8,20 @@ import type { PartyVotesDTO } from '@/interface/PartyVotesDTO.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
 import { ElectionsService } from '@/services/databaseVotes/ElectionsService.ts'
 import { ProvincesService } from '@/services/databaseVotes/ProvincesService.ts'
+import { AuthoritiesService } from '@/services/databaseVotes/AuthoritiesService.ts'
 const elections = ref<DropdownOption[]>([])
 const selectedElection = ref<DropdownOption | null>(null)
+
 const provinces = ref<DropdownOption[]>([])
 const selectedProvince = ref<DropdownOption | null>(null)
+
 const constituencies = ref<DropdownOption[]>([])
 const selectedConstituency = ref<DropdownOption | null>(null)
-const nationalVotes = ref<PartyVotesDTO[]>([])
-const partyVotes = ref<PartyVotesDTO[]>([]) // placeholder
+
+const authorities= ref<DropdownOption[]>([])
+const selectedAuthority = ref<DropdownOption | null>(null)
+
+const partyVotes = ref<PartyVotesDTO[]>([])
 const selectedParty = ref<string>('') // placeholder
 const selectedCandidate = ref<Candidate | null>(null) // placeholder
 const currentVoteLevel = ref<string>('') // will hold the string 'national',
@@ -47,90 +53,109 @@ async function fetchConstituencyOptions(electionId: string, provinceId: number):
   }
 }
 
-async function fetchNationalVotes(electionId: string ): Promise<void> {
+async function fetchAuthorityOptions(electionId: string, constituencyId: number): Promise<void> {
   try {
-    const data = await ElectionsService.getNationalPartyVotes(electionId)
-    nationalVotes.value = data || []
-    currentVoteLevel.value = `national`
-    console.log(data)
-
-  } catch (e){
+    const data = await AuthoritiesService.getAuthorityNames(electionId, constituencyId)
+    authorities.value = data || []
+  } catch (e) {
     console.error(e)
   }
 }
 
-async function fetchProvincePartyVotes(electionId: string , provinceId: number): Promise<void> {
-  try {
-    const data = await ProvincesService.getProvincePartyVotes(electionId, provinceId)
-    nationalVotes.value = data || []
-    currentVoteLevel.value = `national`
-    console.log(data)
+  async function fetchNationalVotes(electionId: string): Promise<void> {
+    try {
+      const data = await ElectionsService.getNationalPartyVotes(electionId)
+      partyVotes.value = data || []
+      currentVoteLevel.value = `national`
+      console.log(data)
 
-  } catch (e){
-    console.error(e)
+    } catch (e) {
+      console.error(e)
+    }
   }
-}
+
+  async function fetchProvincePartyVotes(electionId: string, provinceId: number): Promise<void> {
+    try {
+      const data = await ProvincesService.getProvincePartyVotes(electionId, provinceId)
+      partyVotes.value = data || []
+      currentVoteLevel.value = `national`
+      console.log(data)
+
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
 
-watch(selectedElection, (newElection) => {
-  if (newElection) {
-    voteLevels.value = [newElection.id]
-    fetchProvinceOptions(String(newElection.id))
-  } else {
-    voteLevels.value = []
+  watch(selectedElection, (newElection) => {
+    if (newElection) {
+      voteLevels.value = [newElection.id]
+      fetchProvinceOptions(String(newElection.id))
+    }
+
+    selectedProvince.value = null
+    selectedConstituency.value = null
+    selectedAuthority.value = null
     provinces.value = []
     constituencies.value = []
-  }
-})
+    authorities.value = []
+  })
 
-watch(selectedProvince, (newProvince) => {
-  if (newProvince && selectedElection.value) {
-    voteLevels.value = [selectedElection.value.id, newProvince.id]
-    fetchConstituencyOptions(String(selectedElection.value.id), Number(newProvince.id))
-  } else if (selectedElection.value) {
-    voteLevels.value = [selectedElection.value.id]
+
+  watch(selectedProvince, (newProvince) => {
+    if (newProvince && selectedElection.value) {
+      voteLevels.value = [selectedElection.value.id, newProvince.id]
+      fetchConstituencyOptions(String(selectedElection.value.id), Number(newProvince.id))
+    }
+
+    selectedConstituency.value = null
+    selectedAuthority.value = null
     constituencies.value = []
+    authorities.value = []
+  })
+
+
+  watch(selectedConstituency, (newConstituency) => {
+    if (newConstituency && selectedElection.value && selectedProvince.value) {
+      voteLevels.value = [
+        selectedElection.value.id,
+        selectedProvince.value.id,
+        newConstituency.id
+      ]
+      fetchAuthorityOptions(
+        String(selectedElection.value.id),
+        Number(newConstituency.id)
+      )
+    }
+
+    selectedAuthority.value = null
+    authorities.value = []
+  })
+
+
+  const isPartyListVisible = ref(false)
+
+  function handleApply() {
+    if (!selectedElection.value) {
+      alert("Please select an election.");
+      return;
+    }
+
+    if (selectedProvince.value) {
+      // Fetch votes for selected provinces
+      fetchProvincePartyVotes(
+        String(selectedElection.value.id),
+        Number(selectedProvince.value.id)
+      );
+    } else {
+      // Fetch national votes if no province selected
+      fetchNationalVotes(String(selectedElection.value.id));
+    }
+
+    isPartyListVisible.value = true;
   }
-})
-
-watch(selectedConstituency, (newConstituency) => {
-  if (newConstituency && selectedElection.value && selectedProvince.value) {
-    voteLevels.value = [
-      selectedElection.value.id,
-      selectedProvince.value.id,
-      newConstituency.id
-    ]
-  } else if (selectedElection.value && selectedProvince.value) {
-    voteLevels.value = [
-      selectedElection.value.id,
-      selectedProvince.value.id
-    ]
-  }
-})
 
 
-
-const isPartyListVisible = ref(false)
-
-function handleApply() {
-  if (!selectedElection.value) {
-    alert("Please select an election.");
-    return;
-  }
-
-  if (selectedProvince.value) {
-    // Fetch votes for selected provinces
-    fetchProvincePartyVotes(
-      String(selectedElection.value.id),
-      Number(selectedProvince.value.id)
-    );
-  } else {
-    // Fetch national votes if no province selected
-    fetchNationalVotes(String(selectedElection.value.id));
-  }
-
-  isPartyListVisible.value = true;
-}
 
 
 
@@ -144,7 +169,7 @@ function handleApply() {
         v-model="selectedElection"
         :options="elections"
         optionLabelKey="name"
-        disabledLabel="Select election"
+        disabledLabel="Select Election"
       />
     </div>
 
@@ -152,7 +177,7 @@ function handleApply() {
       <FilterSelect
         v-model="selectedProvince"
       :options="provinces"
-      disabledLabel="Select province"
+      disabledLabel="Select Province"
       />
     </div>
 
@@ -160,7 +185,15 @@ function handleApply() {
       <FilterSelect
         v-model="selectedConstituency"
         :options="constituencies"
-        disabledLabel="Select constituency"
+        disabledLabel="Select Constituency"
+      />
+    </div>
+
+    <div class="authority-filter" v-if="authorities.length">
+      <FilterSelect
+        v-model="selectedAuthority"
+        :options="authorities"
+        disabledLabel="Select Municipality"
       />
     </div>
 
@@ -173,7 +206,7 @@ function handleApply() {
   <VoteListOverview
     v-if="isPartyListVisible"
                     :selected-election="selectedElection?.id ?? null"
-                    :displayed-party-votes="nationalVotes"
+                    :displayed-party-votes="partyVotes"
                     :party-votes="partyVotes"
                     :selected-party="selectedParty"
                     :selected-candidate="selectedCandidate"

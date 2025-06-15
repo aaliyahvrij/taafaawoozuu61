@@ -38,7 +38,7 @@ public interface ProvincePartyVotesRepository extends JpaRepository<ProvincePart
             "FROM ProvincePartyVotes ppv " +
             "JOIN Parties p ON ppv.partyId = p.partyId AND ppv.electionId = p.electionId " +
             "WHERE ppv.electionId = :electionId AND ppv.provinceId = :provinceId " +
-            "ORDER BY p.name DESC")
+            "ORDER BY p.name ASC")
     List<PartyVotesDTO> findProvincePartyVotesSortedByName(
             @Param("electionId") String electionId,
             @Param("provinceId") Integer provinceId);

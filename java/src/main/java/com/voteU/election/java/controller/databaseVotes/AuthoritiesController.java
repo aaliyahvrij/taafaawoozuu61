@@ -23,7 +23,7 @@ public class AuthoritiesController {
     }
 
 
-    @GetMapping("/by-constituency")
+    @GetMapping()
     public List<DropdownOptionDTO<String>> getAuthoritiesByConstituencyId(@RequestParam String electionId, @RequestParam Integer constituencyId) {
         return authorityService.getAuthorityNamesByConstituencyId(electionId, constituencyId);
     }
