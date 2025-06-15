@@ -17,6 +17,7 @@ const role: ComputedRef<string | null> = computed(() => useAuth().getRole())
         <li class="link-item"><RouterLink to="/compare">Compare</RouterLink></li>
         <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
         <li class="link-item" v-if="role === 'ADMIN'"><RouterLink to="/admin">Admin Page</RouterLink></li>
+        <li class="link-item" v-if="role === 'USER'"><RouterLink to="/profile">Profile Page</RouterLink></li>
       </ul>
     </nav>
     <div class="login-link">

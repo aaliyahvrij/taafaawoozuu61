@@ -10,6 +10,7 @@ import register from '@/components/register.vue'
 import PostDetailView from '@/views/PostDetailView.vue'
 import AdminView from '@/views/AdminView.vue'
 import { authService } from '@/services/AuthService.ts'
+import ProfileView from '@/views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,16 @@ const router = createRouter({
       path:'/register',
       name:'register',
       component: register,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
+      beforeEnter: (to, from, next) => {
+        const role = authService.getUserRole();
+        if (role === 'USER') next();
+        else next('/');
+      }
     },
 
     {
