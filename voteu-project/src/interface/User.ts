@@ -10,7 +10,5 @@ export interface User {
   createdAt?: string;
 }
 
-export interface UserLogin {
-  username: string;
-  password: string;
-}
+export type UpdateUser = Partial<User>;
+

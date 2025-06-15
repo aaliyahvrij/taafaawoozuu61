@@ -59,9 +59,14 @@ export async function createUser(user: User): Promise<User> {
  * @param {User} user - An object representing the user to be updated, including its unique identifier and updated properties.
  * @return {Promise<User>} A promise that resolves to the updated user object returned from the server.
  */
-export async function updateUser(user: User): Promise<User> {
-  return await apiFetch<User>(`/users/${user.id}`, {
+export async function updateUser(user: Partial<User>): Promise<User> {
+  return await apiFetch<User>(`/users/id/${user.id}`, {
     method: 'PUT',
+    body: JSON.stringify(user),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json',
+    },
   })
 }
 
