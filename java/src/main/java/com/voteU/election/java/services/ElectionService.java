@@ -25,29 +25,15 @@ public class ElectionService {
      *
      * @return true if the data has been loaded successfully, false otherwise
      */
-    public boolean readElectoralData(String electionIdListString) {
+    public boolean getElectoralData(String electionIdListString) {
         LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectoralData(electionIdListString);
         if (readerElectionList_lhMap == null || readerElectionList_lhMap.isEmpty()) {
-            log.warn("No electoral data found during readElectoralData(%s).".formatted(electionIdListString));
+            log.warn("No electoral data found during getElectoralData(%s).".formatted(electionIdListString));
             return false;
         }
         electionList_lhMap.putAll(readerElectionList_lhMap);
         return true;
     }
-
-    /**
-     * Retrieves all the data of the specified election(s).
-     */
-    /*public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, Election> specifiedElectionList_lhMap = null;
-        for (String electionId : electionIdList) {
-            if (electionList_lhMap.containsKey(electionId)) {
-                specifiedElectionList_lhMap.put(electionId, electionList_lhMap.get(electionId));
-            }
-        }
-        return specifiedElectionList_lhMap;
-    }*/
 
     /**
      * Retrieves all the affiliation data of the specified election(s).
@@ -57,9 +43,6 @@ public class ElectionService {
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = electionList_lhMap.get(electionId);
-            if (election == null) {
-                return null;
-            }
             affiList_list_lhMap.put(electionId, election.getAffiList_lhMap());
         }
         return affiList_list_lhMap;
@@ -73,9 +56,6 @@ public class ElectionService {
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = electionList_lhMap.get(electionId);
-            if (election == null) {
-                return null;
-            }
             poStList_list_lhMap.put(electionId, election.getPoStList_lhMap());
         }
         return poStList_list_lhMap;

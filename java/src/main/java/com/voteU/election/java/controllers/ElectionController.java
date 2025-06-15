@@ -22,7 +22,7 @@ public class ElectionController {
 
     @PostMapping("/{electionIdListString}")
     public boolean readElectoralData(@PathVariable String electionIdListString) {
-        return this.electionService.readElectoralData(electionIdListString);
+        return this.electionService.getElectoralData(electionIdListString);
     }
 
     @GetMapping("/{electionIdListString}/affiliations")

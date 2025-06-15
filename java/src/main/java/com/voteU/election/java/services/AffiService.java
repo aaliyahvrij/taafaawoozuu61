@@ -17,7 +17,7 @@ public class AffiService {
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getAffiList_lhMap().get(affId);
             if (affi == null) {
-                throw new ResourceNotFoundException("Affi " + affId + " not found");
+                throw new ResourceNotFoundException("Election " + electionId + " > affi " + affId + " not found in election " + electionId);
             }
             candiList_list_lhMap.put(electionId, affi.getCandiList());
         }

@@ -57,7 +57,7 @@ public class MuniService {
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             if (muni == null) {
-                throw new ResourceNotFoundException("Muni " + munId + " not found");
+                throw new ResourceNotFoundException("Election " + electionId + " > muni " + munId + " not found");
             }
             affiList_list_lhMap.put(electionId, muni.getAffiList_lhMap());
         }
@@ -70,7 +70,7 @@ public class MuniService {
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId).getAffiList_lhMap().get(affId);
             if (affi == null) {
-                throw new ResourceNotFoundException("Affi " + affId + " not found");
+                throw new ResourceNotFoundException("Election " + electionId + " > affi " + affId + " not found");
             }
             affiList_lhMap.put(electionId, affi);
         }
