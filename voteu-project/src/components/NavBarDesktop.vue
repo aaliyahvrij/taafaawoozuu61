@@ -12,7 +12,6 @@ const role: ComputedRef<string | null> = computed(() => useAuth().getRole())
     <nav>
       <ul>
         <li class="link-item"><RouterLink to="/">Home</RouterLink></li>
-        <li class="link-item"><RouterLink to="/about">About</RouterLink></li>
         <li class="link-item"><RouterLink to="/how">How</RouterLink></li>
         <li class="link-item"><RouterLink to="/filter">Filter</RouterLink></li>
         <li class="link-item"><RouterLink to="/compare">Compare</RouterLink></li>
