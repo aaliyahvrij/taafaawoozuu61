@@ -1,6 +1,5 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.models.Candidate;
 
@@ -16,9 +15,6 @@ public class AffiService {
         LinkedHashMap<String, List<Candidate>> candiList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getAffiList_lhMap().get(affId);
-            if (affi == null) {
-                throw new ResourceNotFoundException("Election " + electionId + " > affi " + affId + " not found in election " + electionId);
-            }
             candiList_list_lhMap.put(electionId, affi.getCandiList());
         }
         return candiList_list_lhMap;

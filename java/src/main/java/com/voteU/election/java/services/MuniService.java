@@ -1,7 +1,6 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.compactDTO.CompactPollingStation;
-import com.voteU.election.java.exceptions.ResourceNotFoundException;
 import com.voteU.election.java.models.Municipality;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
@@ -56,9 +55,6 @@ public class MuniService {
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
-            if (muni == null) {
-                throw new ResourceNotFoundException("Election " + electionId + " > muni " + munId + " not found");
-            }
             affiList_list_lhMap.put(electionId, muni.getAffiList_lhMap());
         }
         return affiList_list_lhMap;
@@ -69,9 +65,6 @@ public class MuniService {
         LinkedHashMap<String, Affiliation> affiList_lhMap = null;
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId).getAffiList_lhMap().get(affId);
-            if (affi == null) {
-                throw new ResourceNotFoundException("Election " + electionId + " > affi " + affId + " not found");
-            }
             affiList_lhMap.put(electionId, affi);
         }
         return affiList_lhMap;
