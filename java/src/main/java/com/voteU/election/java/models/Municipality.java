@@ -9,16 +9,15 @@ import java.util.LinkedHashMap;
 public class Municipality {
     @Setter
     private String id;
-    @Setter
-    private String name;
+    private final String name;
     @Setter
     private int constId;
     private final LinkedHashMap<String, PollingStation> poStList_lhMap;
     private final LinkedHashMap<Integer, Affiliation> affiList_lhMap;
 
-    public Municipality(String id) {
+    public Municipality(String id, String name) {
         this.id = id;
-        this.name = "";
+        this.name = name;
         this.constId = 0;
         this.poStList_lhMap = new LinkedHashMap<>();
         this.affiList_lhMap = new LinkedHashMap<>();

@@ -73,8 +73,7 @@ public class ElectionTransformer implements Transformer<Election> {
         Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<String, Municipality> nationalLevel_muniList_lhMap = election.getMuniList_lhMap();
         Municipality nationalLevel_muni = nationalLevel_muniList_lhMap.computeIfAbsent(munId, id -> {
-            Municipality muni = new Municipality(id);
-            muni.setName(muniName);
+            Municipality muni = new Municipality(id, muniName);
             muni.setConstId(constId);
             return muni;
         });

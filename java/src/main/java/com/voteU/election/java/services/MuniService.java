@@ -14,10 +14,7 @@ import java.util.LinkedHashMap;
 
 @Service
 public class MuniService {
-    private final ConstiService constiService;
-
-    public MuniService(ConstiService constiService) {
-        this.constiService = constiService;
+    public MuniService() {
     }
 
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getMuniLevel_poStList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {

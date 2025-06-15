@@ -1,6 +1,5 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.models.Election;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.services.ElectionService;
@@ -24,11 +23,6 @@ public class ElectionController {
     @PostMapping("/{electionIdListString}")
     public boolean readElectoralData(@PathVariable String electionIdListString) {
         return this.electionService.readElectoralData(electionIdListString);
-    }
-
-    @GetMapping("/{electionIdListString}")
-    public LinkedHashMap<String, Election> getElectoralData(@PathVariable String electionIdListString) {
-        return this.electionService.getElectoralData(electionIdListString);
     }
 
     @GetMapping("/{electionIdListString}/affiliations")

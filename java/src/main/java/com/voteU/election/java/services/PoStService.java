@@ -11,17 +11,14 @@ import java.util.LinkedHashMap;
 @Slf4j
 @Service
 public class PoStService {
-    private final MuniService muniService;
-
-    public PoStService(MuniService muniService) {
-        this.muniService = muniService;
+    public PoStService() {
     }
 
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getPoStLevel_affiList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            PollingStation muniLevel_poSt = muniService.getMuniLevel_poSt(electionId, constId, munId, poStId);
+            PollingStation muniLevel_poSt = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId).getPoStList_lhMap().get(poStId);
             affiList_list_lhMap.put(electionId, muniLevel_poSt.getAffiList_lhMap());
         }
         return affiList_list_lhMap;

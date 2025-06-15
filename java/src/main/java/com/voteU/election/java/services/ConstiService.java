@@ -8,10 +8,7 @@ import com.voteU.election.java.models.Municipality;
 import java.util.LinkedHashMap;
 
 public class ConstiService {
-    private final ElectionService electionService;
-
-    public ConstiService(ElectionService electionService) {
-        this.electionService = electionService;
+    public ConstiService() {
     }
 
     public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getConstiLevel_muniList_lhMap(String electionIdListString, int constId) {
@@ -57,7 +54,7 @@ public class ConstiService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = /*constiService.*/getConstiLevel_muniList_lhMap(electionId, constId).get(munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
             if (constiLevel_muni == null) {
                 throw new ResourceNotFoundException("Muni " + munId + " not found in consti " + constId);
             }
