@@ -29,7 +29,7 @@ public class ConstiController {
     }
 
     @GetMapping("/{constId}/municipalities/{munId}")
-    public LinkedHashMap<String, Municipality> getConstiLevel_muniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
+    public LinkedHashMap<String, Municipality> getConstiLevel_muni(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
         return constiService.getConstiLevel_muni(electionIdListString, constId, munId);
     }
 }
