@@ -114,14 +114,20 @@ function goToPost(postId : number) :void{
     <div class="post-box">
       <h2 class="post-title">All Posts</h2>
       <ul class="post-list">
-        <li class="post-item" v-for="post in posts" :key="post.id" @click="goToPost(post.id)">
-          <span class="author">User {{ post.user.username }}:</span> <strong>{{ post.title }}</strong><br />
-          <em>{{ post.description }}</em><br />
-          <small class="timestamp">
-            📅 {{ formatDate(post.createdAt) }}
-          </small>
+        <li class="post-item" v-for="post in posts" :key="post.id">
+          <div @click="goToPost(post.id)" class="post-header" style="cursor: pointer;">
+            <span class="author">User {{ post.user.username }}:</span>
+            <strong>{{ post.title }}</strong><br />
+            <em>{{ post.description }}</em><br />
+            <small class="timestamp">
+              📅 {{ formatDate(post.createdAt) }}
+            </small>
+          </div>
+
+          <!-- Comment Section werkt normaal zonder redirect -->
           <CommentSection v-if="post.id" :postId="post.id" />
         </li>
+
       </ul>
     </div>
   </div>
@@ -250,4 +256,12 @@ function goToPost(postId : number) :void{
   color: #6b7280;
   font-size: 0.85rem;
 }
+
+.post-header {
+  background-color: #f9f9f9;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+}
+
 </style>
