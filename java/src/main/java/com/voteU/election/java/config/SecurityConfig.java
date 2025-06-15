@@ -45,8 +45,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/username/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/users").permitAll()
+                        .requestMatchers("/api/elections").permitAll()
                         .requestMatchers("/api/countries").permitAll()
                         .anyRequest().authenticated()
                 )
