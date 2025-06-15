@@ -1,6 +1,6 @@
 package com.voteU.election.java.models;
 
-import lombok.*;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.ArrayList;

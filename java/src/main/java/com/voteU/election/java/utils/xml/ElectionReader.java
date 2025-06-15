@@ -27,7 +27,7 @@ public class ElectionReader {
      * @return A map containing election results, organized by election year.
      */
     public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split(",");
+        String[] electionIdList = electionIdListString.split("-");
         for (String electionId : electionIdList) {
             String filePath = "/EML_bestanden_" + electionId;
             try {

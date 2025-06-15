@@ -1,6 +1,7 @@
 package com.voteU.election.java.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

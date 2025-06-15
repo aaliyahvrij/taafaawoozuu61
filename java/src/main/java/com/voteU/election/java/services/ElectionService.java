@@ -1,6 +1,8 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.models.*;
+import com.voteU.election.java.models.Election;
+import com.voteU.election.java.models.PollingStation;
+import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.utils.xml.ElectionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import java.util.LinkedHashMap;
 @Service
 public class ElectionService {
     private final ElectionReader electionReader;
-    private static final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
+    public static final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
 
     public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -37,7 +39,7 @@ public class ElectionService {
      * Retrieves all the data of the specified election(s).
      */
     public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split(",");
+        String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Election> specifiedElectionList_lhMap = null;
         for (String electionId : electionIdList) {
             if (electionList_lhMap.containsKey(electionId)) {
@@ -51,7 +53,7 @@ public class ElectionService {
      * Retrieves all the affiliation data of the specified election(s).
      */
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split(",");
+        String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = getElectoralData(electionId).get(electionId);
@@ -67,7 +69,7 @@ public class ElectionService {
      * Retrieves all the polling station data of the specified election(s).
      */
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(String electionIdListString) {
-        String[] electionIdList = electionIdListString.split(",");
+        String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = getElectoralData(electionId).get(electionId);

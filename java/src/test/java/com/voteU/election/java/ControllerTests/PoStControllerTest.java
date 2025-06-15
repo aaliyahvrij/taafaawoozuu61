@@ -2,15 +2,14 @@ package com.voteU.election.java.ControllerTests;
 
 import com.voteU.election.java.compactDTO.CompactPollingStation;
 import com.voteU.election.java.controllers.PoStController;
-import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.models.PollingStation;
+import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.services.PoStService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;

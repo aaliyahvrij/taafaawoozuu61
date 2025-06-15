@@ -1,6 +1,8 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.models.*;
+import com.voteU.election.java.models.Election;
+import com.voteU.election.java.models.PollingStation;
+import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.services.ElectionService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +31,13 @@ public class ElectionController {
         return this.electionService.getElectoralData(electionIdListString);
     }
 
-    @GetMapping("/{electionId}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_affiList_lhMap(electionId);
+    @GetMapping("/{electionIdListString}/affiliations")
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getNationalLevel_affiList_lhMap(@PathVariable String electionIdListString) {
+        return this.electionService.getNationalLevel_affiList_lhMap(electionIdListString);
     }
 
-    @GetMapping("/{electionId}/pollingstations")
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(@PathVariable String electionId) {
-        return this.electionService.getNationalLevel_poStList_lhMap(electionId);
+    @GetMapping("/{electionIdListString}/pollingstations")
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getNationalLevel_poStList_lhMap(@PathVariable String electionIdListString) {
+        return this.electionService.getNationalLevel_poStList_lhMap(electionIdListString);
     }
 }
