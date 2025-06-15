@@ -120,11 +120,11 @@ public class ElectionTransformer implements Transformer<Election> {
         LinkedHashMap<Integer, Constituency> nationalLevel_constiList_lhMap = election.getConstiList_lhMap();
         Constituency nationalLevel_consti = nationalLevel_constiList_lhMap.get(constId);
         if (nationalLevel_consti != null) {
-            // Update or insert a candidate in a constituencial level affiliation
+            // Update or insert a candidate in a consti-level affi
             LinkedHashMap<Integer, Affiliation> constiLevel_affiList_lhMap = nationalLevel_consti.getAffiList_lhMap();
             populateCandi(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiList_lhMap);
 
-            // Update or insert a candidate in each municipal level affiliation
+            // Update or insert a candidate in each muni-level affi
             LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = nationalLevel_consti.getMuniList_lhMap();
             for (Municipality constiLevel_muni : constiLevel_muniList_lhMap.values()) {
                 LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = constiLevel_muni.getAffiList_lhMap();

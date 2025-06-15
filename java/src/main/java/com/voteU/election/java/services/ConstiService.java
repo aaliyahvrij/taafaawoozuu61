@@ -16,9 +16,6 @@ public class ConstiService {
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
-            if (election == null) {
-                throw new ResourceNotFoundException("Election " + electionId + " not found");
-            }
             Constituency electoralLevel_consti = election.getConstiList_lhMap().get(constId);
             if (electoralLevel_consti == null) {
                 throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
@@ -33,9 +30,6 @@ public class ConstiService {
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
-            if (election == null) {
-                throw new ResourceNotFoundException("Election " + electionId + " not found");
-            }
             Constituency electoralLevel_consti = election.getConstiList_lhMap().get(constId);
             if (electoralLevel_consti == null) {
                 throw new ResourceNotFoundException("Consti " + constId + " not found in election " + electionId);
