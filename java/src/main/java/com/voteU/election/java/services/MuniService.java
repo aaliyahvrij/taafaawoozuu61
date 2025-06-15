@@ -6,7 +6,6 @@ import com.voteU.election.java.models.Municipality;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class MuniService {
     public MuniService() {
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getMuniLevel_poStList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getMuniLevel_poStList_lhMap(String electionIdListString, int constId, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_LhMap = null;
         for (String electionId : electionIdList) {
@@ -27,7 +26,7 @@ public class MuniService {
         return poStList_list_LhMap;
     }
 
-    public LinkedHashMap<String, List<CompactPollingStation>> getMuniLevel_compactPoStList(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
+    public LinkedHashMap<String, List<CompactPollingStation>> getMuniLevel_compactPoStList(String electionIdListString, int constId, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, List<CompactPollingStation>> compactPoStList_list_lhMap = null;
         for (String electionId : electionIdList) {
@@ -42,21 +41,21 @@ public class MuniService {
         return compactPoStList_list_lhMap;
     }
 
-    public LinkedHashMap<String, PollingStation> getMuniLevel_poSt(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
+    public LinkedHashMap<String, PollingStation> getMuniLevel_poSt(String electionIdListString, String munId, String poStId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, PollingStation> poStList_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             poStList_lhMap.put(electionId, constiLevel_muni.getPoStList_lhMap().get(poStId));
         }
         return poStList_lhMap;
     }
 
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getMuniLevel_affiList_lhMap(String electionIdListString, Integer constId, String munId) {
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getMuniLevel_affiList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
-            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
+            Municipality constiLevel_muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             if (constiLevel_muni == null) {
                 throw new ResourceNotFoundException("Muni " + munId + " not found");
             }

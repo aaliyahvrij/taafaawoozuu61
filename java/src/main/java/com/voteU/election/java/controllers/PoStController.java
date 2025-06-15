@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.LinkedHashMap;
 
 @RestController
-@RequestMapping("/api/election/{electionIdListString}/constituencies/{constId}/municipalities/{munId}/pollingstations")
+@RequestMapping("/api/election/{electionIdListString}/pollingstations")
 public class PoStController {
     private final PoStService poStService;
 
@@ -19,7 +19,7 @@ public class PoStController {
     }
 
     @GetMapping("/{poStId}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getPoStLevel_affiList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId, @PathVariable String poStId) {
-        return poStService.getPoStLevel_affiList_lhMap(electionIdListString, constId, munId, poStId);
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getPoStLevel_affiList_lhMap(@PathVariable String electionIdListString, @PathVariable String poStId) {
+        return poStService.getPoStLevel_affiList_lhMap(electionIdListString, poStId);
     }
 }
