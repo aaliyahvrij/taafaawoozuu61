@@ -19,17 +19,17 @@ public class ConstiController {
     }
 
     @GetMapping("/{constId}/municipalities")
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getConstiLevel_muniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getConstiLevel_muniList_lhMap(electionIdListString, constId);
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
+        return constiService.getMuniList_lhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/compact")
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getConstiLevel_compactMuniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getConstiLevel_compactMuniList_lhMap(electionIdListString, constId);
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
+        return constiService.getCompactMuniList_lhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/{munId}")
-    public LinkedHashMap<String, Municipality> getConstiLevel_muni(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
-        return constiService.getConstiLevel_muni(electionIdListString, constId, munId);
+    public LinkedHashMap<String, Municipality> getMuni(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
+        return constiService.getMuni(electionIdListString, constId, munId);
     }
 }

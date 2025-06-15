@@ -20,7 +20,7 @@ public class AffiController {
     }
 
     @GetMapping("/{affId}/candidates")
-    public LinkedHashMap<String, List<Candidate>> getAffiLevel_candiList(@PathVariable String electionIdListString, @PathVariable int affId) {
-        return affiService.getAffiLevel_candiList(electionIdListString, affId);
+    public LinkedHashMap<String, List<Candidate>> getCandiList(@PathVariable String electionIdListString, @PathVariable int affId) {
+        return affiService.getCandiList(electionIdListString, affId);
     }
 }

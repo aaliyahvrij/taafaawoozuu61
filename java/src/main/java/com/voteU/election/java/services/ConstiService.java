@@ -11,7 +11,7 @@ public class ConstiService {
     public ConstiService() {
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getConstiLevel_muniList_lhMap(String electionIdListString, int constId) {
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniList_lhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = null;
         for (String electionId : electionIdList) {
@@ -25,7 +25,7 @@ public class ConstiService {
         return muniList_list_lhMap;
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getConstiLevel_compactMuniList_lhMap(String electionIdListString, int constId) {
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniList_lhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = null;
         for (String electionId : electionIdList) {
@@ -44,7 +44,7 @@ public class ConstiService {
         return compactMuniList_list_lhMap;
     }
 
-    public LinkedHashMap<String, Municipality> getConstiLevel_muni(String electionIdListString, Integer constId, String munId) {
+    public LinkedHashMap<String, Municipality> getMuni(String electionIdListString, Integer constId, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = null;
         for (String electionId : electionIdList) {

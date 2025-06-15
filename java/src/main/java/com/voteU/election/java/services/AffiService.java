@@ -11,7 +11,7 @@ public class AffiService {
     public AffiService() {
     }
 
-    public LinkedHashMap<String, List<Candidate>> getAffiLevel_candiList(String electionIdListString, Integer affId) {
+    public LinkedHashMap<String, List<Candidate>> getCandiList(String electionIdListString, Integer affId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, List<Candidate>> candiList_list_lhMap = null;
         for (String electionId : electionIdList) {

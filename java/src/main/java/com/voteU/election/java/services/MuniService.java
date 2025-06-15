@@ -16,7 +16,7 @@ public class MuniService {
     public MuniService() {
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getMuniLevel_poStList_lhMap(String electionIdListString, String munId) {
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_LhMap = null;
         for (String electionId : electionIdList) {
@@ -26,7 +26,7 @@ public class MuniService {
         return poStList_list_LhMap;
     }
 
-    public LinkedHashMap<String, List<CompactPollingStation>> getMuniLevel_compactPoStList(String electionIdListString, String munId) {
+    public LinkedHashMap<String, List<CompactPollingStation>> getCompactPoStList(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, List<CompactPollingStation>> compactPoStList_list_lhMap = null;
         for (String electionId : electionIdList) {
@@ -41,7 +41,7 @@ public class MuniService {
         return compactPoStList_list_lhMap;
     }
 
-    public LinkedHashMap<String, PollingStation> getMuniLevel_poSt(String electionIdListString, String munId, String poStId) {
+    public LinkedHashMap<String, PollingStation> getPoSt(String electionIdListString, String munId, String poStId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, PollingStation> poStList_lhMap = null;
         for (String electionId : electionIdList) {
@@ -51,7 +51,7 @@ public class MuniService {
         return poStList_lhMap;
     }
 
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getMuniLevel_affiList_lhMap(String electionIdListString, String munId) {
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
@@ -64,7 +64,7 @@ public class MuniService {
         return affiList_list_lhMap;
     }
 
-    public LinkedHashMap<String, Affiliation> getMuniLevel_affi(String electionIdListString, String munId, Integer affId) {
+    public LinkedHashMap<String, Affiliation> getAffi(String electionIdListString, String munId, Integer affId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Affiliation> affiList_lhMap = null;
         for (String electionId : electionIdList) {

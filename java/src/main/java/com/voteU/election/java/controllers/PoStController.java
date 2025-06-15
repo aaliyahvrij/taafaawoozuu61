@@ -19,7 +19,7 @@ public class PoStController {
     }
 
     @GetMapping("/{poStId}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getPoStLevel_affiList_lhMap(@PathVariable String electionIdListString, @PathVariable String poStId) {
-        return poStService.getPoStLevel_affiList_lhMap(electionIdListString, poStId);
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(@PathVariable String electionIdListString, @PathVariable String poStId) {
+        return poStService.getAffiList_lhMap(electionIdListString, poStId);
     }
 }

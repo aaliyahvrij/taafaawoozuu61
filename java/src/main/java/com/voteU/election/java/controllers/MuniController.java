@@ -22,27 +22,27 @@ public class MuniController {
     }
 
     @GetMapping("/{munId}/pollingstations")
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getMuniLevel_poStList_lhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
         return muniService.getMuniLevel_poStList_lhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/pollingstations/compact")
-    public LinkedHashMap<String, List<CompactPollingStation>> getMuniLevel_compactPoStList(@PathVariable String electionIdListString, @PathVariable String munId) {
+    public LinkedHashMap<String, List<CompactPollingStation>> getCompactPoStList(@PathVariable String electionIdListString, @PathVariable String munId) {
         return muniService.getMuniLevel_compactPoStList(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/pollingstations/{poStId}")
-    public LinkedHashMap<String, PollingStation> getMuniLevel_poSt(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable String poStId) {
+    public LinkedHashMap<String, PollingStation> getPoSt(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable String poStId) {
         return muniService.getMuniLevel_poSt(electionIdListString, munId, poStId);
     }
 
     @GetMapping("/{munId}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getMuniLevel_affiList_lhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
         return muniService.getMuniLevel_affiList_lhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/affiliations/{affId}")
-    public LinkedHashMap<String, Affiliation> getMuniLevel_affi(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable int affId) {
+    public LinkedHashMap<String, Affiliation> getAffi(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable int affId) {
         return muniService.getMuniLevel_affi(electionIdListString, munId, affId);
     }
 }

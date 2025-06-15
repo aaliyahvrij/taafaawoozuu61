@@ -43,7 +43,7 @@ class PoStControllerTest {
 
     @Test
     void test_getMuniLevel_poStList_lhMap() {
-        when(poStService.getMuniLevel_poStList_lhMap(electionId, constId, munId)).thenReturn(poStList_lhMap);
+        when(poStService.getPoStList_lhMap(electionId, constId, munId)).thenReturn(poStList_lhMap);
         LinkedHashMap<String, LinkedHashMap<String, PollingStation>> result = poStController.getMuniLevel_poStList_lhMap(electionId, constId, munId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(poStId));

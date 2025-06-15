@@ -13,7 +13,7 @@ public class PoStService {
     public PoStService() {
     }
 
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getPoStLevel_affiList_lhMap(String electionIdListString, String poStId) {
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString, String poStId) {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
         for (String electionId : electionIdList) {
