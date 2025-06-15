@@ -31,10 +31,10 @@ public class MuniService {
         LinkedHashMap<String, List<CompactPollingStation>> compactPoStList_list_lhMap = null;
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
-            LinkedHashMap<String, PollingStation> muniLevel_poStList_lhMap = muni.getPoStList_lhMap();
+            LinkedHashMap<String, PollingStation> poStList_lhMap = muni.getPoStList_lhMap();
             List<CompactPollingStation> compactPoStList = new ArrayList<>();
-            for (PollingStation muniLevel_poSt : muniLevel_poStList_lhMap.values()) {
-                compactPoStList.add(new CompactPollingStation(muniLevel_poSt.getId(), muniLevel_poSt.getName(), muniLevel_poSt.getZipCode()));
+            for (PollingStation poSt : poStList_lhMap.values()) {
+                compactPoStList.add(new CompactPollingStation(poSt.getId(), poSt.getName(), poSt.getZipCode()));
             }
             compactPoStList_list_lhMap.put(electionId, compactPoStList);
         }
@@ -68,12 +68,11 @@ public class MuniService {
         String[] electionIdList = electionIdListString.split("-");
         LinkedHashMap<String, Affiliation> affiList_lhMap = null;
         for (String electionId : electionIdList) {
-            LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId).getAffiList_lhMap();
-            Affiliation muniLevel_affi = muniLevel_affiList_lhMap.get(affId);
-            if (muniLevel_affi == null) {
+            Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId).getAffiList_lhMap().get(affId);
+            if (affi == null) {
                 throw new ResourceNotFoundException("Affi " + affId + " not found");
             }
-            affiList_lhMap.put(electionId, muniLevel_affi);
+            affiList_lhMap.put(electionId, affi);
         }
         return affiList_lhMap;
     }
