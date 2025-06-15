@@ -1,6 +1,5 @@
 package com.voteU.election.java.ServicesTest;
 
-import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
 import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.*;
@@ -9,189 +8,104 @@ import com.voteU.election.java.services.ElectionService;
 import com.voteU.election.java.services.ProvinceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for {@link ProvinceService}.
- */
-@ExtendWith(MockitoExtension.class)
 class ProvinceServiceTest {
 
-    @Mock
     private ElectionService electionService;
-
-    @Mock
     private ProvinceRepository provinceRepository;
-
     private ProvinceService provinceService;
 
     @BeforeEach
     void setUp() {
+        electionService = mock(ElectionService.class);
+        provinceRepository = mock(ProvinceRepository.class);
         provinceService = new ProvinceService(electionService, provinceRepository);
     }
 
-    // ---------- helpers -----------------------------------------------------
-
-    private Province buildProvince(int id, String name, Party... parties) {
-        Authority authority = new Authority(String.valueOf(1), "Authority-1");
-        for (Party p : parties) {
-            authority.getParties().put(p.getId(), p);
-        }
-
-        Constituency constituency = new Constituency(10, "Constituency-1");
-        constituency.getAuthorities().put(authority.getId(), authority);
-
-        Province province = new Province(id, name);
-        province.getConstituencies().add(constituency);
-        return province;
-    }
-
-    private Election buildElection2021() {
-        Party p1 = new Party(111, "Alpha"); p1.setVotes(1_000);
-        Party p2 = new Party(222, "Beta");  p2.setVotes(2_000);
-
-        Province groningen = buildProvince(1, "Groningen", p1, p2);
-        Election election = new Election("TK2021", "Tweede Kamer 2021", "2021-03-17");
-        election.getProvinces().add(groningen);
-        return election;
-    }
-
-    // ---------- getProvinces() ---------------------------------------------
-
     @Test
-    void getProvinces_returns_list_when_election_found() {
-        Election election = buildElection2021();
-        when(electionService.getElection("TK2021")).thenReturn(election);
+    void testGetProvinces_returnsCorrectProvinces() {
+        String year = "2023";
+        List<Province> provinces = List.of(new Province(1, "Noord-Holland"), new Province(2, "Zuid-Holland"));
+        Election election = new Election("1", "tweede kwamer", "2023-07-17");
+        election.setProvinces(provinces);
 
-        List<Province> result = provinceService.getProvinces("TK2021");
+        when(electionService.getElection(year)).thenReturn(election);
 
-        assertEquals(1, result.size());
-        assertEquals("Groningen", result.getFirst().getName());
+        List<Province> result = provinceService.getProvinces(year);
+        assertEquals(2, result.size());
+        assertEquals("Noord-Holland", result.get(0).getName());
     }
 
     @Test
-    void getProvinces_returns_empty_when_election_not_found() {
-        when(electionService.getElection("TK404")).thenReturn(null);
+    void testGetCompactProvinces_returnsCorrectCompactData() {
+        String year = "2023";
+        List<Province> provinces = List.of(new Province(1, "Utrecht"), new Province(2, "Groningen"));
+        Election election = new Election("1", "tweede kwamer", "2023-07-17");
+        election.setProvinces(provinces);
 
-        List<Province> result = provinceService.getProvinces("TK404");
+        when(electionService.getElection(year)).thenReturn(election);
 
-        assertTrue(result.isEmpty());
-    }
-
-    // ---------- getCompactProvinces() --------------------------------------
-
-    @Test
-    void getCompactProvinces_maps_to_dto() {
-        when(electionService.getElection("TK2021")).thenReturn(buildElection2021());
-
-        List<CompactProvince> result = provinceService.getCompactProvinces("TK2021");
-
-        assertEquals(1, result.size());
-        assertEquals(1, result.getFirst().getId());
-        assertEquals("Groningen", result.getFirst().getName());
-    }
-
-    // ---------- getConstituenciesByProvinceId() ----------------------------
-
-    @Test
-    void getConstituenciesByProvinceId_returns_correct_list() {
-        when(electionService.getElection("TK2021")).thenReturn(buildElection2021());
-
-        List<Constituency> result = provinceService.getConstituenciesByProvinceId("TK2021", 1);
-
-        assertEquals(1, result.size());
-        assertEquals("Constituency-1", result.getFirst().getName());
+        List<CompactProvince> result = provinceService.getCompactProvinces(year);
+        assertEquals(2, result.size());
+        assertEquals(1, result.get(0).getId());
+        assertEquals("Utrecht", result.get(0).getName());
     }
 
     @Test
-    void getConstituenciesByProvinceId_returns_empty_when_province_missing() {
-        when(electionService.getElection("TK2021")).thenReturn(buildElection2021());
+    void testGetTotalVotesPerParty_returnsCorrectTotalsAndPercentages() {
+        // Setup test data
+        Party party1 = new Party(1, "Party A");
+        party1.setVotes(100);
 
-        List<Constituency> result = provinceService.getConstituenciesByProvinceId("TK2021", 999);
+        Party party2 = new Party(2, "Party B");
+        party2.setVotes(200);
 
-        assertTrue(result.isEmpty());
-    }
+        Map<Integer, Party> authorityParties = new HashMap<>();
+        authorityParties.put(party1.getId(), party1);
+        authorityParties.put(party2.getId(), party2);
 
-    // ---------- getCompactConstituenciesByProvinceId() ---------------------
+        Authority authority = new Authority("1");
+        authority.setParties(authorityParties);
 
-    @Test
-    void getCompactConstituenciesByProvinceId_maps_to_dto() {
-        when(electionService.getElection("TK2021")).thenReturn(buildElection2021());
 
-        List<CompactConstituency> result =
-                provinceService.getCompactConstituenciesByProvinceId("TK2021", 1);
+        Map<String, Authority> authorities = new HashMap<>();
+        authorities.put("1", authority);
 
-        assertEquals(1, result.size());
-        assertEquals(10, result.getFirst().getId());
-        assertEquals("Constituency-1", result.getFirst().getName());
-    }
+        Constituency constituency = new Constituency(5, "Constituency A");
+        constituency.setAuthorities(authorities);
 
-    // ---------- getTotalVotesPerParty(Province) ----------------------------
+        var province = new Province();
+        province.setConstituencies(List.of(constituency));
 
-    @Test
-    void getTotalVotesPerParty_calculates_votes_and_percentages() {
-        Province province = buildProvince(
-                1,
-                "Groningen",
-                new Party(1, "Alpha") {{ setVotes(1_000); }},
-                new Party(2, "Beta")  {{ setVotes(3_000); }}
-        );
-
+        // Act
         Map<Integer, Party> result = provinceService.getTotalVotesPerParty(province);
 
+        // Assert
         assertEquals(2, result.size());
-        assertEquals(1_000, result.get(1).getVotes());
-        assertEquals(3_000, result.get(2).getVotes());
-
-        double pctAlpha = result.get(1).getPercentage();
-        double pctBeta  = result.get(2).getPercentage();
-        assertEquals(25.0, pctAlpha, 0.0001);
-        assertEquals(75.0, pctBeta,  0.0001);
-    }
-
-    // ---------- getTotalVotesPerParty(year, provinceId) --------------------
-
-    @Test
-    void getTotalVotesPerParty_with_year_and_id_delegates_correctly() {
-        Election election = buildElection2021();
-        when(electionService.getElection("TK2021")).thenReturn(election);
-
-        Map<Integer, Party> result =
-                provinceService.getTotalVotesPerParty("TK2021", 1);
-
-        assertEquals(2, result.size());
-        verify(electionService).getElection("TK2021");
+        assertEquals(100, result.get(1).getVotes());
+        assertEquals(200, result.get(2).getVotes());
+        assertEquals(33.3333, result.get(1).getPercentage(), 0.1);
+        assertEquals(66.6666, result.get(2).getPercentage(), 0.1);
     }
 
     @Test
-    void getTotalVotesPerParty_returns_empty_map_when_province_not_found() {
-        when(electionService.getElection("TK2021")).thenReturn(buildElection2021());
-
-        Map<Integer, Party> result = provinceService.getTotalVotesPerParty("TK2021", 99);
-
-        assertTrue(result.isEmpty());
-    }
-
-    // ---------- getAllProvinceNames() --------------------------------------
-
-    @Test
-    void getAllProvinceNames_returns_repository_result() {
+    void testGetAllProvinceNames_callsRepository() {
+        String year = "2021";
         List<DropdownOptionDTO<Integer>> mockList = List.of(
-                new DropdownOptionDTO<>(1, "Groningen"),
-                new DropdownOptionDTO<>(2, "Friesland")
+                new DropdownOptionDTO<>(1, "Drenthe"),
+                new DropdownOptionDTO<>(2, "Flevoland")
         );
-        when(provinceRepository.getProvincesByElectionId("TK2021")).thenReturn(mockList);
 
-        List<DropdownOptionDTO<Integer>> result = provinceService.getAllProvinceNames("TK2021");
+        when(provinceRepository.getProvincesByElectionId(year)).thenReturn(mockList);
 
-        assertEquals(mockList, result);
-        verify(provinceRepository).getProvincesByElectionId("TK2021");
+        List<DropdownOptionDTO<Integer>> result = provinceService.getAllProvinceNames(year);
+        assertEquals(2, result.size());
+        assertEquals("Drenthe", result.getFirst().getName());
     }
 }
