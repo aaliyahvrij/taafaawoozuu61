@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.LinkedHashMap;
 
 /**
- * Organizes processed election data into an Election object.
+ * Organizes processed election data into Election objects.
  */
 @Getter
 @Slf4j
 public class ElectionTransformer implements Transformer<Election> {
-    private final LinkedHashMap<String, Election> electionLhMap = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
 
     @Override
     public void registerElectoralLevelData(LinkedHashMap<String, String> prcsElectionLhMap) {
@@ -22,17 +22,17 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionDate = prcsElectionLhMap.get("electionDate");
 
         // Get or create an Election object
-        Election electionLhMap = this.electionLhMap.get(electionId);
+        Election electionLhMap = this.electionList_lhMap.get(electionId);
         if (electionLhMap == null) {
             electionLhMap = new Election(electionId, electionName, electionDate);
-            this.electionLhMap.put(electionId, electionLhMap);
+            this.electionList_lhMap.put(electionId, electionLhMap);
         }
     }
 
     @Override
     public void registerNationalLevel_affiData(LinkedHashMap<String, String> nationLhMap) {
         String electionId = nationLhMap.get("electionId");
-        Election election = this.electionLhMap.get(electionId);
+        Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiList_lhMap = election.getAffiList_lhMap();
         int affId = Integer.parseInt(nationLhMap.get("affId"));
         Affiliation affi = affiList_lhMap.get(affId);
@@ -74,7 +74,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int affId = Integer.parseInt(muniLhMap.get("affId"));
         String affiName = muniLhMap.get("affiName");
         String electionId = muniLhMap.get("electionId");
-        Election election = this.electionLhMap.get(electionId);
+        Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<String, Municipality> muniList_lhMap = election.getMuniList_lhMap();
         Municipality muni = muniList_lhMap.computeIfAbsent(munId, id -> {
             Municipality m = new Municipality(id, muniName);
@@ -101,7 +101,7 @@ public class ElectionTransformer implements Transformer<Election> {
     @Override
     public void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap) {
         String electionId = poStLhMap.get("electionId");
-        Election election = this.electionLhMap.get(electionId);
+        Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<String, PollingStation> poStList_lhMap = election.getPoStList_lhMap();
         String poStId = poStLhMap.get("poStId");
         String poStName = poStLhMap.get("poStName");
@@ -125,7 +125,7 @@ public class ElectionTransformer implements Transformer<Election> {
         int constId = Integer.parseInt(candiLhMap.get("constId"));
         int affId = Integer.parseInt(candiLhMap.get("affId"));
         String electionId = candiLhMap.get("electionId");
-        Election election = this.electionLhMap.get(electionId);
+        Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<Integer, Constituency> constiList_lhMap = election.getConstiList_lhMap();
         Constituency consti = constiList_lhMap.get(constId);
         if (consti != null) {

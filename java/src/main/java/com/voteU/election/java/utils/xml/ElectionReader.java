@@ -41,14 +41,9 @@ public class ElectionReader {
             try {
                 this.processor.processResults(electionId, PathUtils.getResourcePath(filePath));
                 log.info("Processed Election {}", electionId);
+                electionList_lhMap.put(electionId, this.transformer.getElectionLhMap());
             } catch (Exception e) {
                 log.error("Could not process Election {}", electionId, e);
-            }
-            try {
-                electionList_lhMap.put(electionId, this.transformer.getElectionLhMap());
-            }
-            catch (Exception e) {
-
             }
         }
         System.out.println("All files are processed.\n");

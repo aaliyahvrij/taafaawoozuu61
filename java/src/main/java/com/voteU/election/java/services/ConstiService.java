@@ -3,9 +3,11 @@ package com.voteU.election.java.services;
 import com.voteU.election.java.models.Election;
 import com.voteU.election.java.models.Constituency;
 import com.voteU.election.java.models.Municipality;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 
+@Service
 public class ConstiService {
     public ConstiService() {
     }
