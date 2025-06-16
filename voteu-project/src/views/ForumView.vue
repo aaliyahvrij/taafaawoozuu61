@@ -5,9 +5,28 @@ import {createPost, getAllPosts} from '@/services/PostsService.ts'
 import type { Posts } from '@/interface/Posts.ts'
 import CommentSection from '@/components/CommentSection.vue'
 import { useRouter } from 'vue-router'
+import type { User } from '@/interface/User.ts'
+import { authService } from '@/services/AuthService.ts'
+import { getUserByUsername } from '@/services/UserService.ts'
 
-//TODO: ADD DATE TO CARD
-//TODO: ADD LIKE
+const user = ref<User | null>(null)
+const error = ref<string | null>(null)
+const fetchUserProfile = async () => {
+  try {
+    const decodedToken = authService.getDecodedToken()
+    if (decodedToken && decodedToken.sub) {
+
+      user.value = await getUserByUsername(decodedToken.sub)
+    } else {
+      error.value = 'Failed to retrieve user information. Please log in again.'
+    }
+  } catch (err) {
+    error.value = 'Failed to fetch user profile'
+    console.error(err)
+  }
+}
+onMounted(fetchUserProfile)
+
 const router = useRouter()
 const { isLoggedIn  } = useAuth()
 

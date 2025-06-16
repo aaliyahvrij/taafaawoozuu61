@@ -75,5 +75,9 @@ const role: ComputedRef<string | null> = computed(() => useAuth().getRole())
 .login-button:hover {
   background-color: #0040ff;
 }
+
+.login-link button{
+  width: 100%;
+}
 </style>
 

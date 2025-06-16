@@ -3,6 +3,11 @@ import { onMounted, ref } from 'vue'
 import { getPostById } from '@/services/PostsService.ts'
 import { useRoute } from 'vue-router'
 import type { Posts } from '@/interface/Posts.ts'
+import type { User } from '@/interface/User.ts'
+import { authService } from '@/services/AuthService.ts'
+import { getUserByUsername } from '@/services/UserService.ts'
+import { deletePost } from '@/services/PostsService.ts'
+import router from '@/router'
 
 const  route = useRoute()
 
@@ -18,33 +23,55 @@ const post = ref<Posts>({
     username: '',
   }
 })
+const user = ref<User | null>(null)
+const error = ref<string | null>(null)
+const fetchUserProfile = async () => {
+  try {
+    const decodedToken = authService.getDecodedToken()
+    if (decodedToken && decodedToken.sub) {
+
+      user.value = await getUserByUsername(decodedToken.sub)
+      console.log(user.value.id)
+    } else {
+      error.value = 'Failed to retrieve user information. Please log in again.'
+    }
+  } catch (err) {
+    error.value = 'Failed to fetch user profile'
+    console.error(err)
+  }
+}
+onMounted(fetchUserProfile)
 
 onMounted(async function(){
   try{
     const postId : number = Number(route.params.id)
     const response = await getPostById(postId)
-    console.log(response)
+    post.value.id = response.id
     post.value.title = response.title;
     post.value.description = response.description;
     post.value.body = response.body;
     post.value.createdAt = response.createdAt;
     post.value.comments = response.comments;
     post.value.user.username = response.user.username
+    post.value.user.id = response.user.id
   }
   catch (e) {
     console.log(e)
   }
 })
 
-const showDelete = ref(true)
-const postdata = ref({ likes: [] })
 
-function handleAddLike() {
-  console.log('Like added')
-}
 
-function handleDeletePost() {
-  console.log(`Post with ID ${post.value.id} deleted`)
+async function handleDeletePost(id:number) :Promise<void> {
+  const confirmed = confirm('Are you sure you want to delete this post?')
+  if (!confirmed) return
+  try{
+    await deletePost(id)
+    router.push({ path: `/forum` });
+    console.log(`Post with ID ${id} deleted`)
+  } catch (e){
+    console.log(e)
+  }
 }
 
 
@@ -73,7 +100,10 @@ function handleDeletePost() {
             <div class="actions-row">
 
 
-              <button class="delete-button" v-show="showDelete" @click="handleDeletePost" aria-label="Delete Post">
+              <button
+                class="delete-button"
+                v-if="user && user.id === post.user.id"
+                @click="handleDeletePost(post.id)" aria-label="Delete Post">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"
@@ -171,29 +201,7 @@ function handleDeletePost() {
   gap: 1rem; /* space between like and delete */
 }
 
-.like-section {
-  display: flex;
-  align-items: center;
-}
 
-.like-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.like-icon {
-  transition: transform 0.2s ease-in-out;
-}
-
-.like-icon:hover {
-  transform: scale(1.25);
-}
-
-.like-count {
-  margin-left: 0.5rem;
-}
 
 .delete-button {
   background-color: #000;
