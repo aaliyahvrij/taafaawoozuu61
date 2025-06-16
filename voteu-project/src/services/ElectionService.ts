@@ -1,4 +1,4 @@
-import type { Affiliation, Constituency, Election, Province } from '@/interfaces'
+import type { Election, Province, Constituency, Affiliation } from '@/interfaces'
 
 export class ElectionService {
   static async getElectoralData(electionIdListString: string): Promise<Election | null> {

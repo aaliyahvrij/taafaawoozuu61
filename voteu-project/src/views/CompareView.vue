@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type {
-  Affiliation,
+  Province,
   Constituency,
   Municipality,
   PollingStation,
-  Province,
+  Affiliation,
 } from '@/interfaces'
 import { ConstiService, ElectionService, MuniService, PoStService, ProviService } from '@/services'
 
@@ -15,12 +15,12 @@ const selectedProvi1 = ref<Province | null>(null)
 const selectedConsti1 = ref<Constituency | null>(null)
 const selectedMuni1 = ref<Municipality | null>(null)
 const selectedPoSt1 = ref<PollingStation | null>(null)
-const affiList1 = ref<Affiliation[] | null>(null)
 const voteLevel1 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
 const proviList1 = ref<Province[]>([])
 const constiList1 = ref<Constituency[]>([])
 const muniList1 = ref<Municipality[]>([])
 const poStList1 = ref<PollingStation[]>([])
+const affiList1 = ref<Affiliation[] | null>(null)
 
 // The second filter set
 const selectedElection2 = ref<'TK2021' | 'TK2023' | null>(null)
@@ -28,13 +28,12 @@ const selectedProvi2 = ref<Province | null>(null)
 const selectedConsti2 = ref<Constituency | null>(null)
 const selectedMuni2 = ref<Municipality | null>(null)
 const selectedPoSt2 = ref<PollingStation | null>(null)
-const affiList2 = ref<Affiliation[] | null>(null)
 const voteLevel2 = ref<'national' | 'provi' | 'consti' | 'muni' | 'poSt' | null>(null)
-
 const proviList2 = ref<Province[]>([])
 const constiList2 = ref<Constituency[]>([])
 const muniList2 = ref<Municipality[]>([])
 const poStList2 = ref<PollingStation[]>([])
+const affiList2 = ref<Affiliation[] | null>(null)
 
 // --- Helper functies voor ophalen filters ---
 async function getNationalLevel_proviList_lhMap(

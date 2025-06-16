@@ -1,4 +1,4 @@
-import type { Affiliation, PollingStation } from '@/interfaces'
+import type { PollingStation, Affiliation } from '@/interfaces'
 
 export class MuniService {
   static async getPoStList_lhMap(

@@ -2,20 +2,20 @@
 import { ref, computed } from 'vue'
 import { AffiChart } from '@/components'
 import type {
-  Affiliation,
-  Candidate,
+  Province,
   Constituency,
   Municipality,
   PollingStation,
-  Province,
+  Affiliation,
+  Candidate,
 } from '@/interfaces'
 import {
   AffiStyleService,
   ElectionService,
+  ProviService,
   ConstiService,
   MuniService,
   PoStService,
-  ProviService,
 } from '@/services'
 
 const selectedElection = ref<'TK2021' | 'TK2023' | null>(null)

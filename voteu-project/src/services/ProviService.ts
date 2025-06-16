@@ -1,4 +1,4 @@
-import type { Affiliation, Constituency } from '@/interfaces'
+import type { Constituency, Affiliation } from '@/interfaces'
 
 export class ProviService {
   static async getConstiList(
