@@ -60,6 +60,8 @@ public interface Transformer<E> {
 
     void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap);
 
+    void registerAffiLevelData();
+
     /**
      * Called multiple times per file with information about a candidate.
      * <ul>

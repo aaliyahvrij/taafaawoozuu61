@@ -107,6 +107,11 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
+    public void registerAffiLevelData() {
+
+    }
+
+    @Override
     public void registerCandiLevelData(LinkedHashMap<String, String> candiLhMap) {
         int candId = Integer.parseInt(candiLhMap.get("candId"));
         String firstName = candiLhMap.get("firstName");
