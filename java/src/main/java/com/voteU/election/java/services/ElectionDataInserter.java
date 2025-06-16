@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class ElectionDataInserter {
@@ -15,6 +17,16 @@ public class ElectionDataInserter {
     private static final Logger logger = LoggerFactory.getLogger(ElectionDataInserter.class);
 
     private final JdbcTemplate jdbc;
+
+    private void batchUpdateInChunks(String sql, List<Object[]> batchArgs, int chunkSize) {
+        int total = batchArgs.size();
+        for (int i = 0; i < total; i += chunkSize) {
+            int end = Math.min(total, i + chunkSize);
+            List<Object[]> chunk = batchArgs.subList(i, end);
+            int[] result = jdbc.batchUpdate(sql, chunk);
+            logger.info("Batch update executed for chunk {} - {} of {}, affected rows: {}", i, end, total, result.length);
+        }
+    }
 
     public ElectionDataInserter(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
@@ -24,31 +36,32 @@ public class ElectionDataInserter {
         logger.info("Starting insertion of election with id {}", election.getId());
 
         // Insert single election row (assuming elections table id is unique)
-        insertElectionRow(election);
+        // insertElectionRow(election);
+        // batchInsertParties(election.getId(), election.getParties().values());
+        //batchInsertCandidates(election.getId(), election.getParties().values());
 
-        // Batch insert parties and candidates
-        batchInsertParties(election.getId(), election.getParties().values());
-        batchInsertCandidates(election.getId(), election.getParties().values());
+        //batchInsertNationalPartyVotes(election.getId(), election.getParties().values());
+        // batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
-        // Batch insert constituencies and their votes
-        batchInsertConstituencies(election.getConstituencies().values());
-        batchInsertConstituencyVotes(election.getId(), election.getConstituencies().values());
-        batchInsertConstituencyPartyVotes(election.getId(), election.getConstituencies().values());
+        // batchInsertConstituencies(election);
+        //batchInsertConstituencyPartyVotes(election);
+        //batchInsertConstituencyCandidateVotes(election);
+        //batchInsertAuthorities(election);
+        //batchInsertAuthorityPartyVotes(election);
+        batchInsertAuthorityCandidateVotes(election);
 
-        // Batch insert authorities and their votes, party votes, polling stations etc.
-        batchInsertAuthorities(election.getId(), election.getConstituencies().values());
 
         logger.info("Finished insertion of election with id {}", election.getId());
     }
 
     private void insertElectionRow(Election election) {
-        String sql = "INSERT IGNORE INTO elections (id, name, date, votes) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT IGNORE INTO elections (election_id, name, date, votes) VALUES (?, ?, ?, ?)";
         int rows = jdbc.update(sql, election.getId(), election.getName(), election.getDate(), election.getVotes());
-        logger.info("Inserted election row for id {}. Rows affected: {}", election.getId(), rows);
+        logger.info("Inserted election row for election_id {}. Rows affected: {}", election.getId(), rows);
     }
 
     private void batchInsertParties(String electionId, Iterable<Party> parties) {
-        String sql = "INSERT IGNORE INTO parties (id, election_id, name) VALUES (?, ?, ?)";
+        String sql = "INSERT IGNORE INTO parties (party_id, election_id, name) VALUES (?, ?, ?)";
         List<Object[]> batchArgs = new ArrayList<>();
         for (Party p : parties) {
             batchArgs.add(new Object[]{p.getId(), electionId, p.getName()});
@@ -58,112 +71,177 @@ public class ElectionDataInserter {
     }
 
     private void batchInsertCandidates(String electionId, Iterable<Party> parties) {
-        String sql = "INSERT IGNORE INTO candidates (id, party_id, election_id, first_name, last_name, gender, locality_name) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT IGNORE INTO candidates (candidate_id, party_id, election_id, first_name, last_name, gender, locality_name) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         List<Object[]> batchArgs = new ArrayList<>();
         for (Party p : parties) {
             for (Candidate c : p.getCandidates()) {
-                batchArgs.add(new Object[]{
-                        c.getId(),
-                        p.getId(),
-                        electionId,
-                        c.getFirstName(),
-                        c.getLastName(),
-                        c.getGender(),
-                        c.getLocalityName()
-                });
+                batchArgs.add(new Object[]{c.getId(), // candidate_id
+                        p.getId(), // party_id
+                        electionId, c.getFirstName(), c.getLastName(), c.getGender(), c.getLocalityName()});
             }
         }
         int[] result = jdbc.batchUpdate(sql, batchArgs);
         logger.info("Batch inserted candidates for election {}. Number of candidates: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
     }
 
-    private void batchInsertConstituencies(Iterable<Constituency> constituencies) {
-        String sql = "INSERT IGNORE INTO constituencies (id, province_id, name) VALUES (?, ?, ?)";
+    private void batchInsertNationalPartyVotes(String electionId, Collection<Party> parties) {
+        String sql = "INSERT IGNORE INTO national_party_votes (election_id, party_id, votes) VALUES (?, ?, ?)";
         List<Object[]> batchArgs = new ArrayList<>();
-        for (Constituency c : constituencies) {
-            batchArgs.add(new Object[]{c.getId(), c.getProvinceId(), c.getName()});
+        for (Party p : parties) {
+            batchArgs.add(new Object[]{electionId, p.getId(), p.getVotes()});
         }
         int[] result = jdbc.batchUpdate(sql, batchArgs);
-        logger.info("Batch inserted constituencies. Number of constituencies: {}, Batch update count: {}", batchArgs.size(), result.length);
+        logger.info("Batch inserted national party votes for election {}. Count: {}, Batch update count: {}", electionId, parties.size(), result.length);
     }
 
-    private void batchInsertConstituencyVotes(String electionId, Iterable<Constituency> constituencies) {
-        String sql = "INSERT IGNORE INTO constituency_total_votes (election_id, constituency_id, votes) VALUES (?, ?, ?)";
+    private void batchInsertNationalCandidateVotes(String electionId, Collection<Party> parties) {
+        String sql = "INSERT IGNORE INTO national_candidate_votes (candidate_id, party_id, election_id, votes) VALUES (?, ?, ?, ?)";
         List<Object[]> batchArgs = new ArrayList<>();
-        for (Constituency c : constituencies) {
-            batchArgs.add(new Object[]{electionId, c.getId(), c.getVotes()});
-        }
-        int[] result = jdbc.batchUpdate(sql, batchArgs);
-        logger.info("Batch inserted constituency total votes for election {}. Number of constituencies: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
-    }
-
-    private void batchInsertConstituencyPartyVotes(String electionId, Iterable<Constituency> constituencies) {
-        String sql = "INSERT IGNORE INTO constituency_party_votes (election_id, constituency_id, party_id, votes) VALUES (?, ?, ?, ?)";
-        List<Object[]> batchArgs = new ArrayList<>();
-        int count = 0;
-        for (Constituency c : constituencies) {
-            for (Party p : c.getParties().values()) {
-                batchArgs.add(new Object[]{electionId, c.getId(), p.getId(), p.getVotes()});
-                count++;
+        for (Party p : parties) {
+            for (Candidate c : p.getCandidates()) {
+                batchArgs.add(new Object[]{c.getId(),    // candidate_ref_id (references candidates.id)
+                        p.getId(),    // party_id
+                        electionId,   // election_id
+                        c.getVotes()  // votes
+                });
             }
         }
         int[] result = jdbc.batchUpdate(sql, batchArgs);
-        logger.info("Batch inserted constituency party votes for election {}. Number of votes: {}, Batch update count: {}", electionId, count, result.length);
+        logger.info("Batch inserted national candidate votes for election {}. Number of entries: {}, Batch update count: {}", electionId, batchArgs.size(), result.length);
     }
 
-    private void batchInsertAuthorities(String electionId, Iterable<Constituency> constituencies) {
-        String authoritySql = "INSERT IGNORE INTO authorities (id, constituency_id, name, election_id) VALUES (?, ?, ?, ?)";
-        String authorityVotesSql = "INSERT IGNORE INTO authority_total_votes (election_id, authority_id, votes) VALUES (?, ?, ?)";
-        String authorityPartyVotesSql = "INSERT IGNORE INTO authority_party_votes (election_id, authority_id, party_id, votes) VALUES (?, ?, ?, ?)";
-        String pollingStationSql = "INSERT IGNORE INTO pollingstations (id, authority_id, name, zipcode, election_id) VALUES (?, ?, ?, ?, ?)";
-        String pollingStationVotesSql = "INSERT IGNORE INTO pollingstation_total_votes (election_id, pollingstation_id, votes) VALUES (?, ?, ?)";
-        String pollingStationPartyVotesSql = "INSERT IGNORE INTO pollingstation_party_votes (election_id, pollingstation_id, party_id, votes) VALUES (?, ?, ?, ?)";
+    private void batchInsertConstituencies(Election election) {
+        String sql = "INSERT INTO constituencies " + "(constituency_id, province_id, election_id, name, votes) VALUES (?, ?, ?, ?, ?)";
 
-        List<Object[]> authorityBatch = new ArrayList<>();
-        List<Object[]> authorityVotesBatch = new ArrayList<>();
-        List<Object[]> authorityPartyVotesBatch = new ArrayList<>();
-        List<Object[]> pollingStationBatch = new ArrayList<>();
-        List<Object[]> pollingStationVotesBatch = new ArrayList<>();
-        List<Object[]> pollingStationPartyVotesBatch = new ArrayList<>();
+        List<Object[]> batchArgs = new ArrayList<>();
 
-        int authorityPartyVotesCount = 0;
-        int pollingStationPartyVotesCount = 0;
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                batchArgs.add(new Object[]{constituency.getId(), province.getId(), election.getId(), constituency.getName(), constituency.getVotes()  // assuming this is the field in your model
+                });
+            }
+        }
 
-        for (Constituency c : constituencies) {
-            for (Authority authority : c.getAuthorities().values()) {
-                authorityBatch.add(new Object[]{authority.getId(), c.getId(), authority.getName(), electionId});
-                authorityVotesBatch.add(new Object[]{electionId, authority.getId(), authority.getVotes()});
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Inserted into 'constituencies' for election {}: {} rows", election.getId(), batchArgs.size());
+    }
 
-                for (Party p : authority.getParties().values()) {
-                    authorityPartyVotesBatch.add(new Object[]{electionId, authority.getId(), p.getId(), p.getVotes()});
-                    authorityPartyVotesCount++;
+    private void batchInsertConstituencyPartyVotes(Election election) {
+        String sql = "INSERT INTO constituency_party_votes " + "(constituency_id, election_id, party_id, votes) VALUES (?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Party party : constituency.getParties().values()) {
+                    batchArgs.add(new Object[]{constituency.getId(), election.getId(), party.getId(), party.getVotes()});
                 }
+            }
+        }
 
-                for (PollingStation ps : authority.getPollingStations().values()) {
-                    pollingStationBatch.add(new Object[]{ps.getId(), authority.getId(), ps.getName(), ps.getZipCode(), electionId});
-                    pollingStationVotesBatch.add(new Object[]{electionId, ps.getId(), ps.getVotes()});
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Inserted constituency_party_votes for election {}: {} rows", election.getId(), batchArgs.size());
+    }
 
-                    for (Party p : ps.getParties().values()) {
-                        pollingStationPartyVotesBatch.add(new Object[]{electionId, ps.getId(), p.getId(), p.getVotes()});
-                        pollingStationPartyVotesCount++;
+    private void batchInsertConstituencyCandidateVotes(Election election) {
+        String sql = "INSERT INTO constituency_candidate_votes " + "(candidate_id, party_id, election_id, constituency_id, votes) VALUES (?, ?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Party party : constituency.getParties().values()) {
+                    for (Candidate candidate : party.getCandidates()) {
+                        batchArgs.add(new Object[]{candidate.getId(), party.getId(), election.getId(), constituency.getId(), candidate.getVotes()});
                     }
                 }
             }
         }
 
-        int[] authorityResult = jdbc.batchUpdate(authoritySql, authorityBatch);
-        int[] authorityVotesResult = jdbc.batchUpdate(authorityVotesSql, authorityVotesBatch);
-        int[] authorityPartyVotesResult = jdbc.batchUpdate(authorityPartyVotesSql, authorityPartyVotesBatch);
-        int[] pollingStationResult = jdbc.batchUpdate(pollingStationSql, pollingStationBatch);
-        int[] pollingStationVotesResult = jdbc.batchUpdate(pollingStationVotesSql, pollingStationVotesBatch);
-        int[] pollingStationPartyVotesResult = jdbc.batchUpdate(pollingStationPartyVotesSql, pollingStationPartyVotesBatch);
-
-        logger.info("Batch inserted authorities. Count: {}, Batch update count: {}", authorityBatch.size(), authorityResult.length);
-        logger.info("Batch inserted authority total votes. Count: {}, Batch update count: {}", authorityVotesBatch.size(), authorityVotesResult.length);
-        logger.info("Batch inserted authority party votes. Count: {}, Batch update count: {}", authorityPartyVotesCount, authorityPartyVotesResult.length);
-        logger.info("Batch inserted polling stations. Count: {}, Batch update count: {}", pollingStationBatch.size(), pollingStationResult.length);
-        logger.info("Batch inserted polling station total votes. Count: {}, Batch update count: {}", pollingStationVotesBatch.size(), pollingStationVotesResult.length);
-        logger.info("Batch inserted polling station party votes. Count: {}, Batch update count: {}", pollingStationPartyVotesCount, pollingStationPartyVotesResult.length);
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Inserted constituency_candidate_votes for election {}: {} rows", election.getId(), batchArgs.size());
     }
+
+    private void batchInsertAuthorities(Election election) {
+        String sql = "INSERT IGNORE INTO authorities (authority_id, constituency_id, election_id, name, votes) VALUES (?, ?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Authority authority : constituency.getAuthorities().values()) {
+                    batchArgs.add(new Object[]{authority.getId(), constituency.getId(), election.getId(), authority.getName(), authority.getVotes()});
+                }
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Batch inserted authorities for election {}. Total authorities: {}", election.getId(), batchArgs.size());
+    }
+
+    private void batchInsertAuthorityPartyVotes(Election election) {
+        String sql = "INSERT IGNORE INTO authority_party_votes (authority_id, party_id, election_id, votes) VALUES (?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Authority authority : constituency.getAuthorities().values()) {
+                    // Assuming Authority has a Map<Integer, Party> parties with votes
+                    for (Party party : authority.getParties().values()) {
+                        batchArgs.add(new Object[]{authority.getId(), party.getId(), election.getId(), party.getVotes()});
+                    }
+                }
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Batch inserted authority party votes for election {}. Total records: {}", election.getId(), batchArgs.size());
+    }
+
+    private void batchInsertAuthorityCandidateVotes(Election election) {
+        String sql = "INSERT INTO authority_candidate_votes (authority_id, election_id, party_id, candidate_id, votes) VALUES (?, ?, ?, ?, ?)";
+
+        List<Object[]> batchArgs = new ArrayList<>();
+
+        for (Province province : election.getProvinces()) {
+            for (Constituency constituency : province.getConstituencies()) {
+                for (Authority authority : constituency.getAuthorities().values()) {
+                    for (Party party : authority.getParties().values()) {
+                        for (Candidate candidate : party.getCandidates()) {
+                            batchArgs.add(new Object[]{authority.getId(), election.getId(), party.getId(), candidate.getId(), candidate.getVotes()});
+                        }
+                    }
+                }
+            }
+        }
+
+        batchUpdateInChunks(sql, batchArgs, 1000);
+        logger.info("Batch inserted authority candidate votes for election {}. Total records: {}", election.getId(), batchArgs.size());
+    }
+
+
+    public void exportPollingStationCandidateVotesToCSV(Election election, String filePath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("election_id,pollingstation_id,party_id,candidate_id,votes");
+            writer.newLine();
+            for (Province province : election.getProvinces()) {
+                for (Constituency c : province.getConstituencies()) {
+                    for (Authority a : c.getAuthorities().values()) {
+                        for (PollingStation ps : a.getPollingStations().values()) {
+                            for (Party p : ps.getParties().values()) {
+                                for (Candidate candidate : p.getCandidates()) {
+                                    int votes = candidate.getVotes();
+                                    String line = String.format("%s,%s,%s,%s,%d", election.getId(), ps.getId(), p.getId(), candidate.getId(), votes);
+                                    writer.write(line);
+                                    writer.newLine();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

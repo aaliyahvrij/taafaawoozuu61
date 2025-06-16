@@ -38,7 +38,7 @@ function clear() {
       <option value="2021">2021</option>
       <option value="2023">2023</option>
     </select>
-    <div class="tag" v-if="localValue">
+    <button class="tag" v-if="localValue">
       {{ localValue }}
       <svg
         @click="clear"
@@ -50,7 +50,7 @@ function clear() {
       >
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
       </svg>
-    </div>
+    </button>
   </div>
 </template>
 

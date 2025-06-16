@@ -3,6 +3,7 @@ import { PartyStyleService } from '@/services/PartyStyleService.ts'
 import PartyChart from '@/components/Data/charts/PartyChart.vue'
 import type { Party } from '@/interface/Party.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
+import BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
 
 defineProps<{
   selectedElection: string | number | null
@@ -29,7 +30,7 @@ defineEmits<{
     <div class="party-list" v-if="selectedElection && displayedPartyVotes && !selectedParty">
       <p>{{ currentVoteLevel }} party votes for Election {{ selectedElection }}</p>
 
-      <PartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />
+      <BarPartyChart v-if="partyVotes" :partyVotes="displayedPartyVotes" />
 
       <div
           class="party-row"
@@ -161,7 +162,7 @@ defineEmits<{
   .party-name {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #1f2937;
+    color: #000000;
     flex: 1;
   }
 

@@ -2,6 +2,7 @@
 import { watchEffect, ref } from 'vue'
 import { Chart, registerables, type ChartConfiguration } from 'chart.js'
 import type { Party } from '@/interface/Party.ts'
+import pattern from 'patternomaly'  // <-- Import patternomaly
 
 Chart.register(...registerables)
 
@@ -12,6 +13,11 @@ const props = defineProps<{
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart<'bar'> | null = null
 
+const patternStyles = [
+  'square', 'circle', 'diamond', 'triangle', 'zigzag',
+  'line', 'dash', 'dot', 'cross', 'plus'
+]
+
 function generateColorFromName(name: string): string {
   let hash = 0
   for (let i = 0; i < name.length; i++) {
@@ -21,13 +27,24 @@ function generateColorFromName(name: string): string {
   return `hsl(${hue}, 70%, 60%)`
 }
 
+function getPattern(name: string, index: number) {
+  const baseColor = generateColorFromName(name)
+  const patternType = patternStyles[index % patternStyles.length]
+  return pattern.draw(patternType, baseColor)
+}
+
 watchEffect(() => {
   if (!canvasRef.value) return
 
   if (props.partyVotes && props.partyVotes.length > 0) {
     const labels = props.partyVotes.map(p => p.name)
     const data = props.partyVotes.map(p => p.votes)
-    const backgroundColors = labels.map(generateColorFromName)
+    const backgroundPatterns = labels.map(getPattern)
+    // For borders, use a darker shade of base color:
+    const borderColors = labels.map((name, i) => {
+      const baseColor = generateColorFromName(name)
+      return baseColor.replace('60%', '40%')
+    })
 
     const config: ChartConfiguration<'bar', number[], string> = {
       type: 'bar',
@@ -36,8 +53,8 @@ watchEffect(() => {
         datasets: [{
           label: 'Votes',
           data,
-          backgroundColor: backgroundColors,
-          borderColor: backgroundColors.map(c => c.replace('60%', '40%')),
+          backgroundColor: backgroundPatterns,
+          borderColor: borderColors,
           borderWidth: 1
         }]
       },
