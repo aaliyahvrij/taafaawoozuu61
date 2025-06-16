@@ -1,28 +1,42 @@
 package com.voteU.election.java.model;
 
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 
+@Getter
+@Setter
 public class Party {
     int id;
-    String partyName;
+    String name;
+    int votes;
+    double percentage;
+    List<Candidate> candidates;
 
-
-    public Party(int id, String partyName) {
+    public Party(int id, String name) {
         this.id = id;
-        this.partyName = partyName;;
+        this.name = name;
+        this.candidates = new ArrayList<>();
+        this.votes = 0;
     }
 
-    public int getId() {
-        return id;
-    }
-    public String getPartyName() {
-        return partyName;
+    public void addCandidate(Candidate candidate) {
+        this.candidates.add(candidate);
     }
 
 
+    public boolean hasCandidateId(int candidateId) {
+        for (Candidate candidate : this.candidates) {
+            if (candidate.getId() == candidateId) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    @Override
     public String toString() {
-        return "{ID: " + id + ", PartyName: " + partyName  + "}";
+        return String.format("Party[id=%d, name=%s, votes=%d, candidates=%s]", this.id, this.name, this.votes, this.candidates);
     }
 }

@@ -1,6 +1,5 @@
 package com.voteU.election.java.utils.xml;
 
-
 import java.util.Map;
 
 /**
@@ -10,6 +9,7 @@ import java.util.Map;
  * For example when {@link #registerCandidate(Map)} is called, it must add the candidate to the correct Affiliation(party).<br>
  * After all the data has been transformed it should be able to return an instance of a class that encapsulates all
  * the data in the application specific data classes.
+ *
  * @param <E>
  */
 public interface Transformer<E> {
@@ -22,7 +22,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#ELECTION_CATEGORY}</li>
      *     <li>{@link DutchElectionProcessor#ELECTION_DATE}</li>
      * </ul>
+     *
      * @param electionData a {@code Map} containing the information as {@code String}'s.
+     * @return
      */
     void registerElection(Map<String, String> electionData);
 
@@ -33,6 +35,7 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#CONTEST_IDENTIFIER}</li>
      *     <li>{@link DutchElectionProcessor#CONTEST_NAME}</li>
      * </ul>
+     *
      * @param contestData a {@code Map} containing information about the election and the contest.
      */
     void registerContest(Map<String, String> contestData);
@@ -44,6 +47,7 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#AFFILIATION_IDENTIFIER}</li>
      *     <li>{@link DutchElectionProcessor#REGISTERED_NAME}</li>
      * </ul>
+     *
      * @param affiliationData a {@code Map} containing information about the election, contest and the affiliation.
      */
     void registerAffiliation(Map<String, String> affiliationData);
@@ -58,8 +62,9 @@ public interface Transformer<E> {
      *     <li>{@link DutchElectionProcessor#LAST_NAME_PREFIX}</li>
      *     <li>{@link DutchElectionProcessor#LAST_NAME}</li>
      * </ul>
+     *
      * @param candidateData a {@code Map} containing information about the election, contest, affiliation and the
-     *                     candidate.
+     *                      candidate.
      */
     void registerCandidate(Map<String, String> candidateData);
 
@@ -69,14 +74,28 @@ public interface Transformer<E> {
      * <ul>
      *     <li>{@link DutchElectionProcessor#VALID_VOTES}</li>
      * </ul>
+     *
      * @param votesData a {@code Map} containing information about the election, contest, affiliation, candidate and
      *                  the number of votes.
      */
-    void registerVotes(Map<String, String> votesData);
+
+    void registerNation(Map<String, String> votesData);
+
+    void registerConstituency(Map<String, String> constituencyData,
+                              Map<Integer, Integer> affiliationVotes,
+                              Map<Integer, Map<Integer, Integer>> candidateVotes,
+                              Map<Integer, String> affiliationNames);
+
+    void registerPollingStation(Map<String, String> pollingStationData);
+
+
+    void registerAuthority(Map<String, String> AuthorityData);
 
     /**
      * Returns an instance that encapsulates all the registered data about the election.
+     *
      * @return an instance that encapsulates all the data for an election.
      */
     E retrieve();
 }
+ 

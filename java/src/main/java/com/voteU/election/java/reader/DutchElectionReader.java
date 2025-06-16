@@ -1,49 +1,71 @@
 package com.voteU.election.java.reader;
 
 import com.voteU.election.java.model.Election;
-import com.voteU.election.java.model.Party;
 import com.voteU.election.java.utils.PathUtils;
 import com.voteU.election.java.utils.xml.DutchElectionProcessor;
-import com.voteU.election.java.utils.xml.Transformer;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import java.util.HashMap;
 import java.util.Map;
-
 /**
- * A very small demo of how the classes {@link DutchElectionProcessor} and {@link Transformer}
- * can be used to process the XML-files.
- * <br>
- * <b>Please do NOT include this code in you project!</b>
+ * Processes election data from XML files and provides access to the results.
  */
+@Slf4j
+@Component
 public class DutchElectionReader {
+    private final DutchElectionTransformer transformer;
+    private final DutchElectionProcessor<Election> electionProcessor;
 
-    public static void main(String[] args) throws IOException, XMLStreamException {
-        System.out.println("Processing files...");
 
-        // We need a Transformer that has knowledge of your classes.
-        DutchElectionTransformer transformer = new DutchElectionTransformer();
+    public DutchElectionReader() {
+        this.transformer = new DutchElectionTransformer();
+        this.electionProcessor = new DutchElectionProcessor<>(transformer);
+    }
 
-        // And the election processor that traverses the folders and processes the XML-files.
-        DutchElectionProcessor<Election> electionProcessor = new DutchElectionProcessor<>(transformer);
+    /**
+     * Reads and processes election results for multiple years.
+     *
+     * @return A map containing election results, organized by election year.
+     */
+    public Map<String, Election> getAll() {
+        String[] electionIds = {"TK2021", "TK2023"};
+        Map<String, Election> elections = new HashMap<>();
 
-        // Assuming the election data is contained in {@code src/main/resource} it should be found.
-        // Please note that you can also specify an absolute path to the folder!
+        for (String electionId : electionIds) {
+            String path = "/EML_bestanden_" + electionId;
+            try {
+                // Process election data
+                Election election = electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+                elections.put(electionId, election);
+                log.info("Processed Election " + electionId);
+            } catch(Exception e){
+                System.out.println("Could not process " + electionId);
+                e.printStackTrace();
+            }
+        }
+        System.out.println("All files are processed.\n");
+        Map<String, Election> electionsMap = new HashMap<>();
+        for (Map.Entry<String, Election> entry : elections.entrySet()) {
+            String electionYear = entry.getKey();
+            Election election = transformer.getElection(electionYear);
+            electionsMap.put(electionYear, election);
+        }
+        return electionsMap;
+    }
 
-        String resourceName = "/EML_bestanden_TK2021/EML_bestanden_TK2021/Kandidatenlijst_2021/EML_bestanden_TK2021_deel_1/Kandidatenlijsten_TK2021_Amsterdam.eml.xml";
-        Election election = electionProcessor.processResults("TK2021", PathUtils.getResourcePath(resourceName));
+    public Election getElection(String electionId) {
+            String path = "/EML_bestanden_" + electionId;
+            try {
+                // Process election data
+                electionProcessor.processResults(electionId, PathUtils.getResourcePath(path));
+                log.info("Processed Election " + electionId);
+            } catch(Exception e){
+                log.error("Could not process {}", electionId, e);
+            }
 
         System.out.println("All files are processed.\n");
-        // Just print the 'results'
-        //System.out.println(election);
-
-        Map<Integer, Party> parties = transformer.getParties(); //HASHMAP PARTIJ OBJECTEN<ID, {PARTY}>
-
-        for (Party party : parties.values()) {
-            System.out.println(party);
-        }
-
-
+        return transformer.getElection(electionId);
     }
 
 }
+
