@@ -1,6 +1,5 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.compactDTO.CompactPollingStation;
 import com.voteU.election.java.models.Municipality;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
@@ -17,7 +16,7 @@ public class MuniService {
 
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_LhMap = null;
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_LhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             poStList_list_LhMap.put(electionId, muni.getPoStList_lhMap());
@@ -25,15 +24,15 @@ public class MuniService {
         return poStList_list_LhMap;
     }
 
-    public LinkedHashMap<String, List<CompactPollingStation>> getCompactPoStList(String electionIdListString, String munId) {
+    public LinkedHashMap<String, List<PollingStation>> getCompactPoStList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, List<CompactPollingStation>> compactPoStList_list_lhMap = null;
+        LinkedHashMap<String, List<PollingStation>> compactPoStList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             LinkedHashMap<String, PollingStation> poStList_lhMap = muni.getPoStList_lhMap();
-            List<CompactPollingStation> compactPoStList = new ArrayList<>();
+            List<PollingStation> compactPoStList = new ArrayList<>();
             for (PollingStation poSt : poStList_lhMap.values()) {
-                compactPoStList.add(new CompactPollingStation(poSt.getId(), poSt.getName(), poSt.getZipCode()));
+                compactPoStList.add(new PollingStation(poSt.getId(), poSt.getName(), poSt.getZipCode()));
             }
             compactPoStList_list_lhMap.put(electionId, compactPoStList);
         }
@@ -42,7 +41,7 @@ public class MuniService {
 
     public LinkedHashMap<String, PollingStation> getPoSt(String electionIdListString, String munId, String poStId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, PollingStation> poStList_lhMap = null;
+        LinkedHashMap<String, PollingStation> poStList_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             poStList_lhMap.put(electionId, muni.getPoStList_lhMap().get(poStId));
@@ -52,7 +51,7 @@ public class MuniService {
 
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString, String munId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId);
             affiList_list_lhMap.put(electionId, muni.getAffiList_lhMap());
@@ -62,7 +61,7 @@ public class MuniService {
 
     public LinkedHashMap<String, Affiliation> getAffi(String electionIdListString, String munId, Integer affId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, Affiliation> affiList_lhMap = null;
+        LinkedHashMap<String, Affiliation> affiList_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getMuniList_lhMap().get(munId).getAffiList_lhMap().get(affId);
             affiList_lhMap.put(electionId, affi);

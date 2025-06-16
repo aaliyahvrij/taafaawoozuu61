@@ -1,6 +1,5 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.compactDTO.CompactPollingStation;
 import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.services.MuniService;
@@ -27,8 +26,8 @@ public class MuniController {
     }
 
     @GetMapping("/{munId}/pollingstations/compact")
-    public LinkedHashMap<String, List<CompactPollingStation>> getCompactPoStList(@PathVariable String electionIdListString, @PathVariable String munId) {
-        return muniService.getCompactPoStList(electionIdListString, munId);
+    public LinkedHashMap<String, List<PollingStation>> getCompactPoStList_lhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
+        return muniService.getCompactPoStList_lhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/pollingstations/{poStId}")

@@ -15,7 +15,7 @@ public class PoStService {
 
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString, String poStId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             PollingStation poSt = ElectionService.electionList_lhMap.get(electionId).getPoStList_lhMap().get(poStId);
             affiList_list_lhMap.put(electionId, poSt.getAffiList_lhMap());

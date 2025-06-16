@@ -30,6 +30,7 @@ public class ElectionReader {
      */
     public LinkedHashMap<String, Election> getElectionData(String electionIdListString) {
         String[] electionIdList;
+        LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
         if (Objects.equals(electionIdListString, "all")) {
             electionIdList = theEntireElectionIdList;
         } else {
@@ -43,8 +44,14 @@ public class ElectionReader {
             } catch (Exception e) {
                 log.error("Could not process Election {}", electionId, e);
             }
+            try {
+                electionList_lhMap.put(electionId, this.transformer.getElectionLhMap());
+            }
+            catch (Exception e) {
+
+            }
         }
         System.out.println("All files are processed.\n");
-        return this.transformer.getElectionList_lhMap();
+        return electionList_lhMap();
     }
 }

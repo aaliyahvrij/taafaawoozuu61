@@ -40,7 +40,7 @@ public class ElectionService {
      */
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Election election = electionList_lhMap.get(electionId);
             affiList_list_lhMap.put(electionId, election.getAffiList_lhMap());
@@ -53,7 +53,7 @@ public class ElectionService {
      */
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Election election = electionList_lhMap.get(electionId);
             poStList_list_lhMap.put(electionId, election.getPoStList_lhMap());

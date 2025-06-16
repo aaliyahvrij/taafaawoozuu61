@@ -12,7 +12,7 @@ public class ConstiService {
 
     public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniList_lhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
             Constituency consti = election.getConstiList_lhMap().get(constId);
@@ -23,7 +23,7 @@ public class ConstiService {
 
     public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniList_lhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = null;
+        LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Election election = ElectionService.electionList_lhMap.get(electionId);
             Constituency consti = election.getConstiList_lhMap().get(constId);
@@ -39,7 +39,7 @@ public class ConstiService {
 
     public LinkedHashMap<String, Municipality> getMuni(String electionIdListString, Integer constId, String munId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, Municipality> muniList_lhMap = null;
+        LinkedHashMap<String, Municipality> muniList_lhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Municipality muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
             muniList_lhMap.put(munId, muni);

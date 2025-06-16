@@ -19,22 +19,22 @@ public class Affiliation {
         this.vvCount = vvCount;
     }
 
-    public void addCandi(Candidate candidate) {
-        candiList.add(candidate);
+    public void addCandi(Candidate candi) {
+        this.candiList.add(candi);
     }
 
-    public boolean hasCandiShortCode(String candiShortCode) {
+    public boolean hasCandId(int candId) {
         for (Candidate candi : this.candiList) {
-            if (candi.getShortCode().equals(candiShortCode)) {
+            if (candi.getId() == candId) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean hasCandId(int candId) {
+    public boolean hasCandiShortCode(String candiShortCode) {
         for (Candidate candi : this.candiList) {
-            if (candi.getId() == candId) {
+            if (candi.getShortCode().equals(candiShortCode)) {
                 return true;
             }
         }
