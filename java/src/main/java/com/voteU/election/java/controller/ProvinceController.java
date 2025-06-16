@@ -2,12 +2,14 @@ package com.voteU.election.java.controller;
 
 import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
+import com.voteU.election.java.dto.ProvinceVotesDto;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.Province;
 import com.voteU.election.java.services.ProvinceService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,5 +56,12 @@ public class ProvinceController {
     public Map<String, Object> getSummaryByProvinceId(@PathVariable String year, @PathVariable int provinceId) {
         return provinceService.getSummary(year, provinceId);
     }
+
+    @GetMapping("/votes")
+    public List<ProvinceVotesDto> getVotesByProvince(@PathVariable("year") String year) {
+        return provinceService.getVotesPerProvinceByYear(year);
+    }
+
+
 
 }

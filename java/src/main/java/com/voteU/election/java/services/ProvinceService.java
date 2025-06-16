@@ -3,6 +3,8 @@ package com.voteU.election.java.services;
 import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
 import com.voteU.election.java.dto.DropdownOptionDTO;
+import com.voteU.election.java.dto.ProvinceVotesDto;
+import com.voteU.election.java.entities.electiondata.Provinces;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.model.Party;
@@ -11,9 +13,12 @@ import com.voteU.election.java.repositories.electiondata.ProvinceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProvinceService {
+
+
 
     private final ElectionService electionService;
     private final ProvinceRepository provinceRepository;
@@ -28,6 +33,8 @@ public class ProvinceService {
         if (election == null) return new ArrayList<>();
         return election.getProvinces();
     }
+
+
 
     public List<CompactProvince> getCompactProvinces(String year) {
         Election election = electionService.getElection(year);
@@ -144,5 +151,10 @@ public class ProvinceService {
         return null;
     }
 
+
+
+    public List<ProvinceVotesDto> getVotesPerProvinceByYear(String electionId) {
+        return provinceRepository.getProvinceVotesByElectionId(electionId);
+    }
 
 }
