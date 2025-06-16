@@ -142,6 +142,7 @@ async function handleDeletePost(id:number) :Promise<void> {
   background-color: #f9fafb;
   margin: 2.5rem;
   border: 1px solid #ccc;
+  border-radius: 5px;
   padding: 3rem 1.5rem;
   max-width: 768px;
   width: 100%;

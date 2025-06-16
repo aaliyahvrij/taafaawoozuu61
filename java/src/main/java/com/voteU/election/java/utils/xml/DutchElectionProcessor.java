@@ -169,17 +169,16 @@ public class DutchElectionProcessor<E> {
             currentIndex++;
         }
 
-//        for (Path authorityFile : filesToScan) {
-//            double percentDone = ((currentIndex + 1) / (double) totalSteps) * 100;
-//            System.out.printf("[%.2f%%] Processing %s (second pass)%n", percentDone, authorityFile.getFileName());
-//
-//
-//            XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
-//            processElection(electionData, parser);
-//            processVotes2(electionData, parser);
-//
-//            currentIndex++;
-//        }
+        for (Path authorityFile : filesToScan) {
+            double percentDone = ((currentIndex + 1) / (double) totalSteps) * 100;
+          System.out.printf("[%.2f%%] Processing %s (second pass)%n", percentDone, authorityFile.getFileName());
+
+          XMLParser parser = new XMLParser(new FileInputStream(authorityFile.toString()));
+         processElection(electionData, parser);
+          processVotes2(electionData, parser);
+
+           currentIndex++;
+     }
 
         for (Path totalVotesFile : PathUtils.findFilesToScan(folderName, "Totaaltelling_%s.eml.xml".formatted(electionId))) {
             LOG.fine("Found: %s".formatted(totalVotesFile));

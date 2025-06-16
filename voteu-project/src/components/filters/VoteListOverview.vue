@@ -136,11 +136,11 @@ defineEmits<{
 
 .back-button {
   background-color: #002970;
+  margin: 1px;
   border: none;
   color: white;
   padding: 10px 24px;
   font-size: 1rem;
-  font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
