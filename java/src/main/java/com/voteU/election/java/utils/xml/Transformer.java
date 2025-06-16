@@ -19,19 +19,19 @@ import java.util.LinkedHashMap;
 public interface Transformer<E> {
     /**
      * Called once per file with the information about the election.
-     * The parameter {@code electionMap} (should) hold the following information:
+     * The parameter {@code electionLhMap} (should) hold the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#ELECTION_ID}</li>
      *     <li>{@link ElectionProcessor#ELECTION_NAME}</li>
      *     <li>{@link ElectionProcessor#ELECTION_DATE}</li>
      * </ul>
      *
-     * @param electionMap a {@code LinkedHashMap} containing the information as {@code String}'s.
+     * @param electionLhMap a {@code LinkedHashMap} containing the information as {@code String}'s.
      */
-    void registerElectoralLevelData(LinkedHashMap<String, String> electionMap);
+    void registerElectoralLevelData(LinkedHashMap<String, String> electionLhMap);
 
     /**
-     * Called multiple times per file with information about a candidate. The {@code nationMap} can hold
+     * Called multiple times per file with information about a candidate. The {@code nationLhMap} can hold
      * the same information as {@code candiLhMap} in {@link #registerCandiLevelData(LinkedHashMap)},
      * and the following information:
      * <ul>
@@ -47,7 +47,7 @@ public interface Transformer<E> {
 
     /**
      * Called once per file with information about the constituency. The {@code constiLhMap} can hold
-     * the same information as {@code electionMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
+     * the same information as {@code electionLhMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
      * and the following information:
      * <ul>
      *     <li>{@link ElectionProcessor#CONSTI_ID}</li>

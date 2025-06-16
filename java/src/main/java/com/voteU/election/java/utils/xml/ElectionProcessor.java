@@ -7,8 +7,6 @@ import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.HashSet;
@@ -49,7 +47,7 @@ public class ElectionProcessor<E> {
     public static final String ID = "Id";
 
     /*
-     The tag names on the election level within the XML files, which are also used as keys in the maps
+     The tag names on the electoral level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
     public static final String ELECTION_ID = "ElectionIdentifier";
@@ -57,7 +55,7 @@ public class ElectionProcessor<E> {
     public static final String ELECTION_DATE = "ElectionDate";
 
     /*
-     The tag names on the constituency level within the XML files, which are also used as keys in the maps
+     The tag names on the constituencial level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
     public static final String CONSTI = "Contest";
@@ -66,7 +64,7 @@ public class ElectionProcessor<E> {
     public static final String TOTAL_VV_COUNT = "TotalVotes";
 
     /*
-     The tag names on the municipality level within the XML files, which are also used as keys in the maps
+     The tag names on the municipal level within the XML files, which are also used as keys in the maps
      when calling the methods of the transformer.
      */
     public static final String MUNI = "ManagingAuthority";
@@ -97,7 +95,7 @@ public class ElectionProcessor<E> {
     public static final String CANDI_SHORT_CODE = "ShortCode";
     public static final String CANDI_FULL_NAME = "PersonName";
     public static final String NAME_LINE = "NameLine";
-    public static final String INITIALS = "Initials"; // For convenience, is used as a key in the data-maps.
+    public static final String INITIALS = "Initials"; // For convenience, is used as a key in the maps.
     public static final String FIRST_NAME = "FirstName";
     public static final String LAST_NAME_PREFIX = "NamePrefix";
     public static final String LAST_NAME = "LastName";

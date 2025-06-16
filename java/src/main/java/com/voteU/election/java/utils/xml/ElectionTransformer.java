@@ -2,7 +2,6 @@ package com.voteU.election.java.utils.xml;
 
 import com.voteU.election.java.models.*;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.LinkedHashMap;
@@ -11,21 +10,20 @@ import java.util.LinkedHashMap;
  * Organizes processed election data into Election objects.
  */
 @Getter
-@Slf4j
 public class ElectionTransformer implements Transformer<Election> {
     private final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
 
     @Override
-    public void registerElectoralLevelData(LinkedHashMap<String, String> prcsElectionLhMap) {
-        String electionId = prcsElectionLhMap.get("electionId");
-        String electionName = prcsElectionLhMap.get("electionName");
-        String electionDate = prcsElectionLhMap.get("electionDate");
+    public void registerElectoralLevelData(LinkedHashMap<String, String> electionLhMap) {
+        String electionId = electionLhMap.get("electionId");
+        String electionName = electionLhMap.get("electionName");
+        String electionDate = electionLhMap.get("electionDate");
 
         // Get or create an Election object
-        Election electionLhMap = this.electionList_lhMap.get(electionId);
-        if (electionLhMap == null) {
-            electionLhMap = new Election(electionId, electionName, electionDate);
-            this.electionList_lhMap.put(electionId, electionLhMap);
+        Election election = this.electionList_lhMap.get(electionId);
+        if (election == null) {
+            election = new Election(electionId, electionName, electionDate);
+            this.electionList_lhMap.put(electionId, election);
         }
     }
 
