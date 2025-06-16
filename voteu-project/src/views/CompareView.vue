@@ -174,7 +174,6 @@ function applyCompare() {
   padding: 1rem;
   background-color: white;
   color: #002970;
-  font-family: sans-serif;
 }
 
 h2 {
@@ -193,7 +192,6 @@ h2 {
 .filter-set {
   flex: 1;
   min-width: 300px;
-  background-color: #f9f9f9;
   border: 2px solid #002970;
   border-radius: 8px;
   padding: 1rem;
@@ -224,7 +222,6 @@ h2 {
 .tag button {
   background: none;
   border: none;
-  color: #880D1E;
   font-weight: bold;
   margin-left: 0.5rem;
   cursor: pointer;
@@ -232,8 +229,6 @@ h2 {
 }
 
 .compare-button {
-  background-color: #880D1E;
-  color: white;
   border: none;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
@@ -242,9 +237,6 @@ h2 {
   transition: background-color 0.2s ease-in-out;
 }
 
-.compare-button:hover {
-  background-color: #aa1226;
-}
 
 .chart-container {
   margin-top: 2rem;

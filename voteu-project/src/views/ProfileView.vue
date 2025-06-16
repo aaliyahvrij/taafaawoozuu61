@@ -116,11 +116,8 @@ const error = ref<string | null>(null)
 }
 .submit-btn {
   margin-top: 1rem;
-  background-color: #0a2342;
-  color: white;
   padding: 0.5rem 1.25rem;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
 }
 .profile-container {
@@ -151,8 +148,6 @@ const error = ref<string | null>(null)
 }
 
 .edit-btn {
-  background-color: #0a2342;
-  color: white;
   padding: 0.5rem 1.25rem;
   border: none;
   border-radius: 6px;
@@ -184,7 +179,7 @@ const error = ref<string | null>(null)
   padding: 0.75rem;
   border: 1px solid #eee;
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: #f4f4f4;
 }
 
 .email-section h3 {

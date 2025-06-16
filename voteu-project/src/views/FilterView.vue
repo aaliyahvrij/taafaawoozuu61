@@ -387,21 +387,13 @@ function sortByVotes() {
 }
 
 .apply-button {
-  background-color: #66817d;
-  color: #ffffff;
   text-shadow: 0 1px 1px rgb(0, 0, 0);
   padding: 0.5rem;
   margin: 0.5rem 0.5rem 0.5rem 0.8rem;
   border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
   font-size: 1rem;
 }
 
-.apply-button:hover {
-  background-color: #0053ba;
-  color: white;
-}
 
 .party-list p {
   margin: 0;
@@ -421,11 +413,5 @@ function sortByVotes() {
   width: 100%;
 }
 
-.tag svg {
-  cursor: pointer;
-}
 
-.tag button:hover {
-  cursor: pointer;
-}
 </style>

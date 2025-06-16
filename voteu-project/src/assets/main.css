@@ -11,3 +11,28 @@ body {
   font-family: sans-serif;
   background-color: #fff;
 }
+
+button{
+  background-color: #002970;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+button:hover{
+  background-color: #2563eb;
+}
+
+select{
+  background-color: #fafafa;
+  border: 1px solid #eee;
+}
+
+.tag svg {
+  cursor: pointer;
+}
+
+.tag button:hover {
+  cursor: pointer;
+}

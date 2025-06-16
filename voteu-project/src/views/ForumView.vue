@@ -153,8 +153,6 @@ function goToPost(postId : number) :void{
 }
 
 .add-post-btn {
-  background-color: #3b82f6;
-  color: white;
   border: none;
   padding: 0.6rem 1rem;
   font-size: 0.95rem;
@@ -162,9 +160,7 @@ function goToPost(postId : number) :void{
   cursor: pointer;
 }
 
-.add-post-btn:hover {
-  background-color: #2563eb;
-}
+
 
 .login-warning {
   background-color: #fff3cd;
