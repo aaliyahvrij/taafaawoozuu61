@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router'
 //TODO: ADD DATE TO CARD
 //TODO: ADD LIKE
 const router = useRouter()
-const { isLoggedIn, user  } = useAuth()
+const { isLoggedIn  } = useAuth()
 
 const showForm = ref(false)
 const posts = ref<Posts[]>([])
@@ -80,17 +80,17 @@ function goToPost(postId : number) :void{
   <div class="forum-container">
     <h1 class="forum-title">Election Forum</h1>
 
-    <div class="top-bar" v-if="isLoggedIn()">
+    <div class="top-bar" v-if="isLoggedIn">
       <button class="add-post-btn" @click="handleAddPostClick">
         {{ showForm ? 'Cancel' : 'Add Post' }}
       </button>
     </div>
 
-    <div class="login-warning" v-if="!isLoggedIn()">
+    <div class="login-warning" v-if="!isLoggedIn">
       <p>You must be <a href="/login">logged in</a> to add a post.</p>
     </div>
 
-    <div class="post-form" v-if="isLoggedIn() && showForm">
+    <div class="post-form" v-if="isLoggedIn && showForm">
       <input
         v-model="newPost.title"
         placeholder="Post title"

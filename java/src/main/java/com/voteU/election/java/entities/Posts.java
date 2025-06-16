@@ -1,5 +1,7 @@
 package com.voteU.election.java.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ import java.util.Set;
 @Table(name = "posts")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Posts {
 
     @Id
@@ -41,9 +44,11 @@ public class Posts {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties("posts")  // To avoid back reference in User entity
     private User user;
 
     @OneToMany(mappedBy = "postsId")
+    @JsonIgnore  // Or use @JsonManagedReference/@JsonBackReference pair
     private Set<Comments> comments = new LinkedHashSet<>();
 
 }

@@ -6,6 +6,7 @@ import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.Province;
 import com.voteU.election.java.reader.DutchElectionReader;
+import com.voteU.election.java.repositories.electiondata.ProvinceRepository;
 import com.voteU.election.java.services.ElectionService;
 import com.voteU.election.java.services.ProvinceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,14 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProvinceServiceTest {
 
     private ProvinceService provinceService;
+    private ProvinceRepository provinceRepository;
 
     @BeforeEach
     void setUp() {
         DutchElectionReader reader = new DutchElectionReader();
-        ElectionService electionService = new ElectionService(reader);
+        ElectionService electionService = new ElectionService(reader);{
+        }
         electionService.readElection("TK2021");
 
-        provinceService = new ProvinceService(electionService);
+        provinceService = new ProvinceService(electionService, provinceRepository);
     }
 
     @Test
