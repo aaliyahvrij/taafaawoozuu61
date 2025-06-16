@@ -34,9 +34,8 @@ public class ElectionTransformer implements Transformer<Election> {
         String electionId = nationLhMap.get("electionId");
         Election election = this.electionList_lhMap.get(electionId);
         LinkedHashMap<Integer, Affiliation> affiList_lhMap = election.getAffiList_lhMap();
-        Affiliation affi;
         int affId = Integer.parseInt(nationLhMap.get("affId"));
-        affi = affiList_lhMap.get(affId);
+        Affiliation affi = affiList_lhMap.get(affId);
 
         // Handle affiliation-specific data
         if (!nationLhMap.containsKey("candiShortCode")) {
@@ -59,11 +58,11 @@ public class ElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerConstiLevelData(LinkedHashMap<String, String> constiLhMap) {
-
+        // ee
     }
 
     @Override
-    public void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap) {
+    public void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap) {
         // ee
     }
 
@@ -113,7 +112,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
     @Override
     public void registerAffiLevelData() {
-
+        // ee
     }
 
     @Override

@@ -56,7 +56,7 @@ public interface Transformer<E> {
      *
      * @param constiLhMap a {@code LinkedHashMap} containing information about the election and constituency.
      */
-    void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap);
+    void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap);
 
     void registerMuniLevel_affiData(LinkedHashMap<String, String> muniLhMap);
 

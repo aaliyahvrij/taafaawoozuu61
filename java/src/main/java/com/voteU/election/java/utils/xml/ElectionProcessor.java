@@ -357,11 +357,10 @@ public class ElectionProcessor<E> {
 
     private void processConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONSTI)) {
-            List<String> affiNameList = new ArrayList<>();
-            List<Integer> affiVVCountList = new ArrayList<>();
+            LinkedHashMap<Integer, Affiliation> affiList_lhMap = new LinkedHashMap<>();
             HashSet<Integer> processedAffiHashSet = new HashSet<>();
-            HashSet<String> processedCandiHashSet = new HashSet<>();
             LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap = new LinkedHashMap<>();
+            HashSet<String> processedCandiHashSet = new HashSet<>();
             if (parser.findBeginTag(CONSTI_ID)) {
                 int constId = parser.getIntegerAttributeValue(null, ID, 0);
                 constiLhMap.put("constId", String.valueOf(constId));
@@ -374,7 +373,8 @@ public class ElectionProcessor<E> {
             }
             while (parser.findBeginTag(TOTAL_VV_COUNT)) {
                 int affId = -1;
-                String affiName;
+                String affiName = "";
+                int affiVVCount = 0;
                 while (parser.findBeginTag(SELECTION)) {
                     parser.nextTag();
                     switch (parser.getLocalName()) {
@@ -382,7 +382,6 @@ public class ElectionProcessor<E> {
                             affId = parser.getIntegerAttributeValue(null, ID, 0);
                             if (parser.findBeginTag(AFFI_NAME)) {
                                 affiName = parser.getElementText().trim();
-                                affiNameList.add(affiName);
                                 parser.findAndAcceptEndTag(AFFI_NAME);
                             }
                             parser.findAndAcceptEndTag(AFFI_ID);
@@ -390,12 +389,13 @@ public class ElectionProcessor<E> {
                                 continue;
                             }
                             if (parser.findBeginTag(VV_COUNT)) {
-                                int affiVVCount = Integer.parseInt(parser.getElementText().trim());
-                                affiVVCountList.add(affiVVCount);
+                                affiVVCount = Integer.parseInt(parser.getElementText().trim());
                                 candiLhMap.putIfAbsent(affId, new LinkedHashMap<>());
                                 processedAffiHashSet.add(affId);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             }
+                            Affiliation affi = new Affiliation(affId, affiName, affiVVCount);
+                            affiList_lhMap.put(affId, affi);
                         case CANDI:
                             int candId = -1;
                             if (parser.findBeginTag(CANDI_ID)) {
@@ -418,14 +418,14 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
-            this.transformer.registerConstiLevel_affiData(constiLhMap, affiNameList, affiVVCountList, candiLhMap);
+            this.transformer.registerConstiLevel_affiData(constiLhMap, affiList_lhMap, candiLhMap);
         }
     }
 
     private void processMuniLevel_affiData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
+        int affId = 0;
+        HashSet<String> processedAffiHashSet = new HashSet<>();
         if (parser.findBeginTag(SELECTION)) {
-            int affId = 0;
-            HashSet<String> processedAffiHashSet = new HashSet<>();
             while (parser.getLocalName().equals(SELECTION)) {
                 parser.nextTag();
                 switch (parser.getLocalName()) {
@@ -514,7 +514,6 @@ public class ElectionProcessor<E> {
         String poStName = null;
         LinkedHashMap<Integer, Affiliation> affiList_lhMap = new LinkedHashMap<>();
         int poStVVCount = 0;
-        Affiliation affi;
         int affId = 0;
         int selectionIndex = 0;
         if (parser.findBeginTag(PO_ST_ID)) {
@@ -557,7 +556,7 @@ public class ElectionProcessor<E> {
                     } else {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for affi %d within poSt %s.".formatted(affId, poStName));
                     }
-                    affi = new Affiliation(affId, affiName, affiVVCount);
+                    Affiliation affi = new Affiliation(affId, affiName, affiVVCount);
                     affiList_lhMap.put(affId, affi);
                     break;
                 case CANDI:
