@@ -39,7 +39,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param nationLhMap a {@code LinkedHashMap} containing information about the election,
-     *                  constituency, affiliation, candidate and valid vote count.
+     *                    constituency, affiliation, candidate and valid vote count.
      */
     void registerNationalLevel_affiData(LinkedHashMap<String, String> nationLhMap);
 
@@ -75,7 +75,7 @@ public interface Transformer<E> {
      * </ul>
      *
      * @param candiLhMap a {@code LinkedHashMap} containing information about
-     *                 the election, constituency, affiliation and candidate.
+     *                   the election, constituency, affiliation and candidate.
      */
     void registerCandiLevelData(LinkedHashMap<String, String> candiLhMap);
 }

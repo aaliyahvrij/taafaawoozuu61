@@ -9,8 +9,8 @@ import java.util.LinkedHashMap;
 /**
  * Organizes processed election data into Election objects.
  */
-@Getter
 public class ElectionTransformer implements Transformer<Election> {
+    @Getter
     private final LinkedHashMap<String, Election> electionListLhMap = new LinkedHashMap<>();
 
     @Override
@@ -127,11 +127,11 @@ public class ElectionTransformer implements Transformer<Election> {
         LinkedHashMap<Integer, Constituency> constiListLhMap = election.getConstiListLhMap();
         Constituency consti = constiListLhMap.get(constId);
         if (consti != null) {
-            // Update or insert a candidate in a consti-level affi
+            // Update or insert a candidate in a constituencial level affiliation
             LinkedHashMap<Integer, Affiliation> constiLevel_affiListLhMap = consti.getAffiListLhMap();
             populateCandi(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiListLhMap);
 
-            // Update or insert a candidate in each muni-level affi
+            // Update or insert a candidate in each municipal level affiliation
             LinkedHashMap<String, Municipality> constiLevel_muniListLhMap = consti.getMuniListLhMap();
             for (Municipality constiLevel_muni : constiLevel_muniListLhMap.values()) {
                 LinkedHashMap<Integer, Affiliation> muniLevel_affiListLhMap = constiLevel_muni.getAffiListLhMap();
