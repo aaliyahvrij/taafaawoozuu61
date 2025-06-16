@@ -43,6 +43,8 @@ public interface Transformer<E> {
      */
     void registerNationalLevel_affiData(LinkedHashMap<String, String> nationLhMap);
 
+    void registerConstiLevelData(LinkedHashMap<String, String> constiLhMap);
+
     /**
      * Called once per file with information about the constituency. The {@code constiLhMap} can hold
      * the same information as {@code electionMap} in {@link #registerElectoralLevelData(LinkedHashMap)},
@@ -76,6 +78,4 @@ public interface Transformer<E> {
      *                 the election, constituency, affiliation and candidate.
      */
     void registerCandiLevelData(LinkedHashMap<String, String> candiLhMap);
-
-    void registerCandiLevel_constiData(LinkedHashMap<String, String> constiLhMap);
 }

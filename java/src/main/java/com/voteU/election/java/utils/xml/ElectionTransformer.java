@@ -58,6 +58,11 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
+    public void registerConstiLevelData(LinkedHashMap<String, String> constiLhMap) {
+
+    }
+
+    @Override
     public void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap) {
         // ee
     }
@@ -140,11 +145,6 @@ public class ElectionTransformer implements Transformer<Election> {
                 }
             }
         }
-    }
-
-    @Override
-    public void registerCandiLevel_constiData(LinkedHashMap<String, String> constiLhMap) {
-
     }
 
     private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiList_lhMap) {

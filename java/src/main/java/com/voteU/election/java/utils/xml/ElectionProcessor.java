@@ -160,7 +160,7 @@ public class ElectionProcessor<E> {
             System.out.println(folderName + " - " + candiFile);
             XMLParser parser = new XMLParser(new FileInputStream(candiFile.toString()));
             processElectoralLevelData(electionLhMap, parser);
-            processCandiLevel_constiData(electionLhMap, parser);
+            processConstiLevelData(electionLhMap, parser);
         }
     }
 
@@ -314,6 +314,37 @@ public class ElectionProcessor<E> {
             while (parser.nextBeginTag(PO_ST)) {
                 processPoStLevelData(constiLhMap, parser);
                 parser.findAndAcceptEndTag(PO_ST);
+            }
+            parser.findAndAcceptEndTag(CONSTI);
+            if (!parser.findAndAcceptEndTag(CONSTI)) {
+                LOG.warning("Cannot find </Contest> tag.");
+            }
+        } else {
+            LOG.warning("Cannot find <Contest> tag.");
+        }
+    }
+
+    private void processConstiLevelData(LinkedHashMap<String, String> electionLhMap, XMLParser parser) throws XMLStreamException {
+        if (parser.findBeginTag(CONSTI)) {
+            LinkedHashMap<String, String> constiLhMap = new LinkedHashMap<>(electionLhMap);
+            int constId;
+            String constiName;
+            if (parser.findBeginTag(CONSTI_ID)) {
+                constId = parser.getIntegerAttributeValue(null, ID, 0);
+                constiLhMap.put("constId", String.valueOf(constId));
+                if (parser.findBeginTag(CONSTI_NAME)) {
+                    constiName = parser.getElementText();
+                    constiLhMap.put("constiName", constiName);
+                    parser.findAndAcceptEndTag(CONSTI_NAME);
+                }
+                parser.findAndAcceptEndTag(CONSTI_ID);
+            }
+            this.transformer.registerConstiLevelData(constiLhMap);
+            if (parser.findBeginTag(AFFI)) {
+                while (parser.getLocalName().equals(AFFI)) {
+                    processAffiLevelData(constiLhMap, parser);
+                    parser.findAndAcceptEndTag(AFFI);
+                }
             }
             parser.findAndAcceptEndTag(CONSTI);
             if (!parser.findAndAcceptEndTag(CONSTI)) {
@@ -636,36 +667,5 @@ public class ElectionProcessor<E> {
             }
         }
         this.transformer.registerCandiLevelData(candiLhMap);
-    }
-
-    private void processCandiLevel_constiData(LinkedHashMap<String, String> electionLhMap, XMLParser parser) throws XMLStreamException {
-        if (parser.findBeginTag(CONSTI)) {
-            LinkedHashMap<String, String> constiLhMap = new LinkedHashMap<>(electionLhMap);
-            int constId;
-            String constiName;
-            if (parser.findBeginTag(CONSTI_ID)) {
-                constId = parser.getIntegerAttributeValue(null, ID, 0);
-                constiLhMap.put("constId", String.valueOf(constId));
-                if (parser.findBeginTag(CONSTI_NAME)) {
-                    constiName = parser.getElementText();
-                    constiLhMap.put("constiName", constiName);
-                    parser.findAndAcceptEndTag(CONSTI_NAME);
-                }
-                parser.findAndAcceptEndTag(CONSTI_ID);
-            }
-            this.transformer.registerCandiLevel_constiData(constiLhMap);
-            if (parser.findBeginTag(AFFI)) {
-                while (parser.getLocalName().equals(AFFI)) {
-                    processAffiLevelData(constiLhMap, parser);
-                    parser.findAndAcceptEndTag(AFFI);
-                }
-            }
-            parser.findAndAcceptEndTag(CONSTI);
-            if (!parser.findAndAcceptEndTag(CONSTI)) {
-                LOG.warning("Cannot find </Contest> tag.");
-            }
-        } else {
-            LOG.warning("Cannot find <Contest> tag.");
-        }
     }
 }
