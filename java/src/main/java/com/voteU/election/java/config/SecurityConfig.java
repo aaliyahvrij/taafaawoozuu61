@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/elections").permitAll()
                         .requestMatchers("/api/countries").permitAll()
                         .requestMatchers("/api/posts").permitAll()
+                        .requestMatchers("/api/posts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.disable())

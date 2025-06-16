@@ -26,6 +26,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException, java.io.IOException {
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/api/posts")) {
+            filterChain.doFilter(request, response); // skip auth for posts
+            return;
+        }
+
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
