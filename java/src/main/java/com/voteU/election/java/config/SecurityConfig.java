@@ -50,6 +50,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/users").permitAll()
                         .requestMatchers("/api/elections").permitAll()
+                        .requestMatchers("/api/election").permitAll()
+                        .requestMatchers("/api/election/**").permitAll()
                         .requestMatchers("/api/countries").permitAll()
                         .requestMatchers("/api/posts").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()

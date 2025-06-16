@@ -33,6 +33,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        else if (path.startsWith("/api/election")) {
+            filterChain.doFilter(request, response); // skip auth for posts
+            return;
+        }
+
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
