@@ -123,4 +123,29 @@ public class ProvinceService {
     }
 
 
+    public int getTotalVotesForProvince(String year, int provinceId) {
+        Election election = electionService.getElection(year);
+        if (election == null) return 0;
+
+        Province province = election.getProvinces().stream()
+                .filter(p -> p.getId() == provinceId)
+                .findFirst()
+                .orElse(null);
+
+        if (province == null) return 0;
+
+        int totalVotes = 0;
+
+        for (var constituency : province.getConstituencies()) {
+            for (var authority : constituency.getAuthorities().values()) {
+                for (var party : authority.getParties().values()) {
+                    totalVotes += party.getVotes();
+                }
+            }
+        }
+
+        return totalVotes;
+    }
+
+
 }
