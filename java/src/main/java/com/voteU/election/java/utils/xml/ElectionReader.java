@@ -45,6 +45,6 @@ public class ElectionReader {
             }
         }
         System.out.println("All files are processed.\n");
-        return this.transformer.getElectionList_lhMap();
+        return this.transformer.getElectionListLhMap();
     }
 }

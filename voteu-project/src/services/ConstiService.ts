@@ -1,7 +1,7 @@
 import type { Municipality, Affiliation } from '@/interfaces'
 
 export class ConstiService {
-  static async getMuniList_lhMap(
+  static async getMuniListLhMap(
     electionIdListString: string,
     constId: string,
   ): Promise<Record<string, Municipality> | null> {
@@ -25,7 +25,7 @@ export class ConstiService {
     return null
   }
 
-  static async getAffiList_lhMap(
+  static async getAffiListLhMap(
     electionIdListString: string,
     constId: string,
   ): Promise<Record<number, Affiliation> | null> {

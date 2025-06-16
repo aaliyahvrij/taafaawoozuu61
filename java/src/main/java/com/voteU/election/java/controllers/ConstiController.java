@@ -19,13 +19,13 @@ public class ConstiController {
     }
 
     @GetMapping("/{constId}/municipalities")
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getMuniList_lhMap(electionIdListString, constId);
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniListLhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
+        return constiService.getMuniListLhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/compact")
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniList_lhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getCompactMuniList_lhMap(electionIdListString, constId);
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniListLhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
+        return constiService.getCompactMuniListLhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/{munId}")

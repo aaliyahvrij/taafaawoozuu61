@@ -11,7 +11,7 @@ public class PollingStation {
     private final String name;
     @Setter
     private String zipCode;
-    private LinkedHashMap<Integer, Affiliation> affiList_lhMap;
+    private LinkedHashMap<Integer, Affiliation> affiListLhMap;
     private int vvCount;
 
     public PollingStation(String id, String name, String zipCode) {     // For the unit test
@@ -23,7 +23,7 @@ public class PollingStation {
     public PollingStation(String id, String name, LinkedHashMap<Integer, Affiliation> affiList_lhMap, int vvCount) {
         this.id = id;
         this.name = name;
-        this.affiList_lhMap = affiList_lhMap;
+        this.affiListLhMap = affiList_lhMap;
         this.vvCount = vvCount;
     }
 }

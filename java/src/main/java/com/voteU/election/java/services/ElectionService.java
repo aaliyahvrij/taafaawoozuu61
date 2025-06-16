@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 @Service
 public class ElectionService {
     private final ElectionReader electionReader;
-    public static final LinkedHashMap<String, Election> electionList_lhMap = new LinkedHashMap<>();
+    public static final LinkedHashMap<String, Election> electionListLhMap = new LinkedHashMap<>();
 
     public ElectionService(ElectionReader electionReader) {
         this.electionReader = electionReader;
@@ -26,38 +26,38 @@ public class ElectionService {
      * @return true if the data has been loaded successfully, false otherwise
      */
     public boolean getElectionData(String electionIdListString) {
-        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectionData(electionIdListString);
-        if (readerElectionList_lhMap.isEmpty()) {
+        LinkedHashMap<String, Election> readerElectionListLhMap = this.electionReader.getElectionData(electionIdListString);
+        if (readerElectionListLhMap.isEmpty()) {
             log.warn("No data found during getElectionData(%s).".formatted(electionIdListString));
             return false;
         }
-        electionList_lhMap.putAll(readerElectionList_lhMap);
+        electionListLhMap.putAll(readerElectionListLhMap);
         return true;
     }
 
     /**
      * Retrieves all the affiliation data of the specified election(s).
      */
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(String electionIdListString) {
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_list_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> affiList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Election election = electionList_lhMap.get(electionId);
-            affiList_list_lhMap.put(electionId, election.getAffiList_lhMap());
+            Election election = electionListLhMap.get(electionId);
+            affiList_listLhMap.put(electionId, election.getAffiListLhMap());
         }
-        return affiList_list_lhMap;
+        return affiList_listLhMap;
     }
 
     /**
      * Retrieves all the polling station data of the specified election(s).
      */
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(String electionIdListString) {
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStListLhMap(String electionIdListString) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_list_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedHashMap<String, PollingStation>> poStList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Election election = electionList_lhMap.get(electionId);
-            poStList_list_lhMap.put(electionId, election.getPoStList_lhMap());
+            Election election = electionListLhMap.get(electionId);
+            poStList_listLhMap.put(electionId, election.getPoStListLhMap());
         }
-        return poStList_list_lhMap;
+        return poStList_listLhMap;
     }
 }

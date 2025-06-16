@@ -14,11 +14,11 @@ public class AffiService {
 
     public LinkedHashMap<String, List<Candidate>> getCandiList(String electionIdListString, Integer affId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, List<Candidate>> candiList_list_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, List<Candidate>> candiList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Affiliation affi = ElectionService.electionList_lhMap.get(electionId).getAffiList_lhMap().get(affId);
-            candiList_list_lhMap.put(electionId, affi.getCandiList());
+            Affiliation affi = ElectionService.electionListLhMap.get(electionId).getAffiListLhMap().get(affId);
+            candiList_listLhMap.put(electionId, affi.getCandiList());
         }
-        return candiList_list_lhMap;
+        return candiList_listLhMap;
     }
 }

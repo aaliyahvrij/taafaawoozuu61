@@ -1,7 +1,7 @@
 import type { Election, Province, Constituency, Affiliation } from '@/interfaces'
 
 export class ElectionService {
-  static async getElectoralData(electionIdListString: string): Promise<Election | null> {
+  static async getElectionData(electionIdListString: string): Promise<Election | null> {
     try {
       const response = await fetch(`http://localhost:8080/api/election/${electionIdListString}`, {
         method: 'GET',
@@ -19,7 +19,7 @@ export class ElectionService {
     return null
   }
 
-  static async getProviList_lhMap(
+  static async getProviListLhMap(
     electionIdListString: string,
   ): Promise<Record<number, Province> | null> {
     try {
@@ -42,7 +42,7 @@ export class ElectionService {
     return null
   }
 
-  static async getConstiList_lhMap(
+  static async getConstiListLhMap(
     electionIdListString: string,
   ): Promise<Record<number, Constituency> | null> {
     try {
@@ -65,7 +65,7 @@ export class ElectionService {
     return null
   }
 
-  static async getAffiList_lhMap(
+  static async getAffiListLhMap(
     electionId: string,
   ): Promise<Record<number, Affiliation> | null> {
     try {

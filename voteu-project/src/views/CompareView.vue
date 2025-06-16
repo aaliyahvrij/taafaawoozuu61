@@ -36,7 +36,7 @@ const poStList2 = ref<PollingStation[]>([])
 const affiList2 = ref<Affiliation[] | null>(null)
 
 // --- Helper functies voor ophalen filters ---
-async function getNationalLevel_proviList_lhMap(
+async function getNationalLevel_proviListLhMap(
   electionId: string | null,
   proviListRef: typeof proviList1,
   clearSelectedProvi: () => void,
@@ -47,11 +47,11 @@ async function getNationalLevel_proviList_lhMap(
     return
   }
   try {
-    const response = await ElectionService.getProviList_lhMap(electionId)
+    const response = await ElectionService.getProviListLhMap(electionId)
     proviListRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching proviList_lhMap of ', electionId)
+    console.log('Fetching proviListLhMap of election ', electionId)
   } catch (err) {
-    console.error('Error fetching proviList_lhMap of ', electionId, ': ', err)
+    console.error('Error fetching proviListLhMap of election ', electionId, ': ', err)
   }
 }
 
@@ -76,7 +76,7 @@ async function getProviLevel_constiList(
   }
 }
 
-async function getConstiLevel_muniList_lhMap(
+async function getConstiLevel_muniListLhMap(
   electionId: string | null,
   constId: string | undefined,
   muniListRef: typeof muniList1,
@@ -89,37 +89,36 @@ async function getConstiLevel_muniList_lhMap(
   }
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await ConstiService.getMuniList_lhMap(electionId, constId)
+    const response = await ConstiService.getMuniListLhMap(electionId, constId)
     muniListRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching muniList_lhMap of ', constiPath)
+    console.log('Fetching muniListLhMap of ', constiPath)
   } catch (err) {
-    console.error('Error fetching muniList_lhMap of ', constiPath, ': ', err)
+    console.error('Error fetching muniListLhMap of ', constiPath, ': ', err)
   }
 }
 
-async function getMuniLevel_poStList_lhMap(
+async function getMuniLevel_poStListLhMap(
   electionId: string | null,
-  constId: string | undefined,
   munId: string | undefined,
   poStListRef: typeof poStList1,
   clearSelectedPoSt: () => void,
 ) {
-  if (!electionId || !constId || !munId) {
+  if (!electionId || !munId) {
     poStListRef.value = []
     clearSelectedPoSt()
     return
   }
-  const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
+  const muniPath = 'election ' + electionId + ' > muni ' + munId
   try {
-    const response = await MuniService.getPoStList_lhMap(electionId, constId, munId)
+    const response = await MuniService.getPoStListLhMap(electionId, munId)
     poStListRef.value = Array.isArray(response) ? response : Object.values(response || {})
-    console.log('Fetching poStList_lhMap of ', muniPath)
+    console.log('Fetching poStListLhMap of ', muniPath)
   } catch (err) {
-    console.error('Error fetching poStList_lhMap of ', muniPath, ': ', err)
+    console.error('Error fetching poStListLhMap of ', muniPath, ': ', err)
   }
 }
 
-async function getAffiListOrListLHMap(
+async function getAffiListOrListLhMap(
   electionId: string | null,
   provi: Province | null,
   muni: Municipality | null,
@@ -129,40 +128,30 @@ async function getAffiListOrListLHMap(
   voteLevelRef: typeof voteLevel1,
 ) {
   if (!electionId) {
-    affiListRef.value = null
-    voteLevelRef.value = null
+    affiListRef.value = voteLevelRef.value = null
     return
   }
   let levelPath = 'election ' + electionId
   try {
     if (poSt && muni && consti) {
-      const response = await PoStService.getAffiList_lhMap(
-        electionId,
-        consti.id.toString(),
-        muni.id.toString(),
-        poSt.id.toString(),
-      )
+      const response = await PoStService.getAffiListLhMap(electionId, poSt.id.toString())
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'poSt'
       levelPath +=
         ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString() + ' > poSt ' + poSt.id
-      console.log('Fetching affiList_lhMap of ', levelPath)
+      console.log('Fetching affiListLhMap of ', levelPath)
     } else if (muni && consti) {
-      const response = await MuniService.getAffiList_lhMap(
-        electionId,
-        consti.id.toString(),
-        muni.id.toString(),
-      )
+      const response = await MuniService.getAffiListLhMap(electionId, muni.id.toString())
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'muni'
       levelPath += ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString()
-      console.log('Fetching affiList_lhMap of ', levelPath)
+      console.log('Fetching affiListLhMap of ', levelPath)
     } else if (consti) {
-      const response = await ConstiService.getAffiList_lhMap(electionId, consti.id.toString())
+      const response = await ConstiService.getAffiListLhMap(electionId, consti.id.toString())
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'consti'
       levelPath += ' > consti ' + consti.id
-      console.log('Fetching affiList_lhMap of ', levelPath)
+      console.log('Fetching affiListLhMap of ', levelPath)
     } else if (provi) {
       const response = await ProviService.getAffiList(electionId, provi.id)
       affiListRef.value = response
@@ -170,15 +159,14 @@ async function getAffiListOrListLHMap(
       levelPath += ' > provi ' + provi.id
       console.log('Fetching affiList of ', levelPath)
     } else {
-      const response = await ElectionService.getAffiList_lhMap(electionId)
+      const response = await ElectionService.getAffiListLhMap(electionId)
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'national'
-      console.log('Fetching affiList_lhMap of ', levelPath)
+      console.log('Fetching affiListLhMap of ', levelPath)
     }
   } catch (err) {
-    console.error('Error fetching affiList(_lhMap) of ', levelPath, ': ', err)
-    affiListRef.value = null
-    voteLevelRef.value = null
+    console.error('Error fetching affiList(LhMap) of ', levelPath, ': ', err)
+    affiListRef.value = voteLevelRef.value = null
   }
 }
 
@@ -242,15 +230,13 @@ function clearPoSt2() {
 // Handles first filter set
 async function onElectionChange1() {
   clearProviAndBelow1()
-  affiList1.value = null
-  voteLevel1.value = null
-  await getNationalLevel_proviList_lhMap(selectedElection1.value, proviList1, clearProviAndBelow1)
+  affiList1.value = voteLevel1.value = null
+  await getNationalLevel_proviListLhMap(selectedElection1.value, proviList1, clearProviAndBelow1)
 }
 
 async function onProviChange1() {
   clearConstiAndBelow1()
-  affiList1.value = null
-  voteLevel1.value = null
+  affiList1.value = voteLevel1.value = null
   if (selectedProvi1.value) {
     await getProviLevel_constiList(
       selectedElection1.value,
@@ -263,10 +249,9 @@ async function onProviChange1() {
 
 async function onConstiChange1() {
   clearMuniAndBelow1()
-  affiList1.value = null
-  voteLevel1.value = null
+  affiList1.value = voteLevel1.value = null
   if (selectedConsti1.value) {
-    await getConstiLevel_muniList_lhMap(
+    await getConstiLevel_muniListLhMap(
       selectedElection1.value,
       selectedConsti1.value.id.toString(),
       muniList1,
@@ -277,12 +262,10 @@ async function onConstiChange1() {
 
 async function onMuniChange1() {
   clearPoSt1()
-  affiList1.value = null
-  voteLevel1.value = null
+  affiList1.value = voteLevel1.value = null
   if (selectedMuni1.value) {
-    await getMuniLevel_poStList_lhMap(
+    await getMuniLevel_poStListLhMap(
       selectedElection1.value,
-      selectedConsti1.value?.id.toString(),
       selectedMuni1.value.id.toString(),
       poStList1,
       clearPoSt1,
@@ -291,22 +274,19 @@ async function onMuniChange1() {
 }
 
 function onPoStChange1() {
-  affiList1.value = null
-  voteLevel1.value = null
+  affiList1.value = voteLevel1.value = null
 }
 
 // Handles second filter set
 async function onElectionChange2() {
   clearProviAndBelow2()
-  affiList2.value = null
-  voteLevel2.value = null
-  await getNationalLevel_proviList_lhMap(selectedElection2.value, proviList2, clearProviAndBelow2)
+  affiList2.value = voteLevel2.value = null
+  await getNationalLevel_proviListLhMap(selectedElection2.value, proviList2, clearProviAndBelow2)
 }
 
 async function onProviChange2() {
   clearConstiAndBelow2()
-  affiList2.value = null
-  voteLevel2.value = null
+  affiList2.value = voteLevel2.value = null
   if (selectedProvi2.value) {
     await getProviLevel_constiList(
       selectedElection2.value,
@@ -319,10 +299,9 @@ async function onProviChange2() {
 
 async function onConstiChange2() {
   clearMuniAndBelow2()
-  affiList2.value = null
-  voteLevel2.value = null
+  affiList2.value = voteLevel2.value = null
   if (selectedConsti2.value) {
-    await getConstiLevel_muniList_lhMap(
+    await getConstiLevel_muniListLhMap(
       selectedElection2.value,
       selectedConsti2.value.id.toString(),
       muniList2,
@@ -333,12 +312,10 @@ async function onConstiChange2() {
 
 async function onMuniChange2() {
   clearPoSt2()
-  affiList2.value = null
-  voteLevel2.value = null
+  affiList2.value = voteLevel2.value = null
   if (selectedMuni2.value) {
-    await getMuniLevel_poStList_lhMap(
+    await getMuniLevel_poStListLhMap(
       selectedElection2.value,
-      selectedConsti2.value?.id.toString(),
       selectedMuni2.value.id.toString(),
       poStList2,
       clearPoSt2,
@@ -357,7 +334,7 @@ async function applyFilter() {
     return
   }
   if (selectedElection1.value) {
-    await getAffiListOrListLHMap(
+    await getAffiListOrListLhMap(
       selectedElection1.value,
       selectedProvi1.value,
       selectedMuni1.value,
@@ -370,7 +347,7 @@ async function applyFilter() {
     affiList1.value = voteLevel1.value = null
   }
   if (selectedElection2.value) {
-    await getAffiListOrListLHMap(
+    await getAffiListOrListLhMap(
       selectedElection2.value,
       selectedProvi2.value,
       selectedMuni2.value,
@@ -380,8 +357,7 @@ async function applyFilter() {
       voteLevel2,
     )
   } else {
-    affiList2.value = null
-    voteLevel2.value = null
+    affiList2.value = voteLevel2.value = null
   }
 }
 </script>

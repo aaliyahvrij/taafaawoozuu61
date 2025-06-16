@@ -355,7 +355,7 @@ public class ElectionProcessor<E> {
 
     private void processConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
         if (parser.findBeginTag(CONSTI)) {
-            LinkedHashMap<Integer, Affiliation> affiList_lhMap = new LinkedHashMap<>();
+            LinkedHashMap<Integer, Affiliation> affiListLhMap = new LinkedHashMap<>();
             HashSet<Integer> processedAffiHashSet = new HashSet<>();
             LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap = new LinkedHashMap<>();
             HashSet<String> processedCandiHashSet = new HashSet<>();
@@ -393,7 +393,7 @@ public class ElectionProcessor<E> {
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             }
                             Affiliation affi = new Affiliation(affId, affiName, affiVVCount);
-                            affiList_lhMap.put(affId, affi);
+                            affiListLhMap.put(affId, affi);
                         case CANDI:
                             int candId = -1;
                             if (parser.findBeginTag(CANDI_ID)) {
@@ -416,7 +416,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
-            this.transformer.registerConstiLevel_affiData(constiLhMap, affiList_lhMap, candiLhMap);
+            this.transformer.registerConstiLevel_affiData(constiLhMap, affiListLhMap, candiLhMap);
         }
     }
 
@@ -510,7 +510,7 @@ public class ElectionProcessor<E> {
     private void processPoStLevelData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
         LinkedHashMap<String, String> poStLhMap = new LinkedHashMap<>(constiLhMap);
         String poStName = null;
-        LinkedHashMap<Integer, Affiliation> affiList_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<Integer, Affiliation> affiListLhMap = new LinkedHashMap<>();
         int poStVVCount = 0;
         int affId = 0;
         int selectionIndex = 0;
@@ -555,7 +555,7 @@ public class ElectionProcessor<E> {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for affi %d within poSt %s.".formatted(affId, poStName));
                     }
                     Affiliation affi = new Affiliation(affId, affiName, affiVVCount);
-                    affiList_lhMap.put(affId, affi);
+                    affiListLhMap.put(affId, affi);
                     break;
                 case CANDI:
                     int candId = 0;
@@ -568,7 +568,7 @@ public class ElectionProcessor<E> {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candi = new Candidate(candId, candiVVCount);
                         candi.setAffId(affId);
-                        affiList_lhMap.get(affId).addCandi(candi);
+                        affiListLhMap.get(affId).addCandi(candi);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
@@ -595,7 +595,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        this.transformer.registerPoStLevelData(poStLhMap, affiList_lhMap);
+        this.transformer.registerPoStLevelData(poStLhMap, affiListLhMap);
     }
 
     private void processAffiLevelData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {

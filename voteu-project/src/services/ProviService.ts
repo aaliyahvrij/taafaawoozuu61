@@ -25,7 +25,10 @@ export class ProviService {
     return null
   }
 
-  static async getAffiList(electionIdListString: string, provId: number): Promise<Affiliation[] | null> {
+  static async getAffiList(
+    electionIdListString: string,
+    provId: number,
+  ): Promise<Affiliation[] | null> {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/affiliations`,

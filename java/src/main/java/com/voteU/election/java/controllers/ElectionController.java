@@ -26,12 +26,12 @@ public class ElectionController {
     }
 
     @GetMapping("/{electionIdListString}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiList_lhMap(@PathVariable String electionIdListString) {
-        return this.electionService.getAffiList_lhMap(electionIdListString);
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(@PathVariable String electionIdListString) {
+        return this.electionService.getAffiListLhMap(electionIdListString);
     }
 
     @GetMapping("/{electionIdListString}/pollingstations")
-    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStList_lhMap(@PathVariable String electionIdListString) {
-        return this.electionService.getPoStList_lhMap(electionIdListString);
+    public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStListLhMap(@PathVariable String electionIdListString) {
+        return this.electionService.getPoStListLhMap(electionIdListString);
     }
 }

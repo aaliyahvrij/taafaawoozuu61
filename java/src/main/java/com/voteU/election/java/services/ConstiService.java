@@ -12,40 +12,40 @@ public class ConstiService {
     public ConstiService() {
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniList_lhMap(String electionIdListString, int constId) {
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniListLhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_list_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedHashMap<String, Municipality>> muniList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Election election = ElectionService.electionList_lhMap.get(electionId);
-            Constituency consti = election.getConstiList_lhMap().get(constId);
-            muniList_list_lhMap.put(electionId, consti.getMuniList_lhMap());
+            Election election = ElectionService.electionListLhMap.get(electionId);
+            Constituency consti = election.getConstiListLhMap().get(constId);
+            muniList_listLhMap.put(electionId, consti.getMuniListLhMap());
         }
-        return muniList_list_lhMap;
+        return muniList_listLhMap;
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniList_lhMap(String electionIdListString, int constId) {
+    public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniListLhMap(String electionIdListString, int constId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_list_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedHashMap<String, Municipality>> compactMuniList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Election election = ElectionService.electionList_lhMap.get(electionId);
-            Constituency consti = election.getConstiList_lhMap().get(constId);
-            LinkedHashMap<String, Municipality> muniList_lhMap = consti.getMuniList_lhMap();
-            LinkedHashMap<String, Municipality> compactMuniList_lhMap = new LinkedHashMap<>();
-            for (Municipality muni : muniList_lhMap.values()) {
-                compactMuniList_lhMap.put(muni.getId(), new Municipality(muni.getId(), muni.getName()));
+            Election election = ElectionService.electionListLhMap.get(electionId);
+            Constituency consti = election.getConstiListLhMap().get(constId);
+            LinkedHashMap<String, Municipality> muniListLhMap = consti.getMuniListLhMap();
+            LinkedHashMap<String, Municipality> compactMuniListLhMap = new LinkedHashMap<>();
+            for (Municipality muni : muniListLhMap.values()) {
+                compactMuniListLhMap.put(muni.getId(), new Municipality(muni.getId(), muni.getName()));
             }
-            compactMuniList_list_lhMap.put(electionId, compactMuniList_lhMap);
+            compactMuniList_listLhMap.put(electionId, compactMuniListLhMap);
         }
-        return compactMuniList_list_lhMap;
+        return compactMuniList_listLhMap;
     }
 
     public LinkedHashMap<String, Municipality> getMuni(String electionIdListString, Integer constId, String munId) {
         String[] electionIdList = electionIdListString.split("-");
-        LinkedHashMap<String, Municipality> muniList_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<String, Municipality> muniListLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
-            Municipality muni = ElectionService.electionList_lhMap.get(electionId).getConstiList_lhMap().get(constId).getMuniList_lhMap().get(munId);
-            muniList_lhMap.put(munId, muni);
+            Municipality muni = ElectionService.electionListLhMap.get(electionId).getConstiListLhMap().get(constId).getMuniListLhMap().get(munId);
+            muniListLhMap.put(munId, muni);
         }
-        return muniList_lhMap;
+        return muniListLhMap;
     }
 }

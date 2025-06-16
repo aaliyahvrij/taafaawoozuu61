@@ -3,8 +3,8 @@ import type { Province, Constituency, Municipality, Affiliation } from '@/interf
 export interface Election {
   id: string
   name: string
-  proviList_lhMap: { [key: number]: Province }
-  constiList_lhMap: { [key: number]: Constituency }
-  muniList_lhMap: { [key: string]: Municipality }
-  affiList_lhMap: { [key: number]: Affiliation }
+  proviListLhMap: { [key: number]: Province }
+  constiListLhMap: { [key: number]: Constituency }
+  muniListLhMap: { [key: string]: Municipality }
+  affiListLhMap: { [key: number]: Affiliation }
 }
