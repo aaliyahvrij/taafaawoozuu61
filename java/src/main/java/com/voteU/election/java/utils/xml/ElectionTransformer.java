@@ -95,15 +95,15 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiList_lhMap) {
+    public void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap) {
         String electionId = poStLhMap.get("electionId");
         Election election = this.electionList_lhMap.get(electionId);
-        LinkedHashMap<String, PollingStation> nationalLevel_poStList_lhMap = election.getPoStList_lhMap();
+        LinkedHashMap<String, PollingStation> poStList_lhMap = election.getPoStList_lhMap();
         String poStId = poStLhMap.get("poStId");
         String poStName = poStLhMap.get("poStName");
         int poStVVCount = Integer.parseInt(poStLhMap.get("poStVVCount"));
-        PollingStation poSt = new PollingStation(poStId, poStName, poStLevel_affiList_lhMap, poStVVCount);
-        nationalLevel_poStList_lhMap.put(poStId, poSt);
+        PollingStation poSt = new PollingStation(poStId, poStName, affiList_lhMap, poStVVCount);
+        poStList_lhMap.put(poStId, poSt);
     }
 
     @Override

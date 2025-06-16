@@ -481,7 +481,7 @@ public class ElectionProcessor<E> {
     private void processPoStLevelData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
         LinkedHashMap<String, String> poStLhMap = new LinkedHashMap<>(constiLhMap);
         String poStName = null;
-        LinkedHashMap<Integer, Affiliation> poStLevel_affiList_lhMap = new LinkedHashMap<>();
+        LinkedHashMap<Integer, Affiliation> affiList_lhMap = new LinkedHashMap<>();
         int poStVVCount = 0;
         Affiliation affi;
         int affId = 0;
@@ -527,7 +527,7 @@ public class ElectionProcessor<E> {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for affi %d within poSt %s.".formatted(affId, poStName));
                     }
                     affi = new Affiliation(affId, affiName, affiVVCount);
-                    poStLevel_affiList_lhMap.put(affId, affi);
+                    affiList_lhMap.put(affId, affi);
                     break;
                 case CANDI:
                     int candId = 0;
@@ -540,7 +540,7 @@ public class ElectionProcessor<E> {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candi = new Candidate(candId, candiVVCount);
                         candi.setAffId(affId);
-                        poStLevel_affiList_lhMap.get(affId).addCandi(candi);
+                        affiList_lhMap.get(affId).addCandi(candi);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
@@ -567,7 +567,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        this.transformer.registerPoStLevelData(poStLhMap, poStLevel_affiList_lhMap);
+        this.transformer.registerPoStLevelData(poStLhMap, affiList_lhMap);
     }
 
     private void processAffiLevelData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {

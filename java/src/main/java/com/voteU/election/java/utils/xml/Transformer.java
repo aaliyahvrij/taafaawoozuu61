@@ -58,7 +58,7 @@ public interface Transformer<E> {
 
     void registerMuniLevel_affiData(LinkedHashMap<String, String> muniLhMap);
 
-    void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> poStLevel_affiList_lhMap);
+    void registerPoStLevelData(LinkedHashMap<String, String> poStLhMap, LinkedHashMap<Integer, Affiliation> affiList_lhMap);
 
     /**
      * Called multiple times per file with information about a candidate.
