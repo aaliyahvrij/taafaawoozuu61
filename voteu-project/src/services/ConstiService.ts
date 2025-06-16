@@ -1,12 +1,13 @@
-import type { Affiliation, Constituency } from '@/interfaces'
+import type { Affiliation, Municipality } from '@/interfaces'
 
 export class ConstiService {
-  static async getNationalLevel_constiList_lhMap(
+  static async getMuniList_lhMap(
     electionIdListString: string,
-  ): Promise<Record<number, Constituency> | null> {
+    constId: string,
+  ): Promise<Record<string, Municipality> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionIdListString}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/constituencies/${constId}/municipalities/compact`,
         {
           method: 'GET',
           headers: {
@@ -24,7 +25,7 @@ export class ConstiService {
     return null
   }
 
-  static async getConstiLevel_affiList_lhMap(
+  static async getAffiList_lhMap(
     electionIdListString: string,
     constId: string,
   ): Promise<Record<number, Affiliation> | null> {

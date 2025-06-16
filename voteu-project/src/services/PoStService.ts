@@ -1,32 +1,7 @@
-import type { Affiliation, PollingStation } from '@/interfaces'
+import type { Affiliation } from '@/interfaces'
 
 export class PoStService {
-  static async getMuniLevel_poStList_lhMap(
-    electionId: string,
-    constId: string,
-    munId: string,
-  ): Promise<Record<string, PollingStation> | null> {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/constituencies/${constId}/municipalities/${munId}/pollingStations`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-      if (!response.ok) {
-        throw new Error('HTTP error: ' + response.status)
-      }
-      return await response.json()
-    } catch (err) {
-      console.error(err)
-    }
-    return null
-  }
-
-  static async getPoStLevel_affiList_lhMap(
+  static async getAffiList_lhMap(
     electionIdListString: string,
     constId: string,
     munId: string,

@@ -111,7 +111,7 @@ async function getNationalLevel_proviList_lhMap(electionId: string | null): Prom
   const proviPath = 'election ' + electionId
   try {
     if (electionId) {
-      const response = await ProviService.getNationalLevel_proviList_lhMap(electionId)
+      const response = await ElectionService.getProviList_lhMap(electionId)
       proviList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching proviList_lhMap of ', proviPath)
     } else {
@@ -125,7 +125,7 @@ async function getNationalLevel_proviList_lhMap(electionId: string | null): Prom
 async function getNationalLevel_affiList_lhMap(electionId: string): Promise<void> {
   const proviPath = 'election ' + electionId
   try {
-    const response = await ElectionService.getNationalLevel_affiList_lhMap(electionId)
+    const response = await ElectionService.getAffiList_lhMap(electionId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
     console.log('Fetching affiList_lhMap of ', proviPath)
@@ -141,7 +141,7 @@ async function getProviLevel_constiList(
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
     if (electionId && provId) {
-      const response = await ProviService.getProviLevel_constiList(electionId, provId)
+      const response = await ProviService.getConstiList(electionId, provId)
       constiList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching constiList of ', proviPath)
     } else {
@@ -155,7 +155,7 @@ async function getProviLevel_constiList(
 async function getProviLevel_affiList(electionId: string, provId: number): Promise<void> {
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
-    const response = await ProviService.getProviLevel_affiList(electionId, provId)
+    const response = await ProviService.getAffiList(electionId, provId)
     affiList.value = response
     voteLevel.value = 'provi'
     console.log('Fetching affiList of ', proviPath)
@@ -171,7 +171,7 @@ async function getConstiLevel_muniList_lhMap(
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
     if (electionId && constId) {
-      const response = await MuniService.getConstiLevel_muniList_lhMap(electionId, constId)
+      const response = await ConstiService.getMuniList_lhMap(electionId, constId)
       muniList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching muniList_lhMap of ', constiPath)
     }
@@ -183,7 +183,7 @@ async function getConstiLevel_muniList_lhMap(
 async function getConstiLevel_affiList_lhMap(electionId: string, constId: string): Promise<void> {
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await ConstiService.getConstiLevel_affiList_lhMap(electionId, constId)
+    const response = await ConstiService.getAffiList_lhMap(electionId, constId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
     console.log('Fetching affiList_lhMap of ', constiPath)
@@ -200,7 +200,7 @@ async function getMuniLevel_poStList_lhMap(
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
     if (electionId && constId && munId) {
-      const response = await PoStService.getMuniLevel_poStList_lhMap(electionId, constId, munId)
+      const response = await MuniService.getPoStList_lhMap(electionId, constId, munId)
       poStList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching poStList_lhMap of ', muniPath)
     }
@@ -216,7 +216,7 @@ async function getMuniLevel_affiList_lhMap(
 ): Promise<void> {
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await MuniService.getMuniLevel_affiList_lhMap(electionId, constId, munId)
+    const response = await MuniService.getAffiList_lhMap(electionId, constId, munId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
     console.log('Fetching affiList_lhMap of ', muniPath)
@@ -234,12 +234,7 @@ async function getPoStLevel_affiList_lhMap(
   const poStPath =
     'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId + ' > poSt ' + poStId
   try {
-    const response = await PoStService.getPoStLevel_affiList_lhMap(
-      electionId,
-      constId,
-      munId,
-      poStId,
-    )
+    const response = await PoStService.getAffiList_lhMap(electionId, constId, munId, poStId)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('votes', affiList.value)
     voteLevel.value = 'poSt'

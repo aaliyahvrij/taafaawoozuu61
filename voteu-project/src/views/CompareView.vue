@@ -48,7 +48,7 @@ async function getNationalLevel_proviList_lhMap(
     return
   }
   try {
-    const response = await ProviService.getNationalLevel_proviList_lhMap(electionId)
+    const response = await ElectionService.getProviList_lhMap(electionId)
     proviListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching proviList_lhMap of ', electionId)
   } catch (err) {
@@ -69,7 +69,7 @@ async function getProviLevel_constiList(
   }
   const proviPath = 'election ' + electionId + ' > provi ' + provId
   try {
-    const response = await ProviService.getProviLevel_constiList(electionId, provId)
+    const response = await ProviService.getConstiList(electionId, provId)
     constiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching constiList of ', proviPath)
   } catch (err) {
@@ -90,7 +90,7 @@ async function getConstiLevel_muniList_lhMap(
   }
   const constiPath = 'election ' + electionId + ' > consti ' + constId
   try {
-    const response = await MuniService.getConstiLevel_muniList_lhMap(electionId, constId)
+    const response = await ConstiService.getMuniList_lhMap(electionId, constId)
     muniListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching muniList_lhMap of ', constiPath)
   } catch (err) {
@@ -112,7 +112,7 @@ async function getMuniLevel_poStList_lhMap(
   }
   const muniPath = 'election ' + electionId + ' > consti ' + constId + ' > muni ' + munId
   try {
-    const response = await PoStService.getMuniLevel_poStList_lhMap(electionId, constId, munId)
+    const response = await MuniService.getPoStList_lhMap(electionId, constId, munId)
     poStListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching poStList_lhMap of ', muniPath)
   } catch (err) {
@@ -137,7 +137,7 @@ async function getAffiListOrListLHMap(
   let levelPath = 'election ' + electionId
   try {
     if (poSt && muni && consti) {
-      const response = await PoStService.getPoStLevel_affiList_lhMap(
+      const response = await PoStService.getAffiList_lhMap(
         electionId,
         consti.id.toString(),
         muni.id.toString(),
@@ -149,7 +149,7 @@ async function getAffiListOrListLHMap(
         ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString() + ' > poSt ' + poSt.id
       console.log('Fetching affiList_lhMap of ', levelPath)
     } else if (muni && consti) {
-      const response = await MuniService.getMuniLevel_affiList_lhMap(
+      const response = await MuniService.getAffiList_lhMap(
         electionId,
         consti.id.toString(),
         muni.id.toString(),
@@ -159,22 +159,19 @@ async function getAffiListOrListLHMap(
       levelPath += ' > consti ' + consti.id.toString() + ' > muni ' + muni.id.toString()
       console.log('Fetching affiList_lhMap of ', levelPath)
     } else if (consti) {
-      const response = await ConstiService.getConstiLevel_affiList_lhMap(
-        electionId,
-        consti.id.toString(),
-      )
+      const response = await ConstiService.getAffiList_lhMap(electionId, consti.id.toString())
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'consti'
       levelPath += ' > consti ' + consti.id
       console.log('Fetching affiList_lhMap of ', levelPath)
     } else if (provi) {
-      const response = await ProviService.getProviLevel_affiList(electionId, provi.id)
+      const response = await ProviService.getAffiList(electionId, provi.id)
       affiListRef.value = response
       voteLevelRef.value = 'provi'
       levelPath += ' > provi ' + provi.id
       console.log('Fetching affiList of ', levelPath)
     } else {
-      const response = await ElectionService.getNationalLevel_affiList_lhMap(electionId)
+      const response = await ElectionService.getAffiList_lhMap(electionId)
       affiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
       voteLevelRef.value = 'national'
       console.log('Fetching affiList_lhMap of ', levelPath)
