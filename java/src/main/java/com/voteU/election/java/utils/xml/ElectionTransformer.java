@@ -58,7 +58,7 @@ public class ElectionTransformer implements Transformer<Election> {
     }
 
     @Override
-    public void registerConstiLevel_affiData(LinkedHashMap<String, String> prcsConstiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap) {
+    public void registerConstiLevel_affiData(LinkedHashMap<String, String> constiLhMap, List<String> affiNameList, List<Integer> affiVVCountList, LinkedHashMap<Integer, LinkedHashMap<Integer, Integer>> candiLhMap) {
         // ee
     }
 
@@ -71,25 +71,25 @@ public class ElectionTransformer implements Transformer<Election> {
         String affiName = muniLhMap.get("affiName");
         String electionId = muniLhMap.get("electionId");
         Election election = this.electionList_lhMap.get(electionId);
-        LinkedHashMap<String, Municipality> nationalLevel_muniList_lhMap = election.getMuniList_lhMap();
-        Municipality nationalLevel_muni = nationalLevel_muniList_lhMap.computeIfAbsent(munId, id -> {
-            Municipality muni = new Municipality(id, muniName);
-            muni.setConstId(constId);
-            return muni;
+        LinkedHashMap<String, Municipality> muniList_lhMap = election.getMuniList_lhMap();
+        Municipality muni = muniList_lhMap.computeIfAbsent(munId, id -> {
+            Municipality m = new Municipality(id, muniName);
+            m.setConstId(constId);
+            return m;
         });
-        LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = nationalLevel_muni.getAffiList_lhMap();
-        Affiliation muniLevel_affi = muniLevel_affiList_lhMap.get(affId);
-        if (muniLevel_affi == null) {
+        LinkedHashMap<Integer, Affiliation> affiList_lhMap = muni.getAffiList_lhMap();
+        Affiliation affi = affiList_lhMap.get(affId);
+        if (affi == null) {
             int affiVVCount = Integer.parseInt(muniLhMap.get("affiVVCount"));
-            muniLevel_affi = new Affiliation(affId, affiName, affiVVCount);
-            muniLevel_affiList_lhMap.put(affId, muniLevel_affi);
+            affi = new Affiliation(affId, affiName, affiVVCount);
+            affiList_lhMap.put(affId, affi);
         }
-        if (nationalLevel_muniList_lhMap.containsKey("candiVVCount")) {
+        if (muniList_lhMap.containsKey("candiVVCount")) {
             int candId = Integer.parseInt(muniLhMap.get("candId"));
             int candiVVCount = Integer.parseInt(muniLhMap.get("candiVVCount"));
-            if (!muniLevel_affi.hasCandId(candId)) {
+            if (!affi.hasCandId(candId)) {
                 Candidate candi = new Candidate(candId, candiVVCount);
-                muniLevel_affi.addCandi(candi);
+                affi.addCandi(candi);
             }
         }
     }
@@ -117,15 +117,15 @@ public class ElectionTransformer implements Transformer<Election> {
         int affId = Integer.parseInt(candiLhMap.get("affId"));
         String electionId = candiLhMap.get("electionId");
         Election election = this.electionList_lhMap.get(electionId);
-        LinkedHashMap<Integer, Constituency> nationalLevel_constiList_lhMap = election.getConstiList_lhMap();
-        Constituency nationalLevel_consti = nationalLevel_constiList_lhMap.get(constId);
-        if (nationalLevel_consti != null) {
+        LinkedHashMap<Integer, Constituency> constiList_lhMap = election.getConstiList_lhMap();
+        Constituency consti = constiList_lhMap.get(constId);
+        if (consti != null) {
             // Update or insert a candidate in a consti-level affi
-            LinkedHashMap<Integer, Affiliation> constiLevel_affiList_lhMap = nationalLevel_consti.getAffiList_lhMap();
+            LinkedHashMap<Integer, Affiliation> constiLevel_affiList_lhMap = consti.getAffiList_lhMap();
             populateCandi(candId, firstName, lastName, gender, localityName, affId, constiLevel_affiList_lhMap);
 
             // Update or insert a candidate in each muni-level affi
-            LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = nationalLevel_consti.getMuniList_lhMap();
+            LinkedHashMap<String, Municipality> constiLevel_muniList_lhMap = consti.getMuniList_lhMap();
             for (Municipality constiLevel_muni : constiLevel_muniList_lhMap.values()) {
                 LinkedHashMap<Integer, Affiliation> muniLevel_affiList_lhMap = constiLevel_muni.getAffiList_lhMap();
                 populateCandi(candId, firstName, lastName, gender, localityName, affId, muniLevel_affiList_lhMap);
