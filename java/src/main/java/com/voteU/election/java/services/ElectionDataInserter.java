@@ -1,6 +1,7 @@
 package com.voteU.election.java.services;
 
 import com.voteU.election.java.model.*;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,17 @@ public class ElectionDataInserter {
         }
     }
 
+    private void batchUpdateInChunks2(String sql, List<Object[]> batchArgs, int chunkSize, int startIndex) {
+        int total = batchArgs.size();
+        for (int i = startIndex; i < total; i += chunkSize) {
+            int end = Math.min(total, i + chunkSize);
+            List<Object[]> chunk = batchArgs.subList(i, end);
+            int[] result = jdbc.batchUpdate(sql, chunk);
+            logger.info("Batch update executed for chunk {} - {} of {}, affected rows: {}", i, end, total, result.length);
+        }
+    }
+
+
     public ElectionDataInserter(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
@@ -44,15 +56,16 @@ public class ElectionDataInserter {
         // batchInsertNationalCandidateVotes(election.getId(), election.getParties().values());
 
        // batchInsertProvinces(election);\
-        batchInsertProvincePartyVotes(election);
-        batchInsertProvinceCandidateVotes(election);
+       // batchInsertProvincePartyVotes(election);
+       // batchInsertProvinceCandidateVotes(election);
 
         // batchInsertConstituencies(election);
         //batchInsertConstituencyPartyVotes(election);
         //batchInsertConstituencyCandidateVotes(election);
+
         //batchInsertAuthorities(election);
         //batchInsertAuthorityPartyVotes(election);
-        //batchInsertAuthorityCandidateVotes(election);
+        batchInsertAuthorityCandidateVotes(election, 76000);
 
 
         logger.info("Finished insertion of election with id {}", election.getId());
@@ -257,11 +270,13 @@ public class ElectionDataInserter {
         logger.info("Batch inserted authority party votes for election {}. Total records: {}", election.getId(), batchArgs.size());
     }
 
-    private void batchInsertAuthorityCandidateVotes(Election election) {
+    @Transactional
+    public void batchInsertAuthorityCandidateVotes(Election election, int startIndex) {
         String sql = "INSERT INTO authority_candidate_votes (authority_id, election_id, party_id, candidate_id, votes) VALUES (?, ?, ?, ?, ?)";
 
         List<Object[]> batchArgs = new ArrayList<>();
 
+        // build batchArgs exactly as you do now
         for (Province province : election.getProvinces()) {
             for (Constituency constituency : province.getConstituencies()) {
                 for (Authority authority : constituency.getAuthorities().values()) {
@@ -274,33 +289,12 @@ public class ElectionDataInserter {
             }
         }
 
-        batchUpdateInChunks(sql, batchArgs, 1000);
-        logger.info("Batch inserted authority candidate votes for election {}. Total records: {}", election.getId(), batchArgs.size());
+        batchUpdateInChunks2(sql, batchArgs, 5000, startIndex);
+
+        logger.info("Batch inserted authority candidate votes for election {} from index {} onwards. Total records: {}", election.getId(), startIndex, batchArgs.size());
     }
 
 
-    public void exportPollingStationCandidateVotesToCSV(Election election, String filePath) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write("election_id,pollingstation_id,party_id,candidate_id,votes");
-            writer.newLine();
-            for (Province province : election.getProvinces()) {
-                for (Constituency c : province.getConstituencies()) {
-                    for (Authority a : c.getAuthorities().values()) {
-                        for (PollingStation ps : a.getPollingStations().values()) {
-                            for (Party p : ps.getParties().values()) {
-                                for (Candidate candidate : p.getCandidates()) {
-                                    int votes = candidate.getVotes();
-                                    String line = String.format("%s,%s,%s,%s,%d", election.getId(), ps.getId(), p.getId(), candidate.getId(), votes);
-                                    writer.write(line);
-                                    writer.newLine();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 
 }
