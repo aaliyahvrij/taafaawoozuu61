@@ -12,23 +12,46 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * Service class responsible for handling province-related logic,
+ * including fetching province and constituency data,
+ * as well as aggregating vote totals.
+ */
 @Service
 public class ProvinceService {
 
     private final ElectionService electionService;
     private final ProvinceRepository provinceRepository;
 
+    /**
+     * Constructs a new ProvinceService with the required dependencies.
+     *
+     * @param electionService     the service used to fetch election data
+     * @param provinceRepository  the repository used to fetch province metadata
+     */
     public ProvinceService(ElectionService electionService, ProvinceRepository provinceRepository) {
         this.electionService = electionService;
         this.provinceRepository = provinceRepository;
     }
 
+    /**
+     * Retrieves all provinces for a given election year.
+     *
+     * @param year the election year
+     * @return list of {@link Province} objects or empty list if not found
+     */
     public List<Province> getProvinces(String year) {
         Election election = electionService.getElection(year);
         if (election == null) return new ArrayList<>();
         return election.getProvinces();
     }
 
+    /**
+     * Retrieves a compact list of provinces (ID and name) for a given election year.
+     *
+     * @param year the election year
+     * @return list of {@link CompactProvince} DTOs
+     */
     public List<CompactProvince> getCompactProvinces(String year) {
         Election election = electionService.getElection(year);
         if (election == null) return new ArrayList<>();
@@ -40,6 +63,13 @@ public class ProvinceService {
         return compactProvinces;
     }
 
+    /**
+     * Retrieves all constituencies belonging to a province by ID and election year.
+     *
+     * @param year       the election year
+     * @param provinceId the ID of the province
+     * @return list of {@link Constituency} objects
+     */
     public List<Constituency> getConstituenciesByProvinceId(String year, int provinceId) {
         Election election = electionService.getElection(year);
         if (election == null) return new ArrayList<>();
@@ -54,6 +84,13 @@ public class ProvinceService {
         return province.getConstituencies();
     }
 
+    /**
+     * Retrieves compact list of constituencies (ID and name only) for a given province and year.
+     *
+     * @param year       the election year
+     * @param provinceId the ID of the province
+     * @return list of {@link CompactConstituency} DTOs
+     */
     public List<CompactConstituency> getCompactConstituenciesByProvinceId(String year, int provinceId) {
         Election election = electionService.getElection(year);
         if (election == null) return new ArrayList<>();
@@ -74,6 +111,12 @@ public class ProvinceService {
     }
 
 
+    /**
+     * Aggregates the total number of votes per party in a given province.
+     *
+     * @param province the {@link Province} object
+     * @return map of party ID to {@link Party} with vote totals and percentages
+     */
     public Map<Integer, Party> getTotalVotesPerParty(Province province) {
         Map<Integer, Party> totalVotesPerParty = new HashMap<>();
         int totalVotes = 0;
@@ -104,6 +147,13 @@ public class ProvinceService {
         return totalVotesPerParty;
     }
 
+    /**
+     * Aggregates total votes per party for a specific province and year.
+     *
+     * @param year       the election year
+     * @param provinceId the ID of the province
+     * @return map of party ID to {@link Party} with vote totals and percentages
+     */
     public Map<Integer, Party> getTotalVotesPerParty(String year, int provinceId) {
         Election election = electionService.getElection(year);
         if (election == null) return Map.of();
@@ -118,11 +168,23 @@ public class ProvinceService {
         return getTotalVotesPerParty(province);
     }
 
+    /**
+     * Retrieves all province names as dropdown options for a given election year.
+     *
+     * @param year the election year
+     * @return list of {@link DropdownOptionDTO} containing province IDs and names
+     */
     public List<DropdownOptionDTO<Integer>> getAllProvinceNames(String year) {
         return provinceRepository.getProvincesByElectionId(year);
     }
 
-
+    /**
+     * Calculates the total number of votes cast in a specific province for a given election year.
+     *
+     * @param year       the election year
+     * @param provinceId the ID of the province
+     * @return total number of votes
+     */
     public int getTotalVotesForProvince(String year, int provinceId) {
         Election election = electionService.getElection(year);
         if (election == null) return 0;
