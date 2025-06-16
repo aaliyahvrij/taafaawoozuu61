@@ -21,14 +21,14 @@ public class ElectionService {
 
     /**
      * Calls upon the reader to call upon the processor to retrieve
-     * the electoral data of the specified election(s).
+     * the data of the specified election(s).
      *
      * @return true if the data has been loaded successfully, false otherwise
      */
-    public boolean getElectoralData(String electionIdListString) {
-        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectoralData(electionIdListString);
+    public boolean getElectionData(String electionIdListString) {
+        LinkedHashMap<String, Election> readerElectionList_lhMap = this.electionReader.getElectionData(electionIdListString);
         if (readerElectionList_lhMap == null || readerElectionList_lhMap.isEmpty()) {
-            log.warn("No electoral data found during getElectoralData(%s).".formatted(electionIdListString));
+            log.warn("No data found during getElectionData(%s).".formatted(electionIdListString));
             return false;
         }
         electionList_lhMap.putAll(readerElectionList_lhMap);

@@ -28,7 +28,7 @@ public class ElectionReader {
      *
      * @return A map containing election results, organized by election year.
      */
-    public LinkedHashMap<String, Election> getElectoralData(String electionIdListString) {
+    public LinkedHashMap<String, Election> getElectionData(String electionIdListString) {
         String[] electionIdList;
         if (Objects.equals(electionIdListString, "all")) {
             electionIdList = theEntireElectionIdList;

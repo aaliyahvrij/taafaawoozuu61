@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.LinkedHashMap;
 
 /**
- * A Transformer that processes election data and organizes it into Election objects.
+ * Organizes processed election data into Election objects.
  */
 @Getter
 @Slf4j
@@ -148,26 +148,24 @@ public class ElectionTransformer implements Transformer<Election> {
 
     private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiList_lhMap) {
         Affiliation affi = affiList_lhMap.get(affId);
-        if (affi != null) {
-            List<Candidate> affiLevel_candiList = affi.getCandiList();
-            Candidate candi = null;
-            for (Candidate affiLevel_candi : affiLevel_candiList) {
-                if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {
-                    candi = affiLevel_candi;
-                    candi.setFirstName(firstName);
-                    candi.setLastName(lastName);
-                    candi.setGender(gender);
-                    candi.setLocalityName(localityName);
-                    break;
-                }
-            }
-            if (candi == null) {
-                candi = new Candidate(candId, firstName, lastName);
+        List<Candidate> affiLevel_candiList = affi.getCandiList();
+        Candidate candi = null;
+        for (Candidate affiLevel_candi : affiLevel_candiList) {
+            if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {
+                candi = affiLevel_candi;
+                candi.setFirstName(firstName);
+                candi.setLastName(lastName);
                 candi.setGender(gender);
                 candi.setLocalityName(localityName);
-                candi.setAffId(affId);
-                affi.addCandi(candi);
+                break;
             }
+        }
+        if (candi == null) {
+            candi = new Candidate(candId, firstName, lastName);
+            candi.setGender(gender);
+            candi.setLocalityName(localityName);
+            candi.setAffId(affId);
+            affi.addCandi(candi);
         }
     }
 }
