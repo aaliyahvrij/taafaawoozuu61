@@ -1,4 +1,4 @@
-/*package com.voteU.election.java.ControllerTests;
+package com.voteU.election.java.ControllerTests;
 
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
@@ -26,27 +26,27 @@ class PoStControllerTest {
     private final String electionId = "tk2023";
     private final String poStId = "poSt456";
     private PollingStation samplePoSt;
-    private LinkedHashMap<String, PollingStation> poStList_lhMap;
-    private LinkedHashMap<Integer, Affiliation> affiList_lhMap;
+    private LinkedHashMap<String, PollingStation> poStListLhMap;
+    private LinkedHashMap<Integer, Affiliation> affiListLhMap;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         samplePoSt = new PollingStation(poStId, "poStA", "1234AB");
-        poStList_lhMap = new LinkedHashMap<>();
-        poStList_lhMap.put(poStId, samplePoSt);
-        affiList_lhMap = new LinkedHashMap<>();
+        poStListLhMap = new LinkedHashMap<>();
+        poStListLhMap.put(poStId, samplePoSt);
+        affiListLhMap = new LinkedHashMap<>();
         Affiliation affi = new Affiliation(10, "affiX", 1447);
-        affiList_lhMap.put(affi.getId(), affi);
+        affiListLhMap.put(affi.getId(), affi);
     }
 
     @Test
-    void test_getAffiList_lhMap() {
-        when(poStService.getAffiList_lhMap(electionId, poStId)).thenReturn(affiList_lhMap);
-        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> result = poStController.getAffiList_lhMap(electionId, poStId);
+    void test_getAffiListLhMap() {
+        when(poStService.getAffiListLhMap(electionId, poStId)).thenReturn(affiListLhMap);
+        LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> result = poStController.getAffiListLhMap(electionId, poStId);
         assertEquals(1, result.size());
         assertTrue(result.containsKey(10));
         assertEquals("affiX", result.get(10).getName());
-        verify(poStService, times(1)).getAffiList_lhMap(electionId, poStId);
+        verify(poStService, times(1)).getAffiListLhMap(electionId, poStId);
     }
-}*/
+}

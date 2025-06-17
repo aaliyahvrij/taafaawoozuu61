@@ -2,30 +2,26 @@ package com.voteU.election.java.models;
 
 import lombok.Getter;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Getter
 public class Affiliation {
     private final int id;
     private final String name;
-    private final List<Candidate> candiList;
+    private final LinkedHashMap<Integer, Candidate> candiListLhMap;
     private final int vvCount;
 
     public Affiliation(int id, String name, int vvCount) {
         this.id = id;
         this.name = name;
-        this.candiList = new ArrayList<>();
+        this.candiListLhMap = new LinkedHashMap<>();
         this.vvCount = vvCount;
     }
 
-    public void addCandi(Candidate candi) {
-        this.candiList.add(candi);
-    }
-
-    public boolean hasCandId(int candId) {
-        for (Candidate candi : this.candiList) {
-            if (candi.getId() == candId) {
+    public boolean hasCandId(int theId) {
+        for (Map.Entry<Integer, Candidate> candiPair : this.candiListLhMap.keySet()) {
+            if (candiPair == theId) {
                 return true;
             }
         }

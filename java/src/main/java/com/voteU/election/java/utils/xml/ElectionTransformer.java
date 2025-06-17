@@ -91,7 +91,7 @@ public class ElectionTransformer implements Transformer<Election> {
             int candiVVCount = Integer.parseInt(muniLhMap.get("candiVVCount"));
             if (!affi.hasCandId(candId)) {
                 Candidate candi = new Candidate(candId, candiVVCount);
-                affi.addCandi(candi);
+                affi.getCandiListLhMap().put(candId, candi);
             }
         }
     }
@@ -146,7 +146,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
     private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListLhMap) {
         Affiliation affi = affiListLhMap.get(affId);
-        List<Candidate> affiLevel_candiList = affi.getCandiList();
+        List<Candidate> affiLevel_candiList = affi.getCandiListLhMap();
         Candidate candi = null;
         for (Candidate affiLevel_candi : affiLevel_candiList) {
             if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {

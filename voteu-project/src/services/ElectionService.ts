@@ -47,7 +47,7 @@ export class ElectionService {
   ): Promise<Record<number, Constituency> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionIdListString}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/constituencies`,
         {
           method: 'GET',
           headers: {
