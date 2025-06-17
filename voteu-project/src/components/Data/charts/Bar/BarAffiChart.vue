@@ -6,7 +6,7 @@ import type { Affiliation } from '@/interfaces'
 Chart.register(...registerables)
 
 const props = defineProps<{
-  affiVotes: Affiliation[] | null
+  affiList: Affiliation[] | null
 }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -25,9 +25,9 @@ watchEffect(() => {
   if (!canvasRef.value) {
     return
   }
-  if (props.affiVotes && props.affiVotes.length > 0) {
-    const labels = props.affiVotes.map((affi) => affi.name)
-    const data = props.affiVotes.map((affi) => affi.vvCount)
+  if (props.affiList && props.affiList.length > 0) {
+    const labels = props.affiList.map((affi) => affi.name)
+    const data = props.affiList.map((affi) => affi.vvCount)
     const backgroundColors = labels.map(generateColorFromName)
     const config: ChartConfiguration<'bar', number[], string> = {
       type: 'bar',
@@ -71,6 +71,6 @@ watchEffect(() => {
 
 <template>
   <div>
-    <canvas ref="canvasRef" width="400px" height="300px"></canvas>
+    <canvas ref="canvasRef" height="300px" width="400px"></canvas>
   </div>
 </template>

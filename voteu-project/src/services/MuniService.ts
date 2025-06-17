@@ -7,7 +7,7 @@ export class MuniService {
   ): Promise<Record<string, PollingStation> | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionId}/municipalities/${munId}/pollingStations`,
+        `http://localhost:8080/api/election/${electionId}/municipalities/${munId}/pollingstations`,
         {
           method: 'GET',
           headers: {

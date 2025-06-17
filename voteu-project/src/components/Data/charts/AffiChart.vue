@@ -6,7 +6,7 @@ import type { Affiliation } from '@/interfaces'
 Chart.register(...registerables)
 
 const props = defineProps<{
-  affiVotes: Affiliation[] | null
+  affiList: Affiliation[] | null
 }>()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart<'pie'> | null = null
@@ -21,9 +21,9 @@ function generateColorFromName(name: string): string {
 }
 
 watchEffect(() => {
-  if (props.affiVotes && canvasRef.value) {
-    const labels = props.affiVotes.map((affi) => affi.name)
-    const data = props.affiVotes.map((affi) => affi.vvCount)
+  if (props.affiList && canvasRef.value) {
+    const labels = props.affiList.map((affi) => affi.name)
+    const data = props.affiList.map((affi) => affi.vvCount)
     const backgroundColors = labels.map(generateColorFromName)
     const config: ChartConfiguration<'pie', number[], string> = {
       type: 'pie',
@@ -52,6 +52,6 @@ watchEffect(() => {
 
 <template>
   <div>
-    <canvas ref="canvasRef" width="200px" height="200px"></canvas>
+    <canvas ref="canvasRef" height="200px" width="200px"></canvas>
   </div>
 </template>

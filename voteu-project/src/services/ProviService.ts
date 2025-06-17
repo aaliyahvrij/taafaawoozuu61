@@ -7,7 +7,7 @@ export class ProviService {
   ): Promise<Constituency[] | null> {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/constituencies/compact`,
+        `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/constituencies`,
         {
           method: 'GET',
           headers: {
