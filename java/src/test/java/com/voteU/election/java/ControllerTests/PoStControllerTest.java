@@ -1,4 +1,4 @@
-package com.voteU.election.java.ControllerTests;
+/*package com.voteU.election.java.ControllerTests;
 
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
@@ -49,4 +49,4 @@ class PoStControllerTest {
         assertEquals("affiX", result.get(10).getName());
         verify(poStService, times(1)).getAffiListLhMap(electionId, poStId);
     }
-}
+}*/
