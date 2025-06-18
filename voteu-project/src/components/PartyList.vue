@@ -35,7 +35,7 @@
       >
         <div class="party-name">{{ party.partyName }}</div>
         <div class="party-votes">{{ party.votes.toLocaleString() }} votes</div>
-        <div class="party-percentage">{{ (party.percentage ?? 0 ).toFixed(2) }} %</div>
+        <div class="party-percentage"> {{ ((party.votes / totalVotes) * 100).toFixed(2) }} %</div>
       </div>
     </div>
   </template>
