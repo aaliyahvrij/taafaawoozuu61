@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Party } from '@/interface/Party.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
+import type { PartyVotesDTO } from '@/interface/PartyVotesDTO.ts'
 
 defineProps<{
-  selectedParty: Party
-  selectedElection: string | number
+  selectedParty: PartyVotesDTO
+  selectedElection: string | number | null
 }>()
 
 defineEmits<{

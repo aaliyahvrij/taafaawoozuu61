@@ -23,7 +23,6 @@ const authorities = ref<DropdownOption[]>([])
 const selectedAuthority = ref<DropdownOption | null>(null)
 
 const partyVotes = ref<PartyVotesDTO[]>([])
-const selectedParty = ref<string>('') // placeholder
 const selectedCandidate = ref<Candidate | null>(null) // placeholder
 const currentVoteLevel = ref<string>('') // will hold the string 'national',
 const voteLevels = ref<(string | number)[]>([])
@@ -155,6 +154,7 @@ function handleApply() {
 
   isPartyListVisible.value = true
 }
+
 </script>
 
 <template>

@@ -15,8 +15,13 @@
     (e: 'select-party', party: PartyVotesDTO): void
   }>()
 
+
   const electionYear = computed(() =>
     String(props.selectedElection).replace(/\D/g, '')
+  )
+
+  const totalVotes = computed(() =>
+    props.partyVotes.reduce((sum, party) => sum + party.votes, 0)
   )
   </script>
 
