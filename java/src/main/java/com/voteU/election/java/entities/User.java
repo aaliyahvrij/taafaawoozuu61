@@ -53,6 +53,9 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked = false;
+
     public User() {
     }
 }
