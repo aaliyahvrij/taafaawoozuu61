@@ -71,6 +71,18 @@ export async function updateUser(user: Partial<User>): Promise<User> {
 }
 
 /**
+ * Blocks a user by their ID.
+ *
+ * @param {number} id - The unique identifier of the user to block.
+ * @return {Promise<User>} A promise that resolves to the updated (blocked) user object.
+ */
+export async function blockUser(id: number): Promise<User> {
+  return await apiFetch<User>(`/users/${id}/block`, {
+    method: 'POST',
+  });
+}
+
+/**
  * Deletes a user identified by the given ID.
  *
  * Sends a DELETE request to remove the user associated with the specified ID.
@@ -87,5 +99,8 @@ export async function deleteUser(id: number): Promise<void> {
     },
 
   })
+
+
+
 }
 
