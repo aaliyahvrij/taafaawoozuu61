@@ -8,6 +8,7 @@ export interface User {
   country: string;
   password: string;
   createdAt?: string;
+  isBlocked?: boolean;
 }
 
 export type UpdateUser = Partial<User>;
