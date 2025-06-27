@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 import type { User } from '@/interface/User.ts'
 import { authService } from '@/services/AuthService.ts'
 import { getUserByUsername } from '@/services/UserService.ts'
+import ReportModal from '@/components/Data/user/ReportModal.vue'
 
 const user = ref<User | null>(null)
 const error = ref<string | null>(null)
@@ -32,6 +33,9 @@ const { isLoggedIn  } = useAuth()
 
 const showForm = ref(false)
 const posts = ref<Posts[]>([])
+
+const showReportModal = ref(false)
+const selectedPost = ref<Posts | null>(null)
 
 onMounted(() => {
   loadPosts()
@@ -93,6 +97,15 @@ function goToPost(postId : number) :void{
   router.push({ path: `/post/${postId}` });
 }
 
+function openReportModal(post: Posts) {
+  selectedPost.value = post
+  console.log('Reporting user:', post.user)
+  showReportModal.value = true
+}
+function handleReported() {
+  window.alert('Report submitted')
+}
+
 </script>
 
 <template>
@@ -133,16 +146,33 @@ function goToPost(postId : number) :void{
     <div class="post-box">
       <h2 class="post-title">All Posts</h2>
       <ul class="post-list">
-        <li class="post-item" v-for="post in posts" :key="post.id" @click="goToPost(post.id)">
-          <span class="author">User {{ post.user.username }}:</span> <strong>{{ post.title }}</strong><br />
-          <em>{{ post.description }}</em><br />
-          <small class="timestamp">
-            📅 {{ formatDate(post.createdAt) }}
-          </small>
+        <li class="post-item" v-for="post in posts" :key="post.id">
+          <div @click="goToPost(post.id)">
+            <span class="author">User {{ post.user.username }}:</span>
+            <strong>{{ post.title }}</strong><br />
+            <em>{{ post.description }}</em><br />
+            <small class="timestamp">📅 {{ formatDate(post.createdAt) }}</small>
+          </div>
+
+          <!-- Report knop -->
+          <button class="report-btn" v-if="isLoggedIn && user?.id !== post.user.id" @click="openReportModal(post)">
+            Report
+          </button>
+
           <CommentSection v-if="post.id" :postId="post.id" />
         </li>
       </ul>
     </div>
+
+    <!-- Report Modal -->
+    <ReportModal
+      v-if="user && user.id && selectedPost"
+      :visible="showReportModal"
+      :reporter="{ id: user.id, username: user.username }"
+      :reported="{ id: selectedPost.user.id, username: selectedPost.user.username }"
+      @close="showReportModal = false"
+      @reported="handleReported"
+    />
   </div>
 </template>
 
