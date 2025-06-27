@@ -149,4 +149,14 @@ public class UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+
+    public User blockUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.setBlocked(true);
+        return userRepository.save(user);
+    }
+
+
 }
