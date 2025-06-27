@@ -333,4 +333,11 @@ public class UserController {
         log.info("Authorities: " + authentication.getAuthorities());
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/block")
+    public ResponseEntity<User> blockUser(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.blockUser(id));
+    }
+
+
 }
