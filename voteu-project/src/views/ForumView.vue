@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import {createPost, getAllPosts} from '@/services/PostsService.ts'
 import type { Posts } from '@/interface/Posts.ts'
@@ -84,6 +84,8 @@ async function submitPost() {
   }
 }
 
+
+
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
   return date.toLocaleString('nl-NL', {
@@ -105,6 +107,10 @@ function openReportModal(post: Posts) {
 function handleReported() {
   window.alert('Report submitted')
 }
+
+const sortedPosts = computed(() => {
+  return [...posts.value].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+});
 
 </script>
 
@@ -143,12 +149,13 @@ function handleReported() {
       <button class="submit-btn" @click="submitPost">Post</button>
     </div>
 
-    <div class="post-box">
+    <div class="post-box ">
       <h2 class="post-title">All Posts</h2>
       <ul class="post-list">
-        <li class="post-item" v-for="post in posts" :key="post.id">
+        <li class="post-item" v-for="post in sortedPosts" :key="post.id">
           <div @click="goToPost(post.id)">
-            <span class="author">User {{ post.user.username }}:</span>
+            <span class="author">👤{{ post.user.username }}</span>
+            <hr>
             <strong>{{ post.title }}</strong><br />
             <em>{{ post.description }}</em><br />
             <small class="timestamp">📅 {{ formatDate(post.createdAt) }}</small>
@@ -210,7 +217,20 @@ function handleReported() {
   cursor: pointer;
 }
 
+.report-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #dc2626; /* rood */
+  font-size: 0.85rem;
+  cursor: pointer;
+}
 
+.report-btn:hover {
+  text-decoration: underline;
+}
 
 .login-warning {
   background-color: #fff3cd;
@@ -260,34 +280,39 @@ function handleReported() {
 }
 
 .post-title {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  color: #111827;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
 }
 
 .post-list {
   list-style-type: none;
-  padding: 0;
   margin: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 0 0.5rem 0 0;
 }
 
 .post-item {
-  background-color: #f3f4f6;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-  color: #374151;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
+  position: relative;
 }
-
-.post-item:hover{
+.post-item:hover {
+  background-color: lightgray;
   cursor: pointer;
-  background-color: #dfdfe1;
 }
 
 .post-item .author {
   font-weight: bold;
-  color: #1e40af;
+  color: #1d4ed8;
+  display: inline-block;
+  margin-bottom: 0.25rem;
 }
 
 .timestamp {
