@@ -158,5 +158,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User unblockUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.setBlocked(false);
+        return userRepository.save(user);
+    }
+
 
 }
