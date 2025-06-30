@@ -3,6 +3,7 @@ package com.voteU.election.java.services;
 import com.voteU.election.java.dto.JwtResponse;
 import com.voteU.election.java.dto.LoginDTO;
 import com.voteU.election.java.entities.User;
+import com.voteU.election.java.exceptions.AccessDeniedException;
 import com.voteU.election.java.repositories.UserRepository;
 import com.voteU.election.java.services.JWT.JwtService;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,12 +30,14 @@ public class AuthenticationService {
         User user = userRepository.findUserByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
+        if (user.isBlocked()) {
+            throw new AccessDeniedException("User is blocked");
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
-
         String token = jwtService.generateToken(user);
-
         return new JwtResponse(token);
     }
 }
