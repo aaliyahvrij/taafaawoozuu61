@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { getAllReports, deleteReport } from '@/services/ReportsService.ts'
 import type { Report } from '@/interface/Report'
-import { blockUser } from '@/services/UserService.ts'
+import { blockUser, unblockUser } from '@/services/UserService.ts'
 
 const reports = ref<Report[]>([])
 const isLoading = ref(true)
@@ -47,6 +47,18 @@ const handleBlock = async (userId: number) => {
   }
 };
 
+const handleUnblock = async (userId: number) => {
+  if (!confirm('Are you sure you want to unblock this user?')) return;
+  try {
+    await unblockUser(userId);
+    alert('User has been unblocked.');
+    await fetchReports();
+  } catch (err) {
+    console.error('Failed to unblock user:', err);
+    alert('Failed to unblock user.');
+  }
+};
+
 onMounted(() => fetchReports())
 </script>
 
@@ -60,9 +72,10 @@ onMounted(() => fetchReports())
       <thead>
       <tr>
         <th>ID</th>
-        <th>Reporter ID</th>
-        <th>Reported ID</th>
+        <th>Reporter</th>
+        <th>Reported</th>
         <th>Reason</th>
+        <th>Post</th>
         <th>Created At</th>
         <th>Actions</th>
       </tr>
@@ -70,9 +83,20 @@ onMounted(() => fetchReports())
       <tbody>
       <tr v-for="report in reports" :key="report.id">
         <td>{{ report.id }}</td>
-        <td>{{ report.reporter_user_id }}</td>
-        <td>{{ report.reported_user_id }}</td>
+        <td>{{ report.reporter.username }} (ID: {{ report.reporter.id }})</td>
+        <td>{{ report.reported.username }} (ID: {{ report.reported.id }})</td>
         <td>{{ report.reason }}</td>
+
+        <td>
+          <div v-if="report.post">
+            <strong>{{ report.post.title }}</strong><br />
+            <small>{{ report.post.body.slice(0, 50) }}...</small>
+          </div>
+          <div v-else>
+            <em>No post info</em>
+          </div>
+        </td>
+
         <td>{{ new Date(report.created_at).toLocaleString() }}</td>
         <td>
           <button
@@ -85,9 +109,17 @@ onMounted(() => fetchReports())
 
           <button
             class="block-button"
-            @click="handleBlock(report.reported_user_id)"
+            @click="handleBlock(report.reported.id)"
           >
             Block
+          </button>
+
+          <button
+            class="unblock- button"
+
+            @click="handleUnblock(report.reported.id)"
+            >
+            Unblock
           </button>
         </td>
       </tr>
