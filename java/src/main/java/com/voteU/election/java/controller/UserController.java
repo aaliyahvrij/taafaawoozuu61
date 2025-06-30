@@ -338,6 +338,10 @@ public class UserController {
     public ResponseEntity<User> blockUser(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.blockUser(id));
     }
+    @PostMapping("/{id}/unblock")
+    public ResponseEntity<User> unblockUser(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.unblockUser(id));
+    }
 
 
 }
