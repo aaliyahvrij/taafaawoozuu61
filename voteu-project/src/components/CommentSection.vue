@@ -12,7 +12,7 @@ const fetchComments = async () => {
   comments.value = await getCommentByPostId(props.postId)
 }
 
-// Filter top-level comments (zonder parent)
+
 const topLevelComments = computed(() =>
   comments.value.filter((c) => !c.commentsId || c.commentsId === 0)
 )
@@ -23,7 +23,7 @@ const submitComment = async () => {
   if (!newComment.value.trim()) return;
 
   if (!user || !user.id) {
-    alert('Je moet ingelogd zijn om te reageren.');
+    alert(' Please login to post a comment.');
     return;
   }
 
@@ -31,7 +31,7 @@ const submitComment = async () => {
     body: newComment.value,
     postsId: { id: props.postId },
     userId: { id: user.id },
-    commentsId: 0, // of { id: 0 } als je een lege parent wil verwijzen
+    commentsId: 0,
     createdAt: new Date().toISOString()
   }
 
@@ -40,8 +40,8 @@ const submitComment = async () => {
     newComment.value = '';
     await fetchComments();
   } catch (error) {
-    console.error('Fout bij versturen van comment:', error);
-    alert('Er ging iets mis bij het versturen van je comment.');
+    console.error('wrong by sending a comment:', error);
+    alert('something wrong by sending a comment, please try again later.');
   }
 };
 </script>
@@ -61,9 +61,9 @@ const submitComment = async () => {
       </div>
     </div>
 
-    <!-- Nieuwe reactie -->
+    <!-- new reaction -->
     <form @submit.prevent="submitComment">
-      <input v-model="newComment" placeholder="Typ je reactie..." />
+      <input v-model="newComment" placeholder="Typ a reply..." />
       <button type="submit">submit</button>
     </form>
   </div>
