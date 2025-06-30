@@ -6,6 +6,18 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a report entity in the system.
+ * This class maps to the "reports" table in the database and is used for handling
+ * reports submitted by users about other users or posts. It contains information
+ * about the reporter, the reported user or post, the reason for the report,
+ * and the timestamp for when the report was created.
+ *
+ * The relationships include:
+ * - A many-to-one association with the User entity for the reporter.
+ * - A many-to-one association with the User entity for the reported user.
+ * - A many-to-one association with the Posts entity for the reported post.
+ */
 @Entity
 @Getter
 @Setter

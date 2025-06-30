@@ -10,6 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Custom implementation of the {@link UserDetails} interface that provides
+ * user details required for Spring Security authentication and authorization.
+ * This class wraps an instance of {@code User} to provide authentication-related details.
+ *
+ * Responsibility:
+ * - Retrieve the authorities (roles) assigned to the user.
+ * - Provide the username and password for authentication.
+ * - Indicate if the user's account and credentials are valid, non-expired, and active.
+
+ */
 @Getter
 public class CustomUserDetails implements UserDetails {
 

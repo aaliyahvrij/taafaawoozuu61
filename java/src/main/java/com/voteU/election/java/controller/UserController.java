@@ -334,10 +334,22 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Blocks a user by their ID.
+     *
+     * @param id the ID of the user to be blocked
+     * @return a ResponseEntity containing the blocked user details
+     */
     @PostMapping("/{id}/block")
     public ResponseEntity<User> blockUser(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.blockUser(id));
     }
+    /**
+     * Unblocks a user with the given ID.
+     *
+     * @param id the ID of the user to be unblocked
+     * @return a ResponseEntity containing the unblocked User object
+     */
     @PostMapping("/{id}/unblock")
     public ResponseEntity<User> unblockUser(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.unblockUser(id));

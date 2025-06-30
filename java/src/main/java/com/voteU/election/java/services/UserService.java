@@ -151,6 +151,14 @@ public class UserService {
     }
 
 
+    /**
+     * Blocks a user by setting their 'blocked' status to true. The user is searched
+     * by their unique identifier, and if found, their status is updated and saved.
+     *
+     * @param id the unique identifier of the user to be blocked
+     * @return the updated User object after setting the 'blocked' status to true
+     * @throws ResourceNotFoundException if no user is found with the specified id
+     */
     public User blockUser(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
@@ -158,6 +166,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Unblocks a user identified by their unique identifier. This method retrieves the
+     * user from the database, changes their "blocked" status to false, and saves the updated
+     * user entity back to the database.
+     *
+     * @param id the unique identifier of the user to unblock
+     * @return the updated User object after being successfully unblocked
+     * @throws ResourceNotFoundException if no user exists with the specified id
+     */
     public User unblockUser(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));

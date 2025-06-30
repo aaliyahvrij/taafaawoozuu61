@@ -7,15 +7,33 @@ import com.voteU.election.java.model.Party;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
+/**
+ * Service class responsible for handling operations related to constituencies.
+ * <p>
+ * It fetches constituency data from the election service and provides methods
+ * to access detailed and compact views of constituencies and their related parties.
+ * </p>
+ */
 @Service
 public class ConstituencyService {
 
     private final ElectionService electionService;
 
+    /**
+     * Constructor that injects the ElectionService dependency.
+     *
+     * @param electionService the election service to retrieve election data
+     */
     public ConstituencyService(ElectionService electionService) {
         this.electionService = electionService;
     }
 
+    /**
+     * Retrieves all constituencies for a given election year.
+     *
+     * @param year the election year as a string
+     * @return a map of constituency IDs to Constituency objects, or null if not found
+     */
     public Map<Integer, Constituency> getConstituenciesByYear(String year) {
         Election election = electionService.getElection(year);
         if (election == null){
@@ -29,6 +47,12 @@ public class ConstituencyService {
         return constituencies;
     }
 
+    /**
+     * Retrieves a compact representation of all constituencies for a given election year.
+     *
+     * @param year the election year as a string
+     * @return a map of constituency IDs to CompactConstituency DTOs, or null if not found
+     */
     public Map<Integer, CompactConstituency> getConstituenciesByYearCompact(String year) {
         Election election = electionService.getElection(year);
         if (election == null){
@@ -47,8 +71,13 @@ public class ConstituencyService {
         return compactConstituencyMap;
     }
 
-
-
+    /**
+     * Retrieves a specific constituency by its ID for a given election year.
+     *
+     * @param year the election year as a string
+     * @param constituencyId the ID of the constituency
+     * @return the Constituency object, or null if not found
+     */
     public Constituency getConstituencyById(String year, int constituencyId) {
         Map<Integer, Constituency> constituencies = getConstituenciesByYear(year);
         if (constituencies == null){
@@ -57,6 +86,13 @@ public class ConstituencyService {
         return constituencies.get(constituencyId);
     }
 
+    /**
+     * Retrieves all parties associated with a specific constituency for a given election year.
+     *
+     * @param year the election year as a string
+     * @param constituencyId the ID of the constituency
+     * @return a map of party IDs to Party objects, or null if not found
+     */
     public Map<Integer, Party> getPartiesByConstituencyId(String year, int constituencyId) {
         Constituency constituency = getConstituencyById(year, constituencyId);
         if (constituency == null){
