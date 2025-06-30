@@ -38,7 +38,11 @@ const submit = async () => {
     }
   } catch (err) {
     console.error(err)
-    error.value = 'Invalid username or password.'
+    if (err instanceof Error && err.message === 'User is blocked') {
+      error.value = 'Your account has been blocked. Please contact support.'
+    } else {
+      error.value = 'Invalid username or password.'
+    }
   }
 }
 </script>
