@@ -79,6 +79,20 @@ export async function updateUser(user: Partial<User>): Promise<User> {
 export async function blockUser(id: number): Promise<User> {
   return await apiFetch<User>(`/users/${id}/block`, {
     method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function unblockUser(id: number): Promise<User> {
+  return await apiFetch<User>(`/users/${id}/unblock`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json',
+    },
   });
 }
 
