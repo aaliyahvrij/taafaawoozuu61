@@ -7,6 +7,7 @@ const props = defineProps<{
   visible: boolean
   reporter: { id: number; username: string }
   reported: { id: number; username: string }
+  post: { id: number; title: string; body: string }
 }>()
 
 
@@ -25,9 +26,10 @@ async function submit() {
 
   try {
     await createReport({
-      reporter: { id: props.reporter.id },
-      reported: { id: props.reported.id },
+      reporter: { id: props.reporter.id, username: props.reporter.username },
+      reported: { id: props.reported.id, username: props.reported.username },
       reason: reason.value,
+      post: { id: props.post.id, title: props.post.title, body: props.post.body },
     })
 
     emit('reported')
