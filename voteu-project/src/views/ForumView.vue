@@ -170,6 +170,7 @@ function handleReported() {
       :visible="showReportModal"
       :reporter="{ id: user.id, username: user.username }"
       :reported="{ id: selectedPost.user.id, username: selectedPost.user.username }"
+      :post="{ id: selectedPost.id, title: selectedPost.title, body: selectedPost.body }"
       @close="showReportModal = false"
       @reported="handleReported"
     />
