@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users/username/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/block").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/unblock").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/users").permitAll()
                         .requestMatchers("/api/elections").permitAll()
                         .requestMatchers("/api/election").permitAll()
