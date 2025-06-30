@@ -50,28 +50,88 @@ const reportedUsername = computed(() => props.reported?.username ?? '')
 <template>
   <div v-if="visible" class="modal-overlay">
     <div class="modal">
-      <h3>Report {{ reportedUsername }}</h3>
-      <textarea v-model="reason" placeholder="Reason for report..."></textarea>
-      <button @click="submit">Submit</button>
-      <button @click="$emit('close')">Cancel</button>
+      <h3 class="modal-title">Report 👤 {{ reportedUsername }}</h3>
+      <textarea
+        v-model="reason"
+        placeholder="Reason for report..."
+        class="modal-textarea"
+      ></textarea>
+      <div class="modal-buttons">
+        <button class="submit-btn" @click="submit">Submit</button>
+        <button class="cancel-btn" @click="$emit('close')">Cancel</button>
+      </div>
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
+
 .modal {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: #fff;
+  padding: 3rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.modal-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.submit-btn {
+  background-color: #1e40af;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #3b82f6;
+}
+
+.cancel-btn {
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #d1d5db;
 }
 </style>
