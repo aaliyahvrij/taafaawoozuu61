@@ -3,7 +3,7 @@ export interface Report {
   reporter: { id: number, username: string }
   reported: { id: number, username: string }
   reason: string
-  created_at: string
+  createdAt?: string;
   post?: {
     id: number
     title: string
