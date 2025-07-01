@@ -97,7 +97,7 @@ onMounted(() => fetchReports())
           </div>
         </td>
 
-        <td>{{ new Date(report.created_at).toLocaleString() }}</td>
+        <td>{{ new Date(report.createdAt || '').toLocaleString() }}</td>
         <td>
           <button
             class="delete-button"
