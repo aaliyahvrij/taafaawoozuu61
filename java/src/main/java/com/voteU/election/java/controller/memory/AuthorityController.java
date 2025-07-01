@@ -1,6 +1,5 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controller.memory;
 
-import com.voteU.election.java.CompactDTO.CompactAuthority;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Party;

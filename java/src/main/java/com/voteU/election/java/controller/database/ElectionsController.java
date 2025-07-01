@@ -1,8 +1,7 @@
-package com.voteU.election.java.controller.databaseVotes;
+package com.voteU.election.java.controller.database;
 
 
 import com.voteU.election.java.dto.DropdownOptionDTO;
-import com.voteU.election.java.services.ConstituencyService;
 
 import com.voteU.election.java.services.ElectionService;
 import org.springframework.web.bind.annotation.GetMapping;

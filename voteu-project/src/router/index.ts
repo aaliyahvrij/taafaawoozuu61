@@ -8,6 +8,7 @@ import CompareView from "@/views/CompareView.vue";
 import AuthView from '@/views/AuthView.vue'
 import login from '@/components/login.vue'
 import register from '@/components/register.vue'
+import PollingStationsOverview from '@/views/PollingStationsOverview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path:'/filter',
       name:'filter',
       component: FilterView,
+    },
+    {
+      path:'/pollingstations',
+      name:'pollingstations',
+      component: PollingStationsOverview
     },
     {
       path:'/compare',

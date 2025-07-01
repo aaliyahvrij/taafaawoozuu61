@@ -19,6 +19,7 @@ function handleLogout() {
         <li class="link-item"><RouterLink to="/about">About</RouterLink></li>
         <li class="link-item"><RouterLink to="/how">How</RouterLink></li>
         <li class="link-item"><RouterLink to="/filter">Filter</RouterLink></li>
+        <li class="link-item"><RouterLink to="/pollingstations">Pollling Stations</RouterLink></li>
         <li class="link-item"><RouterLink to="/compare">Compare</RouterLink></li>
         <li class="link-item"><RouterLink to="/forum">Forum</RouterLink></li>
       </ul>

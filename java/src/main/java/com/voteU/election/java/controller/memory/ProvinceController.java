@@ -1,4 +1,4 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controller.memory;
 
 import com.voteU.election.java.CompactDTO.CompactConstituency;
 import com.voteU.election.java.CompactDTO.CompactProvince;
