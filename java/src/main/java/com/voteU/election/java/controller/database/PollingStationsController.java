@@ -19,16 +19,19 @@ public class PollingStationsController {
 
     @GetMapping("/search")
     public List<PollingStations> getPollingStationsByZipcode(
-            @RequestParam String zipcode) {
-        return pollingStationsService.getPollingStationsByZipCode(zipcode);
+            @RequestParam String zipcode,
+            @RequestParam(defaultValue = "TK2021") String electionId
+            ) {
+        return pollingStationsService.getPollingStationsByZipCode(zipcode, electionId);
     }
 
     @GetMapping
     public Page<PollingStations> getPollingStations(
+            @RequestParam(defaultValue = "TK2021") String electionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size
     ) {
-        return pollingStationsService.getPollingStations(page, size);
+        return pollingStationsService.getPollingStations(electionId, page, size);
     }
 
 }

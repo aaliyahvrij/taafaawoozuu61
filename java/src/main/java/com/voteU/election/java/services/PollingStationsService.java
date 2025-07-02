@@ -18,18 +18,18 @@ public class PollingStationsService {
         this.pollingStationRepository = pollingStationRepository;
     }
 
-    public List<PollingStations> getPollingStationsByZipCode(String zipcode) {
+    public List<PollingStations> getPollingStationsByZipCode(String zipcode, String electionId) {
         String cleanedZipcode = zipcode.replaceAll("\\s+", "").toUpperCase();
 
         if (cleanedZipcode.matches("^\\d{1,4}([A-Z]{0,2})?$")) {
-            return pollingStationRepository.findByZipcodeStartingWith(cleanedZipcode);
+            return pollingStationRepository.findByZipcodeStartingWithAndElectionId(cleanedZipcode, electionId);
         } else {
             throw new IllegalArgumentException("Invalid Dutch postcode format. Must start with up to 4 digits followed by up to 2 letters.");
         }
     }
 
-    public Page<PollingStations> getPollingStations(int page, int size) {
+    public Page<PollingStations> getPollingStations(String electionId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        return pollingStationRepository.findAll(pageable);
+        return pollingStationRepository.findByElectionId(electionId, pageable);
     }
 }

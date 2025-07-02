@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { PollingStationService } from '@/services/databaseVotes/PollingStationService.ts'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { PollingStation } from '@/interface/PollingStation.ts'
 
 const pollingStations = ref<PollingStation[]>([])
 const pageNumber = ref(0)
-const pageSize = 20
+const pageSize = 17
 const totalPages = ref()
 const zipcode = ref()
 const errorMessage = ref('')
+const electionId = ref(null)
+
 
 async function getPollingStations(pageNumber: number): Promise<void> {
   try {
-    const response = await PollingStationService.getPollingStations(pageNumber, pageSize)
+    const response = await PollingStationService.getPollingStations(pageNumber, pageSize,electionId.value)
     pollingStations.value = response.content
     totalPages.value = response.totalPages
   } catch (error) {
@@ -23,7 +25,7 @@ async function getPollingStations(pageNumber: number): Promise<void> {
 async function searchByZipcode(zipcode:string) : Promise<void>{
   try {
     errorMessage.value = ''
-    const response = await PollingStationService.searchPollingStationByZipcode(zipcode)
+    const response = await PollingStationService.searchPollingStationByZipcode(zipcode,electionId.value)
     pollingStations.value = response
     console.log(response)
   } catch (error : any) {
@@ -49,21 +51,48 @@ onMounted(() => {
   getPollingStations(pageNumber.value)
 })
 
+watch(electionId, () => {
+  pageNumber.value = 0
+  getPollingStations(pageNumber.value)
+})
+
 </script>
 
 <template>
   <b><p v-if="errorMessage" style="color:red;">{{ errorMessage }}</p></b>
+  <div class="pollingstations-header">
+    <select class="election-select"  v-model="electionId">
+      <option value="null" disabled>Select Election</option>
+      <option value="TK2021">2021</option>
+      <option value="TK2023">2023</option>
+    </select>
+    <div class="pollingstations-title">
+      <p v-if="electionId === null">Pollingstations of 2021</p>
+      <p v-else-if="electionId === 'TK2021'">Pollingstations of 2021</p>
+      <p v-else-if="electionId === 'TK2023'">Pollingstations of 2023</p>
+    </div>
+
+    <div v-if="pollingStations.length > 0 && !zipcode">
+      <div class="arrow-container">
+        <button class="pagenation" :disabled="pageNumber === 0" @click="previousPage()">previous</button>
+        <button class="pagenation" @click="nextPage()">next</button>
+      </div>
+      <div class="page-count">
+        {{pageNumber + 1}} / {{totalPages}}
+      </div>
+    </div>
+  </div>
   <table>
     <thead>
     <tr>
       <th class="name-column">Polling Station name</th>
       <th class="zipcode-column">Zipcode
-        <input class="search-zipcode" v-model="zipcode" @input="errorMessage= '' ">
-        <button v-if="zipcode" @click="getPollingStations(pageNumber); zipcode='' ">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
-        </button>
+        <input placeholder="Search zipcode"  class="search-zipcode" v-model="zipcode" @input="errorMessage= '' ">
         <button class="search-button" @click="searchByZipcode(zipcode)">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+          Search
+        </button>
+        <button class="clear-button" v-if="zipcode" @click="getPollingStations(pageNumber); zipcode='' ">
+          Clear
         </button>
       </th>
       <th class="municipality-column">Municipality</th>
@@ -78,22 +107,33 @@ onMounted(() => {
     </tbody>
   </table>
   <b><p v-if="pollingStations.length < 1">No polling stations found for this location.</p></b>
-  <div v-if="pollingStations.length > 0 && !zipcode">
-    <div class="arrow-container">
-      <button class="pagenation" :disabled="pageNumber === 0" @click="previousPage()">previous</button>
-      <button class="pagenation" @click="nextPage()">next</button>
-    </div>
-    <div class="page-count">
-      {{pageNumber + 1}} / {{totalPages}}
-    </div>
-  </div>
 
 </template>
 <style scoped>
+
+.election-select{
+  height: 40px;
+  width: 200px;
+  margin-bottom: 15px;
+}
+
+.pollingstations-header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin:20px
+}
+
+.pollingstations-title{
+  margin: 10px 10px 20px;
+}
+
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   margin-top: 1rem;
+  border-radius: 12px;
 }
 
 th,
@@ -136,8 +176,9 @@ tbody tr:nth-child(even) {
 }
 
 .pagenation{
-  height: 60px;
-  width: 200px;
+  height: 40px;
+  width: 150px;
+  margin: 10px;
 }
 .page-count{
   display: flex;
@@ -152,6 +193,18 @@ padding: 7px ;
 .pollingstation-row:hover{
   background-color: #002b80;
   color:white;
+}
+
+.search-button:hover , .clear-button:hover{
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.search-button, .clear-button{
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-left:10px;
+  padding-right:10px
 }
 
 

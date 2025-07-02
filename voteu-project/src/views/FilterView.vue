@@ -2,7 +2,7 @@
 import FilterSelect from '@/components/FilterSelect.vue'
 import type { DropdownOption } from '@/interface/DropdownOption'
 import { ref, watch, onMounted } from 'vue'
-import VoteListOverview from '@/components/filters/VoteListOverview.vue'
+import FilterResultContainer from '@/components/filters/FilterResultContainer.vue'
 import type { PartyVotesDTO } from '@/interface/PartyVotesDTO.ts'
 import type { Candidate } from '@/interface/Candidate.ts'
 import { ElectionsService } from '@/services/databaseVotes/ElectionsService.ts'
@@ -196,7 +196,7 @@ function handleApply() {
       <button class="apply-button" @click="handleApply">Apply</button>
     </div>
   </div>
-  <VoteListOverview
+  <FilterResultContainer
     v-if="isPartyListVisible"
     :selected-election="selectedElection?.id ?? null"
     :displayed-party-votes="partyVotes"

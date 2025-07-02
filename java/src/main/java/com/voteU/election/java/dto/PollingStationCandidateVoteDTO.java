@@ -6,14 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class PollingStationVoteFlat {
+public class PollingStationCandidateVoteDTO {
     private String electionId;
     private String pollingStationId;
     private int partyId;
     private Integer candidateId; // nullable
     private int votes;
 
-    public PollingStationVoteFlat(String electionId, String pollingStationId, int partyId, Integer candidateId, int votes) {
+    public PollingStationCandidateVoteDTO(String electionId, String pollingStationId, int partyId, Integer candidateId, int votes) {
         this.electionId = electionId;
         this.pollingStationId = pollingStationId;
         this.partyId = partyId;

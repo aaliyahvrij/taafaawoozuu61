@@ -10,7 +10,13 @@ import java.util.List;
 
 public interface PollingStationRepository extends JpaRepository<PollingStations, String> {
 
-     List<PollingStations> findByZipcodeStartingWith(@Param("zipcode") String zipcode);
+     List<PollingStations> findByZipcodeStartingWithAndElectionId(
+             @Param("zipcode") String zipcode,
+             @Param("electionId") String electionId);
 
-     Page<PollingStations> findAll(Pageable pageable);
+
+     Page<PollingStations> findByElectionId(
+             @Param("electionId") String electionId,
+             Pageable pageable);
+
 }

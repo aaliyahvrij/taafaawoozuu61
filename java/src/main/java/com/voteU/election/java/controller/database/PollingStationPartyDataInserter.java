@@ -1,6 +1,6 @@
 package com.voteU.election.java.controller.database;
 
-import com.voteU.election.java.dto.PollingStationCandidateVoteDTO;
+import com.voteU.election.java.dto.PollingStationPartyVoteDTO;
 import com.voteU.election.java.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Service
-public class PollingStationCandidateDataInserter {
 
-    private static final Logger logger = LoggerFactory.getLogger(PollingStationCandidateDataInserter.class);
+@Service
+public class PollingStationPartyDataInserter {
+
+    private static final Logger logger = LoggerFactory.getLogger(PollingStationPartyDataInserter.class);
     private final JdbcTemplate jdbc;
 
-    public PollingStationCandidateDataInserter(JdbcTemplate jdbc) {
+    public PollingStationPartyDataInserter(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
-    public void insertPollingStationCandidateVotesStreamed(Election election, int chunkSize) {
-        logger.info("Streaming and inserting candidate votes for election {}", election.getId());
+    public void insertPollingStationPartyVotesStreamed(Election election, int chunkSize) {
+        logger.info("Streaming and inserting party votes for election {}", election.getId());
 
         List<Object[]> buffer = new ArrayList<>(chunkSize);
 
@@ -31,7 +32,6 @@ public class PollingStationCandidateDataInserter {
                     vote.getElectionId(),
                     vote.getPollingStationId(),
                     vote.getPartyId(),
-                    vote.getCandidateId(),
                     vote.getVotes()
             });
 
@@ -45,20 +45,20 @@ public class PollingStationCandidateDataInserter {
             flushBatch(buffer);
         }
 
-        logger.info("Finished inserting all candidate votes.");
+        logger.info("Finished inserting all party votes.");
     }
 
     private void flushBatch(List<Object[]> batch) {
-        String sql = "INSERT INTO pollingstation_candidate_votes " +
-                "(election_id, pollingstation_id, party_id, candidate_id, votes) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pollingstation_party_votes " +
+                "(election_id, pollingstation_id, party_id, votes) " +
+                "VALUES (?, ?, ?, ?)";
 
         jdbc.batchUpdate(sql, batch);
         logger.info("Inserted batch of size: {}", batch.size());
         batch.clear();
     }
 
-    private void flattenData(Election election, Consumer<PollingStationCandidateVoteDTO> consumer) {
+    private void flattenData(Election election, Consumer<PollingStationPartyVoteDTO> consumer) {
         String electionId = election.getId();
 
         for (Constituency constituency : election.getConstituencies().values()) {
@@ -68,21 +68,18 @@ public class PollingStationCandidateDataInserter {
 
                     for (Party party : station.getParties().values()) {
                         int partyId = party.getId();
+                        consumer.accept(new PollingStationPartyVoteDTO(
+                                electionId,
+                                pollingStationId,
+                                partyId,
+                                party.getVotes()
+                        ));
 
-                        for (Candidate candidate : party.getCandidates()) {
-                            if (candidate.getId() > -1) {
-                                consumer.accept(new PollingStationCandidateVoteDTO(
-                                        electionId,
-                                        pollingStationId,
-                                        partyId,
-                                        candidate.getId(),
-                                        candidate.getVotes()
-                                ));
-                            }
-                        }
+
                     }
                 }
             }
         }
     }
 }
+

@@ -13,17 +13,20 @@ public class ElectionDataController {
     private final ElectionDataInserter electionDataInserter;
     private final ElectionService electionService;
     private final PollingStationCandidateDataInserter pollingStationCandidateDataInserter;
+    private final PollingStationPartyDataInserter pollingStationPartyDataInserter;
     private final PollingStationDataInserter  pollingStationDataInserter;
 
     @Autowired
     public ElectionDataController(
             ElectionDataInserter electionDataInserter,
             ElectionService electionService,
+            PollingStationPartyDataInserter pollingStationPartyDataInserter,
             PollingStationCandidateDataInserter pollingStationCandidateDataInserter,
             PollingStationDataInserter pollingStationDataInserter
     ) {
         this.electionDataInserter = electionDataInserter;
         this.electionService = electionService;
+        this.pollingStationPartyDataInserter = pollingStationPartyDataInserter;
         this.pollingStationCandidateDataInserter = pollingStationCandidateDataInserter;
         this.pollingStationDataInserter = pollingStationDataInserter;
     }
@@ -38,15 +41,28 @@ public class ElectionDataController {
         return "Election saved successfully!";
     }
 
-    @PostMapping("/{electionId}/insertVotes")
-    public String insertFlattenedVotes(@PathVariable String electionId) {
+    @PostMapping("/{electionId}/insertPCVotes")
+    public String insertCandidateVotes(@PathVariable String electionId) {
         Election election = electionService.getElection(electionId);
         if (election == null) {
             return "Election not found with ID: " + electionId;
         }
 
-        int chunkSize = 50_000; // adjust as needed
+        int chunkSize = 19_000; // adjust as needed
         pollingStationCandidateDataInserter.insertPollingStationCandidateVotesStreamed(election, chunkSize);
+
+        return "Election votes inserted successfully!";
+    }
+
+    @PostMapping("/{electionId}/insertPPVotes")
+    public String insertPartyVotes(@PathVariable String electionId) {
+        Election election = electionService.getElection(electionId);
+        if (election == null) {
+            return "Election not found with ID: " + electionId;
+        }
+
+        int chunkSize = 10_000; // adjust as needed
+        pollingStationPartyDataInserter.insertPollingStationPartyVotesStreamed(election, chunkSize);
 
         return "Election votes inserted successfully!";
     }

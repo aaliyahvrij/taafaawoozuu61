@@ -55,5 +55,4 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-/* Add styles if needed */
 </style>
