@@ -18,15 +18,14 @@ public class PollingStationsService {
         this.pollingStationRepository = pollingStationRepository;
     }
 
-    private boolean isValidDutchPostcode(String zipcode) {
-        return zipcode != null && zipcode.matches("^\\d{4}[A-Za-z]{2}$");
-    }
-
     public List<PollingStations> getPollingStationsByZipCode(String zipcode) {
-        if(!isValidDutchPostcode(zipcode)){
-            throw new IllegalArgumentException("Invalid Dutch postcode format. Expected 4 digits followed by 2 letters.");
+        String cleanedZipcode = zipcode.replaceAll("\\s+", "").toUpperCase();
+
+        if (cleanedZipcode.matches("^\\d{1,4}([A-Z]{0,2})?$")) {
+            return pollingStationRepository.findByZipcodeStartingWith(cleanedZipcode);
+        } else {
+            throw new IllegalArgumentException("Invalid Dutch postcode format. Must start with up to 4 digits followed by up to 2 letters.");
         }
-        return pollingStationRepository.findByZipcode(zipcode.toUpperCase());
     }
 
     public Page<PollingStations> getPollingStations(int page, int size) {
