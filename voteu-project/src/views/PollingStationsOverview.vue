@@ -126,7 +126,7 @@ watch(electionId, () => {
 }
 
 .pollingstations-title{
-  margin: 10px 10px 20px;
+  margin: 0px 25px 20px 25px;
 }
 
 table {
@@ -177,7 +177,7 @@ tbody tr:nth-child(even) {
 
 .pagenation{
   height: 40px;
-  width: 150px;
+  width: 80px;
   margin: 10px;
 }
 .page-count{
