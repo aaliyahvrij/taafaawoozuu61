@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { ProvinceService } from '@/services/ProvinceService.ts'
-import { PollingStationService } from "@/services/PollingStationService.ts"
-import { AuthorityService } from "@/services/AuthorityService.ts"
+import { ProvinceService } from '@/services/electiondata/memory/ProvinceService.ts'
+import { PollingStationService } from "@/services/electiondata/memory/PollingStationService.ts"
+import { AuthorityService } from "@/services/electiondata/memory/AuthorityService.ts"
 
 import type { Province } from '@/interface/Province.ts'
 import type { Constituency } from '@/interface/Constituency.ts'

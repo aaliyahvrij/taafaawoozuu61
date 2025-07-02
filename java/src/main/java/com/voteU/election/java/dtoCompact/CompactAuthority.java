@@ -1,4 +1,4 @@
-package com.voteU.election.java.CompactDTO;
+package com.voteU.election.java.dtoCompact;
 
 public class CompactAuthority {
     String id;

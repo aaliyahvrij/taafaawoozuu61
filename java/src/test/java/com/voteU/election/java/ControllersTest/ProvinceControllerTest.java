@@ -1,12 +1,12 @@
 package com.voteU.election.java.ControllersTest;
 
-import com.voteU.election.java.CompactDTO.CompactConstituency;
-import com.voteU.election.java.CompactDTO.CompactProvince;
-import com.voteU.election.java.controller.ProvinceController;
+import com.voteU.election.java.dtoCompact.CompactConstituency;
+import com.voteU.election.java.dtoCompact.CompactProvince;
+import com.voteU.election.java.controller.electiondata.memory.ProvinceController;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.Province;
-import com.voteU.election.java.services.ProvinceService;
+import com.voteU.election.java.services.electiondata.memory.ProvinceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

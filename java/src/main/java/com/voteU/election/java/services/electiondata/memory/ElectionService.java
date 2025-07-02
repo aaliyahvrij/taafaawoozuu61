@@ -1,6 +1,6 @@
-package com.voteU.election.java.services;
+package com.voteU.election.java.services.electiondata.memory;
 
-import com.voteU.election.java.CompactDTO.CompactElection;
+import com.voteU.election.java.dtoCompact.CompactElection;
 import com.voteU.election.java.model.*;
 import com.voteU.election.java.reader.DutchElectionReader;
 import lombok.extern.slf4j.Slf4j;

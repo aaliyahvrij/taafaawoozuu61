@@ -1,9 +1,8 @@
-package com.voteU.election.java.controller;
-import com.voteU.election.java.CompactDTO.CompactConstituency;
-import com.voteU.election.java.CompactDTO.CompactElection;
+package com.voteU.election.java.controller.electiondata.memory;
+import com.voteU.election.java.dtoCompact.CompactConstituency;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
-import com.voteU.election.java.services.ConstituencyService;
+import com.voteU.election.java.services.electiondata.memory.ConstituencyService;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 

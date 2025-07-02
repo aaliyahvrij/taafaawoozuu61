@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ProvinceService } from '@/services/ProvinceService'
+import { ProvinceService } from '@/services/electiondata/memory/ProvinceService.ts'
 import NetherlandsMap from '@/components/NetherlandsMap.vue'
 
 const hovered = ref<string | null>(null)

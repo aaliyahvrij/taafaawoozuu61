@@ -1,16 +1,15 @@
 package com.voteU.election.java.ServicesTest;
 
-import com.voteU.election.java.CompactDTO.CompactPollingStation;
+import com.voteU.election.java.dtoCompact.CompactPollingStation;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.PollingStation;
-import com.voteU.election.java.services.AuthorityService;
-import com.voteU.election.java.services.PollingStationService;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.PollingStationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;

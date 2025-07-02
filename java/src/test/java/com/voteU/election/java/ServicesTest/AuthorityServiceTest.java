@@ -1,8 +1,8 @@
 package com.voteU.election.java.ServicesTest;
 
 import com.voteU.election.java.model.*;
-import com.voteU.election.java.services.AuthorityService;
-import com.voteU.election.java.services.ElectionService;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

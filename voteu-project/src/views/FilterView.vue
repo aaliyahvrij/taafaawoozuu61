@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { ConstituencyServiceService } from '@/services/ConstituencyService.ts'
-import { AuthorityService } from '@/services/AuthorityService.ts'
-import { ElectionService } from '@/services/ElectionService.ts'
-import { ProvinceService } from '@/services/ProvinceService.ts'
-import { PollingStationService } from '@/services/PollingStationService.ts'
+import { ConstituencyServiceService } from '@/services/electiondata/memory/ConstituencyService.ts'
+import { AuthorityService } from '@/services/electiondata/memory/AuthorityService.ts'
+import { ElectionService } from '@/services/electiondata/memory/ElectionService.ts'
+import { ProvinceService } from '@/services/electiondata/memory/ProvinceService.ts'
+import { PollingStationService } from '@/services/electiondata/memory/PollingStationService.ts'
 import { PartyStyleService } from '@/services/PartyStyleService.ts'
 
 import type { Constituency } from '@/interface/Constituency.ts'

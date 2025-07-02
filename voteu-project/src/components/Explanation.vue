@@ -36,7 +36,7 @@
 
     <!-- Section: What Are We Voting For? -->
     <section>
-      <h2 class="text-xl font-semibold mb-2">🤔 What Are We Even Voting For?</h2>
+      <h2 class="text-xl font-semibold mb-2"> What Are We Even Voting For?</h2>
       <p>
         You're helping choose who gets the 150 seats in the <strong>Tweede Kamer (House of Representatives)</strong>—basically, the Dutch national brain.
         They decide on laws, budgets, and whether the government’s doing its job.
@@ -58,7 +58,7 @@
 
     <!-- Section: Forming a Government -->
     <section>
-      <h2 class="text-xl font-semibold mb-2">🤝 Teamwork Time: Coalition Building</h2>
+      <h2 class="text-xl font-semibold mb-2"> Teamwork Time: Coalition Building</h2>
       <p>
         No single party usually wins a majority, so parties must <strong>team up</strong> to form a <strong>coalition government</strong>.
         That means:
@@ -105,7 +105,9 @@
 section{
   background-color: #f4f4f4;
   margin-left: 10px;
+  margin-top:10px;
   border-radius: 5px;
   height: auto;
+  padding: 10px;
 }
 </style>

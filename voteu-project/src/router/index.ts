@@ -11,6 +11,7 @@ import PostDetailView from '@/views/PostDetailView.vue'
 import AdminView from '@/views/AdminView.vue'
 import { authService } from '@/services/AuthService.ts'
 import ProfileView from '@/views/ProfileView.vue'
+import PollingStationsOverview from '@/views/PollingStationsOverview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,12 @@ const router = createRouter({
       name:'filter',
       component: FilterView,
     },
+    {
+      path:'/pollingstations',
+      name:'pollingstations',
+      component: PollingStationsOverview
+    },
+
     {
       path:'/compare',
       name:'compare',

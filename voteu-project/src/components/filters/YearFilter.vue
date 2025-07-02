@@ -55,14 +55,6 @@ function clear() {
 </template>
 
 <style scoped>
-/* gebruik dezelfde CSS zoals je had, of importeer globaal */
-.dropdown {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-}
 .tag {
   padding: 2px;
   display: flex;

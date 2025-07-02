@@ -1,10 +1,10 @@
 package com.voteU.election.java.ControllersTest;
 
-import com.voteU.election.java.controller.AuthorityController;
+import com.voteU.election.java.controller.electiondata.memory.AuthorityController;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Party;
-import com.voteU.election.java.services.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

@@ -2,7 +2,7 @@ package com.voteU.election.java;
 
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.reader.DutchElectionReader;
-import com.voteU.election.java.services.ElectionService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

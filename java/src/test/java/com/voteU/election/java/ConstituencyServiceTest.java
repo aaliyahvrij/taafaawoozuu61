@@ -3,9 +3,9 @@ package com.voteU.election.java;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.reader.DutchElectionReader;
-import com.voteU.election.java.services.ConstituencyService;
-import com.voteU.election.java.services.ElectionService;
-import com.voteU.election.java.CompactDTO.CompactConstituency;
+import com.voteU.election.java.services.electiondata.memory.ConstituencyService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
+import com.voteU.election.java.dtoCompact.CompactConstituency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

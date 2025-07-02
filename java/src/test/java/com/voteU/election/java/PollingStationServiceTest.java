@@ -2,10 +2,10 @@ package com.voteU.election.java;
 
 import com.voteU.election.java.model.PollingStation;
 import com.voteU.election.java.reader.DutchElectionReader;
-import com.voteU.election.java.services.AuthorityService;
-import com.voteU.election.java.services.ElectionService;
-import com.voteU.election.java.services.PollingStationService;
-import com.voteU.election.java.CompactDTO.CompactPollingStation;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
+import com.voteU.election.java.services.electiondata.memory.PollingStationService;
+import com.voteU.election.java.dtoCompact.CompactPollingStation;
 import com.voteU.election.java.model.Party;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

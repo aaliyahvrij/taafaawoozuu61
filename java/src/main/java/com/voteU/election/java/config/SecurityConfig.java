@@ -57,6 +57,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/countries").permitAll()
                         .requestMatchers("/api/posts").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()
+                        .requestMatchers("/api/pollingstations").permitAll()
+                        .requestMatchers("/api/pollingstations/**").permitAll()
                         .requestMatchers("/api/reports").permitAll()
                         .anyRequest().authenticated()
                 )

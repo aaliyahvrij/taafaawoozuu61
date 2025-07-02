@@ -1,8 +1,8 @@
-    package com.voteU.election.java.controller;
-    import com.voteU.election.java.CompactDTO.CompactElection;
+    package com.voteU.election.java.controller.electiondata.memory;
+    import com.voteU.election.java.dtoCompact.CompactElection;
     import com.voteU.election.java.model.Election;
     import com.voteU.election.java.model.Party;
-    import com.voteU.election.java.services.ElectionService;
+    import com.voteU.election.java.services.electiondata.memory.ElectionService;
     import org.springframework.web.bind.annotation.*;
     import java.util.Map;
 

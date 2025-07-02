@@ -110,7 +110,6 @@ const reportedUsername = computed(() => props.reported?.username ?? '')
 }
 
 .submit-btn {
-  background-color: #1e40af;
   color: white;
   padding: 0.5rem 1rem;
   border: none;
@@ -118,9 +117,7 @@ const reportedUsername = computed(() => props.reported?.username ?? '')
   cursor: pointer;
 }
 
-.submit-btn:hover {
-  background-color: #3b82f6;
-}
+
 
 .cancel-btn {
   background-color: #e5e7eb;

@@ -1,7 +1,7 @@
-package com.voteU.election.java.services;
+package com.voteU.election.java.services.electiondata.memory;
 
-import com.voteU.election.java.CompactDTO.CompactConstituency;
-import com.voteU.election.java.CompactDTO.CompactProvince;
+import com.voteU.election.java.dtoCompact.CompactConstituency;
+import com.voteU.election.java.dtoCompact.CompactProvince;
 import com.voteU.election.java.dto.DropdownOptionDTO;
 import com.voteU.election.java.model.Constituency;
 import com.voteU.election.java.model.Election;

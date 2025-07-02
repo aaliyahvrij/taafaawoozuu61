@@ -1,16 +1,14 @@
 package com.voteU.election.java;
 
-import com.voteU.election.java.CompactDTO.CompactAuthority;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.reader.DutchElectionReader;
-import com.voteU.election.java.services.AuthorityService;
-import com.voteU.election.java.services.ConstituencyService;
-import com.voteU.election.java.services.ElectionService;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.ConstituencyService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;

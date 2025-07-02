@@ -1,4 +1,4 @@
-package com.voteU.election.java.CompactDTO;
+package com.voteU.election.java.dtoCompact;
 
 import lombok.Getter;
 import lombok.Setter;

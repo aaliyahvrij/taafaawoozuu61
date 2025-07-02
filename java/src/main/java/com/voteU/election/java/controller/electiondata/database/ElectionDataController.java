@@ -1,8 +1,8 @@
-package com.voteU.election.java.controller.databaseVotes;
+package com.voteU.election.java.controller.electiondata.database;
 
 import com.voteU.election.java.model.Election;
 import com.voteU.election.java.services.ElectionDataInserter;
-import com.voteU.election.java.services.ElectionService;
+import com.voteU.election.java.services.electiondata.memory.ElectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

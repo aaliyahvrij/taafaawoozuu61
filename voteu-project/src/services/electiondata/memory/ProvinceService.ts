@@ -1,4 +1,4 @@
-import type { Province } from '@/interface/Province';
+import type { Province } from '@/interface/Province.ts';
 import type { Constituency } from '@/interface/Constituency.ts';
 import type { Party } from '@/interface/Party.ts';
 import { apiFetch } from '@/services/api.ts'

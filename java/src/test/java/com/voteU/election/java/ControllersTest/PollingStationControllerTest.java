@@ -1,10 +1,10 @@
 package com.voteU.election.java.ControllersTest;
 
-import com.voteU.election.java.CompactDTO.CompactPollingStation;
-import com.voteU.election.java.controller.PollingStationController;
+import com.voteU.election.java.dtoCompact.CompactPollingStation;
+import com.voteU.election.java.controller.electiondata.memory.PollingStationController;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.PollingStation;
-import com.voteU.election.java.services.PollingStationService;
+import com.voteU.election.java.services.electiondata.memory.PollingStationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

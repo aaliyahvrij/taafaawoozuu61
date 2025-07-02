@@ -1,10 +1,9 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controller.electiondata.memory;
 
-import com.voteU.election.java.CompactDTO.CompactAuthority;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Candidate;
 import com.voteU.election.java.model.Party;
-import com.voteU.election.java.services.AuthorityService;
+import com.voteU.election.java.services.electiondata.memory.AuthorityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

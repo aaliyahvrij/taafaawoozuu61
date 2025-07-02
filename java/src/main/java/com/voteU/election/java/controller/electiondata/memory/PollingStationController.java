@@ -1,11 +1,9 @@
-package com.voteU.election.java.controller;
+package com.voteU.election.java.controller.electiondata.memory;
 
-import com.voteU.election.java.CompactDTO.CompactPollingStation;
-import com.voteU.election.java.model.Authority;
+import com.voteU.election.java.dtoCompact.CompactPollingStation;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.PollingStation;
-import com.voteU.election.java.services.AuthorityService;
-import com.voteU.election.java.services.PollingStationService;
+import com.voteU.election.java.services.electiondata.memory.PollingStationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

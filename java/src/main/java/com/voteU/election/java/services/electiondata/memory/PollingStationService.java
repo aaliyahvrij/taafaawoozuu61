@@ -1,6 +1,6 @@
-package com.voteU.election.java.services;
+package com.voteU.election.java.services.electiondata.memory;
 
-import com.voteU.election.java.CompactDTO.CompactPollingStation;
+import com.voteU.election.java.dtoCompact.CompactPollingStation;
 import com.voteU.election.java.model.Authority;
 import com.voteU.election.java.model.Party;
 import com.voteU.election.java.model.PollingStation;
