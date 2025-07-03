@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import type { PollingStation } from '@/interface/PollingStation.ts'
 import { PollingStationsService } from '@/services/electiondata/database/PollingStationsService.ts'
@@ -8,6 +9,7 @@ import type { PartyVote } from '@/interface/PartyVote.ts'
 import BarPartyChart from '@/components/Data/charts/Bar/BarPartyChart.vue'
 
 const route = useRoute()
+const router = useRouter()
 const pollingStation = ref<PollingStation | null>(null)
 const partyVotes = ref<PartyVote[] | null>(null)
 const showTable = ref(true)
@@ -29,6 +31,10 @@ async function getPartyVotes(electionId: string, pollingstationId: string): Prom
   }
 }
 
+function goBack(){
+  router.push({ path: `/pollingstations` });
+}
+
 onMounted(async () => {
   const id = Number(route.params.id)
   await getPollingStation(id)
@@ -41,7 +47,7 @@ onMounted(async () => {
   <div v-if="pollingStation" class="pollingstation-card">
     <h2 class="name">{{ pollingStation.name }}</h2>
     <p class="zipcode">Zipcode: {{ pollingStation.zipcode }}</p>
-    <p class="authority">Authority: {{ pollingStation.authorityName }}</p>
+    <p class="authority">Municipality: {{ pollingStation.authorityName }}</p>
     <p class="votes">Total Votes: {{ pollingStation.votes ?? 'N/A' }}</p>
   </div>
 
@@ -49,6 +55,10 @@ onMounted(async () => {
 
   <button @click="showTable = !showTable" class="toggle-btn">
     {{ showTable ? 'Show Chart' : 'Show Table' }}
+  </button>
+
+  <button @click="goBack()" style="margin-left: 10px" class="toggle-btn">
+    Back to overview
   </button>
 
   <div v-if="showTable">
@@ -87,6 +97,8 @@ onMounted(async () => {
 
 .pollingstation-card:hover {
   transform: translateY(-5px);
+  background-color: #013b9f;
+
 }
 
 .name {
