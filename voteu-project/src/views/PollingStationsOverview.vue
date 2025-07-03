@@ -9,7 +9,7 @@ const pollingStations = ref<PollingStation[]>([])
 const pageNumber = ref(0)
 const pageSize = 17
 const totalPages = ref()
-const zipcode = ref()
+const zipcode = ref('')
 const errorMessage = ref('')
 const electionId = ref(undefined)
 
@@ -74,7 +74,9 @@ function goToPollingStation(id: number){
 </script>
 
 <template>
-  <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+  <p class="error-message" :class="{ visible: errorMessage.length > 0 }">
+    {{ errorMessage }}
+  </p>
   <div class="pollingstations-header">
     <select class="election-select"  v-model="electionId">
       <option value="undefined" disabled>Select Election</option>
@@ -87,10 +89,10 @@ function goToPollingStation(id: number){
       <p v-else-if="electionId === 'TK2023'">Pollingstations of election 2023</p>
     </div>
 
-    <div v-if="pollingStations.length > 0 && !zipcode">
+    <div v-if="pollingStations.length > 0">
       <div class="arrow-container">
-        <button class="pagenation" :disabled="pageNumber === 0" @click="previousPage()">previous</button>
-        <button class="pagenation" @click="nextPage()">next</button>
+        <button class="pagenation" :disabled="pageNumber === 0 || zipcode.length>0" @click="previousPage()">previous</button>
+        <button class="pagenation" :disabled="zipcode.length>0"  @click="nextPage()">next</button>
       </div>
       <div class="page-count">
         {{pageNumber + 1}} / {{totalPages}}
@@ -168,6 +170,7 @@ th{
 .zipcode-column{
   display: flex;
   align-items: center;
+  min-width: 400px;
 }
 .name-column{
   width: 40%;
@@ -228,9 +231,22 @@ tbody tr:nth-child(even) {
   bottom: 0;
   background-color: #f3c9c9;
   height: 40px;
-  width:30%;
+  width:100%;
   padding:10px;
   border-radius: 5px;
+  visibility: hidden;
+}
+
+.error-message.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.pagenation:disabled {
+  opacity: 0.5;           /* Make it semi-transparent */
+  cursor: not-allowed;    /* Show a "not allowed" cursor */
+  filter: grayscale(10%); /* Optional: make it look "grayed out" */
+  pointer-events: none;   /* Optional: prevent any mouse interaction */
 }
 
 
