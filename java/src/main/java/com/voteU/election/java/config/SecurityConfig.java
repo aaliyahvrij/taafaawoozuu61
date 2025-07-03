@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/pollingstations").permitAll()
                         .requestMatchers("/api/pollingstations/**").permitAll()
                         .requestMatchers("/api/reports").permitAll()
+                        .requestMatchers("api/pollingstation-party-votes/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.disable())

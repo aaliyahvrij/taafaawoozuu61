@@ -53,15 +53,20 @@ import Header from '@/components/Header.vue'
 @media (max-width: 768px) {
   .content-area {
     flex-direction: column;
+    height: calc(100vh - 200px); /* keep this or adjust if needed */
   }
 
   .router-view-wrapper {
     order: 0;
+    flex: 1 1 auto; /* take 3 parts of available height */
+    overflow-y: auto;
   }
 
   .sidebar {
     order: 1;
     width: 100%;
+    flex: 1 1 auto; /* take 1 part of available height */
+    overflow-y: auto; /* optional: allow scrolling if content is tall */
   }
 }
 </style>

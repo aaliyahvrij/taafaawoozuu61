@@ -2,12 +2,13 @@
 import { watchEffect, ref } from 'vue'
 import { Chart, registerables, type ChartConfiguration } from 'chart.js'
 import type { Party } from '@/interface/Party.ts'
-import pattern from 'patternomaly' // ✅ Import patternomaly
+import pattern from 'patternomaly'
+import type { PartyVote } from '@/interface/PartyVote.ts' // ✅ Import patternomaly
 
 Chart.register(...registerables)
 
 const props = defineProps<{
-  partyVotes: Party[] | null
+  partyVotes: Party[] | PartyVote[]| null
 }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -34,7 +35,7 @@ function getPatternOrColor(name: string, index: number): CanvasPattern | string 
 
 watchEffect(() => {
   if (props.partyVotes && canvasRef.value) {
-    const labels = props.partyVotes.map(p => p.name)
+    const labels = props.partyVotes.map(p => p.partyName)
     const data = props.partyVotes.map(p => p.votes)
     const backgroundColors = labels.map((name, i) => getPatternOrColor(name, i))
 

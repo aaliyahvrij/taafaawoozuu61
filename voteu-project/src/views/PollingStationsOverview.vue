@@ -2,7 +2,9 @@
 import { PollingStationsService } from '@/services/electiondata/database/PollingStationsService.ts'
 import { onMounted, ref, watch } from 'vue'
 import type { PollingStation } from '@/interface/PollingStation.ts'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const pollingStations = ref<PollingStation[]>([])
 const pageNumber = ref(0)
 const pageSize = 17
@@ -65,10 +67,14 @@ watch(electionId, () => {
   getPollingStations(pageNumber.value)
 })
 
+function goToPollingStation(id: number){
+  router.push({ path: `/pollingstations/${id}` });
+}
+
 </script>
 
 <template>
-  <p v-if="errorMessage" style="color:red; font-weight:bold;">{{ errorMessage }}</p>
+  <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
   <div class="pollingstations-header">
     <select class="election-select"  v-model="electionId">
       <option value="undefined" disabled>Select Election</option>
@@ -76,9 +82,9 @@ watch(electionId, () => {
       <option value="TK2023">2023</option>
     </select>
     <div class="pollingstations-title">
-      <p v-if="electionId === undefined">Pollingstations of 2021</p>
-      <p v-else-if="electionId === 'TK2021'">Pollingstations of 2021</p>
-      <p v-else-if="electionId === 'TK2023'">Pollingstations of 2023</p>
+      <p v-if="electionId === undefined">Pollingstations of election 2021</p>
+      <p v-else-if="electionId === 'TK2021'">Pollingstations of election 2021</p>
+      <p v-else-if="electionId === 'TK2023'">Pollingstations of election 2023</p>
     </div>
 
     <div v-if="pollingStations.length > 0 && !zipcode">
@@ -90,7 +96,9 @@ watch(electionId, () => {
         {{pageNumber + 1}} / {{totalPages}}
       </div>
     </div>
+
   </div>
+
   <table>
     <thead>
     <tr>
@@ -107,8 +115,9 @@ watch(electionId, () => {
       <th class="municipality-column">Municipality</th>
     </tr>
     </thead>
+
     <tbody>
-    <tr class="pollingstation-row" v-for="pollingstation in pollingStations" :key="pollingstation.id">
+    <tr @click="goToPollingStation(pollingstation.id)" class="pollingstation-row" v-for="pollingstation in pollingStations" :key="pollingstation.id">
       <td>{{ pollingstation.name }}</td>
       <td>{{ pollingstation.zipcode }}</td>
       <td>{{ pollingstation.authorityName }}</td>
@@ -213,6 +222,15 @@ tbody tr:nth-child(even) {
   margin-left: 5px;
   padding-left:10px;
   padding-right:10px
+}
+
+.error-message{
+  bottom: 0;
+  background-color: #f3c9c9;
+  height: 40px;
+  width:30%;
+  padding:10px;
+  border-radius: 5px;
 }
 
 

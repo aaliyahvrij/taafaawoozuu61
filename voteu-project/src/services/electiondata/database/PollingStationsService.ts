@@ -29,4 +29,13 @@ export class PollingStationsService {
     }
   }
 
+  static async getPollingStationById(id:number): Promise<PollingStation | null> {
+    try {
+      return await apiFetch<PollingStation>(`/pollingstations/${id}`)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
 }

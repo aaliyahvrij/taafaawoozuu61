@@ -19,4 +19,6 @@ public interface PollingStationRepository extends JpaRepository<PollingStations,
             @Param("electionId") String electionId,
             Pageable pageable);
 
+    PollingStations findById(Long id);
+
 }

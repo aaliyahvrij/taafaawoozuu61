@@ -34,4 +34,9 @@ public class PollingStationsController {
         return pollingStationsService.getPollingStations(electionId, page, size);
     }
 
+    @GetMapping("/{id}")
+    public PollingStations getPollingStationById(@PathVariable Long id){
+        return pollingStationsService.getPollingStationById(id);
+    }
+
 }
