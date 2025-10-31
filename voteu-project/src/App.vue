@@ -5,9 +5,9 @@ import { Header, NavBarDesktop } from '@/components'
 <template>
   <div class="layout">
     <Header />
-    <div class="content-area">
-      <NavBarDesktop class="sidebar" />
-      <main class="router-view-wrapper">
+    <div class="contentArea">
+      <NavBarDesktop class="sideBar" />
+      <main class="routerViewWrapper">
         <RouterView />
       </main>
     </div>
@@ -16,13 +16,13 @@ import { Header, NavBarDesktop } from '@/components'
 
 <style scoped>
 .layout,
-.content-area {
+.contentArea {
   display: flex;
   overflow: hidden;
 }
 
-.content-area,
-.router-view-wrapper {
+.contentArea,
+.routerViewWrapper {
   flex: 1;
 }
 
@@ -31,13 +31,13 @@ import { Header, NavBarDesktop } from '@/components'
   flex-direction: column;
 }
 
-.content-area {
+.contentArea {
   flex-direction: row;
   height: calc(100vh - 200px); /* 200px height for the header */
 }
 
 /* Default orders (desktop): Sidebar left, content right */
-.sidebar {
+.sideBar {
   order: 0;
   width: 200px;
   background-color: #f4f4f4;
@@ -46,7 +46,7 @@ import { Header, NavBarDesktop } from '@/components'
   list-style-type: none;
 }
 
-.router-view-wrapper {
+.routerViewWrapper {
   order: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -54,17 +54,17 @@ import { Header, NavBarDesktop } from '@/components'
 
 /* Mobile: stack vertically and rearrange order */
 @media (max-width: 768px) {
-  .content-area {
+  .contentArea {
     flex-direction: column;
   }
 
-  .router-view-wrapper {
+  .routerViewWrapper {
     order: 0;
   }
 
-  .sidebar {
-    order: 1;
+  .sideBar {
     width: 100%;
+    order: 1;
   }
 }
 </style>

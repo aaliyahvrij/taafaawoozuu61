@@ -231,18 +231,18 @@ function handleCandiChange(candi: Candidate): void {
   selectedCandi.value = candi
 }
 
-function sortCandidatesByName(candiList: Candidate[]): Candidate[] {
+function sortCandiListByName(candiList: Candidate[]): Candidate[] {
   return AffiStyleService.sortCandiListByName(candiList)
 }
 
-function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
+function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   return AffiStyleService.sortCandiListByVVCount(candiList)
 }
 </script>
 
 <template>
-  <div class="filter-bar">
-    <div class="election-filter">
+  <div class="filterBar">
+    <div class="electionFilter">
       <select
         class="dropdown"
         v-model="selectedElection"
@@ -268,7 +268,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="provi-filter">
+    <div class="proviFilter">
       <select
         class="dropdown"
         v-if="proviList.length > 0"
@@ -296,7 +296,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="consti-filter">
+    <div class="constiFilter">
       <select
         class="dropdown"
         v-if="constiList.length > 0"
@@ -324,7 +324,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="muni-filter">
+    <div class="muniFilter">
       <select
         class="dropdown"
         v-if="muniList.length > 0"
@@ -352,7 +352,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </svg>
       </div>
     </div>
-    <div class="po-st-filter">
+    <div class="poSt_filter">
       <select class="dropdown" v-if="poStList.length > 0" v-model="selectedPoSt">
         <option value="null" disabled>Select a polling station</option>
         <option v-for="poSt in poStList" :key="poSt.id" :value="poSt">
@@ -376,41 +376,41 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
       </div>
     </div>
     <div>
-      <button v-if="selectedElection" class="apply-btn" @click="handleApply()">
+      <button v-if="selectedElection" class="applyBtn" @click="handleApply()">
         Apply filters
       </button>
     </div>
   </div>
-  <div class="filtered-data">
-    <div class="affi-list" v-if="selectedElection && displayedAffiVotes && !selectedAffi">
+  <div class="filteredData">
+    <div class="affiList" v-if="selectedElection && displayedAffiVotes && !selectedAffi">
       <p>{{ voteLevel }} affiliation votes of Election {{ selectedElection }}</p>
       <AffiChart v-if="affiList" :affiVotes="displayedAffiVotes" />
       <div
-        class="affi-row"
+        class="affiRow"
         v-for="affi in displayedAffiVotes"
         :key="affi.id"
         @click="handleAffiChange(affi)"
         :style="{ backgroundColor: AffiStyleService.generateColorFromName(affi.name) }"
       >
-        <div class="affi-name">{{ affi.name }}</div>
-        <div class="affi-vv-count">{{ affi.vvCount.toLocaleString() }} votes</div>
-        <div class="affi-percentage">{{ affi.percentage.toFixed(2) }}%</div>
+        <div class="affiName">{{ affi.name }}</div>
+        <div class="affiVVCount">{{ affi.vvCount.toLocaleString() }} votes</div>
+        <div class="affiPercentage">{{ affi.percentage.toFixed(2) }}%</div>
       </div>
     </div>
     <div v-if="selectedAffi && selectedElection && !selectedCandi">
-      <h1 class="affi-title">{{ selectedAffi.name }}</h1>
-      <h2 class="candi-list-title">Candidates</h2>
+      <h1 class="affiTitle">{{ selectedAffi.name }}</h1>
+      <h2 class="candiListTitle">Candidates</h2>
       <div class="buttons">
-        <button class="back-btn" @click="selectedAffi = null">Back</button>
+        <button class="backBtn" @click="selectedAffi = null">Back</button>
         <button
-          class="back-btn"
-          @click="selectedAffi.candiList = sortCandidatesByName(selectedAffi.candiList)"
+          class="backBtn"
+          @click="selectedAffi.candiList = sortCandiListByName(selectedAffi.candiList)"
         >
           sort by name
         </button>
         <button
-          class="back-btn"
-          @click="selectedAffi.candiList = sortCandidatesByVVCount(selectedAffi.candiList)"
+          class="backBtn"
+          @click="selectedAffi.candiList = sortCandiListByVVCount(selectedAffi.candiList)"
         >
           sort by votes
         </button>
@@ -426,14 +426,14 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         </p>
       </div>
     </div>
-    <div v-if="selectedCandi && selectedElection" class="candi-details-card">
-      <h2 class="candi-title" v-if="selectedCandi.shortCode">
+    <div v-if="selectedCandi && selectedElection" class="candiDetailCard">
+      <h2 class="candiTitle" v-if="selectedCandi.shortCode">
         {{ selectedCandi.shortCode }}
       </h2>
-      <h3 class="candi-name" v-if="selectedCandi.firstName && selectedCandi.lastName">
+      <h3 class="candiName" v-if="selectedCandi.firstName && selectedCandi.lastName">
         {{ selectedCandi.firstName }} {{ selectedCandi.lastName }}
       </h3>
-      <p class="candi-info">
+      <p class="candInfo">
         <strong>Gender:</strong> {{ selectedCandi.gender }}
         <svg
           v-if="selectedCandi.gender === 'male'"
@@ -462,15 +462,15 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
         <br />
         <strong>Locality:</strong> {{ selectedCandi.localityName }}
       </p>
-      <p class="candi-vv-count">
+      <p class="candiVVCount">
         Votes: <strong>{{ selectedCandi.vvCount.toLocaleString() }}</strong>
       </p>
-      <button class="back-btn" @click="selectedCandi = null">Back</button>
+      <button class="backBtn" @click="selectedCandi = null">Back</button>
     </div>
   </div>
 </template>
 <style scoped>
-.candi-details-card {
+.candiDetailCard {
   background: #f9fafb;
   border-radius: 12px;
   padding: 24px 32px;
@@ -479,66 +479,66 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .tag,
-.affi-title,
-.candi-details-card {
+.affiTitle,
+.candiDetailCard {
   text-align: center;
 }
 
-.candi-title {
+.candiTitle {
   font-weight: 700;
   color: #2c3e50;
   margin-bottom: 8px;
 }
 
-.candi-name {
+.candiName {
   font-size: 1.75rem;
   color: #34495e;
 }
 
-.candi-info {
+.candInfo {
   color: #555;
   line-height: 1.5;
 }
 
-.candi-name,
-.candi-info {
+.candiName,
+.candInfo {
   margin-bottom: 16px;
 }
 
-.candi-vv-count {
+.candiVVCount {
   font-size: 1.25rem;
   margin-bottom: 24px;
 }
 
-.back-btn {
+.backBtn {
   background-color: #002970;
   padding: 10px 24px;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
-.apply-btn {
+.applyBtn {
   background-color: #66817d;
   color: #ffffff;
   text-shadow: 0 1px 1px rgb(0, 0, 0);
   margin: 0.5rem 0.5rem 0.5rem 0.8rem;
 }
 
-.back-btn,
-.apply-btn {
+.backBtn,
+.applyBtn {
   border: none;
 }
 
 .tag,
-.back-btn,
-.back-btn:hover,
-.apply-btn:hover {
+.backBtn,
+.backBtn:hover,
+.applyBtn:hover {
   color: white;
 }
 
-.back-btn,
-.back-btn:hover,
-.apply-btn:hover {
+.backBtn,
+.backBtn:hover,
+.applyBtn:hover {
   background-color: #0053ba;
 }
 
@@ -546,7 +546,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   border: 1px solid #d1d5db;
 }
 
-.apply-btn,
+.applyBtn,
 .dropdown {
   border-radius: 0.375rem;
   padding: 0.5rem;
@@ -556,7 +556,7 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   background-color: #efefef;
 }
 
-.affi-list {
+.affiList {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -566,13 +566,13 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.affi-list p {
+.affiList p {
   margin: 0;
   font-weight: 500;
   color: #333;
 }
 
-.affi-row,
+.affiRow,
 .candi {
   padding: 0.75rem 1rem;
   background-color: #ffffff;
@@ -584,81 +584,81 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
   transition: all 0.2s ease;
 }
 
-.affi-name {
+.affiName {
   color: #1f2937;
   flex: 1;
 }
 
-.affi-name,
-.back-btn {
+.affiName,
+.backBtn {
   font-weight: 600;
 }
 
-.affi-vv-count,
-.candi-vv-count {
+.affiVVCount,
+.candiVVCount {
   color: #000000;
 }
 
-.affi-vv-count {
+.affiVVCount {
   min-width: 100px;
   text-align: right;
 }
 
-.affi-percentage {
+.affiPercentage {
   color: #123c98;
 }
 
-.affi-vv-count,
-.affi-percentage,
-.back-btn,
-.apply-btn {
+.affiVVCount,
+.affiPercentage,
+.backBtn,
+.applyBtn {
   font-size: 1rem;
 }
 
-.affi-list p,
-.affi-name,
-.candi-info {
+.affiList p,
+.affiName,
+.candInfo {
   font-size: 1.1rem;
 }
 
-.affi-title,
-.candi-title {
+.affiTitle,
+.candiTitle {
   font-size: 2.5rem;
 }
 
-.affi-vv-count,
-.affi-percentage {
+.affiVVCount,
+.affiPercentage {
   font-weight: bold;
 }
 
-.affi-vv-count,
-.affi-percentage,
-.candi-list-title {
+.affiVVCount,
+.affiPercentage,
+.candiListTitle {
   margin-left: 1rem;
 }
 
-.affi-row:hover {
+.affiRow:hover {
   background-color: #e0f2fe;
   border-color: #60a5fa;
   transform: scale(1.02);
 }
 
-.filtered-data {
+.filteredData {
   border: 1px solid black;
 }
 
-.election-filter,
-.consti-filter,
-.muni-filter {
+.electionFilter,
+.constiFilter,
+.muniFilter {
   min-width: 120px;
   margin-right: 10px;
 }
 
 .dropdown,
 .tag,
-.election-filter select,
-.consti-filter select,
-.muni-filter select {
+.electionFilter select,
+.constiFilter select,
+.muniFilter select {
   width: 100%;
 }
 
@@ -677,26 +677,26 @@ function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .tag,
-.affi-row,
+.affiRow,
 .candi,
-.filter-bar {
+.filterBar {
   display: flex;
 }
 
-.filter-bar {
+.filterBar {
   flex-direction: row;
 }
 
 .tag,
-.affi-row,
+.affiRow,
 .candi {
   align-items: center;
 }
 
 .tag svg,
 .tag button:hover,
-.back-btn,
-.apply-btn {
+.backBtn,
+.applyBtn {
   cursor: pointer;
 }
 
