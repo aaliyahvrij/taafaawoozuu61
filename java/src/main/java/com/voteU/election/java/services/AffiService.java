@@ -17,7 +17,7 @@ public class AffiService {
         LinkedHashMap<String, List<Candidate>> candiList_listLhMap = new LinkedHashMap<>();
         for (String electionId : electionIdList) {
             Affiliation affi = ElectionService.electionListLhMap.get(electionId).getAffiListLhMap().get(affId);
-            candiList_listLhMap.put(electionId, affi.getCandiList());
+            candiList_listLhMap.put(electionId, affi.getCandiListLhMap());
         }
         return candiList_listLhMap;
     }
