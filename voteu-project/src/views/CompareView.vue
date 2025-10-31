@@ -50,8 +50,8 @@ async function getNationalLevel_proviListLhMap(
     const response = await ElectionService.getProviListLhMap(electionId)
     proviListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching proviListLhMap of election ', electionId)
-  } catch (err) {
-    console.error('Error fetching proviListLhMap of election ', electionId, ': ', err)
+  } catch (error) {
+    console.error('Error fetching proviListLhMap of election ', electionId, ': ', error)
   }
 }
 
@@ -71,8 +71,8 @@ async function getProviLevel_constiList(
     const response = await ProviService.getConstiList(electionId, provId)
     constiListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching constiList of ', proviPath)
-  } catch (err) {
-    console.error('Error fetching constiList of ', proviPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching constiList of ', proviPath, ': ', error)
   }
 }
 
@@ -92,8 +92,8 @@ async function getConstiLevel_muniListLhMap(
     const response = await ConstiService.getMuniListLhMap(electionId, constId)
     muniListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching muniListLhMap of ', constiPath)
-  } catch (err) {
-    console.error('Error fetching muniListLhMap of ', constiPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching muniListLhMap of ', constiPath, ': ', error)
   }
 }
 
@@ -113,8 +113,8 @@ async function getMuniLevel_poStListLhMap(
     const response = await MuniService.getPoStListLhMap(electionId, munId)
     poStListRef.value = Array.isArray(response) ? response : Object.values(response || {})
     console.log('Fetching poStListLhMap of ', muniPath)
-  } catch (err) {
-    console.error('Error fetching poStListLhMap of ', muniPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching poStListLhMap of ', muniPath, ': ', error)
   }
 }
 
@@ -363,11 +363,11 @@ async function applyFilter() {
 </script>
 
 <template>
-  <div class="compare-view">
+  <div class="compareView">
     <h2 style="text-align: center; margin-bottom: 1rem">Compare Election Results</h2>
-    <div class="filter-wrapper">
+    <div class="filterWrapper">
       <!-- Filter Set 1 -->
-      <div class="filter-set">
+      <div class="filterSet">
         <h3>Set 1</h3>
         <select v-model="selectedElection1" @change="onElectionChange1">
           <option value="null" disabled>Select election year</option>
@@ -401,7 +401,7 @@ async function applyFilter() {
       </div>
 
       <!-- Filter Set 2 -->
-      <div class="filter-set">
+      <div class="filterSet">
         <h3>Set 2</h3>
         <select v-model="selectedElection2" @change="onElectionChange2">
           <option value="null" disabled>Select election year</option>
@@ -435,13 +435,13 @@ async function applyFilter() {
       </div>
     </div>
     <button @click="applyFilter" style="display: block; margin: 1rem auto">Compare</button>
-    <div class="result-wrapper">
+    <div class="resultWrapper">
       <!-- Placeholder texts for results -->
-      <div class="result-set">
+      <div class="resultSet">
         <p v-if="affiList1">Results for Set 1 (will be replaced by chart)</p>
         <p v-else>No data for Set 1</p>
       </div>
-      <div class="result-set">
+      <div class="resultSet">
         <p v-if="affiList2">Results for Set 2 (will be replaced by chart)</p>
         <p v-else>No data for Set 2</p>
       </div>
@@ -450,17 +450,17 @@ async function applyFilter() {
 </template>
 
 <style scoped>
-.compare-view,
-.filter-set {
+.compareView,
+.filterSet {
   padding: 1rem;
 }
 
-.filter-wrapper {
+.filterWrapper {
   display: flex;
   gap: 2rem;
 }
 
-.filter-set {
+.filterSet {
   min-width: 300px;
   border: 1px solid #ccc;
   border-radius: 5px;

@@ -1,29 +1,29 @@
 <template>
-  <aside class="sidenav">
+  <aside class="sideNav">
     <nav>
       <ul>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/">Home</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/about">About</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/how">How</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/register">Register</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/login">Log In</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/filter">Filter</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/compare">Compare</RouterLink>
         </li>
-        <li class="link-item">
+        <li class="linkItem">
           <RouterLink to="/forum">Forum</RouterLink>
         </li>
       </ul>
@@ -32,26 +32,26 @@
 </template>
 
 <style scoped>
-.sidenav {
+.sideNav {
   width: 200px;
   background-color: #f4f4f4;
   padding: 1rem;
   box-sizing: border-box;
 }
 
-.sidenav ul {
+.sideNav ul {
   list-style-type: none; /* Remove bullets */
   padding: 0;
   margin: 0;
 }
 
-.sidenav .link-item {
+.sideNav .linkItem {
   width: 100%;
   display: block; /* Make each <li> behave like a block element */
   margin-bottom: 10px;
 }
 
-.sidenav a {
+.sideNav a {
   display: block; /* Makes the <RouterLink> fill the container */
   text-decoration: none;
   color: #333; /* Default link color */
@@ -60,7 +60,7 @@
   box-sizing: border-box; /* Ensure it spans the entire width */
 }
 
-.sidenav a:hover {
+.sideNav a:hover {
   color: #1976d2;
   background-color: #e0e0e0;
 }

@@ -19,8 +19,8 @@ export class ConstiService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
     return null
   }
@@ -43,8 +43,8 @@ export class ConstiService {
         throw new Error('HTTP error: ' + response.status)
       }
       return await response.json()
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
     return null
   }

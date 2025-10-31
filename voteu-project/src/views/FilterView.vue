@@ -108,8 +108,8 @@ async function getNationalLevel_proviListLhMap(electionId: string | null): Promi
     } else {
       proviList.value = []
     }
-  } catch (err) {
-    console.error('Error fetching proviListLhMap of election', electionId, ': ', err)
+  } catch (error) {
+    console.error('Error fetching proviListLhMap of election', electionId, ': ', error)
   }
 }
 
@@ -119,8 +119,8 @@ async function getNationalLevel_affiListLhMap(electionId: string): Promise<void>
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'national'
     console.log('Fetching affiListLhMap of election ', electionId)
-  } catch (err) {
-    console.error('Error fetching affiListLhMap of election ', electionId, ': ', err)
+  } catch (error) {
+    console.error('Error fetching affiListLhMap of election ', electionId, ': ', error)
   }
 }
 
@@ -137,8 +137,8 @@ async function getProviLevel_constiList(
     } else {
       constiList.value = []
     }
-  } catch (err) {
-    console.error('Error fetching constiList of ', proviPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching constiList of ', proviPath, ': ', error)
   }
 }
 
@@ -149,8 +149,8 @@ async function getProviLevel_affiList(electionId: string, provId: number): Promi
     affiList.value = response
     voteLevel.value = 'provi'
     console.log('Fetching affiList of ', proviPath)
-  } catch (err) {
-    console.error('Error fetching affiList of ', proviPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching affiList of ', proviPath, ': ', error)
   }
 }
 
@@ -165,8 +165,8 @@ async function getConstiLevel_muniListLhMap(
       muniList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching muniListLhMap of ', constiPath)
     }
-  } catch (err) {
-    console.error('Error fetching muniListLhMap of ', constiPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching muniListLhMap of ', constiPath, ': ', error)
   }
 }
 
@@ -177,8 +177,8 @@ async function getConstiLevel_affiListLhMap(electionId: string, constId: string)
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'consti'
     console.log('Fetching affiListLhMap of ', constiPath)
-  } catch (err) {
-    console.error('Error fetching affiListLhMap of ', constiPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching affiListLhMap of ', constiPath, ': ', error)
   }
 }
 
@@ -193,8 +193,8 @@ async function getMuniLevel_poStListLhMap(
       poStList.value = Array.isArray(response) ? response : Object.values(response || {})
       console.log('Fetching poStListLhMap of ', muniPath)
     }
-  } catch (err) {
-    console.error('Error fetching poStListLhMap of ', muniPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching poStListLhMap of ', muniPath, ': ', error)
   }
 }
 
@@ -205,8 +205,8 @@ async function getMuniLevel_affiListLhMap(electionId: string, munId: string): Pr
     affiList.value = Array.isArray(response) ? response : Object.values(response || {})
     voteLevel.value = 'muni'
     console.log('Fetching affiListLhMap of ', muniPath)
-  } catch (err) {
-    console.error('Error fetching affiListLhMap of ', muniPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching affiListLhMap of ', muniPath, ': ', error)
   }
 }
 
@@ -218,8 +218,8 @@ async function getPoStLevel_affiListLhMap(electionId: string, poStId: string): P
     console.log('votes', affiList.value)
     voteLevel.value = 'poSt'
     console.log('Fetching affiListLhMap of ', poStPath)
-  } catch (err) {
-    console.error('Error fetching affiListLhMap of ', poStPath, ': ', err)
+  } catch (error) {
+    console.error('Error fetching affiListLhMap of ', poStPath, ': ', error)
   }
 }
 
@@ -232,11 +232,11 @@ function handleCandiChange(candi: Candidate): void {
 }
 
 function sortCandidatesByName(candiList: Candidate[]): Candidate[] {
-  return AffiStyleService.sortCandidatesByName(candiList)
+  return AffiStyleService.sortCandiListByName(candiList)
 }
 
 function sortCandidatesByVVCount(candiList: Candidate[]): Candidate[] {
-  return AffiStyleService.sortCandidatesByVVCount(candiList)
+  return AffiStyleService.sortCandiListByVVCount(candiList)
 }
 </script>
 
