@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {
-  AboutView,
-  CompareView,
-  ForumView,
-  FilterView,
   HomeView,
+  AboutView,
   HowView,
   LoginView,
   RegisterView,
+  ForumView,
+  FilterView,
+  CompareView,
 } from '@/views'
 
 const router = createRouter({

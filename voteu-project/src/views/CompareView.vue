@@ -466,7 +466,7 @@ async function applyFilter() {
   border-radius: 5px;
 }
 
-.filter-set select {
+.filterSet select {
   width: 100%;
   display: block;
   margin-bottom: 1rem;
