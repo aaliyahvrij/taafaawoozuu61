@@ -57,8 +57,7 @@ class XMLParser extends StreamReaderDelegate {
         String hit = (isStartElement() ? getLocalName() : "/");
 
         if (skipCount > 0 && !hit.equals(tag)) {
-            LOG.finer("nextBeginTag(" + tag + "): skipped " + skipCount +
-                    " from event" + fromEvent + " to event" + toEvent + " hit <" + hit + ">");
+            LOG.finer("nextBeginTag(" + tag + "): skipped " + skipCount + " from event" + fromEvent + " to event" + toEvent + " hit <" + hit + ">");
         }
         return hit.equals(tag);
     }
@@ -78,13 +77,11 @@ class XMLParser extends StreamReaderDelegate {
                 skipCount++;
             }
             next();
-
         }
         int toEvent = getEventType();
         String hit = (isEndElement() ? getLocalName() : "/");
         if (skipCount > 0 && !tag.equals(hit)) {
-            LOG.finer("nextEndTag(" + tag + "): skipped " + skipCount +
-                    " from event" + fromEvent + " to event" + toEvent + " hit </" + hit + ">");
+            LOG.finer("nextEndTag(" + tag + "): skipped " + skipCount + " from event" + fromEvent + " to event" + toEvent + " hit </" + hit + ">");
         }
         return tag.equals(hit);
     }
@@ -135,18 +132,13 @@ class XMLParser extends StreamReaderDelegate {
                 return Integer.parseInt(value); // Try parsing normally if not "alle"
             } catch (NumberFormatException e) {
                 // Log a warning and return the default value
-                LOG.warning("Expected an integer for attribute '" + name + "' but found: " + value
-                        + ". Using default value: " + defaultValue);
+                LOG.warning("Expected an integer for attribute '" + name + "' but found: " + value + ". Using default value: " + defaultValue);
             }
         }
         return defaultValue; // Return default if null or parsing fails
     }
 
     void logStatus() {
-        LOG.config("start=" + isStartElement() +
-                " end=" + isEndElement() +
-                " chars=" + isCharacters() +
-                " whitespace=" + isWhiteSpace() +
-                " name=" + getLocalName());
+        LOG.config("start=" + isStartElement() + " end=" + isEndElement() + " chars=" + isCharacters() + " whitespace=" + isWhiteSpace() + " name=" + getLocalName());
     }
 }

@@ -146,7 +146,7 @@ public class ElectionTransformer implements Transformer<Election> {
 
     private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListLhMap) {
         Affiliation affi = affiListLhMap.get(affId);
-        LinkedHashMap<Integer, Candidate> affiLevel_candiList = affi.getCandiListLhMap();
+        LinkedHashMap<Integer, Candidate> affiLevel_candiListLhMap = affi.getCandiListLhMap();
         Candidate candi = null;
         for (Candidate affiLevel_candi : affiLevel_candiListLhMap) {
             if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {
