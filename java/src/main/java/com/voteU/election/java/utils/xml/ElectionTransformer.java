@@ -49,7 +49,7 @@ public class ElectionTransformer implements Transformer<Election> {
             int candiVVCount = Integer.parseInt(nationLhMap.get("candiVVCount"));
             if (!affi.getCandiList().get(candiShortCode)) {
                 Candidate candi = new Candidate(candiShortCode, candiVVCount);
-                //affi.getCandiList().put(candId, candi);
+                affi.getCandiList().add(candi);
             }
         }
     }
@@ -91,7 +91,7 @@ public class ElectionTransformer implements Transformer<Election> {
             int candiVVCount = Integer.parseInt(muniLhMap.get("candiVVCount"));
             if (!affi.getCandiList().get(candId)) {
                 Candidate candi = new Candidate(candId, candiVVCount);
-                affi.getCandiList().put(candId, candi);
+                affi.getCandiList().add(candi);
             }
         }
     }
@@ -163,7 +163,7 @@ public class ElectionTransformer implements Transformer<Election> {
             candi.setGender(gender);
             candi.setLocalityName(localityName);
             candi.setAffId(affId);
-            //affi.getCandiList().put(candId, candi);
+            affi.getCandiList().add(candi);
         }
     }
 }

@@ -568,7 +568,7 @@ public class ElectionProcessor<E> {
                         int candiVVCount = Integer.parseInt(parser.getElementText());
                         Candidate candi = new Candidate(candId, candiVVCount);
                         candi.setAffId(affId);
-                        affiListLhMap.get(affId).getCandiListLhMap().put(candId, candi);
+                        affiListLhMap.get(affId).addCandi(candi);
                         parser.findAndAcceptEndTag(VV_COUNT);
                     } else {
                         LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %d of affi %d within poSt %s.".formatted(candId, affId, poStName));
