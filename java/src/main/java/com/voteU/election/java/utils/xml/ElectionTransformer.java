@@ -163,7 +163,7 @@ public class ElectionTransformer implements Transformer<Election> {
             candi.setGender(gender);
             candi.setLocalityName(localityName);
             candi.setAffId(affId);
-            affi.getCandiList().add(candi);
+            affi.addCandi(candi);
         }
     }
 }
