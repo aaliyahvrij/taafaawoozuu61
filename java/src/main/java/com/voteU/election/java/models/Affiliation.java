@@ -18,4 +18,26 @@ public class Affiliation {
         this.candiList = new ArrayList<>();
         this.vvCount = vvCount;
     }
+
+    public void addCandi(Candidate candi) {
+        candiList.add(candi);
+    }
+
+    public boolean hasCandiShortCode(String candiShortCode) {
+        for (Candidate candi : this.candiList) {
+            if (candi.getShortCode().equals(candiShortCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasCandId(int candId) {
+        for (Candidate candi : this.candiList) {
+            if (candi.getId() == candId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
