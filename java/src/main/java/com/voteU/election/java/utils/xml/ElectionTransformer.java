@@ -47,9 +47,9 @@ public class ElectionTransformer implements Transformer<Election> {
         else {
             String candiShortCode = nationLhMap.get("candiShortCode");
             int candiVVCount = Integer.parseInt(nationLhMap.get("candiVVCount"));
-            if (!affi.getCandiList().get(candiShortCode)) {
+            if (!affi.hasCandiShortCode(candiShortCode)) {
                 Candidate candi = new Candidate(candiShortCode, candiVVCount);
-                affi.getCandiList().add(candi);
+                affi.addCandi(candi);
             }
         }
     }
@@ -89,9 +89,9 @@ public class ElectionTransformer implements Transformer<Election> {
         if (muniListLhMap.containsKey("candiVVCount")) {
             int candId = Integer.parseInt(muniLhMap.get("candId"));
             int candiVVCount = Integer.parseInt(muniLhMap.get("candiVVCount"));
-            if (!affi.getCandiList().get(candId)) {
+            if (!affi.hasCandId(candId)) {
                 Candidate candi = new Candidate(candId, candiVVCount);
-                affi.getCandiList().add(candi);
+                affi.addCandi(candi);
             }
         }
     }
