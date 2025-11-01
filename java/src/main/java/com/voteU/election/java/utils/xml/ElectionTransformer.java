@@ -47,9 +47,9 @@ public class ElectionTransformer implements Transformer<Election> {
         else {
             String candiShortCode = nationLhMap.get("candiShortCode");
             int candiVVCount = Integer.parseInt(nationLhMap.get("candiVVCount"));
-            if (!affi.getCandiListLhMap().get(candiShortCode)) {
+            if (!affi.getCandiList().get(candiShortCode)) {
                 Candidate candi = new Candidate(candiShortCode, candiVVCount);
-                affi.getCandiListLhMap().put(candId, candi);
+                //affi.getCandiList().put(candId, candi);
             }
         }
     }
@@ -89,9 +89,9 @@ public class ElectionTransformer implements Transformer<Election> {
         if (muniListLhMap.containsKey("candiVVCount")) {
             int candId = Integer.parseInt(muniLhMap.get("candId"));
             int candiVVCount = Integer.parseInt(muniLhMap.get("candiVVCount"));
-            if (!affi.getCandiListLhMap().get(candId)) {
+            if (!affi.getCandiList().get(candId)) {
                 Candidate candi = new Candidate(candId, candiVVCount);
-                affi.getCandiListLhMap().put(candId, candi);
+                affi.getCandiList().put(candId, candi);
             }
         }
     }
@@ -146,9 +146,9 @@ public class ElectionTransformer implements Transformer<Election> {
 
     private void populateCandi(int candId, String firstName, String lastName, String gender, String localityName, int affId, LinkedHashMap<Integer, Affiliation> affiListLhMap) {
         Affiliation affi = affiListLhMap.get(affId);
-        LinkedHashMap<Integer, Candidate> affiLevel_candiListLhMap = affi.getCandiListLhMap();
+        List<Candidate> affiLevel_candiList = affi.getCandiList();
         Candidate candi = null;
-        for (Candidate affiLevel_candi : affiLevel_candiListLhMap) {
+        for (Candidate affiLevel_candi : affiLevel_candiList) {
             if (affiLevel_candi.getId() == candId && affiLevel_candi.getAffId() == affId) {
                 candi = affiLevel_candi;
                 candi.setFirstName(firstName);
@@ -163,7 +163,7 @@ public class ElectionTransformer implements Transformer<Election> {
             candi.setGender(gender);
             candi.setLocalityName(localityName);
             candi.setAffId(affId);
-            affi.getCandiListLhMap().put(candId, candi);
+            //affi.getCandiList().put(candId, candi);
         }
     }
 }
