@@ -579,7 +579,9 @@ public class ElectionProcessor<E> {
             }
             selectionIndex += 1;
             parser.findAndAcceptEndTag(SELECTION);
-            if (selectionIndex == 3) break;
+            if (selectionIndex == 3) {
+                break;
+            }
         }
         poStLhMap.put("poStVVCount", String.valueOf(poStVVCount));
         for (Map.Entry<String, String> poStLhMapPair : poStLhMap.entrySet()) {

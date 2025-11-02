@@ -20,7 +20,7 @@ public class Affiliation {
     }
 
     public void addCandi(Candidate candi) {
-        candiList.add(candi);
+        this.candiList.add(candi);
     }
 
     public boolean hasCandiShortCode(String candiShortCode) {
