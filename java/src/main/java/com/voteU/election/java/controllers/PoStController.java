@@ -1,11 +1,11 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.services.PoStService;
-import com.voteU.election.java.models.Affiliation;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.voteU.election.java.services.PoStService;
+import com.voteU.election.java.models.Affiliation;
 
 import java.util.LinkedHashMap;
 
@@ -20,6 +20,6 @@ public class PoStController {
 
     @GetMapping("/{poStId}/affiliations")
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(@PathVariable String electionIdListString, @PathVariable String poStId) {
-        return poStService.getAffiListLhMap(electionIdListString, poStId);
+        return this.poStService.getAffiListLhMap(electionIdListString, poStId);
     }
 }

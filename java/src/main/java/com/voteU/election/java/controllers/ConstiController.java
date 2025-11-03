@@ -1,11 +1,11 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.models.Municipality;
-import com.voteU.election.java.services.ConstiService;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.voteU.election.java.models.Municipality;
+import com.voteU.election.java.services.ConstiService;
 
 import java.util.LinkedHashMap;
 
@@ -20,16 +20,16 @@ public class ConstiController {
 
     @GetMapping("/{constId}/municipalities")
     public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getMuniListLhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getMuniListLhMap(electionIdListString, constId);
+        return this.constiService.getMuniListLhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/compact")
     public LinkedHashMap<String, LinkedHashMap<String, Municipality>> getCompactMuniListLhMap(@PathVariable String electionIdListString, @PathVariable int constId) {
-        return constiService.getCompactMuniListLhMap(electionIdListString, constId);
+        return this.constiService.getCompactMuniListLhMap(electionIdListString, constId);
     }
 
     @GetMapping("/{constId}/municipalities/{munId}")
     public LinkedHashMap<String, Municipality> getMuni(@PathVariable String electionIdListString, @PathVariable int constId, @PathVariable String munId) {
-        return constiService.getMuni(electionIdListString, constId, munId);
+        return this.constiService.getMuni(electionIdListString, constId, munId);
     }
 }

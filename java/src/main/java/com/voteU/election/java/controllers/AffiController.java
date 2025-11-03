@@ -1,14 +1,14 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.models.Candidate;
-import com.voteU.election.java.services.AffiService;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.voteU.election.java.services.AffiService;
+import com.voteU.election.java.models.Candidate;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/election/{electionIdListString}/affiliations")
@@ -21,6 +21,6 @@ public class AffiController {
 
     @GetMapping("/{affId}/candidates")
     public LinkedHashMap<String, List<Candidate>> getCandiList(@PathVariable String electionIdListString, @PathVariable int affId) {
-        return affiService.getCandiList(electionIdListString, affId);
+        return this.affiService.getCandiList(electionIdListString, affId);
     }
 }

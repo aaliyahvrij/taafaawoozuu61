@@ -1,12 +1,12 @@
 package com.voteU.election.java.controllers;
 
-import com.voteU.election.java.models.Affiliation;
-import com.voteU.election.java.models.PollingStation;
-import com.voteU.election.java.services.MuniService;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.voteU.election.java.services.MuniService;
+import com.voteU.election.java.models.PollingStation;
+import com.voteU.election.java.models.Affiliation;
 
 import java.util.List;
 import java.util.LinkedHashMap;
@@ -22,26 +22,26 @@ public class MuniController {
 
     @GetMapping("/{munId}/pollingstations")
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStListLhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
-        return muniService.getPoStListLhMap(electionIdListString, munId);
+        return this.muniService.getPoStListLhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/pollingstations/compact")
     public LinkedHashMap<String, List<PollingStation>> getCompactPoStListLhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
-        return muniService.getCompactPoStListLhMap(electionIdListString, munId);
+        return this.muniService.getCompactPoStListLhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/pollingstations/{poStId}")
     public LinkedHashMap<String, PollingStation> getPoSt(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable String poStId) {
-        return muniService.getPoSt(electionIdListString, munId, poStId);
+        return this.muniService.getPoSt(electionIdListString, munId, poStId);
     }
 
     @GetMapping("/{munId}/affiliations")
     public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(@PathVariable String electionIdListString, @PathVariable String munId) {
-        return muniService.getAffiListLhMap(electionIdListString, munId);
+        return this.muniService.getAffiListLhMap(electionIdListString, munId);
     }
 
     @GetMapping("/{munId}/affiliations/{affId}")
     public LinkedHashMap<String, Affiliation> getAffi(@PathVariable String electionIdListString, @PathVariable String munId, @PathVariable int affId) {
-        return muniService.getAffi(electionIdListString, munId, affId);
+        return this.muniService.getAffi(electionIdListString, munId, affId);
     }
 }

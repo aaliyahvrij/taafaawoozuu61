@@ -1,11 +1,11 @@
 package com.voteU.election.java.services;
 
+import org.springframework.stereotype.Service;
 import com.voteU.election.java.models.Affiliation;
 import com.voteU.election.java.models.Candidate;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class AffiService {

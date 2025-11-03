@@ -1,9 +1,9 @@
 package com.voteU.election.java.services;
 
-import com.voteU.election.java.models.PollingStation;
-import com.voteU.election.java.models.Affiliation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.voteU.election.java.models.PollingStation;
+import com.voteU.election.java.models.Affiliation;
 
 import java.util.LinkedHashMap;
 

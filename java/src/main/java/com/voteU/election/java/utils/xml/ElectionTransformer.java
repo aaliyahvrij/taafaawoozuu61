@@ -3,8 +3,8 @@ package com.voteU.election.java.utils.xml;
 import com.voteU.election.java.models.*;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Organizes processed election data into Election objects.
