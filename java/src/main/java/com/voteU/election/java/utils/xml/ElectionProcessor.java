@@ -1,17 +1,17 @@
 package com.voteU.election.java.utils.xml;
 
-import com.voteU.election.java.models.*;
 import com.voteU.election.java.utils.PathUtils;
+import com.voteU.election.java.models.*;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.FileInputStream;
+import java.util.logging.Logger;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
+import java.io.FileInputStream;
+import javax.xml.stream.XMLStreamException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.logging.Logger;
+import java.nio.file.Path;
 
 /**
  * Processes the XML data files for the Dutch elections. It is completely model agnostic. This means that it
