@@ -467,13 +467,14 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
     </div>
   </div>
 </template>
+
 <style scoped>
-.candiDetailCard {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 24px 32px;
-  margin: 24px auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.dropdown,
+.tag,
+.electionFilter select,
+.constiFilter select,
+.muniFilter select {
+  width: 100%;
 }
 
 .tag,
@@ -482,44 +483,9 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   text-align: center;
 }
 
-.candiTitle {
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 8px;
-}
-
-.candiName {
-  font-size: 1.75rem;
-  color: #34495e;
-}
-
-.candInfo {
-  color: #555;
-  line-height: 1.5;
-}
-
-.candiName,
-.candInfo {
-  margin-bottom: 16px;
-}
-
-.candiVVCount {
-  font-size: 1.25rem;
-  margin-bottom: 24px;
-}
-
-.backBtn {
-  background-color: #002970;
-  padding: 10px 24px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.applyBtn {
-  background-color: #66817d;
-  color: #ffffff;
-  text-shadow: 0 1px 1px rgb(0, 0, 0);
-  margin: 0.5rem 0.5rem 0.5rem 0.8rem;
+.affiVVCount {
+  min-width: 100px;
+  text-align: right;
 }
 
 .applyBtn
@@ -527,17 +493,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   border: none;
 }
 
-.tag,
-.applyBtn:hover
-.backBtn,
-.backBtn:hover {
-  color: white;
-}
-
-.backBtn,
-.applyBtn:hover,
-.backBtn:hover {
-  background-color: #0053ba;
+.filteredData {
+  border: 1px solid black;
 }
 
 .dropdown {
@@ -545,41 +502,16 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .dropdown,
-.applyBtn {
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-}
-
-.candi:hover {
-  background-color: #efefef;
-}
-
-.affiList {
-  border-radius: 0.5rem;
-  background-color: #f9fafb;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.affiList p {
-  font-weight: 500;
-  color: #333;
-  margin: 0;
-}
-
+.applyBtn,
+.affiList,
 .affiRow,
 .candi {
-  padding: 0.75rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  justify-content: space-between; /* pushes name and valid vote count apart */
-  cursor: pointer;
-  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+}
+
+.dropdown,
+.applyBtn {
+  padding: 0.5rem;
 }
 
 .affiName {
@@ -587,26 +519,12 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   flex: 1;
 }
 
-.affiVVCount,
-.candiVVCount {
-  color: #000000;
-}
-
-.affiVVCount {
-  min-width: 100px;
-  text-align: right;
-}
-
-.affiPercentage {
-  color: #123c98;
-}
-
 .applyBtn,
+.affiList p,
+.affiName,
 .affiVVCount,
 .affiPercentage,
 .backBtn,
-.affiList p,
-.affiName,
 .candInfo {
   font-size: 1rem;
 }
@@ -626,49 +544,44 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   font-weight: bold;
 }
 
+.tag:hover {
+  background-color: #00379a;
+}
+
+.backBtn,
+.applyBtn:hover,
+.backBtn:hover {
+  background-color: #0053ba;
+}
+
+.candi:hover {
+  background-color: #efefef;
+}
+
 .affiVVCount,
-.affiPercentage,
-.candiListTitle {
-  margin-left: 1rem;
+.candiVVCount {
+  color: #000000;
 }
 
-.affiRow:hover {
-  background-color: #e0f2fe;
-  border-color: #60a5fa;
-  transform: scale(1.02);
+.candInfo {
+  line-height: 1.5;
+  color: #555;
 }
 
-.filteredData {
-  border: 1px solid black;
+.affiPercentage {
+  color: #123c98;
 }
 
-.electionFilter,
-.constiFilter,
-.muniFilter {
-  min-width: 120px;
-  margin-right: 10px;
-}
-
-.dropdown,
-.tag,
-.electionFilter select,
-.constiFilter select,
-.muniFilter select {
-  width: 100%;
-}
-
-.tag {
-  padding: 2px;
-  justify-content: center;
-  gap: 10px; /* optional: space between text and icon */
-  background-color: #002970;
-  border-radius: 15px;
+.candiName {
+  font-size: 1.75rem;
+  color: #34495e;
 }
 
 .tag,
-.dropdown,
-.buttons button {
-  margin: 0.5rem;
+.applyBtn:hover
+.backBtn,
+.backBtn:hover {
+  color: white;
 }
 
 .tag,
@@ -688,6 +601,79 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   align-items: center;
 }
 
+.affiList {
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tag {
+  border-radius: 15px;
+  background-color: #002970;
+  padding: 2px;
+  justify-content: center;
+  gap: 10px; /* optional: space between text and icon */
+}
+
+.affiList p {
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.tag,
+.dropdown,
+.buttons button {
+  margin: 0.5rem;
+}
+
+.applyBtn {
+  background-color: #66817d;
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgb(0, 0, 0);
+  margin: 0.5rem 0.5rem 0.5rem 0.8rem;
+}
+
+.candiDetailCard {
+  background: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 24px 32px;
+  margin: 24px auto;
+}
+
+.candiTitle {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.candiName,
+.candInfo {
+  margin-bottom: 16px;
+}
+
+.candiVVCount {
+  font-size: 1.25rem;
+  margin-bottom: 24px;
+}
+
+.affiVVCount,
+.affiPercentage,
+.candiListTitle {
+  margin-left: 1rem;
+}
+
+.electionFilter,
+.constiFilter,
+.muniFilter {
+  min-width: 120px;
+  margin-right: 10px;
+}
+
 .tag svg,
 .tag button:hover,
 .backBtn,
@@ -695,7 +681,27 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   cursor: pointer;
 }
 
-.tag:hover {
-  background-color: #00379a;
+.affiRow:hover {
+  border-color: #60a5fa;
+  background-color: #e0f2fe;
+  transform: scale(1.02);
+}
+
+.backBtn {
+  background-color: #002970;
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: background-color 0.5s ease;
+}
+
+.affiRow,
+.candi {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 1rem;
+  justify-content: space-between; /* pushes name and valid vote count apart */
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 </style>
