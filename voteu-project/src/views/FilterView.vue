@@ -376,15 +376,13 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
       </div>
     </div>
     <div>
-      <button v-if="selectedElection" class="applyBtn" @click="handleApply()">
-        Apply filters
-      </button>
+      <button v-if="selectedElection" class="applyBtn" @click="handleApply()">Apply filters</button>
     </div>
   </div>
   <div class="filteredData">
     <div class="affiList" v-if="selectedElection && displayedAffiVotes && !selectedAffi">
       <p>{{ voteLevel }} affiliation votes of Election {{ selectedElection }}</p>
-      <AffiChart v-if="affiList" :affiVotes="displayedAffiVotes" />
+      <AffiChart v-if="affiList" :affiList="displayedAffiVotes" />
       <div
         class="affiRow"
         v-for="affi in displayedAffiVotes"
@@ -524,21 +522,21 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   margin: 0.5rem 0.5rem 0.5rem 0.8rem;
 }
 
-.backBtn,
-.applyBtn {
+.applyBtn
+.backBtn {
   border: none;
 }
 
 .tag,
+.applyBtn:hover
 .backBtn,
-.backBtn:hover,
-.applyBtn:hover {
+.backBtn:hover {
   color: white;
 }
 
 .backBtn,
-.backBtn:hover,
-.applyBtn:hover {
+.applyBtn:hover,
+.backBtn:hover {
   background-color: #0053ba;
 }
 
@@ -546,8 +544,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   border: 1px solid #d1d5db;
 }
 
-.applyBtn,
-.dropdown {
+.dropdown,
+.applyBtn {
   border-radius: 0.375rem;
   padding: 0.5rem;
 }
@@ -557,19 +555,19 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .affiList {
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .affiList p {
-  margin: 0;
   font-weight: 500;
   color: #333;
+  margin: 0;
 }
 
 .affiRow,
@@ -579,19 +577,14 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   border: 1px solid #e5e7eb;
   border-radius: 0.375rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
   justify-content: space-between; /* pushes name and valid vote count apart */
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .affiName {
   color: #1f2937;
   flex: 1;
-}
-
-.affiName,
-.backBtn {
-  font-weight: 600;
 }
 
 .affiVVCount,
@@ -608,22 +601,24 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   color: #123c98;
 }
 
+.applyBtn,
 .affiVVCount,
 .affiPercentage,
 .backBtn,
-.applyBtn {
-  font-size: 1rem;
-}
-
 .affiList p,
 .affiName,
 .candInfo {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .affiTitle,
 .candiTitle {
   font-size: 2.5rem;
+}
+
+.affiName,
+.backBtn {
+  font-weight: 600;
 }
 
 .affiVVCount,
