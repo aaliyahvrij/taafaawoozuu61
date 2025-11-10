@@ -55,7 +55,6 @@ class XMLParser extends StreamReaderDelegate {
         }
         int toEvent = getEventType();
         String hit = (isStartElement() ? getLocalName() : "/");
-
         if (skipCount > 0 && !hit.equals(tag)) {
             LOG.finer("nextBeginTag(" + tag + "): skipped " + skipCount + " from event" + fromEvent + " to event" + toEvent + " hit <" + hit + ">");
         }
