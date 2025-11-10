@@ -477,17 +477,6 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   width: 100%;
 }
 
-.tag,
-.affiTitle,
-.candiDetailCard {
-  text-align: center;
-}
-
-.affiVVCount {
-  min-width: 100px;
-  text-align: right;
-}
-
 .applyBtn,
 .backBtn {
   border: none;
@@ -507,16 +496,6 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .affiRow,
 .candi {
   border-radius: 0.5rem;
-}
-
-.dropdown,
-.applyBtn {
-  padding: 0.5rem;
-}
-
-.affiName {
-  color: #1f2937;
-  flex: 1;
 }
 
 .applyBtn,
@@ -542,6 +521,17 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .affiVVCount,
 .affiPercentage {
   font-weight: bold;
+}
+
+.tag,
+.affiTitle,
+.candiDetailCard {
+  text-align: center;
+}
+
+.affiVVCount {
+  min-width: 100px;
+  text-align: right;
 }
 
 .tag:hover {
@@ -584,6 +574,11 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   color: white;
 }
 
+.dropdown,
+.applyBtn {
+  padding: 0.5rem;
+}
+
 .filterBar,
 .tag,
 .affiRow,
@@ -616,6 +611,11 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   padding: 2px;
   justify-content: center;
   gap: 10px; /* optional: space between text and icon */
+}
+
+.affiName {
+  color: #1f2937;
+  flex: 1;
 }
 
 .affiList p {
