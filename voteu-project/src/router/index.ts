@@ -3,11 +3,11 @@ import {
   HomeView,
   AboutView,
   HowView,
-  LoginView,
-  RegisterView,
   ForumView,
   FilterView,
   CompareView,
+  RegisterView,
+  LoginView,
 } from '@/views'
 
 const router = createRouter({
@@ -29,16 +29,6 @@ const router = createRouter({
       component: HowView,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: RegisterView,
-    },
-    {
       path: '/forum',
       name: 'forum',
       component: ForumView,
@@ -52,6 +42,16 @@ const router = createRouter({
       path: '/compare',
       name: 'compare',
       component: CompareView,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     },
   ],
 })

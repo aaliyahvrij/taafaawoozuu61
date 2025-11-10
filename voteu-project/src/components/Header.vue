@@ -7,11 +7,11 @@
 <style scoped>
 .banner {
   height: 120px;
+  font-size: 1.5rem;
   background-color: #7c0606;
   color: white;
-  font-size: 1.5rem;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 </style>

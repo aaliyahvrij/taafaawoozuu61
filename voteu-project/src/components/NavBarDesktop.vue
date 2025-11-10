@@ -74,5 +74,4 @@
   margin: 0;
 }
 </style>
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>

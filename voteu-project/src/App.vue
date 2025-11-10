@@ -32,18 +32,18 @@ import { Header, NavBarDesktop } from '@/components'
 }
 
 .contentArea {
-  flex-direction: row;
   height: calc(100vh - 200px); /* 200px height for the header */
+  flex-direction: row;
 }
 
 /* Default orders (desktop): Sidebar left, content right */
 .sideBar {
-  order: 0;
+  box-sizing: border-box;
   width: 200px;
   background-color: #f4f4f4;
   padding: 1rem;
-  box-sizing: border-box;
   list-style-type: none;
+  order: 0;
 }
 
 .routerViewWrapper {
