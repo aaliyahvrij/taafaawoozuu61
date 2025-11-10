@@ -469,9 +469,9 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 </template>
 
 <style scoped>
+.electionFilter select,
 .dropdown,
 .tag,
-.electionFilter select,
 .constiFilter select,
 .muniFilter select {
   width: 100%;
@@ -488,7 +488,7 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   text-align: right;
 }
 
-.applyBtn
+.applyBtn,
 .backBtn {
   border: none;
 }
@@ -548,8 +548,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   background-color: #00379a;
 }
 
-.backBtn,
 .applyBtn:hover,
+.backBtn,
 .backBtn:hover {
   background-color: #0053ba;
 }
@@ -578,16 +578,16 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .tag,
-.applyBtn:hover
+.applyBtn:hover,
 .backBtn,
 .backBtn:hover {
   color: white;
 }
 
+.filterBar,
 .tag,
 .affiRow,
-.candi,
-.filterBar {
+.candi {
   display: flex;
 }
 
@@ -624,8 +624,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   margin: 0;
 }
 
-.tag,
 .dropdown,
+.tag,
 .buttons button {
   margin: 0.5rem;
 }
@@ -676,8 +676,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 
 .tag svg,
 .tag button:hover,
-.backBtn,
-.applyBtn {
+.applyBtn,
+.backBtn {
   cursor: pointer;
 }
 
