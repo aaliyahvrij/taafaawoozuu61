@@ -53,19 +53,15 @@
   padding: 1rem;
 }
 
-.sideNav a,
-.sideNav .linkItem {
-  display: block; /*. sideNav a: Makes the <RouterLink> fill the container */
-}
-
 .sideNav a {
   text-decoration: none;
   color: #333; /* Default link color */
   padding: 10px; /* Add padding for better click area */
 }
 
+.sideNav a,
 .sideNav .linkItem {
-  margin-bottom: 10px;
+  display: block; /*. sideNav a: Makes the <RouterLink> fill the container */
 }
 
 .sideNav ul {
@@ -73,5 +69,10 @@
   padding: 0;
   margin: 0;
 }
+
+.sideNav .linkItem {
+  margin-bottom: 10px;
+}
 </style>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>

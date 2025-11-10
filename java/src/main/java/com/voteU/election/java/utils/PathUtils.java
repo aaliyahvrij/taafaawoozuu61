@@ -1,17 +1,17 @@
 package com.voteU.election.java.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
 import java.util.List;
 import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.FileVisitResult;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.io.IOException;
+import java.io.File;
+import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A helper-class used for traversing a directory structure which contains the Dutch election data.
@@ -59,8 +59,9 @@ public class PathUtils {
             }
 
             // trim leading slashes to resolve relatively
-            while (resourceName.startsWith("/")) resourceName = resourceName.substring(1);
-
+            while (resourceName.startsWith("/")) {
+                resourceName = resourceName.substring(1);
+            }
             url = PathUtils.class.getResource("/");
             URI projectRootURI = url.toURI();
             String resourceFilePath = null;
