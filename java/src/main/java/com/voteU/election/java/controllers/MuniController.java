@@ -8,8 +8,8 @@ import com.voteU.election.java.services.MuniService;
 import com.voteU.election.java.models.PollingStation;
 import com.voteU.election.java.models.Affiliation;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/election/{electionIdListString}/municipalities")
