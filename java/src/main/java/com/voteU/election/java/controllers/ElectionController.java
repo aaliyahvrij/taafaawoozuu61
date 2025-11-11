@@ -25,13 +25,13 @@ public class ElectionController {
         return this.electionService.getElectionData(electionIdListString);
     }
 
-    @GetMapping("/{electionIdListString}/affiliations")
-    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(@PathVariable String electionIdListString) {
-        return this.electionService.getAffiListLhMap(electionIdListString);
-    }
-
     @GetMapping("/{electionIdListString}/pollingstations")
     public LinkedHashMap<String, LinkedHashMap<String, PollingStation>> getPoStListLhMap(@PathVariable String electionIdListString) {
         return this.electionService.getPoStListLhMap(electionIdListString);
+    }
+
+    @GetMapping("/{electionIdListString}/affiliations")
+    public LinkedHashMap<String, LinkedHashMap<Integer, Affiliation>> getAffiListLhMap(@PathVariable String electionIdListString) {
+        return this.electionService.getAffiListLhMap(electionIdListString);
     }
 }
