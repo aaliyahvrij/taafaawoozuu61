@@ -21,8 +21,8 @@ public class ElectionController {
     }
 
     @PostMapping("/{electionIdListString}")
-    public boolean readElectionData(@PathVariable String electionIdListString) {
-        return this.electionService.getElectionData(electionIdListString);
+    public boolean readElection(@PathVariable String electionIdListString) {
+        return this.electionService.getElection(electionIdListString);
     }
 
     @GetMapping("/{electionIdListString}/pollingstations")
