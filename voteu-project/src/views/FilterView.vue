@@ -477,6 +477,12 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   width: 100%;
 }
 
+.dropdown,
+.applyBtn,
+.affiList {
+  padding: 1rem;
+}
+
 .applyBtn,
 .backBtn {
   border: none;
@@ -495,7 +501,7 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .affiList,
 .affiRow,
 .candi {
-  border-radius: 0.5rem;
+  border-radius: 1rem;
 }
 
 .applyBtn,
@@ -541,7 +547,7 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .applyBtn:hover,
 .backBtn,
 .backBtn:hover {
-  background-color: #0053ba;
+  background-color: #0054ba;
 }
 
 .candi:hover {
@@ -558,13 +564,13 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
   color: #555;
 }
 
-.affiPercentage {
-  color: #123c98;
+.candiName {
+  font-size: 2rem;
+  color: #34495e;
 }
 
-.candiName {
-  font-size: 1.75rem;
-  color: #34495e;
+.affiPercentage {
+  color: #123c98;
 }
 
 .tag,
@@ -572,11 +578,6 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .backBtn,
 .backBtn:hover {
   color: white;
-}
-
-.dropdown,
-.applyBtn {
-  padding: 0.5rem;
 }
 
 .filterBar,
@@ -599,16 +600,15 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 .affiList {
   background-color: #f9fafb;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .tag {
+  padding: 2px;
   border-radius: 15px;
   background-color: #002970;
-  padding: 2px;
   justify-content: center;
   gap: 10px; /* optional: space between text and icon */
 }
@@ -620,14 +620,14 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 
 .affiList p {
   font-weight: 500;
-  color: #333;
+  color: #334;
   margin: 0;
 }
 
 .dropdown,
 .tag,
 .buttons button {
-  margin: 0.5rem;
+  margin: 1rem;
 }
 
 .applyBtn {
@@ -638,10 +638,10 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .candiDetailCard {
+  padding: 24px 32px;
   background: #f9fafb;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  padding: 24px 32px;
   margin: 24px auto;
 }
 
@@ -688,18 +688,18 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .backBtn {
-  background-color: #002970;
   padding: 10px 24px;
+  background-color: #002970;
   border-radius: 8px;
   transition: background-color 0.5s ease;
 }
 
 .affiRow,
 .candi {
+  padding: 0.75rem 1rem;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  padding: 0.75rem 1rem;
   justify-content: space-between; /* pushes name and valid vote count apart */
   cursor: pointer;
   transition: all 0.2s ease;

@@ -450,15 +450,15 @@ async function applyFilter() {
 </template>
 
 <style scoped>
+.compareView,
+.filterSet {
+  padding: 1rem;
+}
+
 .filterSet {
   min-width: 300px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.compareView,
-.filterSet {
-  padding: 1rem;
 }
 
 .filterWrapper {
