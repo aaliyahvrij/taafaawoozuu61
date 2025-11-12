@@ -14,13 +14,13 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class ElectionReader {
-    private final ElectionProcessor<Election> processor;
-    private final ElectionTransformer transformer;
+    private final ElectionProcessor<Election> electionProcessor;
+    private final ElectionTransformer electionTransformer;
     private final String[] theEntireElectionIdList = {"TK2021", "TK2023"};
 
     public ElectionReader() {
-        this.transformer = new ElectionTransformer();
-        this.processor = new ElectionProcessor<>(this.transformer);
+        this.electionTransformer = new ElectionTransformer();
+        this.electionProcessor = new ElectionProcessor<>(this.electionTransformer);
     }
 
     /**
@@ -28,7 +28,7 @@ public class ElectionReader {
      *
      * @return A map containing election results, organized by election year.
      */
-    public LinkedHashMap<String, Election> getElection(String electionIdListString) {
+    public LinkedHashMap<String, Election> getElectionListLhMap(String electionIdListString) {
         String[] electionIdList;
         if (Objects.equals(electionIdListString, "all")) {
             electionIdList = theEntireElectionIdList;
@@ -38,13 +38,13 @@ public class ElectionReader {
         for (String electionId : electionIdList) {
             String filePath = "/EML_bestanden_" + electionId;
             try {
-                this.processor.processResults(electionId, PathUtils.getResourcePath(filePath));
+                this.electionProcessor.processResults(electionId, PathUtils.getResourcePath(filePath));
                 log.info("Processed Election {}", electionId);
             } catch (Exception e) {
                 log.error("Could not process Election {}", electionId, e);
             }
         }
         System.out.println("All files are processed.\n");
-        return this.transformer.getElectionListLhMap();
+        return this.electionTransformer.getElectionListLhMap();
     }
 }

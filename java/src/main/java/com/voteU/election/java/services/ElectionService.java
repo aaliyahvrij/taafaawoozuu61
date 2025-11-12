@@ -25,10 +25,10 @@ public class ElectionService {
      *
      * @return true if the data has been loaded successfully, false otherwise
      */
-    public boolean getElection(String electionIdListString) {
-        LinkedHashMap<String, Election> readerElectionListLhMap = this.electionReader.getElection(electionIdListString);
+    public boolean readElectionListLhMap(String electionIdListString) {
+        LinkedHashMap<String, Election> readerElectionListLhMap = this.electionReader.getElectionListLhMap(electionIdListString);
         if (readerElectionListLhMap.isEmpty()) {
-            log.warn("No data found during getElectionData(%s).".formatted(electionIdListString));
+            log.warn("No data found during getElectionListLhMao(%s).".formatted(electionIdListString));
             return false;
         }
         electionListLhMap.putAll(readerElectionListLhMap);

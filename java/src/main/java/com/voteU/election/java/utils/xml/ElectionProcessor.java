@@ -40,7 +40,7 @@ import java.nio.file.Path;
  */
 public class ElectionProcessor<E> {
     private static final Logger LOG = Logger.getLogger(ElectionProcessor.class.getName());
-    private final Transformer<E> transformer;
+    private final Transformer<E> electionTransformer;
 
     // Tag (attribute) names in multiple levels within the XML files
     public static final String VV_COUNT = "ValidVotes";
@@ -107,11 +107,11 @@ public class ElectionProcessor<E> {
      * Creates a new instance that will use the provided transformer for transforming the data into the
      * application-specific models.
      *
-     * @param transformer the {@link Transformer} that will take care of transforming the data into the
+     * @param electionTransformer the {@link Transformer} that will take care of transforming the data into the
      *                    application-specific models.
      */
-    public ElectionProcessor(Transformer<E> transformer) {
-        this.transformer = transformer;
+    public ElectionProcessor(Transformer<E> electionTransformer) {
+        this.electionTransformer = electionTransformer;
     }
 
     /**
@@ -190,7 +190,7 @@ public class ElectionProcessor<E> {
                     return;
                 }
             }
-            this.transformer.registerElectoralLevelData(electionLhMap);
+            this.electionTransformer.registerElectoralLevelData(electionLhMap);
             parser.findAndAcceptEndTag(ELECTION_ID);
         }
     }
@@ -237,7 +237,7 @@ public class ElectionProcessor<E> {
                                     }
                                 }
                             }
-                            this.transformer.registerNationalLevel_affiData(affiLhMap);
+                            this.electionTransformer.registerNationalLevel_affiData(affiLhMap);
                             break;
                         case CANDI:
                             String candiShortCode = null;
@@ -269,7 +269,7 @@ public class ElectionProcessor<E> {
                                         }
                                     }
                                 }
-                                this.transformer.registerNationalLevel_affiData(candiLhMap);
+                                this.electionTransformer.registerNationalLevel_affiData(candiLhMap);
                                 parser.findAndAcceptEndTag(VV_COUNT);
                             } else {
                                 LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %s of affi %d.".formatted(candiShortCode, affId));
@@ -300,7 +300,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(CONSTI_ID);
             }
-            this.transformer.registerConstiLevelData(constiLhMap);
+            this.electionTransformer.registerConstiLevelData(constiLhMap);
             if (parser.findBeginTag(AFFI)) {
                 while (parser.getLocalName().equals(AFFI)) {
                     processAffiLevelData(constiLhMap, parser);
@@ -416,7 +416,7 @@ public class ElectionProcessor<E> {
                 }
                 parser.findAndAcceptEndTag(TOTAL_VV_COUNT);
             }
-            this.transformer.registerConstiLevel_affiData(constiLhMap, affiListLhMap, candiLhMap);
+            this.electionTransformer.registerConstiLevel_affiData(constiLhMap, affiListLhMap, candiLhMap);
         }
     }
 
@@ -459,7 +459,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                         }
-                        this.transformer.registerMuniLevel_affiData(affiLhMap);
+                        this.electionTransformer.registerMuniLevel_affiData(affiLhMap);
                         break;
                     case CANDI:
                         LinkedHashMap<String, String> candiLhMap = new LinkedHashMap<>(constiLhMap);
@@ -493,7 +493,7 @@ public class ElectionProcessor<E> {
                                 }
                             }
                             processedAffiHashSet.add(candiCompKey);
-                            this.transformer.registerMuniLevel_affiData(candiLhMap);
+                            this.electionTransformer.registerMuniLevel_affiData(candiLhMap);
                             parser.findAndAcceptEndTag(VV_COUNT);
                         } else {
                             LOG.warning("Missing <ValidVotes> tag. Unable to register the vvCount for candi %s of affi %d.".formatted(candId, affId));
@@ -597,7 +597,7 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        this.transformer.registerPoStLevelData(poStLhMap, affiListLhMap);
+        this.electionTransformer.registerPoStLevelData(poStLhMap, affiListLhMap);
     }
 
     private void processAffiLevelData(LinkedHashMap<String, String> constiLhMap, XMLParser parser) throws XMLStreamException {
@@ -665,6 +665,6 @@ public class ElectionProcessor<E> {
                 }
             }
         }
-        this.transformer.registerCandiLevelData(candiLhMap);
+        this.electionTransformer.registerCandiLevelData(candiLhMap);
     }
 }
