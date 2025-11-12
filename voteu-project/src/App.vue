@@ -40,8 +40,8 @@ import { Header, NavBarDesktop } from '@/components'
 .sideBar {
   box-sizing: border-box;
   width: 200px;
-  background-color: #f4f4f4;
   padding: 1rem;
+  background-color: #f4f4f4;
   list-style-type: none;
   order: 0;
 }

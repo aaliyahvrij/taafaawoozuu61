@@ -682,8 +682,8 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 }
 
 .affiRow:hover {
-  border-color: #60a5fa;
   background-color: #e0f2fe;
+  border-color: #60a5fa;
   transform: scale(1.02);
 }
 
@@ -696,7 +696,7 @@ function sortCandiListByVVCount(candiList: Candidate[]): Candidate[] {
 
 .affiRow,
 .candi {
-  padding: 0.75rem 1rem;
+  padding: 1rem 1rem;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
