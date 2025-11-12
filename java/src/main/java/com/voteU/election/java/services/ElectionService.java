@@ -26,7 +26,7 @@ public class ElectionService {
      * @return true if the data has been loaded successfully, false otherwise
      */
     public boolean getElection(String electionIdListString) {
-        LinkedHashMap<String, Election> readerElectionListLhMap = this.electionReader.getElectionData(electionIdListString);
+        LinkedHashMap<String, Election> readerElectionListLhMap = this.electionReader.getElection(electionIdListString);
         if (readerElectionListLhMap.isEmpty()) {
             log.warn("No data found during getElectionData(%s).".formatted(electionIdListString));
             return false;
