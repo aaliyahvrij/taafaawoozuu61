@@ -1,4 +1,4 @@
-import type { Constituency, Affiliation } from '@/interfaces'
+import type { Constituency, Affiliation, Municipality } from '@/interfaces'
 
 export class ProviService {
   static async getConstiList(
@@ -8,6 +8,30 @@ export class ProviService {
     try {
       const response = await fetch(
         `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/constituencies`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      if (!response.ok) {
+        throw new Error('HTTP error: ' + response.status)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+    return null
+  }
+
+  static async getMuniList(
+    electionIdListString: string,
+    provId: string,
+  ): Promise<Municipality[] | null> {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/election/${electionIdListString}/provinces/${provId}/municipalities`,
         {
           method: 'GET',
           headers: {
