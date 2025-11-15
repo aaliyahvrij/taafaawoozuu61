@@ -363,7 +363,7 @@ async function applyFilter() {
 </script>
 
 <template>
-  <div class="compareView">
+  <div class="comparisonView">
     <h2 style="text-align: center; margin-bottom: 1rem">Compare Election Results</h2>
     <div class="filterWrapper">
       <!-- Filter Set 1 -->
@@ -450,7 +450,7 @@ async function applyFilter() {
 </template>
 
 <style scoped>
-.compareView,
+.comparisonView,
 .filterSet {
   padding: 1rem;
 }

@@ -5,8 +5,8 @@ import {
   HowView,
   ForumView,
   FilterView,
-  CompareView,
-  RegisterView,
+  ComparisonView,
+  RegistrationView,
   LoginView,
 } from '@/views'
 
@@ -41,12 +41,12 @@ const router = createRouter({
     {
       path: '/compare',
       name: 'compare',
-      component: CompareView,
+      component: ComparisonView,
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView,
+      component: RegistrationView,
     },
     {
       path: '/login',
