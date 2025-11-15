@@ -39,7 +39,7 @@ const router = createRouter({
       component: FilterView,
     },
     {
-      path: '/comparisin',
+      path: '/comparison',
       name: 'Comparison',
       component: ComparisonView,
     },
