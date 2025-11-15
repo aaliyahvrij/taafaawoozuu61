@@ -15,42 +15,42 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: HomeView,
     },
     {
       path: '/about',
-      name: 'about',
+      name: 'About',
       component: AboutView,
     },
     {
       path: '/how',
-      name: 'how',
+      name: 'How',
       component: HowView,
     },
     {
       path: '/forum',
-      name: 'forum',
+      name: 'Forum',
       component: ForumView,
     },
     {
       path: '/filter',
-      name: 'filter',
+      name: 'Filter',
       component: FilterView,
     },
     {
-      path: '/compare',
-      name: 'compare',
+      path: '/comparisin',
+      name: 'Comparison',
       component: ComparisonView,
     },
     {
-      path: '/register',
-      name: 'register',
+      path: '/registration',
+      name: 'Registration',
       component: RegistrationView,
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: LoginView,
     },
   ],
