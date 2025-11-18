@@ -2,7 +2,7 @@ package com.voteU.election.java;
 
 import java.util.*;
 
-public class FourMapClasses_keysIntegerWithNanoTime {
+public class mapInterfaceTest {
     public static void main(String[] args) {
         Map<Integer, Integer> hashMap = new HashMap<>();
         Map<Integer, Integer> linkedHashMap = new LinkedHashMap<>();
