@@ -20,10 +20,10 @@ public class FourMapClasses_keysIntegerWithNanoTime {
         int difference;
         HashMap<Integer, Integer> putStuffHashMap = new HashMap<>();
         start = System.nanoTime();
-        Integer[] differentLengthList = {10, 100, 1000, 10000, 100000};
+        Integer[] iterationLengthList = {10, 100, 1000, 10000, 100000};
         if (theMap instanceof WeakHashMap<Integer, Integer>) {
             /*WeakHashMap<Integer, Integer> weakHashMap = new WeakHashMap<>();
-            Integer[] weakKeyList = new Integer[differentLengthList[index]];
+            Integer[] weakKeyList = new Integer[iterationLengthList[index]];
             for (int i = 0; i < weakKeyList.length; i++) {
                 weakKeyList[i] = new Integer(keys[i]); // ensure distinct objects
                 weakHashMap.put(weakKeyList[i], values[i]);
@@ -40,12 +40,12 @@ public class FourMapClasses_keysIntegerWithNanoTime {
             }
             System.out.println("WeakHashMap after GC: " + weakHashMap);*/
         }
-        for (int ii = 0; ii < differentLengthList[index]; ii++) {
+        for (int ii = 0; ii < iterationLengthList[index]; ii++) {
             theMap.put(ii, ii);
         }
         end = System.nanoTime();
         difference = (int) (end - start);
-        putStuffHashMap.put(differentLengthList[index], difference);
+        putStuffHashMap.put(iterationLengthList[index], difference);
         return putStuffHashMap;
     }
 
