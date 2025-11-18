@@ -1,6 +1,6 @@
 package com.voteU.election.java;
 
-public class Esther_LinearyBinaryTest {
+public class Esther_LinearAndBinarySearchTest {
     public static int linearSearch(int[] arr, int target) {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == target) {
@@ -32,28 +32,24 @@ public class Esther_LinearyBinaryTest {
             for (int i = 0; i < size; i++) {
                 array[i] = i * 2;
             }
-
             long totalLinear = 0;
             long totalBinary = 0;
             int iterationLength = 100;
-
             for (int i = 0; i < iterationLength; i++) {
                 int target = array[(int) (Math.random() * size)];
 
-                // Linear Search timing
+                // Linear search timing
                 long startL = System.nanoTime();
                 linearSearch(array, target);
                 totalLinear += System.nanoTime() - startL;
 
-                // Binary Search timing
+                // Binary search timing
                 long startB = System.nanoTime();
                 binarySearch(array, target);
                 totalBinary += System.nanoTime() - startB;
             }
-
             double avgLinearMs = totalLinear / iterationLength / 1_000_000.0;
             double avgBinaryMs = totalBinary / iterationLength / 1_000_000.0;
-
             System.out.printf("%-10d %-20.5f %-20.5f\n", size, avgLinearMs, avgBinaryMs);
         }
     }
