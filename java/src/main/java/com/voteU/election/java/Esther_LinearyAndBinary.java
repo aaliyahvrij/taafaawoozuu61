@@ -3,7 +3,9 @@ package com.voteU.election.java;
 public class Esther_LinearyAndBinary {
     public static int linearSearch(int[] arr, int target) {
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == target) return i;
+            if (arr[i] == target) {
+                return i;
+            }
         }
         return -1;
     }
@@ -12,16 +14,21 @@ public class Esther_LinearyAndBinary {
         int left = 0, right = arr.length - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            if (arr[mid] == target) return mid;
-            else if (arr[mid] < target) left = mid + 1;
-            else right = mid - 1;
+            if (arr[mid] == target) {
+                return mid;
+            }
+            else if (arr[mid] < target) {
+                left = mid + 1;
+            }
+            else {
+                right = mid - 1;
+            }
         }
         return -1;
     }
 
     public static void main(String[] args) {
         System.out.printf("%-10s %-20s %-20s\n", "Size", "Linear Avg (ms)", "Binary Avg (ms)");
-
         for (int size = 10; size <= 1_000_000; size *= 10) {
             int[] array = new int[size];
             for (int i = 0; i < size; i++) {
