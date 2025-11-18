@@ -1,6 +1,6 @@
 package com.voteU.election.java;
 
-public class Esther_LinearyAndBinary {
+public class Esther_LinearyBinaryTest {
     public static int linearSearch(int[] arr, int target) {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == target) {
@@ -16,11 +16,9 @@ public class Esther_LinearyAndBinary {
             int mid = left + (right - left) / 2;
             if (arr[mid] == target) {
                 return mid;
-            }
-            else if (arr[mid] < target) {
+            } else if (arr[mid] < target) {
                 left = mid + 1;
-            }
-            else {
+            } else {
                 right = mid - 1;
             }
         }
@@ -40,7 +38,7 @@ public class Esther_LinearyAndBinary {
             int runs = 100;
 
             for (int i = 0; i < runs; i++) {
-                int target = array[(int)(Math.random() * size)];
+                int target = array[(int) (Math.random() * size)];
 
                 // Linear Search timing
                 long startL = System.nanoTime();
