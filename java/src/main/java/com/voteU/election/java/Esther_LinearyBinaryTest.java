@@ -35,9 +35,9 @@ public class Esther_LinearyBinaryTest {
 
             long totalLinear = 0;
             long totalBinary = 0;
-            int runs = 100;
+            int iterationLength = 100;
 
-            for (int i = 0; i < runs; i++) {
+            for (int i = 0; i < iterationLength; i++) {
                 int target = array[(int) (Math.random() * size)];
 
                 // Linear Search timing
@@ -51,8 +51,8 @@ public class Esther_LinearyBinaryTest {
                 totalBinary += System.nanoTime() - startB;
             }
 
-            double avgLinearMs = totalLinear / runs / 1_000_000.0;
-            double avgBinaryMs = totalBinary / runs / 1_000_000.0;
+            double avgLinearMs = totalLinear / iterationLength / 1_000_000.0;
+            double avgBinaryMs = totalBinary / iterationLength / 1_000_000.0;
 
             System.out.printf("%-10d %-20.5f %-20.5f\n", size, avgLinearMs, avgBinaryMs);
         }
