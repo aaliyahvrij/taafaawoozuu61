@@ -15,8 +15,8 @@ public class FourMapClasses_keysIntegerWithNanoTime {
     }
 
     private static HashMap<Integer, Integer> putDataIn(Map<Integer, Integer> theMap, int index) {
-        long start;// = System.nanoTime();
-        long end;// = System.nanoTime();
+        long start; // = System.nanoTime();
+        long end; // = System.nanoTime();
         int difference;
         HashMap<Integer, Integer> putStuffHashMap = new HashMap<>();
         start = System.nanoTime();
@@ -50,7 +50,7 @@ public class FourMapClasses_keysIntegerWithNanoTime {
     }
 
     private static void showResultsOf(Map<Integer, Integer> theMap) {
-        Map<Integer, Integer> stuff = null;
+        Map<Integer, Integer> stuff;
         Integer key = 0;
         Integer value = 0;
         for (int i = 0; i < 5; i++) {
