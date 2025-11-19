@@ -37,7 +37,7 @@ public class MapInterfaceTest {
             try {
                 Thread.sleep(1000); // Allow GC time
             } catch (InterruptedException e) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
             System.out.println("WeakHashMap after GC: " + weakHashMap);*/
         }
