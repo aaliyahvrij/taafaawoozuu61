@@ -16,7 +16,7 @@ public class MapInterfaceTest {
         showResultsOf(weakHashMap);
     }
 
-    private static Integer[] iterationLengthList = {100000, 1000000, 2000000, 4000000};
+    private static Integer[] iterationLengthList = {1000000, 2000000, 4000000, 8000000};
 
     private static HashMap<Integer, Integer> putDataIn(Map<Integer, Integer> theMap, int index) {
         long start; // = System.nanoTime();
