@@ -18,7 +18,7 @@ public class MapInterfaceTest {
         long start; // = System.nanoTime();
         long end; // = System.nanoTime();
         int difference;
-        HashMap<Integer, Integer> putStuffHashMap = new HashMap<>();
+        HashMap<Integer, Integer> resultHashMap = new HashMap<>();
         start = System.nanoTime();
         Integer[] iterationLengthList = {10, 100, 1000, 10000, 100000};
         if (theMap instanceof WeakHashMap<Integer, Integer>) {
@@ -45,8 +45,8 @@ public class MapInterfaceTest {
         }
         end = System.nanoTime();
         difference = (int) (end - start);
-        putStuffHashMap.put(iterationLengthList[index], difference);
-        return putStuffHashMap;
+        resultHashMap.put(iterationLengthList[index], difference);
+        return resultHashMap;
     }
 
     private static void showResultsOf(Map<Integer, Integer> theMap) {
