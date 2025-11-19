@@ -41,8 +41,8 @@ public class MapInterfaceTest {
             }
             System.out.println("WeakHashMap after GC: " + weakHashMap);*/
         }
-        for (int ii = 0; ii < iterationLengthList[index]; ii++) {
-            theMap.put(ii, ii);
+        for (int i = 0; i < iterationLengthList[index]; i++) {
+            theMap.put(i, i);
         }
         end = System.nanoTime();
         difference = (int) (end - start);
