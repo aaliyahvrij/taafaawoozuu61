@@ -1,5 +1,7 @@
 package com.voteU.election.java;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 
 public class MapInterfaceTest {
@@ -54,6 +56,10 @@ public class MapInterfaceTest {
         Map<Integer, Integer> resultHashMap;
         Integer key = 0;
         Integer value = 0;
+        DecimalFormat df = new DecimalFormat("#,###");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        df.setDecimalFormatSymbols(symbols);
         System.out.println(theMap.getClass().getSimpleName());
         for (int i = 0; i < iterationLengthList.length; i++) {
             resultHashMap = putDataIn(theMap, i);
@@ -61,7 +67,7 @@ public class MapInterfaceTest {
                 key = entry.getKey();
                 value = entry.getValue();
             }
-            System.out.println(key + " iterations --> " + value / 1_000_000.0 + "ms");
+            System.out.println(df.format(key) + " iterations --> " + value / 1_000_000.0 + "ms");
         }
         System.out.println("\n--------------------\n");
     }
