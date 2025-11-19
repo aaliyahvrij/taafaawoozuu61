@@ -50,13 +50,13 @@ public class MapInterfaceTest {
     }
 
     private static void showResultsOf(Map<Integer, Integer> theMap) {
-        Map<Integer, Integer> stuff;
+        Map<Integer, Integer> resultHashMap;
         Integer key = 0;
         Integer value = 0;
         System.out.println(theMap.getClass().getSimpleName());
         for (int i = 0; i < 5; i++) {
-            stuff = putDataIn(theMap, i);
-            for (Map.Entry<Integer, Integer> entry : stuff.entrySet()) {
+            resultHashMap = putDataIn(theMap, i);
+            for (Map.Entry<Integer, Integer> entry : resultHashMap.entrySet()) {
                 key = entry.getKey();
                 value = entry.getValue();
             }
