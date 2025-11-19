@@ -56,10 +56,12 @@ public class MapInterfaceTest {
         Map<Integer, Integer> resultHashMap;
         Integer key = 0;
         Integer value = 0;
+
         DecimalFormat df = new DecimalFormat("#,###");
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator('.');
         df.setDecimalFormatSymbols(symbols);
+
         System.out.println(theMap.getClass().getSimpleName());
         for (int i = 0; i < iterationLengthList.length; i++) {
             resultHashMap = putDataIn(theMap, i);
