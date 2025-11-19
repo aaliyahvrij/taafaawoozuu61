@@ -14,13 +14,14 @@ public class MapInterfaceTest {
         showResultsOf(weakHashMap);
     }
 
+    private static Integer[] iterationLengthList = {10, 100, 1000, 10000, 100000};
+
     private static HashMap<Integer, Integer> putDataIn(Map<Integer, Integer> theMap, int index) {
         long start; // = System.nanoTime();
         long end; // = System.nanoTime();
         int difference;
         HashMap<Integer, Integer> resultHashMap = new HashMap<>();
         start = System.nanoTime();
-        Integer[] iterationLengthList = {10, 100, 1000, 10000, 100000};
         if (theMap instanceof WeakHashMap<Integer, Integer>) {
             /*WeakHashMap<Integer, Integer> weakHashMap = new WeakHashMap<>();
             Integer[] weakKeyList = new Integer[iterationLengthList[index]];
@@ -54,7 +55,7 @@ public class MapInterfaceTest {
         Integer key = 0;
         Integer value = 0;
         System.out.println(theMap.getClass().getSimpleName());
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < iterationLengthList.length; i++) {
             resultHashMap = putDataIn(theMap, i);
             for (Map.Entry<Integer, Integer> entry : resultHashMap.entrySet()) {
                 key = entry.getKey();
