@@ -53,16 +53,15 @@ public class MapInterfaceTest {
         Map<Integer, Integer> stuff;
         Integer key = 0;
         Integer value = 0;
+        System.out.println(theMap.getClass().getSimpleName());
         for (int i = 0; i < 5; i++) {
             stuff = putDataIn(theMap, i);
             for (Map.Entry<Integer, Integer> entry : stuff.entrySet()) {
                 key = entry.getKey();
                 value = entry.getValue();
             }
-            System.out.println(key + " - Time to fill " + theMap.getClass().getSimpleName() + ": " + value / 1_000_000.0 + "ms");
+            System.out.println(key + " iterations --> " + value / 1_000_000.0 + "ms");
         }
-        if (!theMap.getClass().getSimpleName().equals("WeakHashMap")) {
-            System.out.println("--------------------");
-        }
+        System.out.println("\n--------------------\n");
     }
 }
