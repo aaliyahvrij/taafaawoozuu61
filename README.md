@@ -1,6 +1,9 @@
 ## Overview
-This project is a text-based game built with Lit and TypeScript, where I explored object-oriented programming concepts and component-based UI design.
+This project is a data-driven election website that dynamically displays election results from two different years using multiple types of data visualizations.
 
-I was responsible for creating the “garden chamber” room, which gave me a lot of creative freedom. I experimented with basic TypeScript syntax and Lit integrations, such as dynamically changing images based on the player, their inventory, and the actions they took.
+I designed the relational database and implemented the Java back-end services using Spring Boot, focusing on clean and maintainable code. On the front-end, I built pages in Vue.js using reusable components and integrated them with REST APIs.
 
-One of the things I enjoyed most about this project was being able to experiment freely — even adding slightly silly outcomes (like unexpectedly killing the player) while still focusing on clean logic and structure. It was a fun way to learn how gameplay logic and UI updates work together.
+I especially enjoyed working on this project because Spring Boot and Vue.js make it possible to build modern-looking applications with a clear structure. Using Swagger to document the APIs also made collaboration easier and helped keep the back-end and front-end well aligned.
+
+## Notes
+This project is kept as part of my personal portfolio to showcase my development approach, technical skills, and learning process.
